@@ -37,8 +37,8 @@ const EXPECT_CAST_OPTIONS = ["Any", ...allCastes].sort();
 const EXPECT_EDUCATION_OPTIONS = ["Any", ...QUALIFICATION_LEVELS];
 const EXPECT_DIET_OPTIONS = ["Any", ...DIET_OPTIONS.map(d => d.charAt(0).toUpperCase() + d.slice(1))].sort();
 const AGE_OPTIONS = Array.from({
-  length: 23
-}, (_, i) => 18 + i);
+  length: 21
+}, (_, i) => 20 + i);
 const ALL_COUNTRIES = getAllCountriesWithCodes().map(c => c.name);
 const INDIAN_STATES = State.getStatesOfCountry("IN").map(s => s.name).sort();
 const ABROAD_OPTIONS = ["Any", ...ALL_COUNTRIES];
@@ -64,8 +64,8 @@ export function EditProfile({
     0: { w: 1080, h: 1350, ratio: 4/5, label: "Full Body Photo (1080x1350)" },   // personal
     1: { w: 1600, h: 1200, ratio: 4/3, label: "Family Photo (1600x1200)" },     // family
     2: { w: 600, h: 600, ratio: 1, label: "Close-up Portrait (600x600)" },      // closer
-    3: { w: 1200, h: 1200, ratio: 1, label: "Additional Photo 1 (1200x1200)" }, // other 1
-    4: { w: 1200, h: 1200, ratio: 1, label: "Additional Photo 2 (1200x1200)" }  // other 2
+    3: { w: 1080, h: 1350, ratio: 4/5, label: "Additional Photo 1 (1080x1350)" }, // other 1
+    4: { w: 1080, h: 1350, ratio: 4/5, label: "Additional Photo 2 (1080x1350)" }  // other 2
   };
   
   const [family, setFamily] = useState({
@@ -2734,24 +2734,49 @@ export function EditProfile({
 
       {}
     </div>;
-  const renderPhotosDetails = () => <div className="space-y-6">
+  const renderPhotosDetails = () => {
+  
+    const photoSlots = [
+      { index: 0, label: "Personal Photo", dimensions: "1080x1350" },
+      { index: 1, label: "Family Photo", dimensions: "1600x1200" },
+      { index: 2, label: "Closer Photo", dimensions: "1200x1200" },
+      { index: 3, label: "Additional Photo 1", dimensions: "1080x1350" },
+      { index: 4, label: "Additional Photo 2", dimensions: "1080x1350" }
+    ];
+
+    return <div className="space-y-6">
       <div className="text-left mb-4">
         <h3 className="text-2xl font-semibold text-black">Photos</h3>
       </div>
-      {photos && photos.length > 0 ? <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-          {photos.map((src, idx) => <div key={idx} className="flex flex-col items-start">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {photoSlots.map(slot => {
+          const src = photos[slot.index];
+          return <div key={slot.index} className="flex flex-col items-start">
+            {src ? (
               <a href={src} target="_blank" rel="noreferrer" className="block w-full h-32 overflow-hidden rounded-md bg-gray-50 mb-2">
-                <img src={src} alt={`photo-${idx}`} className="w-full h-full object-cover" />
+                <img src={src} alt={`photo-${slot.index}`} className="w-full h-full object-cover" />
               </a>
-              <div className="w-full flex items-center gap-3">
-                <div className="text-sm font-medium">{getPhotoLabel(idx)}</div>
-                <button type="button" onClick={() => handleReplacePhoto(idx)} className="ml-auto px-3 py-1 rounded-md bg-[#D4A052] text-white text-sm">
-                  {uploadingPhotoIdx === idx ? "Uploading..." : "Edit"}
-                </button>
+            ) : (
+              <div className="block w-full h-32 overflow-hidden rounded-md bg-gray-100 mb-2 border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-[#D4A052] transition-colors" onClick={() => handleReplacePhoto(slot.index)}>
+                <div className="text-center">
+                  <svg className="w-8 h-8 text-gray-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <p className="text-xs text-gray-500">Click to upload</p>
+                </div>
               </div>
-            </div>)}
-        </div> : <p className="text-sm text-gray-500">No photos uploaded yet.</p>}
+            )}
+            <div className="w-full flex flex-col gap-1">
+              <div className="text-xs font-medium text-gray-700">{slot.label}</div>
+              <button type="button" onClick={() => handleReplacePhoto(slot.index)} className="mt-1 w-full px-3 py-1.5 rounded-md bg-[#D4A052] text-white text-xs hover:bg-[#c8a227] transition-colors">
+                {uploadingPhotoIdx === slot.index ? "Uploading..." : (src ? "Edit" : "Upload")}
+              </button>
+            </div>
+          </div>;
+        })}
+      </div>
     </div>;
+  };
   function getPhotoLabel(index) {
     if (index === 0) return "Personal Photo";
     if (index === 1) return "Family Photo";

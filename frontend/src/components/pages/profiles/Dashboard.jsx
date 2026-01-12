@@ -69,19 +69,19 @@ export function Dashboard({
         const onboardingData = onboardingRes?.data?.data;
 
         
-        // Check if onboarding is completed
+      
         const requiredSteps = ["personal", "family", "education", "profession", "health", "expectation", "photos"];
         const completedSteps = onboardingData?.completedSteps || userData?.completedSteps || [];
         const isOnboardingComplete = requiredSteps.every(step => completedSteps.includes(step));
 
-        // If onboarding NOT complete, redirect to onboarding (not both conditions)
+       
         if (!isOnboardingComplete) {
-          toast.error("Please complete your profile first");
+      
           navigate("/onboarding/user", { replace: true });
           return;
         }
 
-        // Check if profile is approved
+        
         const profileStatus = onboardingData?.profileReviewStatus || userData?.profileReviewStatus;
         const isApproved = profileStatus === "approved";
         

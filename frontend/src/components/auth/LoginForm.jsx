@@ -167,29 +167,28 @@ const LoginForm = () => {
         return;
       }
 
-      // Handle incomplete onboarding (success: false but has user and redirectTo)
+  
       if (response?.redirectTo && response?.user) {
-        // User is authenticated but needs to complete onboarding
+    
         ctxLogin(response);
-        toast.success(`Welcome back! Please complete your profile setup.`);
         await new Promise(resolve => setTimeout(resolve, 300));
         navigate(response.redirectTo, { replace: true });
         return;
       }
 
-      // Handle actual login failure (no user data)
+      
       if (!response?.success && !response?.user) {
         setError(response?.message || "Invalid credentials. Please try again.");
         return;
       }
 
-      // Standard successful login
+
       if (response?.success && response?.user) {
         await handleAuthResponse(response);
         return;
       }
 
-      // Fallback - if we have user data, consider it successful
+    
       if (response?.user) {
         await handleAuthResponse(response);
         return;

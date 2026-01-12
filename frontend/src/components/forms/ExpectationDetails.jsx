@@ -52,8 +52,8 @@ const ExpectationDetails = ({
   const partnerDietOptions = useMemo(() => ["Any", ...DIET_OPTIONS.map(d => d.charAt(0).toUpperCase() + d.slice(1))], []);
   const inputClass = "w-full border border-[#D4A052] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition";
   const ageOptions = useMemo(() => Array.from({
-    length: 23
-  }, (_, i) => 18 + i), []);
+    length: 21
+  }, (_, i) => 20 + i), []);
   const countryOptions = useMemo(() => {
     const countries = getAllCountriesWithCodes();
     return [{
@@ -83,7 +83,7 @@ const ExpectationDetails = ({
         if (Number.isNaN(num)) {
           value = "";
         } else {
-          if (num < 18) num = 18;
+          if (num < 20) num = 20;
           if (num > 40) num = 40;
           value = String(num);
         }
@@ -129,8 +129,8 @@ const ExpectationDetails = ({
     const toAge = Number(formData.preferredAgeTo);
     if (isNaN(fromAge)) newErrors.preferredAgeFrom = "Preferred Age From is required";
     if (isNaN(toAge)) newErrors.preferredAgeTo = "Preferred Age To is required";
-    if (!isNaN(fromAge) && (fromAge < 18 || fromAge > 40)) newErrors.preferredAgeFrom = "Age must be between 18 and 40";
-    if (!isNaN(toAge) && (toAge < 18 || toAge > 40)) newErrors.preferredAgeTo = "Age must be between 18 and 40";
+    if (!isNaN(fromAge) && (fromAge < 20 || fromAge > 40)) newErrors.preferredAgeFrom = "Age must be between 20 and 40";
+    if (!isNaN(toAge) && (toAge < 20 || toAge > 40)) newErrors.preferredAgeTo = "Age must be between 20 and 40";
     if (!isNaN(fromAge) && !isNaN(toAge) && fromAge > toAge) newErrors.preferredAgeTo = "To age must be greater than From age";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -149,7 +149,7 @@ const ExpectationDetails = ({
     };
     const payload = {
       age: {
-        from: Number(formData.preferredAgeFrom) || 18,
+        from: Number(formData.preferredAgeFrom) || 20,
         to: Number(formData.preferredAgeTo) || 40
       },
       maritalStatus: formData.maritalStatus.map(x => x.value),

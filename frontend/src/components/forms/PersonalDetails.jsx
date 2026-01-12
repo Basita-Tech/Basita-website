@@ -202,6 +202,8 @@ const PersonalDetails = ({
             birthHour = parts[0] || "";
             birthMinute = parts[1] || "";
           }
+          
+          // Build mapped object once
           const mapped = {
             firstName: data.firstName || "",
             middleName: data.middleName || "",
@@ -236,13 +238,17 @@ const PersonalDetails = ({
             livingWith: data.isChildrenLivingWithYou === true ? "With Me" : data.isChildrenLivingWithYou === false ? "No" : "",
             residingInIndia: typeof data.isResidentOfIndia === "boolean" ? data.isResidentOfIndia ? "yes" : "no" : ""
           };
-          setFormData(prev => ({
-            ...prev,
-            ...mapped
-          }));
+          
+          // Single setState call
+          setFormData(mapped);
+          
+          // Batch other state updates
           const status = data.marriedStatus || "";
-          setShowChildrenFields(status && status !== "Never Married");
-          setShowDivorceFields(status === "Divorced" || status === "Awaiting Divorce");
+          const childFields = status && status !== "Never Married";
+          const divorceFields = status === "Divorced" || status === "Awaiting Divorce";
+          setShowChildrenFields(childFields);
+          setShowDivorceFields(divorceFields);
+          
           let separated = "";
           if (data.isYouLegallySeparated === true) separated = "Yes";else if (data.isYouLegallySeparated === false && data.separatedSince) separated = "No";else if (data.isLegallySeparated === true) separated = "Yes";else if (data.isLegallySeparated === false && data.separatedSince) separated = "No";else if (data.separatedSince) separated = "Yes";
           setIsLegallySeparated(separated);
@@ -255,7 +261,7 @@ const PersonalDetails = ({
       }
     };
     fetchPersonal();
-  }, []);
+  }, []); // Only run once on mount
   const validateBirthState = () => {
     if (!formData.birthState) {
       setErrors(prev => ({
@@ -570,6 +576,22 @@ const PersonalDetails = ({
   };
   const handlePrevious = () => navigate("/signup");
   const RequiredMark = () => <span className="text-red-500 ml-1">*</span>;
+  
+  // Loading skeleton component
+  const LoadingSkeleton = () => (
+    <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-md animate-pulse">
+      <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
+      <div className="space-y-4">
+        {[1, 2, 3, 4, 5, 6].map(i => (
+          <div key={i} className="h-12 bg-gray-200 rounded"></div>
+        ))}
+      </div>
+    </div>
+  );
+  
+  if (loading && !formData.firstName) {
+    return <LoadingSkeleton />;
+  }
   return <div className="min-h-screen w-full bg-[#F9F7F5] flex justify-center items-start py-2 px-2">
       <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[#F9F7F5] transition-transform duration-300 hover:scale-[1.02]">
         {}

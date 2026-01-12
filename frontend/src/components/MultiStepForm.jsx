@@ -49,6 +49,23 @@ const MultiStepForm = () => {
         setLoading(true);
         const res = await getOnboardingStatus();
         const savedSteps = res?.data?.data?.completedSteps || [];
+        const profileStatus = res?.data?.data?.profileReviewStatus;
+        
+        // Check profile status once at load
+        if (profileStatus === "pending") {
+          toast.error("Your profile is under review. You cannot edit your details at this time.");
+          navigate("/onboarding/review", {
+            replace: true
+          });
+          return;
+        } else if (profileStatus === "approved") {
+          toast.success("Your profile has been approved! Redirecting to your dashboard.");
+          navigate("/dashboard", {
+            replace: true
+          });
+          return;
+        }
+        
         setCompletedSteps(savedSteps);
         
         const urlParams = new URLSearchParams(window.location.search);
@@ -88,7 +105,7 @@ const MultiStepForm = () => {
       }
     };
     fetchProgress();
-  }, []);
+  }, []); // Only run on mount
   const handleNext = async stepId => {
     const updatedSteps = [...new Set([...completedSteps, stepId])];
     setCompletedSteps(updatedSteps);
@@ -147,23 +164,7 @@ const MultiStepForm = () => {
       replace: true
     });
   };
-  useEffect(() => {
-    async function checkUserReview() {
-      const res = await getProfileReviewStatus();
-      if (res.data.profileReviewStatus === "pending") {
-        toast.error("Your profile is under review. You cannot edit your details at this time.");
-        navigate("/onboarding/review", {
-          replace: true
-        });
-      } else if (res.data.profileReviewStatus === "approved") {
-        toast.success("Your profile has been approved! Redirecting to your dashboard.");
-        navigate("/dashboard", {
-          replace: true
-        });
-      }
-    }
-    checkUserReview();
-  }, [currentStep]);
+  
   const renderStep = () => {
     switch (currentStep) {
       case "personal":

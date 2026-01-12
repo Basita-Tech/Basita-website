@@ -25,6 +25,7 @@ const VerifyOTP = () => {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
+  const [displayedOtp, setDisplayedOtp] = useState("");
   const otpRefs = useRef([]); 
   const toastShownRef = useRef(false);
 
@@ -42,6 +43,8 @@ const VerifyOTP = () => {
     if (!email) {
       // If coming from login, redirect to login, otherwise to signup
       navigate(fromLogin ? "/login" : "/signup");
+    } else {
+      fetchInitialOtp();
     }
   }, [email, navigate, fromLogin]);
   useEffect(() => {
@@ -133,6 +136,12 @@ const VerifyOTP = () => {
         setEmailOtp(Array(6).fill(""));
         setSuccessMessage("📧 New OTP sent! Please check your email inbox and spam folder.");
         toast.success("📧 OTP resent successfully!");
+        
+        const otp = res?.otp || res?.data?.otp || res?.data?.data?.otp;
+        if (otp) {
+          setDisplayedOtp(otp);
+        }
+        
         setTimeout(() => setSuccessMessage(""), 5000);
       } else {
         const message = res?.message || res?.data?.message || "Failed to send OTP. Please try again.";
@@ -216,6 +225,25 @@ const VerifyOTP = () => {
       setIsVerifying(false);
     }
   };
+  const fetchInitialOtp = async () => {
+    try {
+      const res = await sendEmailOtp({
+        email,
+        type: "signup",
+        resendAttempt: 0
+      });
+      
+      const isSuccess = !!(res?.success || res?.data?.success || res?.data?.data?.success);
+      if (isSuccess) {
+        const otp = res?.otp || res?.data?.otp || res?.data?.data?.otp;
+        if (otp) {
+          setDisplayedOtp(otp);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch initial OTP:", err);
+    }
+  };
   return <>
       <style>
         {`\
@@ -258,6 +286,13 @@ const VerifyOTP = () => {
               Your account is not verified. Please verify your email to continue.
             </p>}
           </div>
+
+          {displayedOtp && (
+            <div className="mb-4 p-3 bg-blue-50 border-2 border-blue-200 rounded-lg text-center">
+              <p className="text-xs text-blue-600 font-semibold mb-1">Your OTP (for testing):</p>
+              <p className="text-2xl font-bold tracking-widest text-blue-700">{displayedOtp}</p>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">

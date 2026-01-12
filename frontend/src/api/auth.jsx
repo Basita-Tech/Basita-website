@@ -269,17 +269,27 @@ export const saveUserPersonal = async payload => {
     const response = await axios.post(`${API}/user-personal/`, payload, {
       headers: getAuthHeaders()
     });
+    // Clear cache after save
+    dataCache.clear('user-personal-details');
     return response;
   } catch (error) {
     console.error("❌ Save Personal Details Error:", error.response?.data || error.message);
     throw error;
   }
 };
-export const getUserPersonal = async () => {
+export const getUserPersonal = async (skipCache = false) => {
+  const cacheKey = 'user-personal-details';
+  
+  if (!skipCache && dataCache.has(cacheKey)) {
+    return dataCache.get(cacheKey);
+  }
+  
   try {
     const response = await axios.get(`${API}/user-personal/`, {
       headers: getAuthHeaders()
     });
+    // Cache for 2 minutes
+    dataCache.set(cacheKey, response, 120000);
     return response;
   } catch (error) {
     console.error("❌ Get Personal Details Error:", error.response?.data || error.message);
@@ -290,6 +300,8 @@ export const updateUserPersonal = async payload => {
     const response = await axios.put(`${API}/user-personal/`, payload, {
       headers: getAuthHeaders()
     });
+    // Clear cache after update
+    dataCache.clear('user-personal-details');
     return response.data;
   } catch (error) {
     console.error("❌ Update Personal Details Error:", error.response?.data || error.message);

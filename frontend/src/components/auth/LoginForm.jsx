@@ -94,12 +94,15 @@ const LoginForm = () => {
       if (resp.user) {
         ctxLogin(resp);
       }
+      // Wait a bit for context to update if redirecting
       if (resp.redirectTo) {
-        navigate(resp.redirectTo);
+        await new Promise(resolve => setTimeout(resolve, 300));
+        navigate(resp.redirectTo, { replace: true });
         return;
       }
       if (resp.success) {
-        navigate("/dashboard");
+        await new Promise(resolve => setTimeout(resolve, 300));
+        navigate("/dashboard", { replace: true });
       }
     } catch (e) {
       console.error("Error handling auth response:", e);
@@ -164,12 +167,36 @@ const LoginForm = () => {
         return;
       }
 
-      if (!response?.success) {
+      // Handle incomplete onboarding (success: false but has user and redirectTo)
+      if (response?.redirectTo && response?.user) {
+        // User is authenticated but needs to complete onboarding
+        ctxLogin(response);
+        toast.success(`Welcome back! Please complete your profile setup.`);
+        await new Promise(resolve => setTimeout(resolve, 300));
+        navigate(response.redirectTo, { replace: true });
+        return;
+      }
+
+      // Handle actual login failure (no user data)
+      if (!response?.success && !response?.user) {
         setError(response?.message || "Invalid credentials. Please try again.");
         return;
       }
 
-      await handleAuthResponse(response);
+      // Standard successful login
+      if (response?.success && response?.user) {
+        await handleAuthResponse(response);
+        return;
+      }
+
+      // Fallback - if we have user data, consider it successful
+      if (response?.user) {
+        await handleAuthResponse(response);
+        return;
+      }
+
+      // If we reach here, something unexpected happened
+      setError("An unexpected error occurred. Please try again.");
     } catch (err) {
       console.error("Login error:", err);
       setError("Invalid credentials. Please try again.");

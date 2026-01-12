@@ -59,7 +59,6 @@ export function Dashboard({
           getOnboardingStatus()
         ]);
         
-        // First check if user data exists
         if (!userRes?.success || !userRes?.data) {
           toast.error("Unable to load profile data");
           navigate("/login", { replace: true });
@@ -69,28 +68,30 @@ export function Dashboard({
         const userData = userRes.data;
         const onboardingData = onboardingRes?.data?.data;
 
-        // Check if onboarding is not completed using onboarding status API
+        
+        // Check if onboarding is completed
         const requiredSteps = ["personal", "family", "education", "profession", "health", "expectation", "photos"];
-        const completedSteps = onboardingData?.completedSteps || [];
+        const completedSteps = onboardingData?.completedSteps || userData?.completedSteps || [];
         const isOnboardingComplete = requiredSteps.every(step => completedSteps.includes(step));
 
-        if (!isOnboardingComplete && !userData.isOnboardingCompleted) {
+        // If onboarding NOT complete, redirect to onboarding (not both conditions)
+        if (!isOnboardingComplete) {
           toast.error("Please complete your profile first");
           navigate("/onboarding/user", { replace: true });
           return;
         }
 
-        // Check if profile is approved using profileReviewStatus from onboarding API
-        const profileStatus = onboardingData?.profileReviewStatus;
-        const isApproved = userData.isApproved === true || 
-                          profileStatus === "approved";
+        // Check if profile is approved
+        const profileStatus = onboardingData?.profileReviewStatus || userData?.profileReviewStatus;
+        const isApproved = profileStatus === "approved";
         
         if (!isApproved) {
-          // Check if it's pending or rejected
           if (profileStatus === "pending") {
             toast.error("Your profile is pending approval");
           } else if (profileStatus === "rejected") {
             toast.error("Your profile was rejected. Please update and resubmit");
+          } else if (profileStatus === "rectification") {
+            toast.error("Your profile requires rectification");
           } else {
             toast.error("Your profile needs approval");
           }
@@ -98,7 +99,7 @@ export function Dashboard({
           return;
         }
 
-        // Profile is approved and onboarding completed - allow dashboard access
+        // Profile approved and onboarding complete
         setUser(userData);
         
         if (photosRes?.success && photosRes?.data) {
@@ -106,19 +107,16 @@ export function Dashboard({
         }
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
-        // Check if it's a 403 forbidden error
         if (error?.response?.status === 403) {
           toast.error(error.response?.data?.message || "Profile approval required");
           navigate("/onboarding/review", { replace: true });
           return;
         }
-        // Check if it's a 401 unauthorized error
         if (error?.response?.status === 401) {
           toast.error("Please login to continue");
           navigate("/login", { replace: true });
           return;
         }
-        // Handle other errors
         toast.error("Failed to load dashboard. Please try again.");
       } finally {
         setIsLoading(false);

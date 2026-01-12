@@ -94,14 +94,14 @@ const LoginForm = () => {
       if (resp.user) {
         ctxLogin(resp);
       }
-      // Wait a bit for context to update if redirecting
+      
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
       if (resp.redirectTo) {
-        await new Promise(resolve => setTimeout(resolve, 300));
         navigate(resp.redirectTo, { replace: true });
         return;
       }
       if (resp.success) {
-        await new Promise(resolve => setTimeout(resolve, 300));
         navigate("/dashboard", { replace: true });
       }
     } catch (e) {
@@ -169,9 +169,8 @@ const LoginForm = () => {
 
   
       if (response?.redirectTo && response?.user) {
-    
         ctxLogin(response);
-        await new Promise(resolve => setTimeout(resolve, 300));
+        await new Promise(resolve => setTimeout(resolve, 200));
         navigate(response.redirectTo, { replace: true });
         return;
       }

@@ -59,7 +59,6 @@ const MultiStepForm = () => {
           });
           return;
         } else if (profileStatus === "approved") {
-          toast.success("Your profile has been approved! Redirecting to your dashboard.");
           navigate("/dashboard", {
             replace: true
           });
@@ -186,8 +185,8 @@ const MultiStepForm = () => {
     }
   };
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center text-gray-600 text-lg">
-        Loading your progress...
+    return <div className="min-h-screen flex items-center justify-center" style={{ opacity: 0.5, transition: 'opacity 0.3s ease-in-out' }}>
+        <div className="text-gray-600 text-lg">Loading...</div>
       </div>;
   }
   return <div className="min-h-screen flex flex-col items-center bg-[hsl(30,33%,97%)] px-2 sm:px-4 md:px-6 py-4 sm:py-6 md:py-10 gap-6 sm:gap-8 md:gap-10">

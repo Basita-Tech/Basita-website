@@ -77,6 +77,7 @@ const PersonalDetails = ({
     maritalStatus: ""
   });
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [errors, setErrors] = useState({
     pincode: "",
     city: "",
@@ -190,7 +191,6 @@ const PersonalDetails = ({
   useEffect(() => {
     const fetchPersonal = async () => {
       try {
-        setLoading(true);
         const res = await getUserPersonal();
         if (res?.data) {
           const data = res.data?.data || {};
@@ -257,7 +257,7 @@ const PersonalDetails = ({
       } catch (err) {
         console.error("Failed to fetch personal details:", err);
       } finally {
-        setLoading(false);
+        setInitialLoading(false);
       }
     };
     fetchPersonal();
@@ -577,22 +577,7 @@ const PersonalDetails = ({
   const handlePrevious = () => navigate("/signup");
   const RequiredMark = () => <span className="text-red-500 ml-1">*</span>;
   
-  // Loading skeleton component
-  const LoadingSkeleton = () => (
-    <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-md animate-pulse">
-      <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
-      <div className="space-y-4">
-        {[1, 2, 3, 4, 5, 6].map(i => (
-          <div key={i} className="h-12 bg-gray-200 rounded"></div>
-        ))}
-      </div>
-    </div>
-  );
-  
-  if (loading && !formData.firstName) {
-    return <LoadingSkeleton />;
-  }
-  return <div className="min-h-screen w-full bg-[#F9F7F5] flex justify-center items-start py-2 px-2">
+  return <div className="min-h-screen w-full bg-[#F9F7F5] flex justify-center items-start py-2 px-2" style={{ opacity: initialLoading ? 0.7 : 1, transition: 'opacity 0.3s ease-in-out' }}>
       <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[#F9F7F5] transition-transform duration-300 hover:scale-[1.02]">
         {}
         <h2 className="text-2xl font-bold text-[#1f1e1d] text-center mb-8">

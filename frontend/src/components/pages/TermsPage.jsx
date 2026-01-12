@@ -171,10 +171,6 @@ export default function TermsPage() {
           <p>
             By using SATFERA, you agree to abide by our Terms & Conditions and Privacy Policy.
           </p>
-
-          <div className="mt-10 pt-6 border-t border-gray-200">
-            <Link to="/" className="text-[#D4A052] hover:opacity-80 font-semibold text-base">Return to Home</Link>
-          </div>
         </div>
       </main>
     </div>

@@ -126,31 +126,34 @@ userPersonalRouter.get(
   authenticate,
   asyncHandler(userPersonalController.getUserOnboardingStatus)
 );
+
 userPersonalRouter.put(
   "/onboarding-status",
   authenticate,
   asyncHandler(userPersonalController.updateUserOnboardingStatus)
 );
 
-userPersonalRouter.post(
-  "/upload/photos",
-  authenticate,
-  photoUploadGatewayLimiter,
-  profilePhotoUpload.single("file"),
-  asyncHandler(uploadController.uploadPhotoController)
-);
+// userPersonalRouter.post(
+//   "/upload/photos",
+//   authenticate,
+//   photoUploadGatewayLimiter,
+//   profilePhotoUpload.single("file"),
+//   asyncHandler(uploadController.uploadPhotoController)
+// );
+
 userPersonalRouter.get(
   "/upload/photos",
   authenticate,
   asyncHandler(uploadController.getPhotosController)
 );
-userPersonalRouter.put(
-  "/upload/photos",
-  authenticate,
-  photoUploadGatewayLimiter,
-  profilePhotoUpload.single("file"),
-  asyncHandler(uploadController.updatePhotoController)
-);
+
+// userPersonalRouter.put(
+//   "/upload/photos",
+//   authenticate,
+//   photoUploadGatewayLimiter,
+//   profilePhotoUpload.single("file"),
+//   asyncHandler(uploadController.updatePhotoController)
+// );
 
 userPersonalRouter.delete(
   "/upload/photos",
@@ -158,13 +161,13 @@ userPersonalRouter.delete(
   asyncHandler(uploadController.deletePhotoController)
 );
 
-userPersonalRouter.post(
-  "/upload/government-id",
-  authenticate,
-  photoUploadGatewayLimiter,
-  governmentIdUpload.single("file"),
-  asyncHandler(uploadController.uploadGovernmentIdController)
-);
+// userPersonalRouter.post(
+//   "/upload/government-id",
+//   authenticate,
+//   photoUploadGatewayLimiter,
+//   governmentIdUpload.single("file"),
+//   asyncHandler(uploadController.uploadGovernmentIdController)
+// );
 
 userPersonalRouter.get(
   "/upload/government-id",
@@ -172,13 +175,13 @@ userPersonalRouter.get(
   asyncHandler(uploadController.getGovernmentIdController)
 );
 
-userPersonalRouter.put(
-  "/upload/government-id",
-  authenticate,
-  photoUploadGatewayLimiter,
-  governmentIdUpload.single("file"),
-  asyncHandler(uploadController.updateGovernmentIdController)
-);
+// userPersonalRouter.put(
+//   "/upload/government-id",
+//   authenticate,
+//   photoUploadGatewayLimiter,
+//   governmentIdUpload.single("file"),
+//   asyncHandler(uploadController.updateGovernmentIdController)
+// );
 
 userPersonalRouter.get(
   "/review/status",

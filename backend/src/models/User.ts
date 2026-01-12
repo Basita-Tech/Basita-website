@@ -7,7 +7,7 @@ export interface IUser extends Document {
   middleName?: string;
   lastName: string;
   gender: Gender;
-  role: { type: string; enum: ["user", "admin"] };
+  role: "user" | "admin";
   phoneNumber?: string;
   password: string;
   isActive: boolean;
@@ -103,10 +103,7 @@ const userSchema: Schema = new Schema(
     },
     role: {
       type: String,
-      enum: {
-        values: ["user", "admin"],
-        message: "Role must be user or admin"
-      },
+      enum: ["user", "admin"],
       default: "user"
     },
     phoneNumber: {

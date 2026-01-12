@@ -12,11 +12,18 @@ import {
   createEmailTemplateValidation,
   updateEmailTemplateValidation,
   createOrUpdatePricingConfigValidation,
-  updateUserProfileValidation
+  updateUserProfileValidation,
+  LoginValidation
 } from "../../validation";
 
 import { getAuditLogsController } from "../controllers/auditController";
 const adminRouter = express();
+
+adminRouter.post(
+  "/login",
+  LoginValidation,
+  asyncHandler(adminController.login)
+);
 
 const handleValidationErrors = (
   req: Request,

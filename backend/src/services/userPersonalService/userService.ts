@@ -124,6 +124,7 @@ export async function getUserDashboardService(userId: string) {
   const age = data.dateOfBirth ? calculateAge(data.dateOfBirth) : null;
 
   return {
+    _id: data._id,
     firstName: data.firstName || null,
     lastName: data.lastName || null,
     age: age,

@@ -384,10 +384,7 @@ const SignUpPage = () => {
             type: "signup"
           });
           if (emailOtpRes?.success) {
-            toast.success("Email OTP sent successfully!");
-            toast.success(`Your OTP is ${emailOtpRes.otp}`, {
-              duration: 10000
-            });
+            toast.success("OTP sent successfully. Please check your email."); // single, plain-text toast
             navigate("/verify-otp", {
               state: {
                 email: payload.email,
@@ -667,7 +664,13 @@ const SignUpPage = () => {
           }} className="w-4 h-4 accent-[#D4AF37] mt-1 flex-shrink-0" />
             <label className="text-xs sm:text-sm text-gray-700">
               I agree to the{" "}
-              <Link to="/terms" className="text-blue-600 underline hover:text-blue-700">
+              {/* Open Terms in a new tab to preserve form state */}
+              <Link
+                to="/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline hover:text-blue-700"
+              >
                 Terms & Conditions
               </Link>
             </label>

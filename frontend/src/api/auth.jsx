@@ -544,7 +544,7 @@ export const uploadToS3 = async (presignedUrl, file, onProgress) => {
 export const savePhotoMetadata = async (userId, photoType) => {
   try {
     const safeType = String(photoType || "personal").replace(/[^A-Za-z0-9_-]/g, "-").toLowerCase();
-    const url = `https://cdn.satfera.in.s3.ap-south-1.amazonaws.com/${userId}-${safeType}`;
+    const url = `https://s3.ap-south-1.amazonaws.com/cdn.satfera.in/${userId}-${safeType}`;
     const response = await axios.put(`${API_V2}/upload/photos`, {
       photoType: safeType,
       url
@@ -574,7 +574,7 @@ export const uploadPhotoViaS3 = async (file, userId, photoType, onProgress) => {
       success: true,
       key: presign.key,
       bucket: presign.bucket,
-      url: `https://cdn.satfera.in.s3.ap-south-1.amazonaws.com/${userId}-${String(photoType || "personal").replace(/[^A-Za-z0-9_-]/g, "-").toLowerCase()}`
+      url: `https://s3.ap-south-1.amazonaws.com/cdn.satfera.in/${userId}-${String(photoType || "personal").replace(/[^A-Za-z0-9_-]/g, "-").toLowerCase()}`
     };
   } catch (error) {
     console.error("❌ uploadPhotoViaS3 Error:", error.response?.data || error.message);

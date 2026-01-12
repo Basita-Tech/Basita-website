@@ -299,6 +299,19 @@ export function Dashboard({
                       ID: {String(customId)}
                     </span>;
               })()}
+                {(() => {
+                const planExpiry = user?.planExpiry;
+                if (!planExpiry) return null;
+                const expiryDate = new Date(planExpiry);
+                const formattedDate = expiryDate.toLocaleDateString('en-GB', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric'
+                });
+                return <span className="inline-flex items-center rounded-full px-3 py-[4px] text-[12px] font-medium border bg-[#f9f5ed] text-[#c8a227] border-[#e9d8a6]">
+                      Plan Expires: {formattedDate}
+                    </span>;
+              })()}
               </div>
               <p className="text-muted-foreground mt-1 text-sm md:text-base">
                 {user?.age || "N/A"} years • {user?.city || "N/A"} •{" "}

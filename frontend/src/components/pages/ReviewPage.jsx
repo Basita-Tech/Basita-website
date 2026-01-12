@@ -119,7 +119,7 @@ const ReviewPage = () => {
               {isPending ? <Clock size={64} className="animate-pulse" /> : isApproved ? <CheckCircle size={64} /> : isRectification ? <AlertCircle size={64} className="animate-pulse" /> : <AlertCircle size={64} />}
             </div>
             <h2 className="text-3xl font-bold mb-2">
-              {isPending ? "Profile Under Review" : isApproved ? "Profile Approved! 🎉" : isRectification ? "Profile Updates Required" : "Review Required"}
+              {isPending ? "Profile Under Review" : isApproved ? "Profile Approved!" : isRectification ? "Profile Updates Required" : "Review Required"}
             </h2>
             <p className="text-lg opacity-90">
               {isPending ? "Your profile is being reviewed by our team" : isApproved ? "You're all set to start connecting!" : isRectification ? "Please update your profile based on admin feedback" : "Please review the feedback below"}
@@ -179,7 +179,7 @@ const ReviewPage = () => {
                     <p className="font-semibold mb-2" style={{
                   color: colors.green
                 }}>
-                      ✅ Your Profile Status: APPROVED
+                      Your Profile Status: APPROVED
                     </p>
                     <ul className="space-y-2 text-sm" style={{
                   color: colors.green
@@ -204,7 +204,7 @@ const ReviewPage = () => {
                     <p className="font-semibold mb-2" style={{
                   color: colors.orange
                 }}>
-                      ⚠️ Feedback
+                      Feedback
                     </p>
                     <p className="text-sm text-gray-700 whitespace-pre-wrap">
                       {reviewNotes || "Please update your profile and resubmit for review."}
@@ -223,7 +223,7 @@ const ReviewPage = () => {
                     <p className="font-semibold mb-2" style={{
                   color: "#f39c12"
                 }}>
-                      📝 Admin Feedback
+                      Admin Feedback
                     </p>
                     <p className="text-sm text-gray-700 whitespace-pre-wrap">
                       {reviewNotes || "Please review and update your profile details."}
@@ -352,24 +352,6 @@ const ReviewPage = () => {
               </a>
             </p>
           </div>
-        </div>
-
-        {}
-        <div className="mt-8 p-6 rounded-2xl text-center" style={{
-        backgroundColor: colors.white,
-        border: `2px dashed ${colors.goldLight}`
-      }}>
-          <h3 className="font-semibold mb-2" style={{
-          color: colors.gold
-        }}>
-            💡 Pro Tips for Profile Approval
-          </h3>
-          <ul className="text-sm text-gray-700 space-y-2 text-left inline-block">
-            <li>• Use clear, recent, professional photos</li>
-            <li>• Provide accurate personal information</li>
-            <li>• Complete all required fields</li>
-            <li>• Upload valid government ID documents</li>
-          </ul>
         </div>
       </div>
     </div>;

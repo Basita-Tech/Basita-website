@@ -1,9 +1,5 @@
 import { useState, useCallback, useRef } from "react";
 import {
-  uploadUserPhoto,
-  uploadGovernmentId,
-  updateUserPhoto,
-  updateGovernmentId,
   getPreSignedUrlForFile,
   uploadToS3,
   getUserId,
@@ -15,7 +11,7 @@ const usePhotoUpload = () => {
   const ensureUserId = useCallback(async () => {
     if (userIdRef.current) return userIdRef.current;
     
-    // Get MongoDB _id from /auth/me endpoint (backend uses cookies, not localStorage)
+    
     try {
       const mongoId = await getUserId();
       if (mongoId) {
@@ -121,59 +117,18 @@ const usePhotoUpload = () => {
           }));
         });
 
-     
-        await savePhotoMetadata(userId || photoKey, actualPhotoType);
-
-       
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("photoType", photoType);
-        if (isUpdate && photoIndex !== null && (photoType === "personal" || photoType === "other")) {
-          formData.append("photoIndex", photoIndex.toString());
-        }
-        let uploadPromise;
-        if (isUpdate) {
-          uploadPromise = photoType === "governmentId" ? updateGovernmentId(formData) : updateUserPhoto(formData);
-        } else {
-          uploadPromise = photoType === "governmentId" ? uploadGovernmentId(formData) : uploadUserPhoto(formData);
-        }
-        const timeoutPromise = new Promise((_, reject) => {
-          setTimeout(() => reject(new Error("Upload timeout after 30 seconds")), 30000);
-        });
-        const response = await Promise.race([uploadPromise, timeoutPromise]);
-        let uploadedUrl = null;
-        if (response.data?.photos || response.data?.governmentIdImage) {
-          const photos = response.data.photos;
-          const govId = response.data.governmentIdImage;
-          switch (photoType) {
-            case "closer":
-              uploadedUrl = photos?.closerPhoto?.url;
-              break;
-            case "personal":
-              const personalPhotos = photos?.personalPhotos || [];
-              uploadedUrl = personalPhotos[personalPhotos.length - 1]?.url;
-              break;
-            case "family":
-              uploadedUrl = photos?.familyPhoto?.url;
-              break;
-            case "other":
-              const otherPhotos = photos?.otherPhotos || [];
-              uploadedUrl = otherPhotos[otherPhotos.length - 1]?.url;
-              break;
-            case "governmentId":
-              uploadedUrl = govId?.url;
-              break;
-          }
-        }
+        // Construct proper S3 object URL for payload
+        const bucketName = 'cdn.satfera.in';
+        const region = 'ap-south-1';
+        const uploadedUrl = `https://s3.${region}.amazonaws.com/${bucketName}/${userId || photoKey}-${actualPhotoType}`;
+        
         if (!uploadedUrl) {
-          throw new Error("No URL returned from server");
+          throw new Error("Failed to construct S3 object URL");
         }
-        return {
-          success: true,
-          url: uploadedUrl,
-          photoKey,
-          photoType
-        };
+
+        await savePhotoMetadata(userId || photoKey, actualPhotoType, uploadedUrl);
+
+        return { success: true, url: uploadedUrl, photoKey, photoType };
       } catch (error) {
         lastError = error;
         console.error(`[PhotoUpload] Attempt ${attempt}/${maxRetries} failed for ${photoKey}:`, error.message);
@@ -193,7 +148,7 @@ const usePhotoUpload = () => {
       photoKey,
       photoType
     };
-  }, [waitForNetwork]);
+  }, [waitForNetwork, ensureUserId]);
   const uploadPhotos = useCallback(async (photosToUpload, existingPhotos = {}) => {
     const cleanupNetwork = setupNetworkMonitoring();
     if (!photosToUpload || photosToUpload.length === 0) {

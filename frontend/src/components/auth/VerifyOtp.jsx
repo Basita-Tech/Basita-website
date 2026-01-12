@@ -26,6 +26,8 @@ const VerifyOTP = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const otpRefs = useRef([]); 
+  const toastShownRef = useRef(false);
+
   useEffect(() => {
     const lockData = JSON.parse(localStorage.getItem("otpLock")) || {};
     const now = Date.now();
@@ -176,9 +178,14 @@ const VerifyOTP = () => {
       const ok = !!(res?.success || res?.data?.success || res?.data?.data?.success);
       if (ok) {
         setIsEmailVerified(true);
-        setSuccessMessage("✅ Email verified successfully!");
+        setSuccessMessage("Email verified successfully!");
         setError("");
-        toast.success("✅ Email verified successfully!");
+        
+        if (!toastShownRef.current) {
+          toastShownRef.current = true;
+          toast.success("Email verified successfully!");
+        }
+        
         const token = res?.token || res?.data?.token || res?.data?.data?.token;
         setTimeout(() => {
           navigate("/success", {
@@ -200,7 +207,7 @@ const VerifyOTP = () => {
         const lockData = JSON.parse(localStorage.getItem("otpLock")) || {};
         lockData[email] = Date.now();
         localStorage.setItem("otpLock", JSON.stringify(lockData));
-        toast.error("❌ Email OTP verification locked for 24 hours");
+        toast.error("Email OTP verification locked for 24 hours");
       }
     } catch (err) {
       console.error("❌ Email OTP Verification Error:", err);

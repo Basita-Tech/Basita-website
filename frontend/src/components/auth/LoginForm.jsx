@@ -55,7 +55,25 @@ const LoginForm = () => {
         }
         const os = await getOnboardingStatus();
         const onboardingData = os?.data?.data || os?.data || {};
-        const isOnboardingCompleted = typeof onboardingData.isOnboardingCompleted !== "undefined" ? onboardingData.isOnboardingCompleted : Array.isArray(onboardingData.completedSteps) ? onboardingData.completedSteps.length >= 6 : true;
+        const completedSteps = Array.isArray(onboardingData.completedSteps) ? onboardingData.completedSteps : [];
+        const isOnboardingCompleted = typeof onboardingData.isOnboardingCompleted !== "undefined" ? onboardingData.isOnboardingCompleted : completedSteps.length >= 7;
+        
+        // If profile is pending review or rejected
+        if (onboardingData.profileReviewStatus === "pending" || onboardingData.profileReviewStatus === "rejected") {
+          navigate("/onboarding/review", {
+            replace: true
+          });
+          return;
+        }
+        
+        // If all steps completed but not yet submitted for review, go to photos page
+        if (completedSteps.length === 7 && !onboardingData.profileReviewStatus) {
+          navigate("/onboarding/user?step=photos", {
+            replace: true
+          });
+          return;
+        }
+        
         if (!isOnboardingCompleted) {
           navigate("/onboarding/user", {
             replace: true

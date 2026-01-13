@@ -16,6 +16,7 @@ import ForgotUsername from "./components/auth/ForgotUsername";
 import TermsPage from "./components/pages/TermsPage";
 import PrivacyPolicyPage from "./components/pages/PrivacyPolicyPage";
 import AboutUsPage from "./components/pages/AboutUsPage";
+import ContactPage from "./components/pages/ContactPage";
 const ProfileCompletion = lazy(() => import("./components/forms/ProfileCompletion"));
 const MultiStepForm = lazy(() => import("./components/MultiStepForm"));
 const ReviewPage = lazy(() => import("./components/pages/ReviewPage"));
@@ -47,6 +48,7 @@ function App() {
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/about" element={<AboutUsPage />} />
+        <Route path="/contact" element={<ContactPage />} />
 
         {}
         <Route path="/complete-profile" element={<Suspense fallback={<PageLoader />}>

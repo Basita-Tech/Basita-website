@@ -9,18 +9,18 @@ export default function Footer() {
     {
       title: "Company",
       links: [
+        { name: "Home", href: "/" },
         { name: "About Us", href: "/about" },
-        { name: "How It Works", href: "/how-it-works" },
-        { name: "Careers", href: "/careers" },
-        { name: "Blog", href: "/blog" },
+        { name: "Membership", href: "/#membership" },
+       
       ],
     },
     {
       title: "Support",
       links: [
         { name: "Help Center", href: "/help" },
-        { name: "Safety Tips", href: "/safety" },
-        { name: "Contact Us", href: "#contact" },
+        
+        { name: "Contact Us", href: "/contact" },
         { name: "FAQs", href: "/faqs" },
       ],
     },
@@ -29,8 +29,7 @@ export default function Footer() {
       links: [
         { name: "Terms & Conditions", href: "/terms" },
         { name: "Privacy Policy", href: "/privacy" },
-        { name: "Cookie Policy", href: "/cookies" },
-        { name: "Compliance", href: "/compliance" },
+      
       ],
     },
   ];
@@ -43,16 +42,16 @@ export default function Footer() {
   ];
 
   return (
-    <footer id="contact" className="bg-[#fbfaf7] text-white py-8">
+    <footer id="contact" className="bg-[#ffff] text-white py-8">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
   
           <div className="md:col-span-1">
             <div className="mb-2">
               <img src="/logo.png" alt="Satfera Logo" className="h-12 w-auto object-contain" />
-              <p className="text-[10px] text-gray-500 mt-1">by Jisal and Parul Patel</p>
+             
             </div>
-            <p className="text-gray-400 text-xs mb-3">
+            <p className="text-black text-xs mb-3">
               India's most trusted matrimony platform.
             </p>
 
@@ -86,7 +85,7 @@ export default function Footer() {
                   <li key={link.name}>
                     <Link
                       to={link.href}
-                      className="text-gray-400 hover:text-[#D4A052] transition-colors duration-300 text-xs"
+                      className="text-black hover:text-[#D4A052] transition-colors duration-300 text-xs"
                     >
                       {link.name}
                     </Link>
@@ -96,38 +95,12 @@ export default function Footer() {
             </div>
           ))}
         </div>
-
-    
-        <div className="border-t border-gray-800 pt-6 pb-4">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6 text-xs text-gray-400">
-            <a href="mailto:contact@satfera.com" className="hover:text-[#D4A052] transition-colors flex items-center gap-1">
-              <Mail className="w-3 h-3" /> support@satfera.in
-            </a>
-            <span className="text-gray-600 hidden md:inline">|</span>
-            <a href="tel:+919925203929" className="hover:text-[#D4A052] transition-colors flex items-center gap-1">
-              <Phone className="w-3 h-3" /> +91 9925203929
-            </a>
-            <span className="text-gray-600 hidden md:inline">|</span>
-            <div className="flex items-center gap-1">
-              <MapPin className="w-3 h-3" /> Ahmedabad, India
-            </div>
-          </div>
-        </div>
-
    
         <div className="border-t border-gray-800 pt-4 text-center">
-          <p className="text-gray-500 text-xs">
+          <p className="text-black text-xs">
             © {currentYear} Satfera Matrimony. All rights reserved.
           </p>
-          <div className="flex justify-center items-center gap-4 mt-2 text-xs">
-            <Link to="/terms" className="text-gray-400 hover:text-[#D4A052] transition-colors">
-              Terms
-            </Link>
-            <span className="text-gray-600">|</span>
-            <Link to="/privacy" className="text-gray-400 hover:text-[#D4A052] transition-colors">
-              Privacy
-            </Link>
-          </div>
+          
         </div>
       </div>
 

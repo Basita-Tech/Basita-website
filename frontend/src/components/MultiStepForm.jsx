@@ -78,11 +78,16 @@ const MultiStepForm = () => {
           }
         }
         
+        
+        if (savedSteps.length === 7 && !urlStep) {
+          nextStep = "photos";
+        }
+        
         const lastCompletedIndex = savedSteps.length > 0 ? steps.findIndex(s => s.id === savedSteps[savedSteps.length - 1]) : -1;
         const maxAllowedIndex = Math.min(lastCompletedIndex + 1, steps.length - 1);
         setMaxAllowedStep(steps[maxAllowedIndex].id);
         
-        // Validate URL step against allowed steps
+  
         if (urlStep) {
           const urlStepIndex = steps.findIndex(s => s.id === urlStep);
           if (urlStepIndex > maxAllowedIndex) {
@@ -104,7 +109,7 @@ const MultiStepForm = () => {
       }
     };
     fetchProgress();
-  }, []); // Only run on mount
+  }, []); 
   const handleNext = async stepId => {
     const updatedSteps = [...new Set([...completedSteps, stepId])];
     setCompletedSteps(updatedSteps);

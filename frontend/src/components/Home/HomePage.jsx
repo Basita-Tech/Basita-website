@@ -66,15 +66,24 @@ export default function HomePage() {
         const onboarding = await getOnboardingStatus();
         const data = onboarding?.data?.data || onboarding?.data || {};
         const completedSteps = Array.isArray(data.completedSteps) ? data.completedSteps : [];
-        const isOnboardingCompleted = typeof data.isOnboardingCompleted !== "undefined" ? data.isOnboardingCompleted : completedSteps.length >= 6;
+        const isOnboardingCompleted = typeof data.isOnboardingCompleted !== "undefined" ? data.isOnboardingCompleted : completedSteps.length >= 7;
         const steps = ["personal", "family", "education", "profession", "health", "expectation", "photos"];
         
-        if (!isOnboardingCompleted || !data.profileReviewStatus) {
+        // If profile is pending review or rejected
+        if (data.profileReviewStatus === "pending" || data.profileReviewStatus === "rejected") {
+          navigate("/onboarding/review");
+          return;
+        }
+        
+        // If all steps completed but not yet submitted for review, go to photos page
+        if (completedSteps.length === 7 && !data.profileReviewStatus) {
+          navigate("/onboarding/user?step=photos");
+          return;
+        }
+        
+        if (!isOnboardingCompleted) {
           const firstUncompletedStep = steps.find(step => !completedSteps.includes(step)) || "personal";
           navigate(`/onboarding/user?step=${firstUncompletedStep}`);
-          return;
-        } else if (data.profileReviewStatus === "pending" || data.profileReviewStatus === "rejected") {
-          navigate("/onboarding/review");
           return;
         }
         
@@ -100,20 +109,33 @@ export default function HomePage() {
       const onboarding = await getOnboardingStatus();
       const data = onboarding?.data?.data || onboarding?.data || {};
       const completedSteps = Array.isArray(data.completedSteps) ? data.completedSteps : [];
-      const isOnboardingCompleted = typeof data.isOnboardingCompleted !== "undefined" ? data.isOnboardingCompleted : completedSteps.length >= 6;
+      const isOnboardingCompleted = typeof data.isOnboardingCompleted !== "undefined" ? data.isOnboardingCompleted : completedSteps.length >= 7;
       const steps = ["personal", "family", "education", "profession", "health", "expectation", "photos"];
-      if (!isOnboardingCompleted || !data.profileReviewStatus) {
-        const firstUncompletedStep = steps.find(step => !completedSteps.includes(step)) || "personal";
-        navigate(`/onboarding/user?step=${firstUncompletedStep}`, {
-          replace: true
-        });
-        return;
-      } else if (data.profileReviewStatus === "pending" || data.profileReviewStatus === "rejected") {
+      
+      // If profile is pending review or rejected
+      if (data.profileReviewStatus === "pending" || data.profileReviewStatus === "rejected") {
         navigate("/onboarding/review", {
           replace: true
         });
         return;
       }
+      
+      // If all steps completed but not yet submitted for review, go to photos page
+      if (completedSteps.length === 7 && !data.profileReviewStatus) {
+        navigate("/onboarding/user?step=photos", {
+          replace: true
+        });
+        return;
+      }
+      
+      if (!isOnboardingCompleted) {
+        const firstUncompletedStep = steps.find(step => !completedSteps.includes(step)) || "personal";
+        navigate(`/onboarding/user?step=${firstUncompletedStep}`, {
+          replace: true
+        });
+        return;
+      }
+      
       navigate("/dashboard", {
         replace: true
       });

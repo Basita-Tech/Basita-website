@@ -89,9 +89,11 @@ const ReviewPage = () => {
     profileReviewStatus,
     reviewedAt,
     reviewNotes,
+    reason,
     userName,
     email
   } = reviewStatus;
+  const feedback = reviewNotes || reason;
   const isPending = profileReviewStatus === "pending";
   const isApproved = profileReviewStatus === "approved";
   const isRejected = profileReviewStatus === "rejected";
@@ -207,7 +209,7 @@ const ReviewPage = () => {
                       Feedback
                     </p>
                     <p className="text-sm text-gray-700 whitespace-pre-wrap">
-                      {reviewNotes || "Please update your profile and resubmit for review."}
+                      {feedback || "Please update your profile and resubmit for review."}
                     </p>
                   </div>
                 </>}
@@ -226,7 +228,7 @@ const ReviewPage = () => {
                       Admin Feedback
                     </p>
                     <p className="text-sm text-gray-700 whitespace-pre-wrap">
-                      {reviewNotes || "Please review and update your profile details."}
+                      {feedback || "Please review and update your profile details."}
                     </p>
                   </div>
                   <div className="p-4 rounded-lg mt-4" style={{
@@ -312,11 +314,18 @@ const ReviewPage = () => {
                 Go to Dashboard <ArrowRight size={20} />
               </button>}
 
-            {isRejected && <button onClick={() => navigate("/onboarding/user?step=personal")} className="w-full py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2 hover:brightness-90 transition" style={{
-            backgroundColor: colors.gold
-          }}>
-                Update Profile <ArrowRight size={20} />
-              </button>}
+            {isRejected && <>
+                <button onClick={() => navigate("/")} className="flex-1 py-3 rounded-lg font-semibold border-2 bg-white transition hover:bg-gray-50" style={{
+              border: `2px solid ${colors.goldLight}`
+            }}>
+                  Return Home
+                </button>
+                <button onClick={handleRetryClick} className="flex-1 py-3 rounded-lg font-semibold text-white hover:brightness-90 transition" style={{
+              backgroundColor: colors.gold
+            }}>
+                  Refresh Status
+                </button>
+              </>}
 
             {isRectification && <button onClick={() => navigate("/onboarding/user?step=personal")} className="w-full py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2 hover:brightness-90 transition" style={{
             backgroundColor: "#f39c12"

@@ -25,10 +25,7 @@ const VerifyOTP = () => {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
-  const [displayedOtp, setDisplayedOtp] = useState("");
   const otpRefs = useRef([]); 
-  const toastShownRef = useRef(false);
-
   useEffect(() => {
     const lockData = JSON.parse(localStorage.getItem("otpLock")) || {};
     const now = Date.now();
@@ -43,8 +40,6 @@ const VerifyOTP = () => {
     if (!email) {
       // If coming from login, redirect to login, otherwise to signup
       navigate(fromLogin ? "/login" : "/signup");
-    } else {
-      fetchInitialOtp();
     }
   }, [email, navigate, fromLogin]);
   useEffect(() => {
@@ -136,12 +131,6 @@ const VerifyOTP = () => {
         setEmailOtp(Array(6).fill(""));
         setSuccessMessage("📧 New OTP sent! Please check your email inbox and spam folder.");
         toast.success("📧 OTP resent successfully!");
-        
-        const otp = res?.otp || res?.data?.otp || res?.data?.data?.otp;
-        if (otp) {
-          setDisplayedOtp(otp);
-        }
-        
         setTimeout(() => setSuccessMessage(""), 5000);
       } else {
         const message = res?.message || res?.data?.message || "Failed to send OTP. Please try again.";
@@ -187,14 +176,9 @@ const VerifyOTP = () => {
       const ok = !!(res?.success || res?.data?.success || res?.data?.data?.success);
       if (ok) {
         setIsEmailVerified(true);
-        setSuccessMessage("Email verified successfully!");
+        setSuccessMessage("✅ Email verified successfully!");
         setError("");
-        
-        if (!toastShownRef.current) {
-          toastShownRef.current = true;
-          toast.success("Email verified successfully!");
-        }
-        
+        toast.success("✅ Email verified successfully!");
         const token = res?.token || res?.data?.token || res?.data?.data?.token;
         setTimeout(() => {
           navigate("/success", {
@@ -216,32 +200,13 @@ const VerifyOTP = () => {
         const lockData = JSON.parse(localStorage.getItem("otpLock")) || {};
         lockData[email] = Date.now();
         localStorage.setItem("otpLock", JSON.stringify(lockData));
-        toast.error("Email OTP verification locked for 24 hours");
+        toast.error("❌ Email OTP verification locked for 24 hours");
       }
     } catch (err) {
       console.error("❌ Email OTP Verification Error:", err);
       setError(err.response?.data?.message || "Error verifying OTP");
     } finally {
       setIsVerifying(false);
-    }
-  };
-  const fetchInitialOtp = async () => {
-    try {
-      const res = await sendEmailOtp({
-        email,
-        type: "signup",
-        resendAttempt: 0
-      });
-      
-      const isSuccess = !!(res?.success || res?.data?.success || res?.data?.data?.success);
-      if (isSuccess) {
-        const otp = res?.otp || res?.data?.otp || res?.data?.data?.otp;
-        if (otp) {
-          setDisplayedOtp(otp);
-        }
-      }
-    } catch (err) {
-      console.error("Failed to fetch initial OTP:", err);
     }
   };
   return <>
@@ -286,13 +251,6 @@ const VerifyOTP = () => {
               Your account is not verified. Please verify your email to continue.
             </p>}
           </div>
-
-          {displayedOtp && (
-            <div className="mb-4 p-3 bg-blue-50 border-2 border-blue-200 rounded-lg text-center">
-              <p className="text-xs text-blue-600 font-semibold mb-1">Your OTP (for testing):</p>
-              <p className="text-2xl font-bold tracking-widest text-blue-700">{displayedOtp}</p>
-            </div>
-          )}
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">

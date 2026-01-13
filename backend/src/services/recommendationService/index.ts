@@ -915,7 +915,7 @@ export async function getDetailedProfile(
     return {
       ...detailedProfile,
       closerPhoto: filteredPhotos?.closerPhoto ?? null,
-      personalPhoto: filteredPhotos?.closerPhoto ?? null,
+      personalPhoto: filteredPhotos?.personalPhotos ?? null,
       familyPhoto: filteredPhotos?.familyPhoto ?? null,
       otherPhotos: Array.isArray(filteredPhotos?.otherPhotos)
         ? filteredPhotos!.otherPhotos.slice(0, 2)

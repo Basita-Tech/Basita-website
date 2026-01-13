@@ -104,17 +104,12 @@ export class AuthService {
         User.findOne({
           email: email.toLowerCase(),
           isEmailLoginEnabled: true,
-          isDeleted: false,
-          isActive: true
+          isDeleted: false
         }).select(
-          "isOnboardingCompleted completedSteps isEmailVerified password lastLoginAt _id role isVisible"
+          "isOnboardingCompleted completedSteps isEmailVerified password lastLoginAt _id role isVisible isActive"
         ),
       100
     );
-
-    if (!user) {
-      return await timingSafe.fail(new Error("Invalid credentials"));
-    }
 
     if (!user.isEmailVerified) {
       const error: any = new Error(
@@ -123,6 +118,13 @@ export class AuthService {
       error.reason = "OTP_VERIFICATION_PENDING";
       error.status = 202;
       return await timingSafe.fail(error);
+    }
+
+    if (!!user.isActive === false) {
+      return await timingSafe.fail(new Error("Invalid credentials"));
+    }
+    if (!user) {
+      return await timingSafe.fail(new Error("Invalid credentials"));
     }
 
     const isPasswordValid = await constantTimePasswordValidation(

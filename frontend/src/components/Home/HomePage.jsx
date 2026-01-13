@@ -8,6 +8,7 @@ import couple2 from "../../assets/couple2.png";
 import couple3 from "../../assets/couple3.png";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { getOnboardingStatus, getProfileReviewStatus } from "../../api/auth";
+import Footer from "../Footer/Footer";
 const colors = {
   maroon: "#800000",
   gold: "#D4A052",
@@ -54,6 +55,42 @@ export default function HomePage() {
   const [logoHighlighted, setLogoHighlighted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [accountNavLoading, setAccountNavLoading] = useState(false);
+  
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    
+   
+    if (isAuthenticated) {
+      
+      try {
+        const onboarding = await getOnboardingStatus();
+        const data = onboarding?.data?.data || onboarding?.data || {};
+        const completedSteps = Array.isArray(data.completedSteps) ? data.completedSteps : [];
+        const isOnboardingCompleted = typeof data.isOnboardingCompleted !== "undefined" ? data.isOnboardingCompleted : completedSteps.length >= 6;
+        const steps = ["personal", "family", "education", "profession", "health", "expectation", "photos"];
+        
+        if (!isOnboardingCompleted || !data.profileReviewStatus) {
+          const firstUncompletedStep = steps.find(step => !completedSteps.includes(step)) || "personal";
+          navigate(`/onboarding/user?step=${firstUncompletedStep}`);
+          return;
+        } else if (data.profileReviewStatus === "pending" || data.profileReviewStatus === "rejected") {
+          navigate("/onboarding/review");
+          return;
+        }
+        
+        
+        navigate("/dashboard");
+      } catch (err) {
+        console.error("Failed to get onboarding status:", err);
+       
+        navigate("/dashboard");
+      }
+    } else {
+      
+      navigate("/signup");
+    }
+  };
+  
   const handleMyAccount = async e => {
     e.preventDefault();
     e.stopPropagation();
@@ -103,11 +140,11 @@ export default function HomePage() {
             <a href="#hero" className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline text-sm lg:text-base">
               Home
             </a>
+            <a href="/about" className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline text-sm lg:text-base">
+              About Us
+            </a>
             <a href="#membership" className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline text-sm lg:text-base">
               Membership
-            </a>
-            <a href="#success-stories" className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline text-sm lg:text-base">
-              Success Stories
             </a>
             <a href="#contact" className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline text-sm lg:text-base">
               Contact
@@ -178,19 +215,20 @@ export default function HomePage() {
               </select>
               <select className="border-2 border-[#E4C48A] rounded-md p-2.5 sm:p-3 text-sm sm:text-base focus:outline-none focus:border-[#D4A052] bg-white">
                 <option>Age</option>
-                <option>18-25</option>
+                <option>20-25</option>
                 <option>26-30</option>
                 <option>31-35</option>
-                <option>36+</option>
+                <option>36-40</option>
               </select>
               <select className="border-2 border-[#E4C48A] rounded-md p-2.5 sm:p-3 text-sm sm:text-base focus:outline-none focus:border-[#D4A052] bg-white">
                 <option>Religion</option>
                 <option>Hindu</option>
-                <option>Muslim</option>
-                <option>Christian</option>
-                <option>Sikh</option>
+                <option>Jain</option>
               </select>
-              <button className="bg-[#D4A052] text-[#800000] rounded-md font-semibold hover:opacity-90 transition py-2.5 sm:py-3 text-sm sm:text-base">
+              <button 
+                onClick={handleSearch}
+                className="bg-[#D4A052] text-white rounded-md font-semibold hover:opacity-90 transition py-2.5 sm:py-3 text-sm sm:text-base"
+              >
                 Search
               </button>
             </div>
@@ -222,7 +260,7 @@ export default function HomePage() {
                   <p className="text-gray-600 text-base">
                     {p.age} | {p.location}
                   </p>
-                  <button className="mt-6 w-full bg-[#D4A052] text-[#800000] py-3 rounded-md font-semibold hover:opacity-90 transition">
+                  <button onClick={handleSearch} className="mt-6 w-full bg-[#D4A052] text-white py-3 rounded-md font-semibold hover:opacity-90 transition">
                     View Profile
                   </button>
                 </div>
@@ -263,35 +301,9 @@ export default function HomePage() {
                   {plan.title}
                 </h3>
                 <p className="text-gray-600 mb-6 text-sm">{plan.desc}</p>
-                <button className="bg-[#D4A052] text-[#800000] w-full py-3 rounded-md font-semibold hover:opacity-90 transition">
+                <button onClick={handleSearch} className="bg-[#D4A052] text-white w-full py-3 rounded-md font-semibold hover:opacity-90 transition">
                   Select
                 </button>
-              </div>)}
-          </div>
-        </div>
-      </section>
-
-      {}
-      <section id="success-stories" className="py-16 bg-[#F9F7F5 ]">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold text-[#800000] mb-10">
-            Success Stories
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {successStories.map(s => <div key={s.id} className="bg-[#F9F7F5] rounded-2xl shadow-sm border-l-4 border-[#E4C48A] flex items-center gap-6 p-6">
-                {}
-                <div className="w-20 h-20 flex-shrink-0">
-                  <img src={s.img} alt={s.name} className="w-full h-full object-cover rounded-full" />
-                </div>
-
-                {}
-                <div className="text-left">
-                  <h3 className="font-semibold text-[#800000] text-lg">
-                    {s.name}
-                  </h3>
-                  <p className="text-gray-600 text-sm italic">{s.story}</p>
-                </div>
               </div>)}
           </div>
         </div>
@@ -302,35 +314,12 @@ export default function HomePage() {
         <h2 className="text-3xl font-bold text-[#800000] mb-6">
           Your Perfect Match Awaits
         </h2>
-        <Link to="/signup" className="bg-[#D4A052] px-8 py-3 rounded-lg font-semibold text-white hover:opacity-90 transition no-underline inline-block">
+        <button onClick={handleSearch} className="bg-[#D4A052] px-8 py-3 rounded-lg font-semibold text-white hover:opacity-90 transition no-underline inline-block">
           Register Free Now
-        </Link>
+        </button>
       </section>
 
       {}
-      <footer id="contact" className="bg-[#0a0a0a] text-white py-10 text-center">
-        <Heart className="w-8 h-8 mx-auto text-[#D4A052]" />
-        <h3 className="text-2xl font-bold mt-2">Satfera</h3>
-        <p className="text-sm text-gray-300 mt-3">
-          © 2025 Satfera Matrimony. All rights reserved.
-        </p>
-        <div className="flex flex-col md:flex-row justify-center items-center gap-3 mt-4">
-          <a href="mailto:contact@satfera.com" className="flex items-center gap-2 text-gray-200 hover:text-[#D4A052] transition">
-            <Mail className="w-4 h-4" /> contact@satfera.com
-          </a>
-          <a href="tel:+919876543210" className="flex items-center gap-2 text-gray-200 hover:text-[#D4A052] transition">
-            <Phone className="w-4 h-4" /> +91 98765 43210
-          </a>
-        </div>
-        <div className="flex flex-col md:flex-row justify-center items-center gap-4 mt-4 text-sm">
-          <Link to="/terms" className="text-gray-200 hover:text-[#D4A052] transition">
-            Terms & Conditions
-          </Link>
-          <span className="text-gray-500 hidden md:inline">|</span>
-          <Link to="/privacy" className="text-gray-200 hover:text-[#D4A052] transition">
-            Privacy Policy
-          </Link>
-        </div>
-      </footer>
+      <Footer />
     </div>;
 }

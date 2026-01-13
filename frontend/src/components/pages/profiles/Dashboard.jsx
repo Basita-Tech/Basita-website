@@ -336,8 +336,16 @@ export function Dashboard({
               </Button>
               <Button variant="outline" onClick={async () => {
               setDownloadingPdf(true);
-              await downloadUserPdf();
-              setDownloadingPdf(false);
+              try {
+                const mongoUserId = user?._id || user?.id;
+                await downloadUserPdf(mongoUserId);
+                toast.success("PDF downloaded successfully");
+              } catch (error) {
+                toast.error("Failed to download PDF");
+                console.error("PDF download error:", error);
+              } finally {
+                setDownloadingPdf(false);
+              }
             }} disabled={downloadingPdf} className="w-full sm:w-auto rounded-[12px] bg-[#f9f5ed] text-[#C8A227] border-[1.3px] border-[#e0c36a] font-medium hover:bg-[#C8A227] hover:text-white hover:border-[#C8A227] transition-all duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                 {downloadingPdf ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                 {downloadingPdf ? "Downloading..." : "Download PDF"}

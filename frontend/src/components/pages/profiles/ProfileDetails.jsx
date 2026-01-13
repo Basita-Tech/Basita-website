@@ -161,7 +161,31 @@ export function ProfileDetails({
   const profileFromList = useMemo(() => profiles?.find(p => String(p.id) === String(profileId)), [profiles, profileId]);
   const status = useMemo(() => profileFromList?.status ? String(profileFromList.status).toLowerCase() : String(profile?.status || "none").toLowerCase(), [profileFromList, profile?.status]);
   const canShowFullAddress = useMemo(() => ["accepted", "approved"].includes(status), [status]);
-  const isSentRequest = useMemo(() => profileId && (sentProfileIds.includes(String(profileId)) || profiles?.some(p => String(p.id) === String(profileId) && p.type === "sent")), [profileId, sentProfileIds, profiles]);
+  const isSentRequest = useMemo(() => {
+    if (!profileId) return false;
+    
+    // First priority: check navigation state (most reliable when coming from Requests page)
+    if (location?.state?.requestType === 'sent') {
+      return true;
+    }
+    
+    // Second priority: check if profileId is in sentProfileIds
+    if (Array.isArray(sentProfileIds) && sentProfileIds.includes(String(profileId))) {
+      return true;
+    }
+    
+    // Third priority: check if the profile in the list has type 'sent'
+    if (profileFromList?.type === 'sent') {
+      return true;
+    }
+    
+    // Final fallback: search through all profiles
+    if (Array.isArray(profiles)) {
+      return profiles.some(p => String(p.id) === String(profileId) && p.type === 'sent');
+    }
+    
+    return false;
+  }, [profileId, sentProfileIds, profiles, profileFromList, location?.state?.requestType]);
   const matchText = useMemo(() => profile?.scoreDetail?.score ? `${profile.scoreDetail.score}% Match` : "", [profile?.scoreDetail?.score]);
   const handleBack = useCallback(() => navigate(-1), [navigate]);
   const handleToggle = useCallback(() => {
@@ -834,7 +858,7 @@ function ActionButtonsSection({
     </Button>;
   return <div className="bg-white rounded-[20px] p-6 sticky bottom-4 border border-gold-light shadow-md">
       <div className="flex flex-col sm:flex-row gap-3">
-        {status === "none" && <>
+        {(status === "none" || status === "withdrawn" || status === "cancelled") && <>
             {onSendRequest && <Button onClick={() => onSendRequest(profileId)} className="flex-1 bg-[#DDB84E] hover:bg-[#C8A227] text-white rounded-[12px] h-12">
                 Send Request
               </Button>}
@@ -866,7 +890,12 @@ function ActionButtonsSection({
             {CompareButton}
           </>}
 
-        {status === "rejected" && CompareButton}
+        {(status === "rejected") && <>
+            {onSendRequest && <Button onClick={() => onSendRequest(profileId)} className="flex-1 bg-[#DDB84E] hover:bg-[#C8A227] text-white rounded-[12px] h-12">
+                Send Request Again
+              </Button>}
+            {CompareButton}
+          </>}
       </div>
     </div>;
 }

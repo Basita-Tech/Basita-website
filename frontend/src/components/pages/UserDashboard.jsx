@@ -1036,7 +1036,11 @@ export function UserDashboard() {
       console.warn('handleViewProfile: could not resolve profile id from', p);
       return;
     }
-    navigate(`/dashboard/profile/${id}`);
+   
+    const state = typeof p === 'object' && p ? {
+      requestType: p.type 
+    } : undefined;
+    navigate(`/dashboard/profile/${id}`, { state });
   };
   return <div className="min-h-screen bg-[#f9f5ed] flex flex-col">
 

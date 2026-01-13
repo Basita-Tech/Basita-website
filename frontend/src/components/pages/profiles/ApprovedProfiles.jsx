@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MessageCircle, Users } from "lucide-react";
 import { ProfileCard } from "../../ProfileCard";
 import { PremiumUpgradeModal } from "../../PremiumUpgradeModal";
-import { generateProfilePDF } from "../../../utils/pdfGenerator";
+import { downloadUserPdf } from "../../../api/auth";
 import toast from 'react-hot-toast';
 export function ApprovedProfiles({
   profiles = [],
@@ -16,29 +16,27 @@ export function ApprovedProfiles({
   const [premiumModal, setPremiumModal] = useState(false);
   const handleDownloadPDF = async profile => {
     try {
-      toast.loading('Generating PDF...');
-      const result = await generateProfilePDF(profile);
-      toast.dismiss();
-      if (result.success) {
-        toast.success(`PDF downloaded successfully!`);
-      } else {
-        toast.error(result.error || 'Failed to generate PDF');
-        console.error('PDF generation failed:', result.error);
+      const userId = profile?.id || profile?.userId || profile?._id;
+      if (!userId) {
+        toast.error('Unable to download: User ID not found');
+        return;
       }
+      
+      toast.loading('Preparing download...', { id: 'pdf-download' });
+      await downloadUserPdf(userId);
+      toast.dismiss('pdf-download');
     } catch (error) {
-      toast.dismiss();
+      toast.dismiss('pdf-download');
       console.error('PDF download error:', error);
-      toast.error('Error downloading PDF: ' + error.message);
+      toast.error('Error downloading PDF: ' + (error.message || 'Unknown error'));
     }
   };
   const approvedProfiles = profiles.filter(p => p.status?.toLowerCase() === "accepted" || p.status?.toLowerCase() === "approved");
-  return <div className="max-w-[1440px] mx-auto px-4 md:px-6 lg:px-8 py-4 md:py-6 lg:py-8 space-y-4 md:space-y-6">
+  return <div className="max-w-[1440px] mx-auto px-3 md:px-6 lg:px-8 py-6 space-y-6">
       {}
       <div>
-        <h2 className="mb-2 m-0">Approved Profiles</h2>
-        <p className="text-muted-foreground m-0">
-          Mutual matches – both parties have shown interest
-        </p>
+        <h2 className="m-0 mb-2 text-2xl font-semibold text-[#3a2f00]">Approved Profiles</h2>
+        <p className="text-muted-foreground m-0">Mutual matches – both parties have shown interest</p>
       </div>
 
       {}

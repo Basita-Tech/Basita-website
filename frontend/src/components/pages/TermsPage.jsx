@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { AuthContextr } from "../context/AuthContext";
 import { getOnboardingStatus } from "../../api/auth";
+import Footer from "../Footer/Footer";
 
 export default function TermsPage() {
   const navigate = useNavigate();
@@ -173,6 +174,9 @@ export default function TermsPage() {
           </p>
         </div>
       </main>
+
+          {/* Footer */}
+          <Footer />
     </div>
   );
 }

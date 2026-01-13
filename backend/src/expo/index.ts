@@ -49,27 +49,31 @@ expoApp.post(
         pushToken: { $exists: true, $ne: null }
       });
 
-      if (users.length === 0) {
-        return res
-          .status(404)
-          .send({ error: "No valid tokens found for these users" });
-      }
+      if (!users.length)
+        return res.status(404).send({ error: "No users found with tokens" });
 
-      const messages: ExpoPushMessage[] = users.map((user) => ({
-        to: user.pushToken!,
-        sound: "default",
-        title: title || "New Notification",
-        body: messageBody,
-        data: data || {}
-      }));
+      const messages: ExpoPushMessage[] = users
+        .filter((u) => Expo.isExpoPushToken(u.pushToken))
+        .map((u) => ({
+          to: u.pushToken!,
+          sound: "default",
+          title: title || "New Notification",
+          body: messageBody || " ",
+          priority: "high",
+          channelId: "default",
+          data: typeof data === "string" ? JSON.parse(data) : data || {}
+        }));
+
+      if (!messages.length)
+        return res.status(400).send({ error: "No valid tokens to send to" });
 
       const tickets = await sendInChunks(messages);
+      console.log("Push Tickets:", tickets);
 
-      handleReceipts(tickets);
-
-      res.send({ success: true, sentCount: messages.length });
-    } catch (error) {
-      res.status(500).send({ error: "Failed to send mass notifications" });
+      res.send({ success: true, tickets });
+    } catch (error: any) {
+      console.error("Mass Send Error:", error.message);
+      res.status(500).send({ error: "Failed to send notifications" });
     }
   }
 );
@@ -85,45 +89,10 @@ const sendInChunks = async (
       let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
       tickets.push(...ticketChunk);
     } catch (error) {
-      console.error("Chunk send error:", error);
+      console.error("Chunk Error:", error);
     }
   }
   return tickets;
-};
-
-const handleReceipts = async (tickets: ExpoPushTicket[]) => {
-  let receiptIds = tickets
-    .filter((ticket) => ticket.status === "ok")
-    .map((ticket) => (ticket as any).id);
-
-  let receiptIdChunks = expo.chunkPushNotificationReceiptIds(receiptIds);
-
-  for (let chunk of receiptIdChunks) {
-    try {
-      let receipts = await expo.getPushNotificationReceiptsAsync(chunk);
-
-      for (let receiptId in receipts) {
-        const receipt = receipts[receiptId] as ExpoPushReceipt;
-
-        if (receipt.status === "error") {
-          console.error(`Error: ${receipt.message}`);
-
-          if (receipt.details && receipt.details.error) {
-            const errorCode = receipt.details.error;
-            console.error(`Error code: ${errorCode}`);
-
-            if (errorCode === "DeviceNotRegistered") {
-              console.warn(
-                "User has uninstalled app. Token should be removed."
-              );
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Receipt fetching error:", error);
-    }
-  }
 };
 
 export default expoApp;

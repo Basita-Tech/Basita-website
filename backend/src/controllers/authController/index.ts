@@ -542,11 +542,11 @@ export class AuthController {
       }
 
       await incrementResend(email, type);
-      const otp = await authService.generateAndStoreOtp(email, type);
+      await authService.generateAndStoreOtp(email, type);
 
       return res
         .status(201)
-        .json({ success: true, message: "OTP sent successfully.", otp });
+        .json({ success: true, message: "OTP sent successfully." });
     } catch (err: any) {
       const message = (err as any)?.message || "Failed to send OTP";
       return res.status(500).json({ success: false, message });

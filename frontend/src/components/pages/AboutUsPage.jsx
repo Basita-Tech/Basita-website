@@ -53,7 +53,7 @@ const AboutUsPage = () => {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-beige">
       {/* Home Navbar */}
-      <header className="sticky top-0 z-50 shadow bg-[#ebe9e6]">
+      <header className="sticky top-0 z-50 bg-[#ebe9e6]">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 flex justify-between items-center py-3 min-h-20">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
@@ -294,26 +294,29 @@ const AboutUsPage = () => {
               {
                 icon: Mail,
                 title: "Email",
-                value: "support@satfera.com"
+                value: "support@satfera.in",
+                href: "mailto:support@satfera.in"
               },
               {
                 icon: Phone,
                 title: "Phone",
-                value: "+91 XXX XXX XXXX"
+                value: "+91 9925203929",
+                href: "tel:+919925203929"
               },
               {
                 icon: MapPin,
                 title: "Address",
-                value: "Satfera HQ, India"
+                value: "Ahmedabad, India",
+                href: "https://www.google.com/maps/place/Ahmedabad"
               }
             ].map((contact, index) => {
               const Icon = contact.icon;
               return (
-                <div key={index} className="bg-[#F9F7F5] rounded-2xl p-8 text-center">
+                <a key={index} href={contact.href} target={contact.title === "Address" ? "_blank" : undefined} rel={contact.title === "Address" ? "noopener noreferrer" : undefined} className="bg-[#F9F7F5] rounded-2xl p-8 text-center hover:shadow-lg transition-shadow duration-300">
                   <Icon className="w-12 h-12 text-[#D4A052] mx-auto mb-4" />
                   <h3 className="text-xl font-bold text-[#800000] mb-2">{contact.title}</h3>
-                  <p className="text-gray-600">{contact.value}</p>
-                </div>
+                  <p className="text-gray-600 hover:text-[#D4A052] transition">{contact.value}</p>
+                </a>
               );
             })}
           </div>

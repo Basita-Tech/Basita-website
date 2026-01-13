@@ -45,7 +45,7 @@ export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-beige">
       {/* Home Navbar */}
-      <header className="sticky top-0 z-50 shadow bg-[#ebe9e6]">
+      <header className="sticky top-0 z-50 bg-[#ebe9e6]">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 flex justify-between items-center py-3 min-h-20">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
@@ -260,9 +260,9 @@ export default function PrivacyPolicyPage() {
               If you have any questions, concerns, or requests regarding this Privacy Policy or your personal information, please contact us at:
             </p>
             <div className="ml-4 space-y-1">
-              <p><strong>Email:</strong> support@satfera.com</p>
-              <p><strong>Phone:</strong> +91-XXXXXXXXXX</p>
-              <p><strong>Address:</strong> SATFERA, [Your Office Address]</p>
+              <p><strong>Email:</strong> <a href="mailto:support@satfera.in" className="text-[#D4A052] hover:underline">support@satfera.in</a></p>
+              <p><strong>Phone:</strong> <a href="tel:+919925203929" className="text-[#D4A052] hover:underline">+91 9925203929</a></p>
+              <p><strong>Address:</strong> SATFERA, Ahmedabad, India</p>
             </div>
           </section>
         </div>

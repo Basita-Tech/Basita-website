@@ -60,7 +60,7 @@ const ContactPage = () => {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-[#F9F7F5]">
       {/* Home Navbar */}
-      <header className="sticky top-0 z-50 shadow bg-[#ebe9e6]">
+      <header className="sticky top-0 z-50 bg-[#ebe9e6]">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 flex justify-between items-center py-3 min-h-20">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">

@@ -5,7 +5,7 @@ import { AuthContextr } from "../context/AuthContext";
 import { getOnboardingStatus } from "../../api/auth";
 import Footer from "../Footer/Footer";
 
-export default function TermsPage() {
+export default function TermsAndConditionsPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useContext(AuthContextr);
   const [logoHighlighted, setLogoHighlighted] = useState(false);
@@ -136,58 +136,111 @@ export default function TermsPage() {
         </div>
       </header>
 
-      {/* Terms Content */}
+      {/* Terms & Conditions Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-[#800000] mb-3">Terms & Conditions</h1>
         <p className="text-sm text-gray-600 mb-10">Last updated: {new Date().toLocaleDateString()}</p>
 
-        <div className="space-y-5 text-gray-700 text-base leading-relaxed">
-          <p>
-            By registering on <strong>SATFERA</strong>, you give us permission to use your photos, profile details, and other shared information on our website, mobile application, and for sharing with suitable profiles for matchmaking purposes.
-          </p>
-          <p>
-            You confirm that all personal details provided by you, including name, age, contact number, education, financial details, and any other information, are true, correct, and updated.
-          </p>
-          <p>
-            <strong>SATFERA</strong> is only a matchmaking platform. We do not guarantee marriage, engagement, or confirmation of any relationship.
-          </p>
-          <p>
-            If you are interested in any profile, it is your sole responsibility to verify their past, present, financial capacity, family background, and other necessary details before making any decision. SATFERA is not responsible for the authenticity of users' claims.
-          </p>
-          <p>
-            SATFERA will not be held responsible for any issues, disputes, frauds, or misunderstandings arising after marriage, engagement, or any personal interactions. We cannot interfere in the personal life of any member.
-          </p>
-          <p>
-            SATFERA strongly advises all members to exercise caution, conduct independent verification, and use their own judgment before sharing personal, financial, or sensitive information with other members.
-          </p>
-          <p>
-            SATFERA does not conduct criminal background checks or financial verifications of its members. Users are responsible for due diligence.
-          </p>
-          <p>
-            SATFERA will not be liable for any loss, damage, fraud, or emotional/financial harm arising out of interactions with other members.
-          </p>
-          <p>
-            Membership fees or charges paid to SATFERA are non-refundable under any circumstances.
-          </p>
-          <p>
-            By using SATFERA, you agree to abide by our Terms & Conditions and Privacy Policy.
-          </p>
-
-          <section className="mt-8 pt-8 border-t border-gray-300">
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">Contact Us</h2>
-            <p className="mb-3">
-              If you have any questions about these Terms & Conditions, please contact us at:
+        <div className="space-y-8 text-gray-700 text-base leading-relaxed">
+          {/* Introduction */}
+          <section>
+            <h2 className="text-2xl font-bold text-[#800000] mb-4">1. Agreement to Terms</h2>
+            <p>
+              By accessing and using the SATFERA matrimony platform (the "Service"), you accept and agree to be bound by and comply with these Terms and Conditions, our Privacy Policy, and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site.
             </p>
-            <div className="ml-4 space-y-1">
-              <p><strong>Email:</strong> <a href="mailto:support@satfera.in" className="text-[#D4A052] hover:underline">support@satfera.in</a></p>
-              <p><strong>Phone:</strong> <a href="tel:+919925203929" className="text-[#D4A052] hover:underline">+91 9925203929</a></p>
-            </div>
+          </section>
+
+          {/* User Responsibilities */}
+          <section>
+            <h2 className="text-2xl font-bold text-[#800000] mb-4">2. User Responsibilities</h2>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>You must be at least 18 years of age to use this Service.</li>
+              <li>You are responsible for maintaining the confidentiality of your account and password.</li>
+              <li>You agree not to provide false, inaccurate, or misleading information.</li>
+              <li>You agree not to use the Service for any unlawful or prohibited purpose.</li>
+              <li>All information provided must be truthful, accurate, and current.</li>
+            </ul>
+          </section>
+
+          {/* Prohibited Activities */}
+          <section>
+            <h2 className="text-2xl font-bold text-[#800000] mb-4">3. Prohibited Activities</h2>
+            <p>You agree not to:</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Harass, threaten, or abuse other users.</li>
+              <li>Post offensive, vulgar, or inappropriate content.</li>
+              <li>Attempt to manipulate or deceive other users.</li>
+              <li>Use automated tools or bots to access the Service.</li>
+              <li>Share another person's account or personal information without consent.</li>
+              <li>Violate any applicable laws or regulations.</li>
+              <li>Spam, scam, or engage in fraudulent activities.</li>
+            </ul>
+          </section>
+
+          {/* Intellectual Property */}
+          <section>
+            <h2 className="text-2xl font-bold text-[#800000] mb-4">4. Intellectual Property Rights</h2>
+            <p>
+              All content on the SATFERA platform, including logos, designs, text, and images, is the property of SATFERA or its content suppliers and is protected by international copyright laws. You may not reproduce, distribute, or transmit any content without prior written permission from SATFERA.
+            </p>
+          </section>
+
+          {/* Limitation of Liability */}
+          <section>
+            <h2 className="text-2xl font-bold text-[#800000] mb-4">5. Limitation of Liability</h2>
+            <p>
+              To the fullest extent permitted by law, SATFERA shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to damages for loss of profits, goodwill, use, data, or other intangible losses arising from your use or inability to use the Service.
+            </p>
+          </section>
+
+          {/* Third-Party Links */}
+          <section>
+            <h2 className="text-2xl font-bold text-[#800000] mb-4">6. Third-Party Links</h2>
+            <p>
+              The Service may contain links to third-party websites. SATFERA is not responsible for the content, accuracy, or practices of external sites. Your use of third-party sites is at your own risk and subject to their terms and conditions.
+            </p>
+          </section>
+
+          {/* Termination */}
+          <section>
+            <h2 className="text-2xl font-bold text-[#800000] mb-4">7. Termination</h2>
+            <p>
+              SATFERA reserves the right to suspend or terminate your account at any time if you violate these terms, engage in prohibited activities, or for any reason at SATFERA's discretion. Upon termination, your access to the Service will be immediately revoked.
+            </p>
+          </section>
+
+          {/* Modifications to Terms */}
+          <section>
+            <h2 className="text-2xl font-bold text-[#800000] mb-4">8. Modifications to Terms</h2>
+            <p>
+              SATFERA reserves the right to modify these Terms and Conditions at any time. Changes will be effective immediately upon posting. Your continued use of the Service constitutes your acceptance of the modified terms. We recommend checking this page periodically for updates.
+            </p>
+          </section>
+
+          {/* Contact Us */}
+          <section>
+            <h2 className="text-2xl font-bold text-[#800000] mb-4">9. Contact Us</h2>
+            <p>
+              If you have any questions or concerns regarding these Terms and Conditions, please contact us at:
+            </p>
+            <p className="mt-3">
+              <strong>Email:</strong> <a href="mailto:support@satfera.com" className="text-[#D4A052] hover:underline">support@satfera.com</a>
+              <br />
+              <strong>Phone:</strong> <a href="tel:+919925203929" className="text-[#D4A052] hover:underline">+91 9925203929</a>
+            </p>
+          </section>
+
+          {/* Governing Law */}
+          <section>
+            <h2 className="text-2xl font-bold text-[#800000] mb-4">10. Governing Law</h2>
+            <p>
+              These Terms and Conditions are governed by and construed in accordance with the laws of India, and you irrevocably submit to the exclusive jurisdiction of the courts located in India.
+            </p>
           </section>
         </div>
       </main>
 
-          {/* Footer */}
-          <Footer />
+      <Footer />
     </div>
   );
 }

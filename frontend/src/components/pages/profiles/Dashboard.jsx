@@ -127,6 +127,7 @@ export function Dashboard({
 
   useEffect(() => {
     let isMounted = true;
+    const controller = new AbortController();
     const fetchRecommendations = async () => {
       setRecommendationsLoading(true);
       setRecommendationsError(null);
@@ -134,7 +135,8 @@ export function Dashboard({
         const response = await getMatches({
           page: currentPage,
           limit: PROFILES_PER_PAGE,
-          useCache: true
+          useCache: true,
+          signal: controller.signal
         });
         if (!isMounted) return;
         const data = Array.isArray(response?.data) ? response.data : [];
@@ -151,7 +153,6 @@ export function Dashboard({
             profession: userData.profession || userData.occupation || userData.professional?.Occupation,
             image: userData.closerPhoto?.url,
             compatibility: match?.scoreDetail?.score || userData.compatibility,
-            // include robust status and address from either match or user
             status: userData.connectionStatus || match?.status || userData.status || null,
             address: userData.address || match?.address || null
           };
@@ -159,7 +160,7 @@ export function Dashboard({
         setRecommendations(mapped);
         setTotalMatches(response?.pagination?.total ?? response?.total ?? mapped.length);
       } catch (err) {
-        if (!isMounted) return;
+        if (!isMounted || err.name === 'AbortError') return;
         setRecommendationsError(err?.message || "Failed to load recommendations");
         setRecommendations([]);
         setTotalMatches(0);
@@ -172,10 +173,15 @@ export function Dashboard({
     fetchRecommendations();
     return () => {
       isMounted = false;
+      controller.abort();
     };
   }, [currentPage]);
 
-  const filteredRecommendations = useMemo(() => recommendations.filter(profile => !sentProfileIds.includes(String(profile.id))), [recommendations, sentProfileIds]);
+  const filteredRecommendations = useMemo(() => {
+    if (!Array.isArray(sentProfileIds)) return recommendations;
+    const sentIds = new Set(sentProfileIds.map(String));
+    return recommendations.filter(profile => !sentIds.has(String(profile.id)));
+  }, [recommendations, sentProfileIds]);
 
   const totalPages = Math.max(1, Math.ceil(totalMatches / PROFILES_PER_PAGE));
 
@@ -414,8 +420,8 @@ export function Dashboard({
                 onSendRequest={onSendRequest}
                 onAddToCompare={onAddToCompare}
                 onRemoveCompare={onRemoveCompare}
-                isInCompare={Array.isArray(compareProfiles) ? compareProfiles.map(String).includes(String(profile.id || profile._id || profile.userId)) : false}
-                isShortlisted={Array.isArray(shortlistedIds) ? shortlistedIds.some(sid => String(sid) === String(profile.id)) : false}
+                isInCompare={Array.isArray(compareProfiles) && compareProfiles.map(String).includes(String(profile.id || profile._id || profile.userId))}
+                isShortlisted={Array.isArray(shortlistedIds) && shortlistedIds.some(sid => String(sid) === String(profile.id))}
                 onToggleShortlist={onToggleShortlist}
               />
             ))}

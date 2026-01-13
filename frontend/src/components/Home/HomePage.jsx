@@ -69,13 +69,13 @@ export default function HomePage() {
         const isOnboardingCompleted = typeof data.isOnboardingCompleted !== "undefined" ? data.isOnboardingCompleted : completedSteps.length >= 7;
         const steps = ["personal", "family", "education", "profession", "health", "expectation", "photos"];
         
-        // If profile is pending review or rejected
+        
         if (data.profileReviewStatus === "pending" || data.profileReviewStatus === "rejected") {
           navigate("/onboarding/review");
           return;
         }
         
-        // If all steps completed but not yet submitted for review, go to photos page
+        
         if (completedSteps.length === 7 && !data.profileReviewStatus) {
           navigate("/onboarding/user?step=photos");
           return;

@@ -42,20 +42,21 @@ export default function Footer() {
   ];
 
   return (
-    <footer id="contact" className="bg-[#ffff] text-white py-8">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-  
-          <div className="md:col-span-1">
-            <div className="mb-2">
+    <footer
+      id="contact"
+      className="bg-white text-[#1f1f1f] py-10 mt-0"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-start gap-8 md:gap-12 mb-8">
+          <div className="md:col-span-1 text-center sm:text-left">
+            <div className="mb-3 flex sm:block justify-center">
               <img src="/logo.png" alt="Satfera Logo" className="h-12 w-auto object-contain" />
-             
             </div>
-            <p className="text-black text-xs mb-3">
+            <p className="text-xs mb-3 text-[#1f1f1f]">
               India's most trusted matrimony platform.
             </p>
 
-            <div className="flex gap-2">
+            <div className="flex justify-center sm:justify-start gap-3">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
                 return (
@@ -64,19 +65,18 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-1.5 rounded-full bg-[#1a1a1a] hover:bg-[#D4A052] hover:text-[#800000] transition-all duration-300"
+                    className="p-2 rounded-full bg-[#1a1a1a] text-white hover:bg-[#D4A052] hover:text-[#800000] transition-all duration-300"
                     aria-label={social.label}
                   >
-                    <Icon className="w-3 h-3" />
+                    <Icon className="w-4 h-4" />
                   </a>
                 );
               })}
             </div>
           </div>
 
-      
           {footerSections.map((section) => (
-            <div key={section.title}>
+            <div key={section.title} className="text-center sm:text-left">
               <h4 className="text-sm font-semibold mb-3 text-[#D4A052]">
                 {section.title}
               </h4>
@@ -85,7 +85,7 @@ export default function Footer() {
                   <li key={link.name}>
                     <Link
                       to={link.href}
-                      className="text-black hover:text-[#D4A052] transition-colors duration-300 text-xs"
+                      className="text-xs text-[#1f1f1f] hover:text-[#D4A052] transition-colors duration-300"
                     >
                       {link.name}
                     </Link>
@@ -95,16 +95,13 @@ export default function Footer() {
             </div>
           ))}
         </div>
-   
-        <div className="border-t border-gray-800 pt-4 text-center">
-          <p className="text-black text-xs">
+
+        <div className="border-t border-[#d3c4a9] pt-4 text-center">
+          <p className="text-xs text-[#1f1f1f]">
             © {currentYear} Satfera Matrimony. All rights reserved.
           </p>
-          
         </div>
       </div>
-
-
     </footer>
   );
 }

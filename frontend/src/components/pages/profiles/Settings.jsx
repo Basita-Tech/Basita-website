@@ -719,7 +719,7 @@ export function Settings() {
             </Button>
 
             {}
-            <Button variant="outline" className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[#C8A227]/10 hover:!border-[#C8A227] hover:!text-[#222222] active:!bg-[#C8A227]/30 focus-visible:ring-2 focus-visible:ring-[#C8A227]/50 transition-all" onClick={() => toast.info('Opening FAQs...')}>
+            <Button variant="outline" className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[#C8A227]/10 hover:!border-[#C8A227] hover:!text-[#222222] active:!bg-[#C8A227]/30 focus-visible:ring-2 focus-visible:ring-[#C8A227]/50 transition-all" onClick={() => navigate('/faq')}>
               <HelpCircle className="w-4 h-4 mr-3" />
               Frequently Asked Questions
             </Button>

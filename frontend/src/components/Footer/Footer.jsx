@@ -21,7 +21,7 @@ export default function Footer() {
         { name: "Help Center", href: "/help" },
         
         { name: "Contact Us", href: "/contact" },
-        { name: "FAQs", href: "/faqs" },
+        { name: "FAQs", href: "/faq" },
       ],
     },
     {
@@ -50,7 +50,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-start gap-8 md:gap-12 mb-8">
           <div className="md:col-span-1 text-center sm:text-left">
             <div className="mb-3 flex sm:block justify-center">
-              <img src="/logo.png" alt="Satfera Logo" className="h-12 w-auto object-contain" />
+              <img src="/logo.png" alt="Satfera Logo" className="h-14 sm:h-12 md:h-16 w-auto object-contain" />
             </div>
             <p className="text-xs mb-3 text-[#1f1f1f]">
               India's most trusted matrimony platform.

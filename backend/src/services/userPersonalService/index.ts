@@ -296,7 +296,8 @@ export async function searchServiceCommon(
       gender: 1,
       createdAt: 1,
       "profession.Occupation": 1,
-      "personal.full_address.city": 1
+      "personal.full_address.city": 1,
+      photoUrl: { $ifNull: ["$profile.photos.closerPhoto.url", null] }
     }
   });
 
@@ -324,7 +325,8 @@ export async function searchServiceCommon(
     age: calculateAge(r.dateOfBirth),
     gender: r.gender,
     profession: r.profession?.Occupation ?? null,
-    city: r.personal?.full_address?.city ?? null
+    city: r.personal?.full_address?.city ?? null,
+    url: r.photoUrl
   }));
 
   return { data: listings };

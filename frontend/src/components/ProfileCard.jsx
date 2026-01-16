@@ -247,19 +247,19 @@ export function ProfileCard({
             </div>
 
             {}
-            {status === "accepted" && (onChat || onReject || onDownloadPDF) && <div className="flex items-center gap-2">
+            {status === "accepted" && (onReject || onDownloadPDF) && <div className="flex items-center gap-2">
                 {onReject && <Button onClick={() => onReject?.(profile || {
               id
             })} className="flex-1 bg-[#f9f5ed] text-[#d64545] border-[1.3px] border-[#d64545] rounded-full py-2 font-medium flex items-center justify-center gap-2 
               hover:bg-[#d64545] hover:text-white transition-all duration-200">
                     ✕ Reject
                   </Button>}
-                {onChat && <Button onClick={() => onChat?.(profile || {
+                {/* {onChat && <Button onClick={() => onChat?.(profile || {
               id
             })} className="flex-1 bg-[#c8a227] text-white rounded-full py-2 font-medium flex items-center justify-center gap-2 
               hover:bg-[#b8941e] transition-all duration-200">
                     💬 Chat
-                  </Button>}
+                  </Button>} */}
                 {onDownloadPDF && <Button onClick={() => onDownloadPDF?.(profile || {
               id
             })} className="flex-1 bg-[#f9f5ed] text-[#c8a227] border-[1.3px] border-[#c8a227] rounded-full py-2 font-medium flex items-center justify-center gap-2 
@@ -295,12 +295,12 @@ export function ProfileCard({
             </div>
 
             {}
-            {status === "accepted" && onChat && <Button onClick={() => onChat?.(profile || {
+            {/* {status === "accepted" && onChat && <Button onClick={() => onChat?.(profile || {
             id
           })} className="w-full bg-[#c8a227] text-white rounded-full py-2 font-medium flex items-center justify-center gap-2 
           hover:bg-[#b8941e] transition-all duration-200">
                 💬 Chat
-              </Button>}
+              </Button>} */}
           </div>;
       case "newprofiles":
         return <div className="mt-2 flex flex-col gap-2">

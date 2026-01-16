@@ -57,7 +57,7 @@ const faqData = [
       {
         id: "reg-2",
         question: "What is the minimum age requirement to register?",
-        answer: "Following the legal marriage age in India, the minimum age to register on Satfera is 18 years for women and 21 years for men. This ensures all our members are eligible for marriage as per Indian law."
+        answer: "Following the legal marriage age in India, the minimum age to register on Satfera is 20 years for women and 21 years for men. This ensures all our members are eligible for marriage as per Indian law."
       },
       {
         id: "reg-3",
@@ -547,7 +547,7 @@ export default function FAQPage() {
                 className="inline-block px-6 py-2 rounded-lg text-white font-semibold transition-colors"
                 style={{ backgroundColor: colors.maroon }}
               >
-                +91 9876543210
+                +91 9925203929
               </a>
             </div>
           </div>

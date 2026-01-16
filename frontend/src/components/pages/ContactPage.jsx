@@ -85,28 +85,6 @@ const ContactPage = () => {
               </a>
             </div>
           </div>
-
-          {/* Additional Info */}
-          <div className="mt-16 bg-gradient-to-r from-[#800000] to-[#A52A2A] rounded-2xl shadow-2xl p-8 md:p-12 text-center text-white">
-            <h2 className="text-3xl font-bold mb-4">Need Immediate Assistance?</h2>
-            <p className="text-lg mb-6 opacity-90">
-              Our support team is ready to help you find your perfect match. Don't hesitate to reach out!
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a 
-                href="mailto:support@satfera.in"
-                className="px-8 py-3 bg-white text-[#800000] rounded-full font-semibold hover:bg-[#E4C48A] transition"
-              >
-                Send Email
-              </a>
-              <a 
-                href="tel:+919925203929"
-                className="px-8 py-3 bg-[#D4A052] text-white rounded-full font-semibold hover:opacity-90 transition"
-              >
-                Call Now
-              </a>
-            </div>
-          </div>
         </div>
       </section>
 

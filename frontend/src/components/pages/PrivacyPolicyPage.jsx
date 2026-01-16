@@ -209,15 +209,6 @@ export default function PrivacyPolicyPage() {
             </ul>
           </section>
 
-          {/* Intellectual Property */}
-          <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">13. Intellectual Property</h2>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>All content on Satfera (text, graphics, logos, design) is owned by Satfera</li>
-              <li>You may not reproduce, distribute, or create derivative works without permission</li>
-              <li>By uploading content, you grant Satfera license to use it for providing services</li>
-            </ul>
-          </section>
 
           {/* Changes to Terms */}
           <section>

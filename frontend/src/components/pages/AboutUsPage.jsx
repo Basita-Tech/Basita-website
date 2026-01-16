@@ -19,10 +19,10 @@ const AboutUsPage = () => {
       <HomeNavbar />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#800000] to-[#600000] text-white py-20 px-4">
+      <section className="bg-gradient-to-b from-[#F4EEE4] to-white text-gray-800 py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-5xl font-bold mb-4">About Satfera</h1>
-          <p className="text-xl text-[#E4C48A] max-w-3xl mx-auto">
+          <h1 className="text-5xl font-bold mb-4 text-[#800000]">About Satfera</h1>
+          <p className="text-xl text-gray-700 max-w-3xl mx-auto">
             Bringing together hearts with values, respect, and the promise of meaningful connections
           </p>
         </div>

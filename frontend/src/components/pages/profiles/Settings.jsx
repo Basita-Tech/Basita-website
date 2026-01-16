@@ -18,6 +18,29 @@ import { getUserProfileDetails, getBlockedUsers, getNotificationSettings, update
 import { AuthContextr } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import { User, Lock, Shield, Heart, Bell, Crown, LogOut, Mail, Phone, Trash2, UserX, Monitor, CreditCard, HelpCircle, MessageCircle, FileText, Send, Ticket, Clock, CheckCircle, XCircle, X, RefreshCw } from 'lucide-react';
+
+// Helper function to format last login time
+const getLastLoginText = (lastActiveDate) => {
+  if (!lastActiveDate) return 'Never';
+  
+  const now = new Date();
+  const last = new Date(lastActiveDate);
+  const diffMs = now - last;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+  
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays === 1) return 'Today';
+  if (diffDays === 2) return 'Yesterday';
+  if (diffDays < 7) return `${diffDays}d ago`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+  
+  return last.toLocaleDateString();
+};
+
 export function Settings() {
   const navigate = useNavigate();
   const {
@@ -599,7 +622,7 @@ export function Settings() {
                               {s.isCurrent && <Badge className="bg-gold/10 text-gold border-gold/20 text-xs">Current</Badge>}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              IP {s.ipAddress || '—'} • Logged in: {s.loginTime ? new Date(s.loginTime).toLocaleString() : '—'} • Last active: {s.lastActive ? new Date(s.lastActive).toLocaleString() : '—'}
+                              Last login: {getLastLoginText(s.lastActivityAt || s.lastActive)}
                             </div>
                           </div>
                         </div>

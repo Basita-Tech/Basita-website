@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Response, Request } from "express";
 import mongoose from "mongoose";
 import { AuthenticatedRequest } from "../../../types";
 import {
@@ -11,7 +11,7 @@ import {
 } from "../../../models";
 import { logger } from "../../../lib/common/logger";
 import { isEitherBlocked } from "../../../lib/common/blockUtils";
-import { computeMatchScore } from "../../../services";
+import { computeMatchScore, searchServiceCommon } from "../../../services";
 import { MatchService } from "../../../services/matchService";
 import { formatListingProfile } from "../../../lib/common/formatting";
 import { sendConnectionAcceptedEmail } from "../../../lib/emails";
@@ -96,7 +96,9 @@ export async function getSentRequests(
           .select("userId Occupation")
           .lean(),
         User.findById(userObjectId).select("blockedUsers").lean(),
-        Profile.findOne({ userId: userObjectId }).select("favoriteProfiles").lean()
+        Profile.findOne({ userId: userObjectId })
+          .select("favoriteProfiles")
+          .lean()
       ]);
 
     const favoriteSet = new Set(
@@ -133,7 +135,7 @@ export async function getSentRequests(
           ) {
             return null;
           }
-        } catch (e) { }
+        } catch (e) {}
 
         if (!receiverUser) return null;
 
@@ -225,7 +227,9 @@ export async function getReceivedRequests(
           .select("userId Occupation")
           .lean(),
         User.findById(userObjectId).select("blockedUsers").lean(),
-        Profile.findOne({ userId: userObjectId }).select("favoriteProfiles").lean()
+        Profile.findOne({ userId: userObjectId })
+          .select("favoriteProfiles")
+          .lean()
       ]);
 
     const favoriteSet = new Set(
@@ -262,7 +266,7 @@ export async function getReceivedRequests(
           ) {
             return null;
           }
-        } catch (e) { }
+        } catch (e) {}
 
         if (!senderUser) return null;
 
@@ -418,8 +422,9 @@ export async function sendConnectionRequest(
         user: receiverId,
         type: "request_received",
         title: "New connection request",
-        message: `${sender?.firstName || "Someone"
-          } sent you a connection request.`,
+        message: `${
+          sender?.firstName || "Someone"
+        } sent you a connection request.`,
         meta: { senderId }
       },
       {
@@ -522,18 +527,21 @@ export async function acceptConnectionRequest(
         user: request.sender,
         type: "request_accepted",
         title: "Request accepted",
-        message: `${receiver?.firstName || "User"
-          } accepted your connection request.`,
+        message: `${
+          receiver?.firstName || "User"
+        } accepted your connection request.`,
         meta: { receiverId: userId }
       }
     ]);
 
     const sender = await User.findById(request.sender).session(session).lean();
     if (sender?.email) {
-      const accepterName = `${receiver?.firstName || ""} ${receiver?.lastName || ""
-        }`.trim();
-      const accepterProfileLink = `${APP_CONFIG.FRONTEND_URL || "https://satfera.vercel.app"
-        }/dashboard/profile/${userId}`;
+      const accepterName = `${receiver?.firstName || ""} ${
+        receiver?.lastName || ""
+      }`.trim();
+      const accepterProfileLink = `${
+        APP_CONFIG.FRONTEND_URL || "https://satfera.vercel.app"
+      }/dashboard/profile/${userId}`;
 
       sendConnectionAcceptedEmail(
         sender.email,
@@ -632,8 +640,9 @@ export async function rejectConnectionRequest(
         user: request.sender,
         type: "request_rejected",
         title: "Request rejected",
-        message: `${receiver?.firstName || "User"
-          } rejected your connection request.`,
+        message: `${
+          receiver?.firstName || "User"
+        } rejected your connection request.`,
         meta: { receiverId: userId }
       }
     ]);
@@ -717,7 +726,9 @@ export async function getApprovedConnections(
           .select("userId Occupation")
           .lean(),
         User.findById(userObjectId).select("blockedUsers").lean(),
-        Profile.findOne({ userId: userObjectId }).select("favoriteProfiles").lean()
+        Profile.findOne({ userId: userObjectId })
+          .select("favoriteProfiles")
+          .lean()
       ]);
 
     const favoriteSet = new Set(
@@ -755,7 +766,7 @@ export async function getApprovedConnections(
           ) {
             return null;
           }
-        } catch (e) { }
+        } catch (e) {}
         if (!otherUser) return null;
 
         const personal = personalMap.get(otherUserId);
@@ -880,8 +891,8 @@ export const getFavorites = async (
     const favoriteIds =
       viewerProfile && Array.isArray(viewerProfile.favoriteProfiles)
         ? (viewerProfile.favoriteProfiles as any[]).map(
-          (f: any) => new mongoose.Types.ObjectId(f)
-        )
+            (f: any) => new mongoose.Types.ObjectId(f)
+          )
         : [];
 
     if (!favoriteIds.length) {
@@ -944,7 +955,7 @@ export const getFavorites = async (
           ) {
             return null;
           }
-        } catch (e) { }
+        } catch (e) {}
         if (!user) return null;
         const score = await computeMatchScore(viewerObjectId, fid);
         const profession = professionMap.get(cid);
@@ -1184,8 +1195,9 @@ export async function rejectAcceptedConnection(
         user: request.sender,
         type: "request_rejected",
         title: "Connection status changed",
-        message: `${receiver?.firstName + " " + receiver?.lastName || "User"
-          } changed the connection status to rejected.`,
+        message: `${
+          receiver?.firstName + " " + receiver?.lastName || "User"
+        } changed the connection status to rejected.`,
         meta: { receiverId: userId, newStatus: "rejected" }
       }
     ]);
@@ -1263,8 +1275,9 @@ export async function acceptRejectedConnection(
         user: request.sender,
         type: "request_accepted",
         title: "Connection status changed",
-        message: `${receiver?.firstName + " " + receiver?.lastName || "User"
-          } changed the connection status to accepted.`,
+        message: `${
+          receiver?.firstName + " " + receiver?.lastName || "User"
+        } changed the connection status to accepted.`,
         meta: { receiverId: userId, newStatus: "accepted" }
       }
     ]);
@@ -1279,5 +1292,32 @@ export async function acceptRejectedConnection(
       success: false,
       message: "Error updating connection status."
     });
+  }
+}
+
+export async function searchController(req: Request, res: Response) {
+  try {
+    const { ageFrom, ageTo, gender, religion, sortBy } = req.query as any;
+
+    const filters: any = {};
+
+    if (ageFrom) filters.ageFrom = parseInt(String(ageFrom), 10);
+    if (ageTo) filters.ageTo = parseInt(String(ageTo), 40);
+    if (gender) filters.gender = String(gender);
+    if (religion) filters.religion = String(religion);
+    if (sortBy) filters.sortBy = String(sortBy);
+
+    const pageNum = Math.max(1, parseInt(String(1), 10) || 1);
+    const limitNum = Math.min(100, Math.max(1, parseInt(String(6), 10) || 20));
+
+    const result = await searchServiceCommon(filters, pageNum, limitNum);
+
+    return res.json({
+      success: true,
+      data: result?.data
+    });
+  } catch (err: any) {
+    console.error("searchController error:", err);
+    return res.status(500).json({ success: false, message: "Search failed" });
   }
 }

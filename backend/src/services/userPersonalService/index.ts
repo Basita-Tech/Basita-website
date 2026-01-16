@@ -8,9 +8,12 @@ import {
   User,
   IUserExpectations,
   UserExpectations,
-  Profile
+  Profile,
+  UserProfession,
+  UserHealth
 } from "../../models";
 import { CreateUserPersonalInput } from "../../types";
+import { calculateAge } from "../../utils/utils";
 
 const validateUserId = (userId: string) => {
   if (!userId) throw new Error("userId is required");
@@ -209,3 +212,120 @@ export const updateUserBoardingStatusService = async (
 };
 
 export * from "./userSettingService";
+
+const escapeRegex = (str: string): string => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};
+
+export async function searchServiceCommon(
+  filters: {
+    ageFrom?: number;
+    ageTo?: number;
+    religion?: string;
+    gender?: string;
+    sortBy?: "age" | "newest";
+  } = {},
+  page = 1,
+  limit = 6
+) {
+  const { ageFrom, ageTo, religion, gender, sortBy } = filters;
+
+  const now = new Date();
+
+  const match: Record<string, any> = {
+    isActive: true,
+    isDeleted: false,
+    isVisible: true,
+    isProfileApproved: true,
+    profileReviewStatus: "approved"
+  };
+
+  if (gender) {
+    match.gender = String(gender);
+  }
+
+  if (typeof ageFrom === "number" || typeof ageTo === "number") {
+    const fromAge = typeof ageFrom === "number" ? ageFrom : 0;
+    const toAge = typeof ageTo === "number" ? ageTo : 120;
+
+    match.dateOfBirth = {
+      $gte: new Date(now.getFullYear() - toAge, now.getMonth(), now.getDate()),
+      $lte: new Date(now.getFullYear() - fromAge, now.getMonth(), now.getDate())
+    };
+  }
+
+  const pipeline: any[] = [{ $match: match }];
+
+  const lookups = [
+    { from: UserPersonal.collection.name, as: "personal" },
+    { from: UserProfession.collection.name, as: "profession" },
+    { from: Profile.collection.name, as: "profile" },
+    { from: UserEducation.collection.name, as: "education" },
+    { from: UserHealth.collection.name, as: "health" }
+  ];
+
+  for (const l of lookups) {
+    pipeline.push(
+      {
+        $lookup: {
+          from: l.from,
+          localField: "_id",
+          foreignField: "userId",
+          as: l.as
+        }
+      },
+      { $unwind: { path: `$${l.as}`, preserveNullAndEmptyArrays: true } }
+    );
+  }
+
+  if (religion) {
+    pipeline.push({
+      $match: {
+        "personal.religion": {
+          $regex: new RegExp(escapeRegex(religion), "i")
+        }
+      }
+    });
+  }
+
+  pipeline.push({
+    $project: {
+      firstName: 1,
+      lastName: 1,
+      dateOfBirth: 1,
+      gender: 1,
+      createdAt: 1,
+      "profession.Occupation": 1,
+      "personal.full_address.city": 1
+    }
+  });
+
+  pipeline.push({
+    $sort: sortBy === "age" ? { dateOfBirth: -1 } : { createdAt: -1 }
+  });
+
+  const safePage = Math.max(1, page);
+  const safeLimit = Math.max(1, limit);
+  const skip = (safePage - 1) * safeLimit;
+
+  pipeline.push({
+    $facet: {
+      results: [{ $skip: skip }, { $limit: safeLimit }],
+      totalCount: [{ $count: "count" }]
+    }
+  });
+
+  const [res] = await User.aggregate(pipeline).exec();
+  const results = res?.results ?? [];
+
+  const listings = results.map((r: any) => ({
+    firstName: r.firstName,
+    lastName: r.lastName,
+    age: calculateAge(r.dateOfBirth),
+    gender: r.gender,
+    profession: r.profession?.Occupation ?? null,
+    city: r.personal?.full_address?.city ?? null
+  }));
+
+  return { data: listings };
+}

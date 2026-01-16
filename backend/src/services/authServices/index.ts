@@ -111,7 +111,11 @@ export class AuthService {
       100
     );
 
-    if (!user.isEmailVerified) {
+    if (!user) {
+      return await timingSafe.fail(new Error("Invalid credentials"));
+    }
+
+    if (!user?.isEmailVerified) {
       const error: any = new Error(
         "Please verify your email before logging in."
       );
@@ -121,9 +125,6 @@ export class AuthService {
     }
 
     if (!!user.isActive === false) {
-      return await timingSafe.fail(new Error("Invalid credentials"));
-    }
-    if (!user) {
       return await timingSafe.fail(new Error("Invalid credentials"));
     }
 

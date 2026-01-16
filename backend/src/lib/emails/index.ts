@@ -136,7 +136,7 @@ export async function sendWelcomeEmail(
     loginLink,
     supportContact: supportContact || "support@satfera.in",
     brandName: APP_CONFIG.BRAND_NAME || "SATFERA",
-    logoUrl: APP_CONFIG.BRAND_LOGO_URL || ""
+    logoUrl: APP_CONFIG.BRAND_LOGO_URL || "https://www.satfera.in/logo.png"
   };
 
   const template = await buildEmailFromTemplate(
@@ -153,7 +153,7 @@ export async function sendWelcomeEmail(
     subject: template.subject,
     html: template.html,
     text: template.text
-  });
+  }); 
 }
 
 export async function sendProfileReviewSubmissionEmail(

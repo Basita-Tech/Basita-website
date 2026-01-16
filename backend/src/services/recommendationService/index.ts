@@ -759,39 +759,25 @@ export async function getDetailedProfile(
     ]);
 
     if (!candidate) return null;
-    if (!candidate.isVisible && !candidate?.isActive) return null;
+    if (!candidate.isVisible && !candidate.isActive) return null;
 
-    try {
-      const viewerBlockedCandidate =
-        (viewer as any)?.blockedUsers &&
-        Array.isArray((viewer as any).blockedUsers) &&
-        (viewer as any).blockedUsers.some(
-          (id: any) => String(id) === String(candidateId)
-        );
+    const viewerBlockedCandidate =
+      Array.isArray(viewer?.blockedUsers) &&
+      viewer.blockedUsers.some((id) => String(id) === String(candidateId));
 
-      const candidateBlockedViewer =
-        (candidate as any)?.blockedUsers &&
-        Array.isArray((candidate as any).blockedUsers) &&
-        (candidate as any).blockedUsers.some(
-          (id: any) => String(id) === String(viewerId)
-        );
+    const candidateBlockedViewer =
+      Array.isArray(candidate?.blockedUsers) &&
+      candidate.blockedUsers.some((id) => String(id) === String(viewerId));
 
-      if (viewerBlockedCandidate || candidateBlockedViewer) {
-        return null;
-      }
-    } catch (e) {
-      return null;
-    }
+    if (viewerBlockedCandidate || candidateBlockedViewer) return null;
 
-    const profileData = (await Profile.findOne({
-      userId: candidateId
-    }).lean()) as any;
+    const profileData = await Profile.findOne({ userId: candidateId }).lean();
     const score = scoreDetail || { score: 0, reasons: [] };
 
-    const viewerProfile = (await Profile.findOne(
+    const viewerProfile = await Profile.findOne(
       { userId: viewerId },
       "favoriteProfiles userId"
-    ).lean()) as any;
+    ).lean();
 
     let filteredPhotos = await getFilteredPhotos(
       profileData?.photos,
@@ -823,77 +809,56 @@ export async function getDetailedProfile(
     try {
       const hasViewed = await hasViewedInLast24Hours(viewerId, candidateId);
 
-      if (!hasViewed) {
-        const viewerIsCandidate =
-          viewerId.toString() === candidateId.toString();
-
-        const viewerName = viewer
-          ? `${viewer.firstName || ""} ${viewer.lastName || ""}`.trim()
-          : "Someone";
-
-        const notificationPayload: any = {
-          user: candidateId,
-          type: "profile_view",
-          title: "Profile Viewed",
-          message: `${viewerName} viewed your profile`,
-          meta: { viewer: viewerId }
-        };
-
+      if (!hasViewed && viewerId.toString() !== candidateId.toString()) {
         const weekStart = getWeekStartDate();
         const weekNum = getWeekNumber();
+        const now = new Date();
 
-        const tasks: Promise<any>[] = [
+        await Promise.all([
           Profile.updateOne(
             { userId: candidateId },
             { $inc: { ProfileViewed: 1 } }
           ),
+
           ProfileView.updateOne(
             {
               viewer: viewerId,
               candidate: candidateId,
-              weekStartDate: weekStart,
-              viewedAt: new Date()
+              weekStartDate: weekStart
             },
             {
               $set: {
-                viewedAt: new Date(),
+                viewedAt: now,
                 weekNumber: weekNum
               },
               $setOnInsert: {
                 viewer: viewerId,
-                candidate: candidateId
+                candidate: candidateId,
+                weekStartDate: weekStart
               }
             },
             { upsert: true }
           ),
-          markProfileViewed(viewerId, candidateId)
-        ];
 
-        if (!viewerIsCandidate) {
-          tasks.push(Notification.create(notificationPayload));
-        }
+          markProfileViewed(viewerId, candidateId),
 
-        await Promise.all(tasks);
-
-        logger.info(
-          `Profile view recorded: ${viewerId.toString()} -> ${candidateId.toString()}`
-        );
-      } else {
-        logger.debug(
-          `Viewer ${viewerId.toString()} already viewed ${candidateId.toString()} in last 24 hours`
-        );
+          Notification.create({
+            user: candidateId,
+            type: "profile_view",
+            title: "Profile Viewed",
+            message: `${viewer?.firstName || "Someone"} viewed your profile`,
+            meta: { viewer: viewerId }
+          })
+        ]);
       }
     } catch (err: any) {
-      logger.error(
-        `Error recording profile view: error: ${err.message}, stack:${err.stack} `
-      );
+      logger.error(`Profile view tracking failed`, err);
     }
-    const isFavorite = !!(
-      viewerProfile?.favoriteProfiles &&
-      viewerProfile.favoriteProfiles.some(
+
+    const isFavorite =
+      viewerProfile?.favoriteProfiles?.some(
         (id: any) => id.toString() === candidateId.toString()
-      )
-    );
+      ) ?? false;
 
     const detailedProfile = await formatDetailedProfile(
       candidate,
@@ -907,28 +872,22 @@ export async function getDetailedProfile(
       status
     );
 
-    const requestType = !!(
-      connectionRequest?.sender &&
-      connectionRequest?.sender.toString() === viewerId.toString()
-    );
-
     return {
       ...detailedProfile,
       closerPhoto: filteredPhotos?.closerPhoto ?? null,
       personalPhoto: filteredPhotos?.personalPhotos ?? null,
       familyPhoto: filteredPhotos?.familyPhoto ?? null,
-      otherPhotos: Array.isArray(filteredPhotos?.otherPhotos)
-        ? filteredPhotos!.otherPhotos.slice(0, 2)
-        : [],
+      otherPhotos: filteredPhotos?.otherPhotos?.slice(0, 2) || [],
       requestId: connectionRequest?._id || null,
       requestType:
-        connectionRequest === null ? null : requestType ? "sent" : "received"
+        connectionRequest === null
+          ? null
+          : connectionRequest.sender.toString() === viewerId.toString()
+            ? "sent"
+            : "received"
     };
   } catch (error: any) {
-    logger.error("Error in getDetailedProfile:", {
-      error: error.message,
-      stack: error.stack
-    });
+    logger.error("Error in getDetailedProfile", error);
     return null;
   }
 }

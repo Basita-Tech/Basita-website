@@ -25,7 +25,8 @@ async function seedAdminUser() {
       isEmailLoginEnabled: true,
       isEmailVerified: true,
       isPhoneVerified: false,
-      welcomeSent: true
+      welcomeSent: true,
+      pushToken: "pushToken"
     };
 
     const existingUser = await User.findOne({ email: adminUser.email });

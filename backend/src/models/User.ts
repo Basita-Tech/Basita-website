@@ -228,7 +228,7 @@ const userSchema: Schema = new Schema(
     isVisible: { type: Boolean, default: true },
     reviewedAt: { type: Date },
     reviewNotes: { type: String },
-    pushToken: { type: String, unique: true }
+    pushToken: { type: String }
   },
   {
     timestamps: true,

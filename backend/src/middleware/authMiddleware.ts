@@ -182,9 +182,19 @@ export const authenticate = async (
         return res.status(402).json({
           success: false,
           code: "PLAN_UPGRADE",
-          message: "Account validity expired. Please upgrade."
+          message:
+            "Your account has been deactivated. Please activate your account to continue."
         });
       }
+    }
+
+    if (user.isVisible === false) {
+      redisClient.del(cacheKey).catch(() => {});
+      return res.status(402).json({
+        success: false,
+        code: "DEACTIVET_ACCOUNT",
+        message: "Your account is decatived. Please aciveted to continue."
+      });
     }
 
     req.user = {

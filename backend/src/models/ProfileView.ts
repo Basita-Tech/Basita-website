@@ -20,7 +20,10 @@ const ProfileViewSchema = new mongoose.Schema(
       ref: "User",
       required: true
     },
-    viewedAt: { type: Date, default: Date.now },
+    viewedAt: {
+      type: Date,
+      default: Date.now
+    },
     weekStartDate: {
       type: Date,
       required: true
@@ -33,18 +36,18 @@ const ProfileViewSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-ProfileViewSchema.index({ viewer: 1, candidate: 1, viewedAt: -1 });
-ProfileViewSchema.index({ candidate: 1, weekStartDate: -1 });
-
 ProfileViewSchema.index(
   { viewer: 1, candidate: 1, weekStartDate: 1 },
   { unique: true }
 );
 
-ProfileViewSchema.index({ weekStartDate: 1 }, { expireAfterSeconds: 604800 });
+ProfileViewSchema.index({ candidate: 1, weekStartDate: -1 });
 
-export const ProfileView = (mongoose.models.ProfileView ??
-  mongoose.model<IProfileView>(
-    "ProfileView",
-    ProfileViewSchema
-  )) as mongoose.Model<IProfileView>;
+ProfileViewSchema.index(
+  { weekStartDate: 1 },
+  { expireAfterSeconds: 60 * 60 * 24 * 7 }
+);
+
+export const ProfileView =
+  (mongoose.models.ProfileView as mongoose.Model<IProfileView>) ||
+  mongoose.model<IProfileView>("ProfileView", ProfileViewSchema);

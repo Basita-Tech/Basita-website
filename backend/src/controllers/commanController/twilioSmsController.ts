@@ -1,60 +1,85 @@
-import { Twilio } from "twilio";
 import { Response } from "express";
 import jwt from "jsonwebtoken";
 import { AuthenticatedRequest } from "../../types";
-import { User } from "../../models";
+import { IUser, User } from "../../models";
 import { enqueueWelcomeEmail } from "../../lib/queue/enqueue";
 import { logger } from "../../lib/common";
+import {
+  getOtp,
+  getResendCount,
+  incrementAttempt,
+  incrementResend,
+  OTP_ATTEMPT_LIMIT,
+  OTP_RESEND_LIMIT,
+  setOtp
+} from "../../lib/redis/otpRedis";
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID || "";
-const authToken = process.env.TWILIO_AUTH_TOKEN || "";
-const verifyServiceSid = process.env.TWILIO_VERIFY_SERVICE_SID || "";
+import {
+  constantTimeUserLookup,
+  generateSecureOTP,
+  TimingSafeAuth,
+  verifyOTPConstantTime
+} from "../../utils/timingSafe";
 
-const client = new Twilio(accountSid, authToken);
+const SMS_API_KEY = process.env.SMS_API_KEY || "";
+const SMS_SENDER_ID = process.env.SMS_SENDER_ID || "";
+const SMS_ENTITY_ID = process.env.SMS_ENTITY_ID || "";
+const SMS_TEMPLATE_ID = process.env.SMS_TEMPLATE_ID || "";
 
 async function sendOtp(req: AuthenticatedRequest, res: Response) {
-  const { countryCode, phoneNumber } = req.body;
+  const { countryCode, phoneNumber, hash } = req.body;
   try {
-    if (!countryCode) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Country code is required" });
-    }
     if (!phoneNumber) {
       return res
         .status(400)
         .json({ success: false, message: "Phone number is required" });
     }
-    const verification = await client.verify.v2
-      .services(verifyServiceSid)
-      .verifications.create({
-        to: `${countryCode}${phoneNumber}`,
-        channel: "sms"
+    if (!countryCode) {
+      return res
+        .status(400)
+        .json({ success: false, message: "country Code is required" });
+    }
+
+    if (countryCode !== "+91") {
+      const mobileNumber = `${countryCode}${phoneNumber}`;
+
+      const user = await User.findOne({
+        phoneNumber: mobileNumber,
+        isDeleted: false
       });
+      user.isPhoneVerified = true;
+      await user.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Phone verified successfully"
+      });
+    }
+
+    const resendCount = await getResendCount(phoneNumber, "signup");
+    if (resendCount >= OTP_RESEND_LIMIT) {
+      return res.status(429).json({
+        success: false,
+        message: "OTP resend limit reached for today. Try again tomorrow."
+      });
+    }
+
+    const sigHash = hash ? hash : "Satfera";
+
+    const otp = generateSecureOTP(6);
+    await setOtp(phoneNumber, otp, "signup");
+    await incrementResend(phoneNumber, "signup");
+
+    const baseApiUrl = `https://ui.netsms.co.in/API/SendSMS.aspx?APIkey=${SMS_API_KEY}&SenderID=${SMS_SENDER_ID}&SMSType=4&Mobile=${phoneNumber}&MsgText=Your Satfera OTP is ${otp}. Kindly do not share it with anyone. \n${sigHash}&EntityID=${SMS_ENTITY_ID}&TemplateID=${SMS_TEMPLATE_ID}`;
+
+    await fetch(baseApiUrl);
 
     res.status(200).json({
       success: true,
-      message: "OTP sent successfully",
-      data: verification
+      message: "OTP sent successfully"
     });
   } catch (error: any) {
     console.error("Error sending OTP:", error);
-    // Twilio specific rate limit error
-    if (error.code === 60203) {
-      return res.status(400).json({
-        success: false,
-        message: "Too many requests. Please try again later."
-      });
-    }
-    // Helpful guidance for a common Twilio 20404 resource-not-found error
-    if (error?.code === 20404 || error?.status === 404) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Twilio Verify Service not found. Please check TWILIO_VERIFY_SERVICE_SID, TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN environment variables (they should belong to the same Twilio account).",
-        hint: "Verify the Verify Service SID in the Twilio console (Services > Verify) and ensure the service SID belongs to the account whose ACCOUNT_SID/AUTH_TOKEN you configured."
-      });
-    }
 
     return res.status(500).json({
       success: false,
@@ -66,12 +91,6 @@ async function sendOtp(req: AuthenticatedRequest, res: Response) {
 async function verifyOtp(req: AuthenticatedRequest, res: Response) {
   const { countryCode, phoneNumber, code } = req.body;
   try {
-    if (!countryCode) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Country code is required" });
-    }
-
     if (!phoneNumber) {
       return res
         .status(400)
@@ -83,24 +102,55 @@ async function verifyOtp(req: AuthenticatedRequest, res: Response) {
         .status(400)
         .json({ success: false, message: "OTP code is required" });
     }
+
+    const timingSafe = new TimingSafeAuth(200);
+
     const mobileNumber = `${countryCode}${phoneNumber}`;
-    const user = await User.findOne({
-      phoneNumber: mobileNumber,
-      isDeleted: false
-    });
+
+    const user = await constantTimeUserLookup<IUser>(
+      () =>
+        User.findOne({
+          phoneNumber: mobileNumber,
+          isDeleted: false
+        }),
+      100
+    );
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+      return await timingSafe.fail(new Error("User not found"));
     }
 
-    const verificationCheck = await client.verify.v2
-      .services(verifyServiceSid)
-      .verificationChecks.create({
-        to: `${countryCode}${phoneNumber}`,
-        code: code
-      });
+    const attemptCount = await incrementAttempt(phoneNumber, "signup");
+    if (attemptCount > OTP_ATTEMPT_LIMIT) {
+      return await timingSafe.fail(
+        new Error(
+          `Maximum OTP verification attempts (${OTP_ATTEMPT_LIMIT}) reached. Please request a new OTP or try again after 24 hours.`
+        )
+      );
+    }
+
+    const redisOtp = await getOtp(phoneNumber, "signup");
+    if (!redisOtp) {
+      return await timingSafe.fail(
+        new Error(
+          "OTP has expired. OTPs are valid for 5 minutes. Please request a new one."
+        )
+      );
+    }
+
+    const isValid = await verifyOTPConstantTime(code, redisOtp);
+    if (!isValid) {
+      const remainingAttempts = OTP_ATTEMPT_LIMIT - attemptCount;
+      return await timingSafe.fail(
+        new Error(
+          `Invalid OTP. You have ${remainingAttempts} attempt${
+            remainingAttempts !== 1 ? "s" : ""
+          } remaining.`
+        )
+      );
+    }
+
+    const verificationCheck = "";
 
     if (user.isPhoneVerified) {
       return res.status(200).json({
@@ -110,7 +160,7 @@ async function verifyOtp(req: AuthenticatedRequest, res: Response) {
       });
     }
 
-    if (verificationCheck.status === "approved" && !user.isPhoneVerified) {
+    if (!user.isPhoneVerified) {
       user.isPhoneVerified = true;
       await user.save();
 
@@ -119,7 +169,6 @@ async function verifyOtp(req: AuthenticatedRequest, res: Response) {
           const username = user.email || user.phoneNumber || "";
           const loginLink = `${process.env.FRONTEND_URL || ""}/login`;
 
-          // Enqueue welcome email instead of sending directly
           const enqueued = await enqueueWelcomeEmail(
             user._id as any,
             {
@@ -144,12 +193,12 @@ async function verifyOtp(req: AuthenticatedRequest, res: Response) {
       }
     }
 
-    if (verificationCheck.status === "pending") {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid OTP code"
-      });
-    }
+    // if (verificationCheck.status === "pending") {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Invalid OTP code"
+    //   });
+    // }
 
     const secret = process.env.JWT_SECRET;
     if (!secret) {
@@ -192,18 +241,4 @@ async function verifyOtp(req: AuthenticatedRequest, res: Response) {
   }
 }
 
-async function createMessage(message: string, to: string) {
-  const from = process.env.TWILIO_PHONE_NUMBER;
-  if (!from) {
-    throw new Error("TWILIO_PHONE_NUMBER environment variable is not set");
-  }
-  const msg = await client.messages.create({
-    body: message,
-    from: from,
-    to: to
-  });
-
-  return msg;
-}
-
-export { sendOtp, verifyOtp, createMessage };
+export { sendOtp, verifyOtp };

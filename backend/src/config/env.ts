@@ -13,10 +13,6 @@ interface EnvConfig {
   SMTP_USER: string;
   SMTP_PASS: string;
   MAIL_FROM: string | undefined;
-  TWILIO_ACCOUNT_SID: string;
-  TWILIO_AUTH_TOKEN: string;
-  TWILIO_VERIFY_SERVICE_SID: string;
-  TWILIO_PHONE_NUMBER: string;
   REDIS_URL: string;
   FRONTEND_URLS: string[];
   SUPPORT_CONTACT: string | undefined;
@@ -41,10 +37,6 @@ export function validateEnv(): EnvConfig {
     "SMTP_PORT",
     "SMTP_USER",
     "SMTP_PASS",
-    "TWILIO_ACCOUNT_SID",
-    "TWILIO_AUTH_TOKEN",
-    "TWILIO_VERIFY_SERVICE_SID",
-    "TWILIO_PHONE_NUMBER",
     "REDIS_URL",
     "GOOGLE_CLIENT_ID",
     "GOOGLE_CLIENT_SECRET",
@@ -132,10 +124,6 @@ export function validateEnv(): EnvConfig {
     SMTP_USER: process.env.SMTP_USER!,
     SMTP_PASS: process.env.SMTP_PASS!,
     MAIL_FROM: process.env.MAIL_FROM,
-    TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID!,
-    TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN!,
-    TWILIO_VERIFY_SERVICE_SID: process.env.TWILIO_VERIFY_SERVICE_SID!,
-    TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER!,
     REDIS_URL: redisUrl,
     FRONTEND_URLS: frontendUrls,
     SUPPORT_CONTACT: process.env.SUPPORT_CONTACT,

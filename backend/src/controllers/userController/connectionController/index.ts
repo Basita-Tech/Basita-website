@@ -570,7 +570,7 @@ export async function acceptConnectionRequest(
     await sendNotificationToUser(
       sender?._id as string,
       "Request Accepted! 🎉",
-      `${sender.firstName} accepted your connection request.`,
+      `${receiver?.firstName} accepted your connection request.`,
       { type: "REQUEST_ACCEPTED", profileId: req.user.id }
     );
 

@@ -103,7 +103,7 @@ export class AuthService {
           isEmailLoginEnabled: true,
           isDeleted: false
         }).select(
-          "isOnboardingCompleted completedSteps isEmailVerified password lastLoginAt _id role isVisible isActive"
+          "isOnboardingCompleted completedSteps email isEmailVerified phoneNumber password lastLoginAt _id role isVisible isActive isPhoneVerified"
         ),
       100
     );
@@ -112,12 +112,24 @@ export class AuthService {
       return await timingSafe.fail(new Error("Invalid credentials"));
     }
 
-    if (!user?.isEmailVerified) {
+    if (!user?.isPhoneVerified || !user?.isEmailVerified) {
       const error: any = new Error(
-        "Please verify your email before logging in."
+        !user.isPhoneVerified
+          ? "Please verify your phone number before logging in."
+          : "Please verify your email before logging in."
       );
+
       error.reason = "OTP_VERIFICATION_PENDING";
       error.status = 202;
+
+      if (!user.isPhoneVerified) {
+        error.phoneNumber = user.phoneNumber;
+      }
+
+      if (!user.isEmailVerified) {
+        error.email = user.email;
+      }
+
       return await timingSafe.fail(error);
     }
 
@@ -211,16 +223,40 @@ export class AuthService {
         User.findOne({
           phoneNumber: phoneNumber,
           isMobileLoginEnabled: true,
-          isDeleted: false,
-          isActive: true
+          isDeleted: false
         }).select(
-          "isOnboardingCompleted completedSteps isPhoneVerified password lastLoginAt _id"
+          "isOnboardingCompleted completedSteps email isPhoneVerified password lastLoginAt _id email isEmailVerified phoneNumber isActive"
         ),
       100
     );
 
     if (!user) {
       return await timingSafe.fail(new Error("Invalid credentials"));
+    }
+
+    if (!!user.isActive === false) {
+      return await timingSafe.fail(new Error("Invalid credentials"));
+    }
+
+    if (!user?.isPhoneVerified || !user?.isEmailVerified) {
+      const error: any = new Error(
+        !user.isPhoneVerified
+          ? "Please verify your phone number before logging in."
+          : "Please verify your email before logging in."
+      );
+
+      error.reason = "OTP_VERIFICATION_PENDING";
+      error.status = 202;
+
+      if (!user.isPhoneVerified) {
+        error.phoneNumber = user.phoneNumber;
+      }
+
+      if (!user.isEmailVerified) {
+        error.email = user.email;
+      }
+
+      return await timingSafe.fail(error);
     }
 
     const isPasswordValid = await constantTimePasswordValidation(

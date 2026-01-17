@@ -352,6 +352,12 @@ export class AuthController {
         if (authError.reason) {
           responseBody.reason = authError.reason;
         }
+        if (authError.email) {
+          responseBody.email = authError.email;
+        }
+        if (authError.phoneNumber) {
+          responseBody.phoneNumber = authError.phoneNumber;
+        }
 
         return res.status(statusCode).json(responseBody);
       }

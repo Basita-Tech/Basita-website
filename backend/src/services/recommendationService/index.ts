@@ -851,15 +851,16 @@ export async function getDetailedProfile(
             meta: { viewer: viewerId }
           })
         ]);
+
+        await sendNotificationToUser(
+          candidateId.toString() as string,
+          "Profile view 👀",
+          `${viewer.firstName} viewed your profile`
+        );
       }
     } catch (err: any) {
       logger.error(`Profile view tracking failed`, err);
     }
-    await sendNotificationToUser(
-      candidateId.toString() as string,
-      "Profile view 👀",
-      `${viewer.firstName} viewed your profile`
-    );
 
     const isFavorite =
       viewerProfile?.favoriteProfiles?.some(

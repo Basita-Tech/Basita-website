@@ -23,6 +23,7 @@ import { Types } from "mongoose";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import { Reports } from "../../../models/Reports";
+import { sendNotificationToUser } from "../../../expo/NotificationService";
 
 function escapeRegExp(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -69,6 +70,12 @@ async function updateProfileApproval(
   if (sendEmail && statusChanged && user && user.email) {
     const reviewType: "submission" | "approved" | "rejected" | "rectification" =
       emailType || (newStatus === "approved" ? "approved" : "rejected");
+
+    await sendNotificationToUser(
+      objectId.toString() as string,
+      `Profile ${reviewType}`,
+      `Your Profile has been ${reviewType} by team satfera`
+    );
 
     try {
       const enqueued = await enqueueProfileReviewEmail(

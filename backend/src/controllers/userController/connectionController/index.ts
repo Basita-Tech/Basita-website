@@ -16,6 +16,7 @@ import { MatchService } from "../../../services/matchService";
 import { formatListingProfile } from "../../../lib/common/formatting";
 import { sendConnectionAcceptedEmail } from "../../../lib/emails";
 import { APP_CONFIG } from "../../../utils/constants";
+import { sendNotificationToUser } from "../../../expo/NotificationService";
 
 async function createNotificationBatch(
   notifications: Array<{
@@ -417,6 +418,12 @@ export async function sendConnectionRequest(
       { session }
     );
 
+    await sendNotificationToUser(
+      receiverId as string,
+      "Received a connection request",
+      `${receiver.firstName} sent you a connection request`
+    );
+
     await createNotificationBatch([
       {
         user: receiverId,
@@ -560,6 +567,13 @@ export async function acceptConnectionRequest(
       });
     }
 
+    await sendNotificationToUser(
+      sender?._id as string,
+      "Request Accepted! 🎉",
+      `${sender.firstName} accepted your connection request.`,
+      { type: "REQUEST_ACCEPTED", profileId: req.user.id }
+    );
+
     await session.commitTransaction();
     res.status(200).json({ success: true, data: request });
   } catch (err) {
@@ -634,6 +648,12 @@ export async function rejectConnectionRequest(
     }
 
     const receiver = await User.findById(userId).session(session).lean();
+
+    await sendNotificationToUser(
+      userId as string,
+      "Request accepted ✨",
+      `${receiver.firstName} accepted your connection request.`
+    );
 
     await createNotificationBatch([
       {

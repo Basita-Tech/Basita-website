@@ -45,6 +45,7 @@ import {
   isAffirmative
 } from "../../utils/utils";
 import { SCORE_WEIGHTS, DEFAULT_EXPECTATIONS } from "../../utils/constants";
+import { sendNotificationToUser } from "../../expo/NotificationService";
 
 const SCORE_THRESHOLDS = {
   MIN_MATCH: 70,
@@ -854,6 +855,11 @@ export async function getDetailedProfile(
     } catch (err: any) {
       logger.error(`Profile view tracking failed`, err);
     }
+    await sendNotificationToUser(
+      candidateId.toString() as string,
+      "Profile view 👀",
+      `${viewer.firstName} viewed your profile`
+    );
 
     const isFavorite =
       viewerProfile?.favoriteProfiles?.some(

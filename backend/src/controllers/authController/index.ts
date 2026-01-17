@@ -380,7 +380,8 @@ export class AuthController {
           success: false,
           message: "Onboarding is not completed",
           redirectTo: `/onboarding/user`,
-          user: publicUser
+          user: publicUser,
+          token: result.token
         });
       }
 
@@ -391,7 +392,8 @@ export class AuthController {
           success: false,
           message: "Profile is not verified",
           redirectTo: `/onboarding/review`,
-          user: publicUser
+          user: publicUser,
+          token: result.token
         });
       }
 

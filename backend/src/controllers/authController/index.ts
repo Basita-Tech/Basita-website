@@ -26,6 +26,7 @@ import {
 import { SessionService } from "../../services/sessionService";
 import { getClientIp, normalizeIp } from "../../utils/ipUtils";
 import { generateJTI } from "../../utils/timingSafe";
+import { issueLoginSession } from "../../utils/utils";
 
 const authService = new AuthService();
 
@@ -192,7 +193,6 @@ export class AuthController {
         await user.save();
       }
 
-      // Use existing session management logic
       const userId = String(user._id);
       const ipAddress = getClientIp(req);
 
@@ -259,7 +259,6 @@ export class AuthController {
         redirectTo = "/onboarding/review";
       }
 
-      // Mobile response
       if (isMobile) {
         logger.info("Google OAuth mobile login successful", {
           userId,
@@ -277,7 +276,6 @@ export class AuthController {
         });
       }
 
-      // Web response (with cookies and redirect)
       setSecureTokenCookie(res, token, { maxAge: APP_CONFIG.COOKIE_MAX_AGE });
 
       const csrfToken = generateCSRFToken();
@@ -562,38 +560,40 @@ export class AuthController {
           .json({ success: false, message: "Invalid type" });
       }
       if (!email || !otp) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Email and OTP are required" });
-      }
-
-      if (type === "signup") {
-        const response = await authService.verifySignupOtp(email, otp, req);
-
-        setSecureTokenCookie(res, response.token, { maxAge: COOKIE_MAX_AGE });
-
-        const csrfToken = generateCSRFToken();
-        setCSRFTokenCookie(res, csrfToken);
-
-        logger.info("Email verified and user logged in", {
-          userId: response.user._id,
-          email,
-          ip: req.ip,
-          isNewSession: response.isNewSession
+        return res.status(400).json({
+          success: false,
+          message: "Email and OTP are required"
         });
+      }
+      if (type === "signup") {
+        const result = await authService.verifySignupOtp(email, otp);
+
+        if (result.user.isEmailVerified && result.user.isPhoneVerified) {
+          const token = await issueLoginSession(result.user, req, res);
+
+          return res.status(200).json({
+            success: true,
+            message: "Email verified successfully",
+            token,
+            user: result.user
+          });
+        }
 
         return res.status(200).json({
           success: true,
-          message: response.message,
-          token: response.token
+          message:
+            "Email verified successfully. Please verify your phone number.",
+          user: result.user
         });
       } else {
         const response = await authService.verifyForgotPasswordOtp(email, otp);
         return res.status(200).json({ success: true, data: response });
       }
     } catch (err: any) {
-      const message = (err as any)?.message || "OTP verification failed";
-      return res.status(400).json({ success: false, message });
+      return res.status(400).json({
+        success: false,
+        message: err?.message || "OTP verification failed"
+      });
     }
   }
 

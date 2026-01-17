@@ -2,6 +2,18 @@ import { logger } from "../lib/common/logger";
 import { randomBytes } from "crypto";
 import { Request, Response, NextFunction } from "express";
 import puppeteer from "puppeteer";
+import { IUser } from "../models";
+import { getClientIp } from "./ipUtils";
+import { generateJTI } from "./timingSafe";
+import jwt from "jsonwebtoken";
+import {
+  generateCSRFToken,
+  generateDeviceFingerprint,
+  setCSRFTokenCookie,
+  setSecureTokenCookie
+} from "./secureToken";
+import { SessionService } from "../services";
+import { APP_CONFIG } from "./constants";
 
 export function calculateAge(dateOfBirth?: Date): number | undefined {
   if (!dateOfBirth) return undefined;
@@ -157,3 +169,44 @@ export const generatePdf = async (html: string) => {
   await browser.close();
   return buffer;
 };
+
+export async function issueLoginSession(
+  user: IUser,
+  req: Request,
+  res: Response
+) {
+  const userId = String(user._id);
+  const ipAddress = getClientIp(req);
+  const jti = generateJTI();
+
+  const token = jwt.sign(
+    {
+      id: userId,
+      email: user.email,
+      jti,
+      iat: Math.floor(Date.now() / 1000)
+    },
+    process.env.JWT_SECRET!,
+    { expiresIn: "30d" }
+  );
+
+  const fingerprint = generateDeviceFingerprint(
+    req.get("user-agent") || "",
+    ipAddress
+  );
+
+  await SessionService.createSession(
+    userId,
+    token,
+    jti,
+    req,
+    ipAddress,
+    APP_CONFIG.COOKIE_MAX_AGE,
+    fingerprint
+  );
+
+  setSecureTokenCookie(res, token, { maxAge: APP_CONFIG.COOKIE_MAX_AGE });
+  setCSRFTokenCookie(res, generateCSRFToken());
+
+  return token;
+}

@@ -35,15 +35,12 @@ import { addMonths } from "date-fns";
 
 async function sendWelcomeEmailOnce(user: any): Promise<boolean> {
   try {
-    if (!user.isEmailVerified || user.welcomeSent) {
+    if (!user.isEmailVerified && !user.isPhoneVerified && user.welcomeSent) {
       return false;
     }
 
     const username = user.email || user.phoneNumber || "";
     const loginLink = `${process.env.FRONTEND_URL || ""}/login`;
-    const fullName = `${(user as any).firstName || "User"} ${
-      (user as any).lastName || ""
-    }`.trim();
 
     const enqueued = await enqueueWelcomeEmail(
       user._id,
@@ -370,7 +367,7 @@ export class AuthService {
       session.endSession();
 
       void clearAllMatchScoreCache();
-      void sendWelcomeEmailOnce(newUser[0]);
+      // void sendWelcomeEmailOnce(newUser[0]);
 
       return newUser[0].toObject();
     } catch (error) {
@@ -471,24 +468,8 @@ export class AuthService {
     });
   }
 
-  async verifySignupOtp(
-    email: string,
-    otp: string,
-    req: Request
-  ): Promise<{
-    token: string;
-    user: IUser;
-    message: string;
-    isNewSession: boolean;
-  }> {
+  async verifySignupOtp(email: string, otp: string): Promise<{ user: IUser }> {
     const timingSafe = new TimingSafeAuth(200);
-
-    if (!email) {
-      return await timingSafe.fail(new Error("Email is required"));
-    }
-    if (!otp) {
-      return await timingSafe.fail(new Error("OTP is required"));
-    }
 
     const user = await constantTimeUserLookup<IUser>(
       () =>
@@ -500,41 +481,26 @@ export class AuthService {
     );
 
     if (!user) {
-      return await timingSafe.fail(new Error("User not found"));
+      return timingSafe.fail(new Error("User not found"));
+    }
+
+    if (user.isEmailVerified) {
+      return timingSafe.fail(new Error("Email already verified"));
     }
 
     const attemptCount = await incrementAttempt(email, "signup");
     if (attemptCount > OTP_ATTEMPT_LIMIT) {
-      return await timingSafe.fail(
-        new Error(
-          `Maximum OTP verification attempts (${OTP_ATTEMPT_LIMIT}) reached. Please request a new OTP or try again after 24 hours.`
-        )
-      );
+      return timingSafe.fail(new Error("Maximum OTP attempts exceeded"));
     }
 
     const redisOtp = await getOtp(email, "signup");
     if (!redisOtp) {
-      return await timingSafe.fail(
-        new Error(
-          "OTP has expired. OTPs are valid for 5 minutes. Please request a new one."
-        )
-      );
+      return timingSafe.fail(new Error("OTP expired"));
     }
 
     const isValid = await verifyOTPConstantTime(otp, redisOtp);
     if (!isValid) {
-      const remainingAttempts = OTP_ATTEMPT_LIMIT - attemptCount;
-      return await timingSafe.fail(
-        new Error(
-          `Invalid OTP. You have ${remainingAttempts} attempt${
-            remainingAttempts !== 1 ? "s" : ""
-          } remaining.`
-        )
-      );
-    }
-
-    if (user.isEmailVerified) {
-      return await timingSafe.fail(new Error("Email is already verified"));
+      return timingSafe.fail(new Error("Invalid OTP"));
     }
 
     user.isEmailVerified = true;
@@ -564,43 +530,6 @@ export class AuthService {
     }
 
     await user.save();
-
-    const userId = String(user._id);
-    const ipAddress = getClientIp(req);
-
-    const jti = generateJTI();
-    const token = jwt.sign(
-      {
-        id: userId,
-        email: user.email,
-        jti,
-        iat: Math.floor(Date.now() / 1000)
-      },
-      this.jwtSecret(),
-      {
-        expiresIn: "30d"
-      }
-    );
-
-    const fingerprint = generateDeviceFingerprint(
-      req.get("user-agent") || "",
-      ipAddress
-    );
-
-    await SessionService.createSession(
-      userId,
-      token,
-      jti,
-      req,
-      ipAddress,
-      APP_CONFIG.COOKIE_MAX_AGE,
-      fingerprint
-    );
-
-    logger.info(
-      `New session created for verified user ${userId} on ${ipAddress}`
-    );
-
     await sendWelcomeEmailOnce(user);
 
     try {
@@ -609,14 +538,7 @@ export class AuthService {
       logger.error("Failed to notify admins of new user registration:", error);
     }
 
-    return await timingSafe.complete({
-      token,
-      user,
-      message: user.isPhoneVerified
-        ? "Email verified successfully. You can now login."
-        : "Email verified successfully. You can now login.",
-      isNewSession: true
-    });
+    return timingSafe.complete({ user });
   }
 
   async resetPasswordWithToken(token: string, newPassword: string) {

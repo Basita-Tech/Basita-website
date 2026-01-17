@@ -8,7 +8,7 @@ async function seedAdminUser() {
     await mongoose.connect(env.MONGO_URI);
     console.log("Database connected successfully.");
 
-    const hasedPassword = bcrypt.hashSync("Password@1", 10);
+    const hasedPassword = bcrypt.hashSync("Shreedhar@207", 10);
 
     const adminUser = {
       firstName: "Admin",
@@ -18,10 +18,10 @@ async function seedAdminUser() {
       for_Profile: "myself",
       gender: "male",
       role: "admin",
-      isVisible: false,
+      isVisible: true,
       phoneNumber: "+911123654785",
       password: hasedPassword,
-      email: "admin@gmail.com",
+      email: "satfera.admin@gmail.com",
       isEmailLoginEnabled: true,
       isEmailVerified: true,
       isPhoneVerified: false,

@@ -75,14 +75,9 @@ const ContactPage = () => {
               <p className="text-gray-700 text-lg font-medium mb-2">
                 Ahmedabad, India
               </p>
-              <a 
-                href="https://www.google.com/maps/place/Ahmedabad" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-sm text-[#D4A052] hover:underline mt-4 inline-block"
-              >
-                View on Google Maps
-              </a>
+              <span className="text-sm text-gray-500 mt-4 inline-block">
+                Ahmedabad, Gujarat
+              </span>
             </div>
           </div>
         </div>

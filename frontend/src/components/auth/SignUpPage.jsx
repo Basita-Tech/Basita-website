@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { sendEmailOtp, signupUser } from "../../api/auth";
+import { sendEmailOtp, sendSmsOtp, signupUser } from "../../api/auth";
 import { ArrowLeft, CheckCircleFill } from "react-bootstrap-icons";
 import { Eye, EyeOff } from "lucide-react";
 import { allCountries } from "country-telephone-data";
@@ -9,6 +9,8 @@ import toast from "react-hot-toast";
 import { AuthContextr } from "../context/AuthContext";
 import { sanitizeName, sanitizeEmail, sanitizePhone, sanitizeCountryCode, sanitizePassword, sanitizeString } from "../../utils/sanitization";
 import { validateName, validateEmail, validatePhone, validateDateOfBirth, validatePassword, validatePasswordMatch, validateCountryCode, validateProfileFor, validateGender, validateSignupForm, getPasswordStrength } from "../../utils/validation";
+
+const SMS_HASH = "satfera";
 const profileOptions = [{
   value: "myself",
   label: "Myself"
@@ -251,7 +253,7 @@ const SignUpPage = () => {
     }));
   };
   const handleGenderBlur = () => {
-    // Gender is optional, so no error should be set on blur
+
     setErrors(prev => {
       const newErr = {
         ...prev
@@ -378,13 +380,56 @@ const SignUpPage = () => {
       };
       const res = await signupUser(payload);
       if (res?.success) {
+        const backendOtpSent = res?.otpSent || res?.otpDispatched || res?.otpAlreadySent;
         try {
+          // If backend already dispatched OTPs, skip client resend to avoid duplicates
+          if (backendOtpSent) {
+            navigate("/verify-otp", {
+              state: {
+                email: payload.email,
+                countryCode: sanitizedCountryCode,
+                mobile: sanitizedMobile,
+                name: `${sanitizedFirstName} ${sanitizedLastName}`
+              }
+            });
+            return;
+          }
+
+          // Send Email OTP
           const emailOtpRes = await sendEmailOtp({
             email: payload.email,
             type: "signup"
           });
+          
+          // Send SMS OTP for Indian numbers (+91)
+          const requiresSmsOtp = sanitizedCountryCode === "+91" || sanitizedCountryCode === "91";
+          let smsOtpRes = { success: true };
+          
+          if (requiresSmsOtp) {
+            try {
+              smsOtpRes = await sendSmsOtp({
+                phoneNumber: sanitizedMobile,
+                countryCode: sanitizedCountryCode,
+                hash: SMS_HASH,
+                type: "signup"
+              });
+              if (!smsOtpRes?.success) {
+                console.warn("SMS OTP send failed:", smsOtpRes?.message);
+                // Continue even if SMS fails, user can resend later
+              }
+            } catch (smsError) {
+              console.error("SMS OTP error:", smsError);
+              // Continue even if SMS fails
+            }
+          }
+          
           if (emailOtpRes?.success) {
-            toast.success("OTP sent successfully. Please check your email."); // single, plain-text toast
+            if (requiresSmsOtp && smsOtpRes?.success) {
+              toast.success("OTPs sent to your email and mobile!");
+            } else {
+              toast.success("OTP sent successfully. Please check your email.");
+            }
+            
             navigate("/verify-otp", {
               state: {
                 email: payload.email,
@@ -585,7 +630,7 @@ const SignUpPage = () => {
               }} error={errors.mobile} countryCodes={countryCodes} />
               </div>
 
-              <input type="tel" name="mobile" placeholder="Enter Mobile Number" value={formData.mobile} maxLength={15} onChange={handleInputChange} autoComplete="off" className={`w-full p-3 rounded-md border text-sm ${errors.mobile ? "border-red-500" : "border-[#E4C48A]"} focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition`} />
+              <input type="tel" name="mobile" placeholder="Enter Mobile Number" value={formData.mobile} maxLength={formData.countryCode === "+91" ? 10 : 15} onChange={handleInputChange} autoComplete="off" className={`w-full p-3 rounded-md border text-sm ${errors.mobile ? "border-red-500" : "border-[#E4C48A]"} focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition`} />
             </div>
 
             {}

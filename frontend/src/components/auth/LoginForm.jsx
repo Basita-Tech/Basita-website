@@ -156,7 +156,12 @@ const LoginForm = () => {
       setLoading(false);
       return;
     }
-    const sanitizedUsername = isEmail ? sanitizeEmail(formData.username) : sanitizePhone(formData.username);
+    // Default Indian phone prefix if user skips +91
+    let sanitizedUsername = isEmail ? sanitizeEmail(formData.username) : sanitizePhone(formData.username);
+    if (isPhone && sanitizedUsername && !sanitizedUsername.startsWith("+")) {
+      const digitsOnly = sanitizedUsername.replace(/^0+/, "");
+      sanitizedUsername = `+91${digitsOnly}`;
+    }
     const sanitizedPassword = sanitizePassword(formData.password);
     if (!sanitizedUsername || !sanitizedPassword) {
       setError("Invalid credentials format");
@@ -175,10 +180,55 @@ const LoginForm = () => {
       const response = await loginUser(payload);
       
       if (response?.requiresOtpVerification) {
+        const phone = response.phoneNumber || payload.phoneNumber || "";
+
+        // Parse phone to avoid greedy country codes like "+9163"
+        const parsePhone = (value = "") => {
+          const cleaned = value.replace(/[^\d+]/g, "");
+          // Explicit India handling: +91 followed by remaining digits
+          if (cleaned.startsWith("+91")) {
+            return { cc: "+91", mobile: cleaned.slice(3) };
+          }
+          // General +CC then rest as mobile
+          if (cleaned.startsWith("+")) {
+            // take up to 4 digits for country code but ensure at least 6 digits remain
+            for (let len = 1; len <= 4; len++) {
+              const cc = `+${cleaned.slice(1, 1 + len)}`;
+              const mobilePart = cleaned.slice(1 + len);
+              if (mobilePart.length >= 6) {
+                return { cc, mobile: mobilePart };
+              }
+            }
+            return { cc: cleaned, mobile: "" };
+          }
+          const digits = cleaned.replace(/\D/g, "");
+          if (!digits) return { cc: "", mobile: "" };
+          if (digits.startsWith("91") && digits.length > 10) {
+            return { cc: "+91", mobile: digits.slice(2) };
+          }
+          return { cc: "+91", mobile: digits };
+        };
+
+        const parsed = parsePhone(phone);
+        const derivedCountryCode = parsed.cc || "+91";
+        const derivedMobile = parsed.mobile || "";
+
+        try {
+          sessionStorage.setItem("otpState", JSON.stringify({
+            email: response.email || payload.email,
+            countryCode: derivedCountryCode,
+            mobile: derivedMobile,
+            phoneNumber: phone,
+            fromLogin: true
+          }));
+        } catch (e) {}
+
         navigate("/verify-otp", {
           state: {
             email: response.email || payload.email,
-            phoneNumber: response.phoneNumber || payload.phoneNumber,
+            countryCode: derivedCountryCode,
+            mobile: derivedMobile,
+            phoneNumber: phone,
             fromLogin: true
           }
         });

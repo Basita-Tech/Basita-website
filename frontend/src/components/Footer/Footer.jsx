@@ -18,7 +18,7 @@ export default function Footer() {
     {
       title: "Support",
       links: [
-        { name: "Help Center", href: "/help" },
+        { name: "Help Center", href: "/help", disabled: true },
         
         { name: "Contact Us", href: "/contact" },
         { name: "FAQs", href: "/faq" },
@@ -53,7 +53,7 @@ export default function Footer() {
               <img src="/logo.png" alt="Satfera Logo" className="h-14 sm:h-12 md:h-16 w-auto object-contain" />
             </div>
             <p className="text-xs mb-3 text-[#1f1f1f]">
-              India's most trusted matrimony platform.
+              
             </p>
 
             <div className="flex justify-center sm:justify-start gap-3">
@@ -83,12 +83,18 @@ export default function Footer() {
               <ul className="space-y-1.5">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    <Link
-                      to={link.href}
-                      className="text-xs text-[#1f1f1f] hover:text-[#D4A052] transition-colors duration-300"
-                    >
-                      {link.name}
-                    </Link>
+                    {link.disabled ? (
+                      <span className="text-xs text-gray-400 cursor-not-allowed">
+                        {link.name}
+                      </span>
+                    ) : (
+                      <Link
+                        to={link.href}
+                        className="text-xs text-[#1f1f1f] hover:text-[#D4A052] transition-colors duration-300"
+                      >
+                        {link.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContextr } from "../context/AuthContext";
 import { Heart, Mail, Phone } from "lucide-react";
@@ -7,7 +7,7 @@ import couple1 from "../../assets/couple1.png";
 import couple2 from "../../assets/couple2.png";
 import couple3 from "../../assets/couple3.png";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import { getOnboardingStatus, getProfileReviewStatus } from "../../api/auth";
+import { getOnboardingStatus, getProfileReviewStatus, getMembershipPlans } from "../../api/auth";
 import Footer from "../Footer/Footer";
 import HomeNavbar from "../HomeNavbar";
 const colors = {
@@ -53,6 +53,31 @@ export default function HomePage() {
   const {
     isAuthenticated
   } = useContext(AuthContextr);
+  const [plans, setPlans] = useState([]);
+  const [plansLoading, setPlansLoading] = useState(false);
+  const [plansError, setPlansError] = useState("");
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        setPlansLoading(true);
+        setPlansError("");
+        const res = await getMembershipPlans();
+        const data = res?.data || res?.plans || [];
+        if (Array.isArray(data) && data.length) {
+          setPlans(data);
+        } else {
+          setPlans([]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch membership plans", err);
+        setPlansError("Unable to load plans right now.");
+      } finally {
+        setPlansLoading(false);
+      }
+    };
+    fetchPlans();
+  }, []);
   
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -192,28 +217,36 @@ export default function HomePage() {
           </p>
 
           {}
+          {plansError && <p className="text-red-600 mb-6 text-sm">{plansError}</p>}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            {[{
-            title: "Basic",
-            desc: "Free access to basic features. Browse profiles and send limited interest requests."
-          }, {
-            title: "Premium",
-            desc: "Full access including messaging, profile highlights, and priority support."
-          }, {
-            title: "Gold",
-            desc: "Includes Premium + personalized matchmaking recommendations."
-          }, {
-            title: "Platinum",
-            desc: "All features + VIP support, spotlight profile, and premium visibility."
-          }].map((plan, i) => <div key={i} className="bg-white rounded-2xl shadow-lg border border-[#E4C48A] p-8 hover:shadow-2xl hover:scale-[1.03] transition-transform duration-300">
-                <h3 className="text-2xl font-bold mb-3 text-[#800000]">
-                  {plan.title}
-                </h3>
-                <p className="text-gray-600 mb-6 text-sm">{plan.desc}</p>
-                <button onClick={handleSearch} className="bg-[#D4A052] text-white w-full py-3 rounded-md font-semibold hover:opacity-90 transition">
-                  Select
-                </button>
-              </div>)}
+            {(plansLoading ? Array(4).fill({}) : plans).map((plan, i) => {
+              const title = plan.monthName ? plan.monthName.replace(/_/g, " ") : "";
+              const price = typeof plan.price === "number" ? `₹${plan.price}` : "";
+              const features = Array.isArray(plan.features) ? plan.features : [];
+              const isSkeleton = plansLoading;
+              return (
+                <div key={plan._id || i} className="bg-white rounded-2xl shadow-lg border border-[#E4C48A] p-8 hover:shadow-2xl hover:scale-[1.03] transition-transform duration-300">
+                  <h3 className="text-2xl font-bold mb-2 text-[#800000]">
+                    {isSkeleton ? "\u00A0" : title || "Plan"}
+                  </h3>
+                  <p className="text-xl font-semibold text-[#D4A052] mb-3">
+                    {isSkeleton ? "" : price}
+                  </p>
+                  <div className="text-gray-600 mb-6 text-sm space-y-2 text-left">
+                    {isSkeleton ? <div className="h-20 bg-gray-100 animate-pulse rounded" /> : features.length ? features.map((f, idx) => (
+                      <p key={idx}>{f.replace(/^•\s*/, "")}</p>
+                    )) : <p>No features listed</p>}
+                  </div>
+                  <button
+                    onClick={handleSearch}
+                    className="bg-[#D4A052] text-white w-full py-3 rounded-md font-semibold hover:opacity-90 transition"
+                    disabled={isSkeleton}
+                  >
+                    Select
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

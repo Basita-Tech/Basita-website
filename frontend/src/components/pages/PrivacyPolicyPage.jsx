@@ -14,18 +14,18 @@ export default function PrivacyPolicyPage() {
         <p className="text-sm text-gray-600 mb-10">by Jisal & Parul Patel | satfera.in</p>
 
         <div className="space-y-8 text-gray-700 text-base leading-relaxed">
-          {/* Introduction */}
+
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">Introduction</h2>
+            <h2 className="text-2xl font-bold text-[#800000] mb-4">1. Introduction</h2>
             <p>
               At <strong>Satfera</strong>, we respect your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, store, and share your data when you use our matchmaking platform.
             </p>
           </section>
 
 
-           {/* Introduction */}
+         
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">Introduction</h2>
+            
             <ul className="list-disc list-inside space-y-2">
               <li>Satfera is a matrimonial platform operated by Jisal &amp; Parul Patel</li>
               <li>Designed exclusively for Gujarati families seeking meaningful, lifelong relationships</li>
@@ -212,7 +212,7 @@ export default function PrivacyPolicyPage() {
 
           {/* Changes to Terms */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">14. Changes to Terms</h2>
+            <h2 className="text-2xl font-bold text-[#800000] mb-4">13. Changes to Terms</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>Satfera may update these Terms at any time</li>
               <li>Users will be notified of significant changes via email or platform notification</li>

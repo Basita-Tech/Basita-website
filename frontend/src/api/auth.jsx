@@ -28,6 +28,19 @@ export const getUserId = async () => {
     return null;
   }
 };
+
+export const getMembershipPlans = async () => {
+  try {
+    const response = await axios.get(`${API}/pricing`);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Get Membership Plans Error:", error.response?.data || error.message);
+    return error.response?.data || {
+      success: false,
+      message: "Unable to fetch membership plans"
+    };
+  }
+};
 export const signupUser = async formData => {
   try {
     const response = await axios.post(`${API}/auth/signup`, formData);
@@ -82,12 +95,13 @@ export const loginUser = async formData => {
       messageText.includes("verification pending");
 
     if (otpPending) {
+      const pendingPhone = data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
       return {
         success: false,
         message: data?.message || "Please verify your email before logging in.",
         requiresOtpVerification: true,
         email: formData.email,
-        phoneNumber: formData.phoneNumber
+        phoneNumber: pendingPhone
       };
     }
 
@@ -104,12 +118,13 @@ export const loginUser = async formData => {
       messageText.includes("verification pending");
 
     if (otpPending) {
+      const pendingPhone = data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
       return {
         success: false,
         message: data?.message || "Please verify your email before logging in.",
         requiresOtpVerification: true,
         email: formData.email,
-        phoneNumber: formData.phoneNumber
+        phoneNumber: pendingPhone
       };
     }
     
@@ -124,12 +139,13 @@ export const loginUser = async formData => {
     if (status === 403) {
       // Check if it's OTP verification pending
       if (data.message && data.message.includes("verify your email")) {
+        const pendingPhone = data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
         return {
           success: false,
           message: data.message || "Verification required",
           requiresOtpVerification: true,
           email: formData.email,
-          phoneNumber: formData.phoneNumber
+          phoneNumber: pendingPhone
         };
       }
       toast.error(data.message || "Verification required.");
@@ -141,12 +157,13 @@ export const loginUser = async formData => {
     
     // Check for 202 status (Accepted but pending verification)
     if (status === 202) {
+      const pendingPhone = data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
       return {
         success: false,
         message: data.message || "Please verify your email before logging in.",
         requiresOtpVerification: true,
         email: formData.email,
-        phoneNumber: formData.phoneNumber
+        phoneNumber: pendingPhone
       };
     }
     

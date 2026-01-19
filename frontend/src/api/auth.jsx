@@ -105,11 +105,12 @@ export const loginUser = async (formData) => {
     if (otpPending) {
       const pendingPhone =
         data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
+      const pendingEmail = data?.email || data?.user?.email || formData.email;
       return {
         success: false,
         message: data?.message || "Please verify your email before logging in.",
         requiresOtpVerification: true,
-        email: formData.email,
+        email: pendingEmail,
         phoneNumber: pendingPhone,
       };
     }
@@ -129,11 +130,12 @@ export const loginUser = async (formData) => {
     if (otpPending) {
       const pendingPhone =
         data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
+      const pendingEmail = data?.email || data?.user?.email || formData.email;
       return {
         success: false,
         message: data?.message || "Please verify your email before logging in.",
         requiresOtpVerification: true,
-        email: formData.email,
+        email: pendingEmail,
         phoneNumber: pendingPhone,
       };
     }
@@ -151,11 +153,12 @@ export const loginUser = async (formData) => {
       if (data.message && data.message.includes("verify your email")) {
         const pendingPhone =
           data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
+        const pendingEmail = data?.email || data?.user?.email || formData.email;
         return {
           success: false,
           message: data.message || "Verification required",
           requiresOtpVerification: true,
-          email: formData.email,
+          email: pendingEmail,
           phoneNumber: pendingPhone,
         };
       }
@@ -170,11 +173,12 @@ export const loginUser = async (formData) => {
     if (status === 202) {
       const pendingPhone =
         data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
+      const pendingEmail = data?.email || data?.user?.email || formData.email;
       return {
         success: false,
         message: data.message || "Please verify your email before logging in.",
         requiresOtpVerification: true,
-        email: formData.email,
+        email: pendingEmail,
         phoneNumber: pendingPhone,
       };
     }
@@ -702,7 +706,6 @@ export const uploadToS3 = async (presignedUrl, file, onProgress) => {
         }
       },
     });
-
     return response;
   } catch (error) {
     console.error(

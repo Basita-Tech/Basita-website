@@ -63,13 +63,25 @@ const applyAuth = () => {};
 const VerifyOTP = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  let persistedOtpState = null;
+  try {
+    const raw = sessionStorage.getItem("otpState");
+    if (raw) persistedOtpState = JSON.parse(raw);
+  } catch (e) {}
+
   const {
-    email,
-    name,
-    mobile,
-    countryCode,
-    fromLogin
+    email: stateEmail,
+    name: stateName,
+    mobile: stateMobile,
+    countryCode: stateCountryCode,
+    fromLogin: stateFromLogin
   } = location.state || {};
+
+  const email = stateEmail || persistedOtpState?.email || "";
+  const name = stateName || persistedOtpState?.name || "";
+  const mobile = stateMobile || persistedOtpState?.mobile || "";
+  const countryCode = stateCountryCode || persistedOtpState?.countryCode || "";
+  const fromLogin = typeof stateFromLogin !== "undefined" ? stateFromLogin : !!persistedOtpState?.fromLogin;
   const [emailOtp, setEmailOtp] = useState(Array(6).fill(""));
   const [emailCountdown, setEmailCountdown] = useState(OTP_VALID_TIME);
   const [resendAttemptsEmail, setResendAttemptsEmail] = useState(0);
@@ -103,6 +115,7 @@ const VerifyOTP = () => {
       : `+${normalizedCountryCode}`
     : "";
   const resolvedMobile = (mobile || "").toString().trim();
+  const hasEmail = Boolean(email);
   // Login (202) requires OTP for any phone; signup enforces OTP only for +91
   const requiresMobileOtp = fromLogin
     ? Boolean(resolvedCountryCode && resolvedMobile)
@@ -110,11 +123,39 @@ const VerifyOTP = () => {
 
   // Only hide verified sections during 202/login flows; keep signup UI intact
   const hideVerifiedSections = fromLogin;
-  const showEmailSection = !(hideVerifiedSections && isEmailVerified);
+  const showEmailSection = hasEmail && !(hideVerifiedSections && isEmailVerified);
   const showMobileSection = requiresMobileOtp && !(hideVerifiedSections && isMobileVerified);
 
   const clearPersistedOtpStatus = () => {
     clearOtpCookie(email, countryCode, mobile);
+    if (!email && (countryCode || mobile)) {
+      clearOtpCookie("__noemail__", countryCode, mobile);
+    }
+    try {
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i += 1) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("otpStatus_")) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach((key) => localStorage.removeItem(key));
+    } catch (e) {
+      console.warn("Failed to clear OTP status keys", e);
+    }
+    try {
+      const lockData = JSON.parse(localStorage.getItem("otpLock")) || {};
+      if (email && lockData[email]) {
+        delete lockData[email];
+      }
+      const mobileKey = `${countryCode}${mobile}`;
+      if (mobileKey && lockData[mobileKey]) {
+        delete lockData[mobileKey];
+      }
+      localStorage.setItem("otpLock", JSON.stringify(lockData));
+    } catch (e) {
+      console.warn("Failed to clear OTP lock data", e);
+    }
     try {
       sessionStorage.removeItem("otpState");
     } catch (e) {
@@ -192,11 +233,10 @@ const VerifyOTP = () => {
     }
   }, [email, mobile, countryCode, fromLogin]);
   useEffect(() => {
-    if (!email) {
-     
+    if (!email && !mobile) {
       navigate(fromLogin ? "/login" : "/signup");
     }
-  }, [email, navigate, fromLogin]);
+  }, [email, mobile, navigate, fromLogin]);
   useEffect(() => {
     if (emailCountdown > 0 && !isEmailVerified && !isLocked) {
       const t = setInterval(() => setEmailCountdown(p => p - 1), 1000);
@@ -259,10 +299,10 @@ const VerifyOTP = () => {
       }
     };
 
-    if (fromLogin && email && !isEmailVerified && !isLocked && !initialEmailSentRef.current) {
+    if (fromLogin && hasEmail && !isEmailVerified && !isLocked && !initialEmailSentRef.current) {
       sendInitialEmailOtp();
     }
-  }, [email, isEmailVerified, isLocked, initialEmailSent, fromLogin]);
+  }, [email, hasEmail, isEmailVerified, isLocked, initialEmailSent, fromLogin]);
 
   // Auto-send mobile OTP on mount for pending verification (login) flows (Indian numbers only)
   useEffect(() => {
@@ -639,7 +679,7 @@ const VerifyOTP = () => {
     }
 
     // Check if email needs verification
-    if (!isEmailVerified) {
+    if (hasEmail && !isEmailVerified) {
       const emailValue = emailOtp.join("");
       if (emailValue.length < 6) {
         setError("Enter 6-digit Email OTP");
@@ -660,11 +700,11 @@ const VerifyOTP = () => {
       if (isVerifying) return;
       setIsVerifying(true);
 
-      let emailOk = isEmailVerified; // If already verified, skip verification
+      let emailOk = !hasEmail || isEmailVerified; // If no email or already verified, skip verification
       let mobileOk = isMobileVerified || !requiresMobileOtp; // If already verified or not required, skip
 
       // Verify email OTP only if not already verified
-      if (!isEmailVerified) {
+      if (hasEmail && !isEmailVerified) {
         setIsVerifyingMobile(true);
         const emailValue = emailOtp.join("");
         const emailRes = await verifyEmailOtp({

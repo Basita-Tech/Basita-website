@@ -14,7 +14,7 @@ type PhotoType =
   | "governmentid";
 
 const BUCKET_NAME = process.env.PHOTO_BUCKET_NAME!;
-const AWS_CDN_BASE_URL = process.env.AWS_CND_BASE_URL!;
+const AWS_CDN_BASE_URL = process.env.AWS_CDN_BASE_URL!;
 
 const getS3KeyFromUrl = (url?: string): string | null => {
   if (!url) return null;

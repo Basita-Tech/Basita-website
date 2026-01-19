@@ -366,6 +366,9 @@ const SignUpPage = () => {
         sanitizedMobile = sanitizedMobile.slice(1);
       }
       const phoneNumber = `${sanitizedCountryCode}${sanitizedMobile}`;
+      const useEmailAsUsername = formData.useAsUsername.includes("email");
+      const useMobileAsUsername = formData.useAsUsername.includes("mobile");
+
       const payload = {
         firstName: sanitizedFirstName,
         middleName: sanitizedMiddleName,
@@ -376,7 +379,9 @@ const SignUpPage = () => {
         password: sanitizedPassword,
         termsAndConditionsAccepted: termsAccepted,
         dateOfBirth: `${String(formData.dobDay).padStart(2, "0")}-${String(formData.dobMonth).padStart(2, "0")}-${formData.dobYear}`,
-        for_Profile: sanitizedProfileFor
+        for_Profile: sanitizedProfileFor,
+        isEmailLoginEnabled: useEmailAsUsername,
+        isMobileLoginEnabled: useMobileAsUsername
       };
       const res = await signupUser(payload);
       if (res?.success) {

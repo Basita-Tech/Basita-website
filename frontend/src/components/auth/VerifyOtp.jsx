@@ -1,43 +1,59 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { verifyEmailOtp, sendEmailOtp, sendSmsOtp, verifySmsOtp } from "../../api/auth";
 import toast from "react-hot-toast";
 const OTP_VALID_TIME = 180;
 const RESEND_AFTER = 60;
 const MAX_RESEND = 5;
 const LOCK_DURATION = 24 * 60 * 60 * 1000;
-// Static hash required by backend for SMS OTP
+
 const SMS_HASH = "satfera";
-const OTP_COOKIE_TTL_MIN = 1 * 24 * 60; // 1 day in minutes
+const OTP_COOKIE_TTL_MIN = 1 * 24 * 60; 
 
 const buildOtpCookieKey = (email = "", countryCode = "", mobile = "") => {
   const normalizedEmail = email.toLowerCase();
   const normalizedPhone = `${countryCode}${mobile}`;
   return `otpStatus_${normalizedEmail}_${normalizedPhone}`;
 };
-
 const setOtpCookie = ({ email, countryCode, mobile, data }) => {
   if (!email) return;
   const key = buildOtpCookieKey(email, countryCode, mobile);
-  const expires = new Date(Date.now() + OTP_COOKIE_TTL_MIN * 60 * 1000).toUTCString();
-  document.cookie = `${key}=${encodeURIComponent(JSON.stringify(data))}; expires=${expires}; path=/; SameSite=Lax`;
+  const payload = {
+    data,
+    expiresAt: Date.now() + OTP_COOKIE_TTL_MIN * 60 * 1000
+  };
+  try {
+    localStorage.setItem(key, JSON.stringify(payload));
+  } catch (e) {
+    console.warn("Failed to persist OTP status to localStorage", e);
+  }
 };
 
 const clearOtpCookie = (email, countryCode, mobile) => {
   if (!email) return;
   const key = buildOtpCookieKey(email, countryCode, mobile);
-  document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
+  try {
+    localStorage.removeItem(key);
+  } catch (e) {
+    console.warn("Failed to clear OTP status from localStorage", e);
+  }
 };
 
 const getOtpCookie = (email, countryCode, mobile) => {
   if (!email) return null;
   const key = buildOtpCookieKey(email, countryCode, mobile);
-  const found = document.cookie.split("; ").find(row => row.startsWith(`${key}=`));
-  if (!found) return null;
   try {
-    return JSON.parse(decodeURIComponent(found.split("=")[1]));
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed?.expiresAt || parsed.expiresAt < Date.now()) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return parsed.data;
   } catch (e) {
-    console.warn("Failed to parse OTP cookie", e);
+    console.warn("Failed to read OTP status from localStorage", e);
     return null;
   }
 };
@@ -47,53 +63,13 @@ const applyAuth = () => {};
 const VerifyOTP = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const safeParseOtpState = () => {
-    try {
-      return JSON.parse(sessionStorage.getItem("otpState") || "{}");
-    } catch (e) {
-      return {};
-    }
-  };
-
-  const stateFromNav = location.state || {};
-  const stateFromStorage = safeParseOtpState();
-  const mergedState = { ...stateFromStorage, ...stateFromNav };
-
   const {
     email,
     name,
     mobile,
     countryCode,
-    fromLogin,
-    phoneNumber
-  } = mergedState;
-
-  const parsePhone = (phone = "") => {
-    const cleaned = phone.replace(/[^\d+]/g, "");
-    if (!cleaned) return { cc: "", mobile: "" };
-    if (cleaned.startsWith("+91")) {
-      return { cc: "+91", mobile: cleaned.slice(3) };
-    }
-    if (cleaned.startsWith("+")) {
-      const ccMatch = cleaned.match(/^\+(\d{1,4})/);
-      if (ccMatch) {
-        const cc = `+${ccMatch[1]}`;
-        const mobilePart = cleaned.slice(cc.length);
-        return { cc, mobile: mobilePart };
-      }
-    }
-    const digits = cleaned.replace(/\D/g, "");
-    if (!digits) return { cc: "", mobile: "" };
-    if (digits.startsWith("91") && digits.length > 10) {
-      return { cc: "+91", mobile: digits.slice(2) };
-    }
-    // no default +91 for unknown numbers to avoid showing Indian mobile OTP UI
-    return { cc: "", mobile: digits };
-  };
-
-  const parsedPhone = phoneNumber ? parsePhone(phoneNumber) : { cc: "", mobile: "" };
-  const resolvedCountryCode = countryCode || parsedPhone.cc || "";
-  const resolvedMobile = mobile || parsedPhone.mobile || "";
+    fromLogin
+  } = location.state || {};
   const [emailOtp, setEmailOtp] = useState(Array(6).fill(""));
   const [emailCountdown, setEmailCountdown] = useState(OTP_VALID_TIME);
   const [resendAttemptsEmail, setResendAttemptsEmail] = useState(0);
@@ -104,8 +80,6 @@ const VerifyOTP = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const otpRefs = useRef([]);
-
-  // Mobile OTP states
   const [mobileOtp, setMobileOtp] = useState(Array(6).fill(""));
   const [mobileCountdown, setMobileCountdown] = useState(OTP_VALID_TIME);
   const [resendAttemptsMobile, setResendAttemptsMobile] = useState(0);
@@ -115,24 +89,49 @@ const VerifyOTP = () => {
   const [mobileError, setMobileError] = useState("");
   const [mobileSuccessMessage, setMobileSuccessMessage] = useState("");
   const [isVerifyingMobile, setIsVerifyingMobile] = useState(false);
-  const [smsSent, setSmsSent] = useState(false);
-  const [initialOtpTriggered, setInitialOtpTriggered] = useState(false);
-  const autoOtpRef = useRef(false);
+  const [initialEmailSent, setInitialEmailSent] = useState(false);
+  const [initialMobileSent, setInitialMobileSent] = useState(false);
   const mobileOtpRefs = useRef([]);
-  
-  // Check if mobile number requires OTP verification (only for +91 with a number present)
-  const requiresMobileOtp = resolvedCountryCode === "+91" && !!resolvedMobile; 
+  const initialEmailSentRef = useRef(false);
+  const initialMobileSentRef = useRef(false);
+  const nonIndianSmsSentRef = useRef(false);
+
+  const normalizedCountryCode = (countryCode || "").trim();
+  const resolvedCountryCode = normalizedCountryCode
+    ? normalizedCountryCode.startsWith("+")
+      ? normalizedCountryCode
+      : `+${normalizedCountryCode}`
+    : "";
+  const resolvedMobile = (mobile || "").toString().trim();
+  // Login (202) requires OTP for any phone; signup enforces OTP only for +91
+  const requiresMobileOtp = fromLogin
+    ? Boolean(resolvedCountryCode && resolvedMobile)
+    : resolvedCountryCode.replace("+", "") === "91";
+
+  // Only hide verified sections during 202/login flows; keep signup UI intact
+  const hideVerifiedSections = fromLogin;
+  const showEmailSection = !(hideVerifiedSections && isEmailVerified);
+  const showMobileSection = requiresMobileOtp && !(hideVerifiedSections && isMobileVerified);
+
+  const clearPersistedOtpStatus = () => {
+    clearOtpCookie(email, countryCode, mobile);
+    try {
+      sessionStorage.removeItem("otpState");
+    } catch (e) {
+      console.warn("Failed to clear OTP session state", e);
+    }
+  };
 
   const persistOtpStatus = updates => {
-    const current = getOtpCookie(email, resolvedCountryCode, resolvedMobile) || {};
+    const current = getOtpCookie(email, countryCode, mobile) || {};
     const next = {
       emailVerified: updates.emailVerified ?? current.emailVerified ?? isEmailVerified,
       mobileVerified: updates.mobileVerified ?? current.mobileVerified ?? isMobileVerified
     };
     setOtpCookie({
       email,
-      countryCode: resolvedCountryCode,
-      mobile: resolvedMobile,
+      countryCode,
+      mobile,
       data: next
     });
   };
@@ -147,113 +146,57 @@ const VerifyOTP = () => {
     }
     
     // Check mobile lock
-    const mobileKey = `${resolvedCountryCode}${resolvedMobile}`;
+    const mobileKey = `${countryCode}${mobile}`;
     if (lockData[mobileKey] && now - lockData[mobileKey] < LOCK_DURATION) {
       setIsMobileLocked(true);
     } else if (lockData[mobileKey]) {
       delete lockData[mobileKey];
       localStorage.setItem("otpLock", JSON.stringify(lockData));
     }
-  }, [email, mobile, resolvedCountryCode]);
+  }, [email, mobile, countryCode]);
 
-  // Restore verification state from cookie to avoid re-verification after refresh
+  
   useEffect(() => {
-    const saved = getOtpCookie(email, resolvedCountryCode, resolvedMobile);
+    const saved = getOtpCookie(email, countryCode, mobile);
     if (!saved) return;
+
+    // For login (202) flows, reuse persisted verification so we don't re-ask verified channels
+    if (fromLogin) {
+      if (saved.emailVerified) {
+        setIsEmailVerified(true);
+        setEmailCountdown(0);
+        setResendCooldown(0);
+        setSuccessMessage("Email already verified");
+      }
+      if (saved.mobileVerified) {
+        setIsMobileVerified(true);
+        setMobileCountdown(0);
+        setResendCooldownMobile(0);
+        setMobileSuccessMessage("Mobile already verified");
+      }
+      return;
+    }
+
+    // Signup flow uses the same persisted state (mostly for refresh resilience)
     if (saved.emailVerified) {
       setIsEmailVerified(true);
       setEmailCountdown(0);
       setResendCooldown(0);
-      setSuccessMessage("✅ Email already verified");
+      setSuccessMessage("Email already verified");
     }
     if (saved.mobileVerified) {
       setIsMobileVerified(true);
       setMobileCountdown(0);
       setResendCooldownMobile(0);
-      setMobileSuccessMessage("✅ Mobile already verified");
-      setSmsSent(true);
+      setMobileSuccessMessage("Mobile already verified");
     }
-  }, [email, resolvedMobile, resolvedCountryCode]);
+  }, [email, mobile, countryCode, fromLogin]);
   useEffect(() => {
     if (!email) {
-      // If coming from login, redirect to login, otherwise to signup
+     
       navigate(fromLogin ? "/login" : "/signup");
     }
   }, [email, navigate, fromLogin]);
-
-  // Auto-trigger OTP send when arriving from login with pending verification
-  useEffect(() => {
-    if (autoOtpRef.current) return;
-    if (!fromLogin) return;
-    if (!email) return;
-    if (isEmailVerified && (isMobileVerified || !requiresMobileOtp)) return;
-
-    autoOtpRef.current = true;
-    setInitialOtpTriggered(true);
-
-    const triggerOtps = async () => {
-      try {
-        if (!isEmailVerified) {
-          const emailRes = await sendEmailOtp({
-            email,
-            type: "signup",
-            resendAttempt: resendAttemptsEmail + 1
-          });
-          if (emailRes?.success) {
-            setEmailCountdown(OTP_VALID_TIME);
-            setResendCooldown(RESEND_AFTER);
-            setResendAttemptsEmail(prev => prev + 1);
-            setEmailOtp(Array(6).fill(""));
-            toast.success("📧 OTP sent to your email");
-          }
-        }
-
-        // Non-+91: send once and auto-complete mobile verification (no UI/input)
-        if (!requiresMobileOtp && resolvedMobile && !isMobileVerified && !smsSent) {
-          try {
-            await sendSmsOtp({
-              phoneNumber: resolvedMobile,
-              countryCode: resolvedCountryCode,
-              hash: SMS_HASH,
-              type: "signup"
-            });
-            setSmsSent(true);
-          } catch (e) {
-            console.warn("Non-+91 SMS send failed", e?.response?.data || e);
-          }
-          setIsMobileVerified(true);
-          setMobileSuccessMessage("✅ Mobile auto-verified for your region");
-          persistOtpStatus({ mobileVerified: true });
-        }
-
-        // +91 with number: send SMS and require OTP entry
-        if (requiresMobileOtp && resolvedMobile && !isMobileVerified) {
-          const smsRes = await sendSmsOtp({
-            phoneNumber: resolvedMobile,
-            countryCode: resolvedCountryCode,
-            hash: SMS_HASH,
-            type: "signup",
-            resendAttempt: resendAttemptsMobile + 1
-          });
-          if (smsRes?.success) {
-            setMobileCountdown(OTP_VALID_TIME);
-            setResendCooldownMobile(RESEND_AFTER);
-            setResendAttemptsMobile(prev => prev + 1);
-            setMobileOtp(Array(6).fill(""));
-            setSmsSent(true);
-            toast.success(" OTP sent to your mobile");
-          }
-        } else if (requiresMobileOtp && !resolvedMobile) {
-          setMobileError("Mobile number missing for OTP. Please go back and retry login/signup.");
-        }
-      } catch (err) {
-        console.error("❌ Auto OTP send (from login) failed", err?.response?.data || err);
-        toast.error("Could not send verification OTPs. Please retry.");
-      }
-    };
-
-    triggerOtps();
-  }, [fromLogin, email, resolvedMobile, requiresMobileOtp, resolvedCountryCode, isEmailVerified, isMobileVerified, resendAttemptsEmail, resendAttemptsMobile, smsSent]);
   useEffect(() => {
     if (emailCountdown > 0 && !isEmailVerified && !isLocked) {
       const t = setInterval(() => setEmailCountdown(p => p - 1), 1000);
@@ -267,7 +210,7 @@ const VerifyOTP = () => {
     }
   }, [resendCooldown, isEmailVerified, isLocked]);
 
-  // Mobile OTP countdown timer
+ 
   useEffect(() => {
     if (mobileCountdown > 0 && !isMobileVerified && !isMobileLocked && requiresMobileOtp) {
       const t = setInterval(() => setMobileCountdown(p => p - 1), 1000);
@@ -275,7 +218,7 @@ const VerifyOTP = () => {
     }
   }, [mobileCountdown, isMobileVerified, isMobileLocked, requiresMobileOtp]);
 
-  // Mobile resend cooldown timer
+
   useEffect(() => {
     if (resendCooldownMobile > 0 && !isMobileVerified && !isMobileLocked && requiresMobileOtp) {
       const t = setInterval(() => setResendCooldownMobile(prev => Math.max(0, prev - 1)), 1000);
@@ -283,34 +226,116 @@ const VerifyOTP = () => {
     }
   }, [resendCooldownMobile, isMobileVerified, isMobileLocked, requiresMobileOtp]);
 
-  // Send SMS for non-Indian numbers automatically (auto-verify)
-  useEffect(() => {
-    if (resolvedMobile && resolvedCountryCode && !requiresMobileOtp && !smsSent) {
-      handleSendSmsToNonIndian();
-    }
-  }, [resolvedMobile, resolvedCountryCode, requiresMobileOtp]);
 
-  const handleSendSmsToNonIndian = async () => {
-    try {
-      setSmsSent(true);
-      const res = await sendSmsOtp({
-        phoneNumber: resolvedMobile,
-        countryCode: resolvedCountryCode,
-        hash: SMS_HASH,
-        type: "signup"
-      });
-      if (res?.success) {
-        setIsMobileVerified(true);
-        setMobileSuccessMessage("✅ SMS sent successfully (auto-verified for non-Indian numbers)");
-        persistOtpStatus({ mobileVerified: true });
+  // Auto-send email OTP on mount for pending verification (login) flows only
+  useEffect(() => {
+    const sendInitialEmailOtp = async () => {
+      try {
+        initialEmailSentRef.current = true;
+        setIsVerifying(true);
+        const res = await sendEmailOtp({
+          email,
+          type: "signup",
+          resendAttempt: 0
+        });
+        const isSuccess = !!(res?.success || res?.data?.success || res?.data?.data?.success);
+        if (isSuccess) {
+          setEmailCountdown(OTP_VALID_TIME);
+          setResendCooldown(RESEND_AFTER);
+          setEmailOtp(Array(6).fill(""));
+          setInitialEmailSent(true);
+        } else {
+          const message = res?.message || res?.data?.message || "Failed to send OTP. Please try again.";
+          setError(message);
+          initialEmailSentRef.current = false;
+          setInitialEmailSent(false);
+        }
+      } catch (err) {
+        setError(err.response?.data?.message || "Unable to send OTP. Please try again.");
+        initialEmailSentRef.current = false;
+        setInitialEmailSent(false);
+      } finally {
+        setIsVerifying(false);
       }
-    } catch (err) {
-      console.error("❌ Send SMS Error:", err);
-      // Even if SMS fails for non-Indian numbers, we auto-verify
-      setIsMobileVerified(true);
-      persistOtpStatus({ mobileVerified: true });
+    };
+
+    if (fromLogin && email && !isEmailVerified && !isLocked && !initialEmailSentRef.current) {
+      sendInitialEmailOtp();
     }
-  };
+  }, [email, isEmailVerified, isLocked, initialEmailSent, fromLogin]);
+
+  // Auto-send mobile OTP on mount for pending verification (login) flows (Indian numbers only)
+  useEffect(() => {
+    const sendInitialMobileOtp = async () => {
+      try {
+        initialMobileSentRef.current = true;
+        setIsVerifyingMobile(true);
+        const res = await sendSmsOtp({
+          phoneNumber: resolvedMobile,
+          countryCode: resolvedCountryCode,
+          hash: SMS_HASH,
+          type: "signup",
+          resendAttempt: 0
+        });
+        const isSuccess = !!(res?.success || res?.data?.success || res?.data?.data?.success);
+        if (isSuccess) {
+          setMobileCountdown(OTP_VALID_TIME);
+          setResendCooldownMobile(RESEND_AFTER);
+          setMobileOtp(Array(6).fill(""));
+          setInitialMobileSent(true);
+        } else {
+          const message = res?.message || res?.data?.message || "Failed to send mobile OTP. Please try again.";
+          setMobileError(message);
+          initialMobileSentRef.current = false;
+          setInitialMobileSent(false);
+        }
+      } catch (err) {
+        setMobileError(err.response?.data?.message || "Unable to send mobile OTP. Please try again.");
+        initialMobileSentRef.current = false;
+        setInitialMobileSent(false);
+      } finally {
+        setIsVerifyingMobile(false);
+      }
+    };
+
+    if (
+      fromLogin &&
+      resolvedMobile &&
+      requiresMobileOtp &&
+      !isMobileVerified &&
+      !isMobileLocked &&
+      !initialMobileSentRef.current
+    ) {
+      sendInitialMobileOtp();
+    }
+  }, [resolvedMobile, resolvedCountryCode, requiresMobileOtp, isMobileVerified, isMobileLocked, initialMobileSent, fromLogin]);
+
+  // Signup-only: auto-mark non-Indian numbers as verified (legacy behavior)
+  useEffect(() => {
+    if (fromLogin) return; // login flows must verify any number
+    const isNonIndianWithPhone = resolvedMobile && resolvedCountryCode && resolvedCountryCode.replace("+", "") !== "91";
+    if (!isNonIndianWithPhone || nonIndianSmsSentRef.current || isMobileVerified) return;
+
+    const autoVerify = async () => {
+      nonIndianSmsSentRef.current = true;
+      try {
+        await sendSmsOtp({
+          phoneNumber: resolvedMobile,
+          countryCode: resolvedCountryCode,
+          hash: SMS_HASH,
+          type: "signup"
+        });
+      } catch (err) {
+        console.warn("Non-Indian SMS send failed; continuing with auto-verify", err?.message || err);
+      }
+      setIsMobileVerified(true);
+      setMobileSuccessMessage("Mobile auto-verified for this country");
+      persistOtpStatus({ mobileVerified: true });
+    };
+
+    autoVerify();
+  }, [fromLogin, resolvedMobile, resolvedCountryCode, isMobileVerified]);
+
   const handleOtpChange = (index, value) => {
     if (!/^\d?$/.test(value)) return;
     if (isVerifying) return;
@@ -415,10 +440,11 @@ const VerifyOTP = () => {
   };
   const formatTime = s => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
   const handleResend = async () => {
+    if (isEmailVerified) return; // no resend once verified
     try {
       if (resendAttemptsEmail >= MAX_RESEND) {
-        setError(`❌ Too many resend attempts. Email OTP locked for 24 hours. You've used all ${MAX_RESEND} attempts.`);
-        toast.error(`❌ Too many resend attempts. Email OTP locked for 24 hours.`);
+        setError(`Too many resend attempts. Email OTP locked for 24 hours. You've used all ${MAX_RESEND} attempts.`);
+        toast.error(`Too many resend attempts. Email OTP locked for 24 hours.`);
         return;
       }
       if (resendCooldown > 0) return;
@@ -440,17 +466,17 @@ const VerifyOTP = () => {
         setResendCooldown(RESEND_AFTER);
         setResendAttemptsEmail(newAttempts);
         setEmailOtp(Array(6).fill(""));
-        toast.success("📧 OTP resent successfully!");
+        toast.success("OTP resent successfully!");
         if (newAttempts >= MAX_RESEND) {
-          setError(`⚠️ Warning: This was your ${newAttempts}/${MAX_RESEND} resend. You have no more resends available.`);
+          setError(`Warning: This was your ${newAttempts}/${MAX_RESEND} resend. You have no more resends available.`);
         }
       } else {
         const message = res?.message || res?.data?.message || "Failed to send OTP. Please try again.";
-        console.error("❌ Send OTP failed:", message);
+        console.error("Send OTP failed:", message);
         setError(message);
       }
     } catch (err) {
-      console.error("❌ Resend OTP Error:", {
+      console.error("Resend OTP Error:", {
         error: err,
         response: err.response?.data,
         status: err.response?.status
@@ -466,15 +492,12 @@ const VerifyOTP = () => {
   };
 
   const handleResendMobile = async () => {
-    if (!requiresMobileOtp) return;
-    if (!resolvedMobile) {
-      setMobileError("Mobile number missing for OTP. Please go back and retry.");
-      return;
-    }
+    if (!mobile || !requiresMobileOtp) return;
+    if (isMobileVerified) return; // no resend once verified
     try {
       if (resendAttemptsMobile >= MAX_RESEND) {
-        setMobileError(`❌ Too many resend attempts. Mobile OTP locked for 24 hours. You've used all ${MAX_RESEND} attempts.`);
-        toast.error(`❌ Too many resend attempts. Mobile OTP locked for 24 hours.`);
+        setMobileError(`Too many resend attempts. Mobile OTP locked for 24 hours. You've used all ${MAX_RESEND} attempts.`);
+        toast.error(`Too many resend attempts. Mobile OTP locked for 24 hours.`);
         return;
       }
       if (resendCooldownMobile > 0) return;
@@ -499,16 +522,16 @@ const VerifyOTP = () => {
         setResendCooldownMobile(RESEND_AFTER);
         setResendAttemptsMobile(newAttempts);
         setMobileOtp(Array(6).fill(""));
-        toast.success("📱 Mobile OTP resent successfully!");
+        toast.success("Mobile OTP resent successfully!");
         if (newAttempts >= MAX_RESEND) {
-          setMobileError(`⚠️ Warning: This was your ${newAttempts}/${MAX_RESEND} resend. You have no more resends available.`);
+          setMobileError(`Warning: This was your ${newAttempts}/${MAX_RESEND} resend. You have no more resends available.`);
         }
       } else {
         const message = res?.message || res?.data?.message || "Failed to send mobile OTP. Please try again.";
         setMobileError(message);
       }
     } catch (err) {
-      console.error("❌ Resend Mobile OTP Error:", err);
+      console.error("Resend Mobile OTP Error:", err);
       const errorMessage = err.response?.data?.message || "Unable to send mobile OTP. Please try again.";
       setMobileError(errorMessage);
       if (err.response?.status >= 500) {
@@ -520,7 +543,7 @@ const VerifyOTP = () => {
   };
 
   const handleVerifyMobileOtp = async () => {
-    if (!requiresMobileOtp || !resolvedMobile) {
+    if (!requiresMobileOtp || !mobile) {
       setMobileSuccessMessage("Mobile verification not required for this number");
       setMobileError("");
       setIsMobileVerified(true);
@@ -547,8 +570,8 @@ const VerifyOTP = () => {
       setIsVerifyingMobile(true);
 
       const res = await verifySmsOtp({
-        phoneNumber: resolvedMobile,
-        countryCode: resolvedCountryCode,
+        phoneNumber: mobile,
+        countryCode,
         hash: SMS_HASH,
         code: mobileValue,
         type: "signup"
@@ -557,7 +580,7 @@ const VerifyOTP = () => {
       const ok = !!(res?.success || res?.data?.success || res?.data?.data?.success);
       if (ok) {
         setIsMobileVerified(true);
-        setMobileSuccessMessage("✅ Mobile verified successfully!");
+        setMobileSuccessMessage("Mobile verified successfully!");
         setMobileError("");
         persistOtpStatus({ mobileVerified: true });
       } else {
@@ -570,13 +593,13 @@ const VerifyOTP = () => {
       if (attempts >= MAX_RESEND) {
         setIsMobileLocked(true);
         const lockData = JSON.parse(localStorage.getItem("otpLock")) || {};
-        const mobileKey = `${resolvedCountryCode}${resolvedMobile}`;
+        const mobileKey = `${resolvedCountryCode}${mobile}`;
         lockData[mobileKey] = Date.now();
         localStorage.setItem("otpLock", JSON.stringify(lockData));
-        toast.error("❌ Mobile OTP verification locked for 24 hours");
+        toast.error("Mobile OTP verification locked for 24 hours");
       }
     } catch (err) {
-      console.error("❌ Mobile OTP Verification Error:", err);
+      console.error("Mobile OTP Verification Error:", err);
       setMobileError(err.response?.data?.message || "Error verifying mobile OTP");
     } finally {
       setIsVerifyingMobile(false);
@@ -597,6 +620,21 @@ const VerifyOTP = () => {
 
     if (isMobileLocked && requiresMobileOtp) {
       setError("Mobile OTP verification locked for 24 hours");
+      return;
+    }
+
+    // If everything already verified, just finish without extra API calls
+    if (isEmailVerified && (!requiresMobileOtp || isMobileVerified)) {
+      setSuccessMessage("Verification successful!");
+      toast.success("Verification Complete!");
+      clearPersistedOtpStatus();
+      navigate("/success", {
+        state: {
+          name,
+          email,
+          mobile: resolvedCountryCode ? `${resolvedCountryCode}${resolvedMobile}`.replace(/\+/, "") : resolvedMobile
+        }
+      });
       return;
     }
 
@@ -650,7 +688,7 @@ const VerifyOTP = () => {
             const lockData = JSON.parse(localStorage.getItem("otpLock")) || {};
             lockData[email] = Date.now();
             localStorage.setItem("otpLock", JSON.stringify(lockData));
-            toast.error("❌ Email OTP verification locked for 24 hours");
+            toast.error("Email OTP verification locked for 24 hours");
           }
         }
       }
@@ -682,22 +720,19 @@ const VerifyOTP = () => {
             const mobileKey = `${resolvedCountryCode}${resolvedMobile}`;
             lockData[mobileKey] = Date.now();
             localStorage.setItem("otpLock", JSON.stringify(lockData));
-            toast.error("❌ Mobile OTP verification locked for 24 hours");
+            toast.error("Mobile OTP verification locked for 24 hours");
           }
         }
       }
 
       // If both are verified, navigate to success
       if (emailOk && mobileOk) {
-        setSuccessMessage("✅ Verification successful!");
+        setSuccessMessage("Verification successful!");
         setError("");
-        toast.success("✅ Verification Complete!");
+        toast.success("Verification Complete!");
         
         setTimeout(() => {
-          try {
-            sessionStorage.removeItem("otpState");
-            clearOtpCookie(email, resolvedCountryCode, resolvedMobile);
-          } catch (e) {}
+          clearPersistedOtpStatus();
           navigate("/success", {
             state: {
               name,
@@ -708,7 +743,7 @@ const VerifyOTP = () => {
         }, 1100);
       }
     } catch (err) {
-      console.error("❌ OTP Verification Error:", err);
+      console.error("OTP Verification Error:", err);
       setError(err.response?.data?.message || "Error verifying OTP");
     } finally {
       setIsVerifying(false);
@@ -732,6 +767,12 @@ const VerifyOTP = () => {
             border: 1px solid #E4C48A;\
             box-shadow: 0 0 5px #E4C48A33;\
           }\
+          .otp-input:disabled {
+            background: #f2f2f2;
+            color: #9e9e9e;
+            border-color: #d7d7d7;
+            box-shadow: none;
+          }
 \
           @media (min-width: 640px) {\
             .otp-input {\
@@ -745,8 +786,9 @@ const VerifyOTP = () => {
 
       <div className="min-h-screen w-full bg-[#F9F7F5] flex items-center justify-center py-8 px-4">
         <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-md p-6 sm:p-8">
-          <Link to={fromLogin ? "/login" : "/signup"} className="inline-block mb-4 px-3 py-2 bg-[#D4A052] text-white rounded-md font-medium">
-            ← Back
+          <Link to={fromLogin ? "/login" : "/signup"} className="inline-flex items-center gap-2 mb-4 px-3 py-2 bg-[#D4A052] text-white rounded-md font-medium">
+            <ArrowLeft size={16} />
+            Back
           </Link>
 
           <div className="text-center mb-4">
@@ -764,67 +806,67 @@ const VerifyOTP = () => {
             {mobileError && <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">{mobileError}</div>}
 
             {/* Email OTP Section */}
-            <div className="mb-4">
-              <h6 className="font-medium">Email OTP</h6>
-              <p className="text-sm text-gray-500">{email}</p>
-              <div className="flex justify-center gap-2 mb-2 mt-3">
-                {emailOtp.map((digit, idx) => <input
-                    key={idx}
-                    id={`email-otp-${idx}`}
-                    ref={el => {
-                    otpRefs.current[idx] = el;
-                  }}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength="1"
-                    disabled={isEmailVerified || emailCountdown === 0 || isLocked || isVerifying}
-                    value={digit}
-                    onChange={e => handleOtpChange(idx, e.target.value)}
-                    onKeyDown={e => handleOtpKeyDown(idx, e)}
-                    onPaste={handleOtpPaste}
-                    className="otp-input"
-                  />)}
+            {showEmailSection && (
+              <div className="mb-4">
+                <h6 className="font-medium">Email OTP</h6>
+                <p className="text-sm text-gray-500">{email}</p>
+                <div className="flex justify-center gap-2 mb-2 mt-3 email-otp" aria-label="Email OTP inputs">
+                  {emailOtp.map((digit, idx) => <input
+                      key={idx}
+                      id={`email-otp-${idx}`}
+                      ref={el => {
+                      otpRefs.current[idx] = el;
+                    }}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength="1"
+                      disabled={isEmailVerified || emailCountdown === 0 || isLocked || isVerifying}
+                      value={digit}
+                      onChange={e => handleOtpChange(idx, e.target.value)}
+                      onKeyDown={e => handleOtpKeyDown(idx, e)}
+                      onPaste={handleOtpPaste}
+                      className="otp-input"
+                    />)}
+                </div>
+                <div className="text-center text-sm mt-2">
+                  {isVerifying ? <span className="text-blue-600">Verifying...</span> : isEmailVerified ? <span className="text-green-600 inline-flex items-center gap-1"><CheckCircle2 size={16} /> Email Verified</span> : isLocked ? <span className="text-red-600">
+                      Email OTP locked for 24 hours
+                    </span> : emailCountdown <= 0 ? <>
+                      <span className="text-red-600 block mb-2">
+                        Email OTP expired
+                      </span>
+                      {resendAttemptsEmail < MAX_RESEND && (resendCooldown > 0 ? <span className="text-xs text-[#8A6F2A]">
+                            You can resend in {formatTime(resendCooldown)}
+                          </span> : <div className="flex items-center justify-center gap-2">
+                            <button type="button" className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[#D4A052] text-white border-[#D4A052] hover:bg-[#E4C48A]" onClick={handleResend} disabled={isVerifying || isEmailVerified}>
+                              Resend Email OTP
+                            </button>
+                          </div>)}
+                    </> : <>
+                      {resendAttemptsEmail < MAX_RESEND && (resendCooldown > 0 ? <span className="text-xs text-[#8A6F2A]">
+                            You can resend in {formatTime(resendCooldown)}
+                          </span> : <div className="flex items-center justify-center gap-2">
+                            <button type="button" className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[#D4A052] text-white border-[#D4A052] hover:bg-[#E4C48A]" onClick={handleResend} disabled={isVerifying || resendCooldown > 0 || isLocked || isEmailVerified}>
+                              Resend Email OTP
+                            </button>
+                          </div>)}
+                      <span className="ml-2 text-gray-500">
+                        Valid for {formatTime(emailCountdown)}
+                      </span>
+                    </>}
+                </div>
               </div>
-              <div className="text-center text-sm mt-2">
-                {isVerifying ? <span className="text-blue-600">Verifying...</span> : isEmailVerified ? <span className="text-green-600">✅ Email Verified</span> : isLocked ? <span className="text-red-600">
-                    Email OTP locked for 24 hours
-                  </span> : emailCountdown <= 0 ? <>
-                    <span className="text-red-600 block mb-2">
-                      Email OTP expired
-                    </span>
-                    {resendAttemptsEmail < MAX_RESEND && (resendCooldown > 0 ? <span className="text-xs text-[#8A6F2A]">
-                          You can resend in {formatTime(resendCooldown)}
-                        </span> : <div className="flex items-center justify-center gap-2">
-                          <button type="button" className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[#D4A052] text-white border-[#D4A052] hover:bg-[#E4C48A]" onClick={handleResend} disabled={isVerifying}>
-                            Resend Email OTP
-                          </button>
-                        </div>)}
-                  </> : <>
-                    {resendAttemptsEmail < MAX_RESEND && (resendCooldown > 0 ? <span className="text-xs text-[#8A6F2A]">
-                          You can resend in {formatTime(resendCooldown)}
-                        </span> : <div className="flex items-center justify-center gap-2">
-                          <button type="button" className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[#D4A052] text-white border-[#D4A052] hover:bg-[#E4C48A]" onClick={handleResend} disabled={isVerifying || resendCooldown > 0 || isLocked}>
-                            Resend Email OTP
-                          </button>
-                        </div>)}
-                    <span className="ml-2 text-gray-500">
-                      Valid for {formatTime(emailCountdown)}
-                    </span>
-                  </>}
-              </div>
-            </div>
+            )}
 
-            {/* Mobile OTP Section - Only show for +91 (Indian numbers) */}
-            {requiresMobileOtp && (
+            {/* Mobile OTP Section - shown when a phone number is available */}
+            {mobile && resolvedCountryCode && showMobileSection && (
               <div className="mb-4 mt-6 pt-6 border-t border-gray-200">
                 <h6 className="font-medium">Mobile OTP</h6>
-                <p className="text-sm text-gray-500">
-                  {resolvedCountryCode} {resolvedMobile || "(mobile missing)"}
-                </p>
+                <p className="text-sm text-gray-500">{resolvedCountryCode} {mobile}</p>
                 
                 {requiresMobileOtp ? (
                   <>
-                    <div className="flex justify-center gap-2 mb-2 mt-3">
+                    <div className="flex justify-center gap-2 mb-2 mt-3 mobile-otp" aria-label="Mobile OTP inputs">
                       {mobileOtp.map((digit, idx) => (
                         <input
                           key={idx}
@@ -848,7 +890,7 @@ const VerifyOTP = () => {
                       {isVerifyingMobile ? (
                         <span className="text-blue-600">Verifying...</span>
                       ) : isMobileVerified ? (
-                        <span className="text-green-600">✅ Mobile Verified</span>
+                        <span className="text-green-600 inline-flex items-center gap-1"><CheckCircle2 size={16} /> Mobile Verified</span>
                       ) : isMobileLocked ? (
                         <span className="text-red-600">Mobile OTP locked for 24 hours</span>
                       ) : mobileCountdown <= 0 ? (
@@ -865,7 +907,7 @@ const VerifyOTP = () => {
                                   type="button"
                                   className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[#D4A052] text-white border-[#D4A052] hover:bg-[#E4C48A]"
                                   onClick={handleResendMobile}
-                                  disabled={isVerifyingMobile}
+                                  disabled={isVerifyingMobile || isMobileVerified}
                                 >
                                   Resend Mobile OTP
                                 </button>
@@ -886,7 +928,7 @@ const VerifyOTP = () => {
                                   type="button"
                                   className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[#D4A052] text-white border-[#D4A052] hover:bg-[#E4C48A]"
                                   onClick={handleResendMobile}
-                                  disabled={isVerifyingMobile || resendCooldownMobile > 0 || isMobileLocked}
+                                  disabled={isVerifyingMobile || resendCooldownMobile > 0 || isMobileLocked || isMobileVerified}
                                 >
                                   Resend Mobile OTP
                                 </button>

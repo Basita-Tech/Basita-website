@@ -138,8 +138,13 @@ async function verifyOtp(req: AuthenticatedRequest, res: Response) {
     }
 
     const isValid = await verifyOTPConstantTime(code, redisOtp);
+
     if (!isValid) {
-      return timingSafe.fail(new Error("Invalid OTP"));
+      await incrementAttempt(mobile, "signup");
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP"
+      });
     }
 
     user.isPhoneVerified = true;

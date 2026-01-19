@@ -140,7 +140,7 @@ const userSchema: Schema = new Schema(
       lowercase: true,
       maxlength: [255, "Email cannot exceed 255 characters"]
     },
-    isEmailLoginEnabled: { type: Boolean, default: true },
+    isEmailLoginEnabled: { type: Boolean, default: false },
     isMobileLoginEnabled: { type: Boolean, default: false },
     for_Profile: {
       type: String,

@@ -13,7 +13,15 @@ class commonService {
             $group: {
               _id: null,
               totalUsers: { $sum: 1 },
-              activeUsers: { $sum: { $cond: ["$isActive", 1, 0] } },
+              activeUsers: {
+                $sum: {
+                  $cond: [
+                    { $and: ["$isActive", "$isOnboardingCompleted"] },
+                    1,
+                    0
+                  ]
+                }
+              },
               inactiveUsers: {
                 $sum: { $cond: [{ $not: ["$isActive"] }, 1, 0] }
               }

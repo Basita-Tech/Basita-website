@@ -234,10 +234,6 @@ export class AuthService {
       return await timingSafe.fail(new Error("Invalid credentials"));
     }
 
-    if (!!user.isActive === false) {
-      return await timingSafe.fail(new Error("Invalid credentials"));
-    }
-
     if (!user?.isPhoneVerified || !user?.isEmailVerified) {
       const error: any = new Error(
         !user.isPhoneVerified
@@ -257,6 +253,10 @@ export class AuthService {
       }
 
       return await timingSafe.fail(error);
+    }
+
+    if (!!user.isActive === false) {
+      return await timingSafe.fail(new Error("Invalid credentials"));
     }
 
     const isPasswordValid = await constantTimePasswordValidation(

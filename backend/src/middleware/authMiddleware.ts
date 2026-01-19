@@ -190,7 +190,7 @@ export const authenticate = async (
 
     if (user.isVisible === false) {
       redisClient.del(cacheKey).catch(() => {});
-      return res.status(402).json({
+      return res.status(200).json({
         success: false,
         code: "DEACTIVET_ACCOUNT",
         message: "Your account is decatived. Please aciveted to continue."

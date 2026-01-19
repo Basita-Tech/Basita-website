@@ -20,7 +20,7 @@ const getAuthHeaders = () => {
 export const getUserId = async () => {
   try {
     const response = await axios.get(`${API}/auth/me`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data?.user?.id || null;
   } catch (error) {
@@ -34,29 +34,36 @@ export const getMembershipPlans = async () => {
     const response = await axios.get(`${API}/pricing`);
     return response.data;
   } catch (error) {
-    console.error("❌ Get Membership Plans Error:", error.response?.data || error.message);
-    return error.response?.data || {
-      success: false,
-      message: "Unable to fetch membership plans"
-    };
+    console.error(
+      "❌ Get Membership Plans Error:",
+      error.response?.data || error.message,
+    );
+    return (
+      error.response?.data || {
+        success: false,
+        message: "Unable to fetch membership plans",
+      }
+    );
   }
 };
-export const signupUser = async formData => {
+export const signupUser = async (formData) => {
   try {
     const response = await axios.post(`${API}/auth/signup`, formData);
     return response.data;
   } catch (error) {
     console.error("❌ Signup Error:", error.response?.data || error.message);
-    return error.response?.data || {
-      success: false,
-      message: "Something went wrong. Please try again."
-    };
+    return (
+      error.response?.data || {
+        success: false,
+        message: "Something went wrong. Please try again.",
+      }
+    );
   }
 };
-export const forgotUsername = async formData => {
+export const forgotUsername = async (formData) => {
   try {
     const response = await axios.post(`${API}/auth/forgot-username`, formData, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
@@ -65,22 +72,23 @@ export const forgotUsername = async formData => {
     if (status === 404 || status === 400) {
       return {
         success: false,
-        message: "If an account exists with the provided details, the username will be displayed."
+        message:
+          "If an account exists with the provided details, the username will be displayed.",
       };
     }
     if (status === 429) {
       return {
         success: false,
-        message: "Too many attempts. Please try again later."
+        message: "Too many attempts. Please try again later.",
       };
     }
     return {
       success: false,
-      message: data.message || "Unable to retrieve username. Please try again."
+      message: data.message || "Unable to retrieve username. Please try again.",
     };
   }
 };
-export const loginUser = async formData => {
+export const loginUser = async (formData) => {
   try {
     const response = await axios.post(`${API}/auth/login`, formData);
     const data = response?.data || {};
@@ -95,13 +103,14 @@ export const loginUser = async formData => {
       messageText.includes("verification pending");
 
     if (otpPending) {
-      const pendingPhone = data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
+      const pendingPhone =
+        data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
       return {
         success: false,
         message: data?.message || "Please verify your email before logging in.",
         requiresOtpVerification: true,
         email: formData.email,
-        phoneNumber: pendingPhone
+        phoneNumber: pendingPhone,
       };
     }
 
@@ -118,59 +127,62 @@ export const loginUser = async formData => {
       messageText.includes("verification pending");
 
     if (otpPending) {
-      const pendingPhone = data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
+      const pendingPhone =
+        data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
       return {
         success: false,
         message: data?.message || "Please verify your email before logging in.",
         requiresOtpVerification: true,
         email: formData.email,
-        phoneNumber: pendingPhone
+        phoneNumber: pendingPhone,
       };
     }
-    
+
     if (status === 401) {
       toast.error("Invalid credentials. Please try again.");
       return {
         success: false,
-        message: "Invalid credentials"
+        message: "Invalid credentials",
       };
     }
-    
+
     if (status === 403) {
       // Check if it's OTP verification pending
       if (data.message && data.message.includes("verify your email")) {
-        const pendingPhone = data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
+        const pendingPhone =
+          data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
         return {
           success: false,
           message: data.message || "Verification required",
           requiresOtpVerification: true,
           email: formData.email,
-          phoneNumber: pendingPhone
+          phoneNumber: pendingPhone,
         };
       }
       toast.error(data.message || "Verification required.");
       return {
         success: false,
-        message: data.message || "Verification required"
+        message: data.message || "Verification required",
       };
     }
-    
+
     // Check for 202 status (Accepted but pending verification)
     if (status === 202) {
-      const pendingPhone = data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
+      const pendingPhone =
+        data?.phoneNumber || data?.user?.phoneNumber || formData.phoneNumber;
       return {
         success: false,
         message: data.message || "Please verify your email before logging in.",
         requiresOtpVerification: true,
         email: formData.email,
-        phoneNumber: pendingPhone
+        phoneNumber: pendingPhone,
       };
     }
-    
+
     toast.error(data.message || "Login failed. Please retry.");
     return {
       success: false,
-      message: data.message || "Login failed"
+      message: data.message || "Login failed",
     };
   }
 };
@@ -182,11 +194,11 @@ export const logoutUser = async () => {
     console.error("❌ Logout Error:", error.response?.data || error.message);
     return {
       success: false,
-      message: error.response?.data?.message || "Logout failed"
+      message: error.response?.data?.message || "Logout failed",
     };
   }
 };
-export const sendEmailOtp = async data => {
+export const sendEmailOtp = async (data) => {
   try {
     const response = await axios.post(`${API}/auth/send-email-otp`, data);
     if (!response.data) {
@@ -197,12 +209,12 @@ export const sendEmailOtp = async data => {
     console.error("❌ Send Email OTP Error:", {
       message: error.message,
       response: error.response?.data,
-      status: error.response?.status
+      status: error.response?.status,
     });
     throw error;
   }
 };
-export const sendSmsOtp = async data => {
+export const sendSmsOtp = async (data) => {
   try {
     const response = await axios.post(`${API}/auth/send-sms-otp`, data);
     if (!response.data) {
@@ -213,24 +225,29 @@ export const sendSmsOtp = async data => {
     console.error("❌ Send SMS OTP Error:", {
       message: error.message,
       response: error.response?.data,
-      status: error.response?.status
+      status: error.response?.status,
     });
     throw error;
   }
 };
-export const verifyEmailOtp = async data => {
+export const verifyEmailOtp = async (data) => {
   try {
     const response = await axios.post(`${API}/auth/verify-email-otp`, data);
     return response.data;
   } catch (error) {
-    console.error("❌ Verify Email OTP Error:", error.response?.data || error.message);
-    return error.response?.data || {
-      success: false,
-      message: "Server error"
-    };
+    console.error(
+      "❌ Verify Email OTP Error:",
+      error.response?.data || error.message,
+    );
+    return (
+      error.response?.data || {
+        success: false,
+        message: "Server error",
+      }
+    );
   }
 };
-export const verifySmsOtp = async data => {
+export const verifySmsOtp = async (data) => {
   try {
     const response = await axios.post(`${API}/auth/verify-sms-otp`, data);
     return response.data;
@@ -238,278 +255,393 @@ export const verifySmsOtp = async data => {
     console.error("❌ Verify SMS OTP Error:", {
       message: error.message,
       response: error.response?.data,
-      status: error.response?.status
+      status: error.response?.status,
     });
-    return error.response?.data || {
-      success: false,
-      message: "Server error"
-    };
+    return (
+      error.response?.data || {
+        success: false,
+        message: "Server error",
+      }
+    );
   }
 };
-export const resendOtp = async data => {
+export const resendOtp = async (data) => {
   try {
     const response = await axios.post(`${API}/auth/resend-otp`, data);
     return response.data;
   } catch (error) {
-    console.error("❌ Resend OTP Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Resend OTP Error:",
+      error.response?.data || error.message,
+    );
   }
 };
-export const forgotPassword = async email => {
+export const forgotPassword = async (email) => {
   try {
     const response = await axios.post(`${API}/auth/forgot-password`, {
-      email: email
+      email: email,
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Forgot Password Error:", error.response?.data || error.message);
-    return error.response?.data || {
-      success: false,
-      message: "Server error"
-    };
+    console.error(
+      "❌ Forgot Password Error:",
+      error.response?.data || error.message,
+    );
+    return (
+      error.response?.data || {
+        success: false,
+        message: "Server error",
+      }
+    );
   }
 };
 
-export const resetPasswordWithToken = async (token, newPassword, confirmPassword) => {
+export const resetPasswordWithToken = async (
+  token,
+  newPassword,
+  confirmPassword,
+) => {
   try {
     const response = await axios.post(`${API}/auth/reset-password/${token}`, {
       newPassword,
-      confirmPassword
+      confirmPassword,
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Reset Password Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Reset Password Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
-export const saveUserPersonal = async payload => {
+export const saveUserPersonal = async (payload) => {
   try {
     const response = await axios.post(`${API}/user-personal/`, payload, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     // Clear cache after save
-    dataCache.clear('user-personal-details');
+    dataCache.clear("user-personal-details");
     return response;
   } catch (error) {
-    console.error("❌ Save Personal Details Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Save Personal Details Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
 export const getUserPersonal = async (skipCache = false) => {
-  const cacheKey = 'user-personal-details';
-  
+  const cacheKey = "user-personal-details";
+
   if (!skipCache && dataCache.has(cacheKey)) {
     return dataCache.get(cacheKey);
   }
-  
+
   try {
     const response = await axios.get(`${API}/user-personal/`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     // Cache for 2 minutes
     dataCache.set(cacheKey, response, 120000);
     return response;
   } catch (error) {
-    console.error("❌ Get Personal Details Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Personal Details Error:",
+      error.response?.data || error.message,
+    );
   }
 };
-export const updateUserPersonal = async payload => {
+export const updateUserPersonal = async (payload) => {
   try {
     const response = await axios.put(`${API}/user-personal/`, payload, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     // Clear cache after update
-    dataCache.clear('user-personal-details');
+    dataCache.clear("user-personal-details");
     return response.data;
   } catch (error) {
-    console.error("❌ Update Personal Details Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Update Personal Details Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
-export const saveUserExpectations = async payload => {
+export const saveUserExpectations = async (payload) => {
   try {
-    const response = await axios.post(`${API}/user-personal/expectations`, payload, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user-personal/expectations`,
+      payload,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response;
   } catch (error) {
-    console.error("❌ Save Expectations Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Save Expectations Error:",
+      error.response?.data || error.message,
+    );
   }
 };
 export const getUserExpectations = async () => {
   try {
     const response = await axios.get(`${API}/user-personal/expectations`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response;
   } catch (error) {
-    console.error("❌ Get User Expectations Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get User Expectations Error:",
+      error.response?.data || error.message,
+    );
   }
 };
-export const updateUserExpectations = async payload => {
+export const updateUserExpectations = async (payload) => {
   try {
-    const response = await axios.put(`${API}/user-personal/expectations`, payload, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.put(
+      `${API}/user-personal/expectations`,
+      payload,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Update Expectations Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Update Expectations Error:",
+      error.response?.data || error.message,
+    );
   }
 };
 export const getUserHealth = async () => {
   try {
     const response = await axios.get(`${API}/user-personal/health`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response;
   } catch (error) {
-    console.error("❌ Get User Health Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get User Health Error:",
+      error.response?.data || error.message,
+    );
   }
 };
-export const saveUserHealth = async payload => {
+export const saveUserHealth = async (payload) => {
   try {
     const response = await axios.post(`${API}/user-personal/health`, payload, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Save User Health Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Save User Health Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
-export const updateUserHealth = async payload => {
+export const updateUserHealth = async (payload) => {
   try {
     const response = await axios.put(`${API}/user-personal/health`, payload, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Update User Health Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Update User Health Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
 export const getUserProfession = async () => {
   try {
     const response = await axios.get(`${API}/user-personal/profession`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response;
   } catch (error) {
-    console.error("❌ Get Profession Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Profession Error:",
+      error.response?.data || error.message,
+    );
   }
 };
-export const saveUserProfession = async payload => {
+export const saveUserProfession = async (payload) => {
   try {
-    const response = await axios.post(`${API}/user-personal/profession`, payload, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user-personal/profession`,
+      payload,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response;
   } catch (error) {
-    console.error("❌ Save Profession Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Save Profession Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
-export const updateUserProfession = async payload => {
+export const updateUserProfession = async (payload) => {
   try {
-    const response = await axios.put(`${API}/user-personal/profession`, payload, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.put(
+      `${API}/user-personal/profession`,
+      payload,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response;
   } catch (error) {
-    console.error("❌ Update Profession Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Update Profession Error:",
+      error.response?.data || error.message,
+    );
   }
 };
 export const getUserFamilyDetails = async () => {
   try {
     const response = await axios.get(`${API}/user-personal/family/`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response;
   } catch (error) {
-    console.error("❌ Get Family Details Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Family Details Error:",
+      error.response?.data || error.message,
+    );
   }
 };
-export const saveUserFamilyDetails = async payload => {
+export const saveUserFamilyDetails = async (payload) => {
   try {
     const response = await axios.post(`${API}/user-personal/family/`, payload, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response;
   } catch (error) {
-    console.error("❌ Save Family Details Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Save Family Details Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
-export const updateUserFamilyDetails = async payload => {
+export const updateUserFamilyDetails = async (payload) => {
   try {
     const response = await axios.put(`${API}/user-personal/family/`, payload, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Update Family Details Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Update Family Details Error:",
+      error.response?.data || error.message,
+    );
   }
 };
 export const getEducationalDetails = async () => {
   try {
     const response = await axios.get(`${API}/user-personal/education/`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response;
   } catch (error) {
-    console.error("❌ Get Educational Details Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Educational Details Error:",
+      error.response?.data || error.message,
+    );
   }
 };
-export const saveEducationalDetails = async payload => {
+export const saveEducationalDetails = async (payload) => {
   try {
-    const response = await axios.post(`${API}/user-personal/education/`, payload, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user-personal/education/`,
+      payload,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response;
   } catch (error) {
-    console.error("❌ Save Educational Details Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Save Educational Details Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
-export const updateEducationalDetails = async payload => {
+export const updateEducationalDetails = async (payload) => {
   try {
-    const response = await axios.put(`${API}/user-personal/education/`, payload, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.put(
+      `${API}/user-personal/education/`,
+      payload,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Update Educational Details Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Update Educational Details Error:",
+      error.response?.data || error.message,
+    );
   }
 };
 export const getOnboardingStatus = async () => {
   try {
-    const response = await axios.get(`${API}/user-personal/onboarding-status/`, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.get(
+      `${API}/user-personal/onboarding-status/`,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response;
   } catch (error) {
-    console.error("❌ Get Onboarding Status Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Onboarding Status Error:",
+      error.response?.data || error.message,
+    );
   }
 };
-export const updateOnboardingStatus = async payload => {
+export const updateOnboardingStatus = async (payload) => {
   try {
-    const response = await axios.put(`${API}/user-personal/onboarding-status/`, payload, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.put(
+      `${API}/user-personal/onboarding-status/`,
+      payload,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Update Onboarding Status Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Update Onboarding Status Error:",
+      error.response?.data || error.message,
+    );
   }
 };
-export const uploadUserPhoto = async formData => {
+export const uploadUserPhoto = async (formData) => {
   try {
-    const response = await axios.post(`${API}/user-personal/upload/photos`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data"
-      }
-    });
+    const response = await axios.post(
+      `${API}/user-personal/upload/photos`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Upload User Photo Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Upload User Photo Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
@@ -517,33 +649,39 @@ export const getPreSignedUrl = async (userId, photoType) => {
   try {
     const response = await axios.get(`${API_V2}/pre-signed-url`, {
       params: {
-        filename: `${userId}-${String(photoType || "personal").replace(/[^A-Za-z0-9_-]/g, "-").toLowerCase()}`
+        filename: `${userId}-${String(photoType || "personal")
+          .replace(/[^A-Za-z0-9_-]/g, "-")
+          .toLowerCase()}`,
       },
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Get Pre-Signed URL Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Pre-Signed URL Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
 
 // Pre-sign using file metadata; safer than raw filename
-export const getPreSignedUrlForFile = async (file, userId, photoType) => {
+export const getPreSignedUrlForFile = async (userId, photoType) => {
   try {
-    const safeType = String(photoType || "personal").replace(/[^A-Za-z0-9_-]/g, "-").toLowerCase();
-    const idPart = (userId || safeType || "user").toString().replace(/[^A-Za-z0-9_-]/g, "-");
-    const candidateName = `${idPart}-${safeType}`;
     const response = await axios.get(`${API_V2}/pre-signed-url`, {
       params: {
-        filename: candidateName,
-        contentType: file?.type
+        userId,
+        photoType,
       },
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
+
     return response.data;
   } catch (error) {
-    console.error("❌ Get Pre-Signed URL (file) Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Pre-Signed URL Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
@@ -552,252 +690,373 @@ export const uploadToS3 = async (presignedUrl, file, onProgress) => {
   try {
     const response = await axios.put(presignedUrl, file, {
       headers: {
-        'Content-Type': file.type
+        "Content-Type": file.type,
       },
       withCredentials: false,
       onUploadProgress: (progressEvent) => {
         if (onProgress && progressEvent.total) {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
           onProgress(percentCompleted);
         }
-      }
+      },
     });
+
     return response;
   } catch (error) {
-    console.error("❌ Upload to S3 Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Upload to S3 Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
 
 // Persist photo metadata after S3 upload
-export const savePhotoMetadata = async (userId, photoType) => {
+export const savePhotoMetadata = async (userId, photoType, key) => {
   try {
-    const safeType = String(photoType || "personal").replace(/[^A-Za-z0-9_-]/g, "-").toLowerCase();
-    const url = `https://s3.ap-south-1.amazonaws.com/cdn.satfera.in/${userId}-${safeType}`;
-    const response = await axios.put(`${API_V2}/upload/photos`, {
-      photoType: safeType,
-      url
-    }, {
-      headers: getAuthHeaders()
-    });
+    const safeType = String(photoType || "personal")
+      .replace(/[^A-Za-z0-9_-]/g, "-")
+      .toLowerCase();
+
+    const response = await axios.put(
+      `${API_V2}/upload/photos`,
+      {
+        photoType: safeType,
+        key,
+        userId,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Save Photo Metadata Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Save Photo Metadata Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
 
 export const uploadPhotoViaS3 = async (file, userId, photoType, onProgress) => {
-  if (!file) throw new Error("File is required");
+  if (!file) {
+    throw new Error("File is required");
+  }
+
   try {
-    const presign = await getPreSignedUrlForFile(file, userId, photoType);
-    if (!presign?.success || !presign?.url) {
+    // 1. Get presigned URL
+    const presign = await getPreSignedUrlForFile(userId, photoType);
+
+    if (!presign?.success) {
       throw new Error(presign?.message || "Failed to get pre-signed URL");
     }
-    await uploadToS3(presign.url, file, onProgress);
-    
-    // Save metadata to database
-    await savePhotoMetadata(userId, photoType);
-    
+
+    const { url, key } = presign.data;
+
+    // 2. Upload file directly to S3
+    await uploadToS3(url, file, onProgress);
+
+    // 3. Save metadata (this triggers updatePhotoController)
+    await savePhotoMetadata(userId, photoType, key);
+
+    // 4. Return canonical CDN URL (same as backend)
     return {
       success: true,
-      key: presign.key,
-      bucket: presign.bucket,
-      url: `https://s3.ap-south-1.amazonaws.com/cdn.satfera.in/${userId}-${String(photoType || "personal").replace(/[^A-Za-z0-9_-]/g, "-").toLowerCase()}`
+      key,
+      url: `https://cdn.satfera.in/${key}`,
     };
   } catch (error) {
-    console.error("❌ uploadPhotoViaS3 Error:", error.response?.data || error.message);
-    return { success: false, message: error.message };
+    console.error(
+      "❌ uploadPhotoViaS3 Error:",
+      error.response?.data || error.message,
+    );
+
+    return {
+      success: false,
+      message: error.message,
+    };
   }
 };
-export const uploadGovernmentId = async formData => {
+
+export const uploadGovernmentId = async (formData) => {
   try {
-    const response = await axios.post(`${API}/user-personal/upload/government-id`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data"
-      }
-    });
+    const response = await axios.post(
+      `${API}/user-personal/upload/government-id`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Upload Government ID Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Upload Government ID Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
 
-
-
 export const getUserPhotos = async () => {
   try {
     const response = await axios.get(`${API}/user-personal/upload/photos`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Get User Photos Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get User Photos Error:",
+      error.response?.data || error.message,
+    );
   }
 };
 export const getGovernmentId = async () => {
   try {
-    const response = await axios.get(`${API}/user-personal/upload/government-id`, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.get(
+      `${API}/user-personal/upload/government-id`,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Get Government ID Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Government ID Error:",
+      error.response?.data || error.message,
+    );
   }
 };
 export const getProfileReviewStatus = async () => {
   try {
     const response = await axios.get(`${API}/user-personal/review/status`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Get Profile Review Status Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Profile Review Status Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
 export const submitProfileForReview = async () => {
   try {
-    const response = await axios.post(`${API}/user-personal/review/submit`, {}, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user-personal/review/submit`,
+      {},
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Submit Profile for Review Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Submit Profile for Review Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
-export const approveProfile = async userId => {
+export const approveProfile = async (userId) => {
   try {
-    const response = await axios.post(`${API}/user-personal/review/approve`, {
-      userId
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user-personal/review/approve`,
+      {
+        userId,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Approve Profile Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Approve Profile Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
 export const rejectProfile = async (userId, reason) => {
   try {
-    const response = await axios.post(`${API}/user-personal/review/reject`, {
-      userId,
-      reason
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user-personal/review/reject`,
+      {
+        userId,
+        reason,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Reject Profile Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Reject Profile Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
 export const getUserProfileDetails = async (useCache = true) => {
   const cacheKey = "user_profile";
   if (useCache) {
-    return cachedFetch(cacheKey, async () => {
-      try {
-        const response = await axios.get(`${API}/user/profile`, {
-          headers: getAuthHeaders()
-        });
-        return response.data;
-      } catch (error) {
-        console.error("❌ Get User Profile Error:", error.response?.data || error.message);
-        return null;
-      }
-    }, 60000);
+    return cachedFetch(
+      cacheKey,
+      async () => {
+        try {
+          const response = await axios.get(`${API}/user/profile`, {
+            headers: getAuthHeaders(),
+          });
+          return response.data;
+        } catch (error) {
+          console.error(
+            "❌ Get User Profile Error:",
+            error.response?.data || error.message,
+          );
+          return null;
+        }
+      },
+      60000,
+    );
   }
   try {
     const response = await axios.get(`${API}/user/profile`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     dataCache.set(cacheKey, response.data, 60000);
     return response.data;
   } catch (error) {
-    console.error("❌ Get User Profile Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get User Profile Error:",
+      error.response?.data || error.message,
+    );
     return null;
   }
 };
 export const getUserContactInfo = async () => {
   try {
     const response = await axios.get(`${API}/user/contact-info`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Get Contact Info Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Contact Info Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       data: null,
-      message: error.response?.data?.message || "Failed to fetch contact information"
+      message:
+        error.response?.data?.message || "Failed to fetch contact information",
     };
   }
 };
-export const requestEmailChange = async newEmail => {
+export const requestEmailChange = async (newEmail) => {
   try {
-    const response = await axios.post(`${API}/user/email/request-change`, {
-      newEmail
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user/email/request-change`,
+      {
+        newEmail,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Request Email Change Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Request Email Change Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to send OTP. Please try again."
+      message:
+        error.response?.data?.message ||
+        "Failed to send OTP. Please try again.",
     };
   }
 };
 export const verifyEmailChange = async (newEmail, otp) => {
   try {
-    const response = await axios.post(`${API}/user/email/verify-change`, {
-      newEmail,
-      otp
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user/email/verify-change`,
+      {
+        newEmail,
+        otp,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Verify Email Change Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Verify Email Change Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to verify OTP. Please try again."
+      message:
+        error.response?.data?.message ||
+        "Failed to verify OTP. Please try again.",
     };
   }
 };
-export const requestPhoneChange = async newPhoneNumber => {
+export const requestPhoneChange = async (newPhoneNumber) => {
   try {
-    const response = await axios.post(`${API}/user/phone/request-change`, {
-      newPhoneNumber
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user/phone/request-change`,
+      {
+        newPhoneNumber,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Request Phone Change Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Request Phone Change Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to initiate phone change. Please try again."
+      message:
+        error.response?.data?.message ||
+        "Failed to initiate phone change. Please try again.",
     };
   }
 };
-export const verifyPhoneChange = async newPhoneNumber => {
+export const verifyPhoneChange = async (newPhoneNumber) => {
   try {
-    const response = await axios.post(`${API}/user/phone/verify-change`, {
-      newPhoneNumber
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user/phone/verify-change`,
+      {
+        newPhoneNumber,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Verify Phone Change Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Verify Phone Change Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to complete phone change. Please try again."
+      message:
+        error.response?.data?.message ||
+        "Failed to complete phone change. Please try again.",
     };
   }
 };
@@ -813,17 +1072,23 @@ export const searchProfiles = async (filters = {}) => {
     if (filters.education) params.education = filters.education;
     if (filters.sortBy) params.sortBy = filters.sortBy;
     if (filters.newProfile) params.newProfile = filters.newProfile;
-    if (filters.ageFrom !== undefined && filters.ageFrom !== null) params.ageFrom = filters.ageFrom;
-    if (filters.ageTo !== undefined && filters.ageTo !== null) params.ageTo = filters.ageTo;
-    if (filters.heightFrom !== undefined && filters.heightFrom !== null) params.heightFrom = filters.heightFrom;
-    if (filters.heightTo !== undefined && filters.heightTo !== null) params.heightTo = filters.heightTo;
-    if (filters.weightFrom !== undefined && filters.weightFrom !== null) params.weightFrom = filters.weightFrom;
-    if (filters.weightTo !== undefined && filters.weightTo !== null) params.weightTo = filters.weightTo;
+    if (filters.ageFrom !== undefined && filters.ageFrom !== null)
+      params.ageFrom = filters.ageFrom;
+    if (filters.ageTo !== undefined && filters.ageTo !== null)
+      params.ageTo = filters.ageTo;
+    if (filters.heightFrom !== undefined && filters.heightFrom !== null)
+      params.heightFrom = filters.heightFrom;
+    if (filters.heightTo !== undefined && filters.heightTo !== null)
+      params.heightTo = filters.heightTo;
+    if (filters.weightFrom !== undefined && filters.weightFrom !== null)
+      params.weightFrom = filters.weightFrom;
+    if (filters.weightTo !== undefined && filters.weightTo !== null)
+      params.weightTo = filters.weightTo;
     params.page = filters.page || 1;
     params.limit = filters.limit || 10;
     const response = await axios.get(`${API}/user/search`, {
       headers: getAuthHeaders(),
-      params
+      params,
     });
     return response.data;
   } catch (error) {
@@ -838,56 +1103,66 @@ export const searchProfiles = async (filters = {}) => {
           page: 1,
           limit: 10,
           total: 0,
-          hasMore: false
-        }
+          hasMore: false,
+        },
       },
-      message: error.response?.data?.message || "Failed to search profiles"
+      message: error.response?.data?.message || "Failed to search profiles",
     };
   }
 };
 export const getMatches = async ({
   useCache = true,
   page = 1,
-  limit = 20
+  limit = 20,
 } = {}) => {
   const cacheKey = `user_matches_${page}_${limit}`;
   if (useCache) {
-    return cachedFetch(cacheKey, async () => {
-      try {
-        const response = await axios.get(`${API}/matches`, {
-          headers: getAuthHeaders(),
-          params: {
-            page,
-            limit
-          }
-        });
-        return response.data;
-      } catch (error) {
-        console.error("❌ Get User Matches Error:", error.response?.data || error.message);
-        return {
-          success: false,
-          data: [],
-          message: error.response?.data?.message || "Failed to fetch matches"
-        };
-      }
-    }, 45000);
+    return cachedFetch(
+      cacheKey,
+      async () => {
+        try {
+          const response = await axios.get(`${API}/matches`, {
+            headers: getAuthHeaders(),
+            params: {
+              page,
+              limit,
+            },
+          });
+          return response.data;
+        } catch (error) {
+          console.error(
+            "❌ Get User Matches Error:",
+            error.response?.data || error.message,
+          );
+          return {
+            success: false,
+            data: [],
+            message: error.response?.data?.message || "Failed to fetch matches",
+          };
+        }
+      },
+      45000,
+    );
   }
   try {
     const response = await axios.get(`${API}/matches`, {
       headers: getAuthHeaders(),
       params: {
         page,
-        limit
-      }
+        limit,
+      },
     });
     dataCache.set(cacheKey, response.data, 45000);
     return response.data;
   } catch (error) {
-    console.error("❌ Get User Matches Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get User Matches Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       data: [],
-      message: error.response?.data?.message || "Failed to fetch matches"
+      message: error.response?.data?.message || "Failed to fetch matches",
     };
   }
 };
@@ -904,7 +1179,7 @@ export const getViewProfiles = async (id, options = {}) => {
   return dedupeRequest(requestKey, async () => {
     try {
       const config = {
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
       };
       if (options?.signal) {
         config.signal = options.signal;
@@ -920,7 +1195,7 @@ export const getViewProfiles = async (id, options = {}) => {
         return {
           success: false,
           data: null,
-          message: "Request canceled"
+          message: "Request canceled",
         };
       }
       const errorStatus = error.response?.status;
@@ -928,57 +1203,76 @@ export const getViewProfiles = async (id, options = {}) => {
       if (errorStatus === 404) {
         console.warn(`⚠️ Profile not found (404): ${id}`, errorMsg);
       } else {
-        console.error("❌ Get User view  profile details Error:", `ID: ${id}, Status: ${errorStatus},`, error.response?.data || error.message);
+        console.error(
+          "❌ Get User view  profile details Error:",
+          `ID: ${id}, Status: ${errorStatus},`,
+          error.response?.data || error.message,
+        );
       }
       return {
         success: false,
         data: [],
-        message: errorMsg || "Failed to fetch user view profile details"
+        message: errorMsg || "Failed to fetch user view profile details",
       };
     }
   });
 };
-export const getNotifications = async (page = 1, limit = 20, useCache = true) => {
+export const getNotifications = async (
+  page = 1,
+  limit = 20,
+  useCache = true,
+) => {
   const cacheKey = `notifications_${page}_${limit}`;
   if (useCache) {
-    return cachedFetch(cacheKey, async () => {
-      try {
-        const response = await axios.get(`${API}/user/notifications`, {
-          headers: getAuthHeaders(),
-          params: {
-            page,
-            limit
-          }
-        });
-        return response.data;
-      } catch (error) {
-        console.error("❌ Get Notifications Error:", error.response?.data || error.message);
-        return {
-          success: false,
-          data: [],
-          pagination: {
-            page: 1,
-            limit: 20,
-            total: 0,
-            hasMore: false
-          },
-          message: error.response?.data?.message || "Failed to fetch notifications"
-        };
-      }
-    }, 20000);
+    return cachedFetch(
+      cacheKey,
+      async () => {
+        try {
+          const response = await axios.get(`${API}/user/notifications`, {
+            headers: getAuthHeaders(),
+            params: {
+              page,
+              limit,
+            },
+          });
+          return response.data;
+        } catch (error) {
+          console.error(
+            "❌ Get Notifications Error:",
+            error.response?.data || error.message,
+          );
+          return {
+            success: false,
+            data: [],
+            pagination: {
+              page: 1,
+              limit: 20,
+              total: 0,
+              hasMore: false,
+            },
+            message:
+              error.response?.data?.message || "Failed to fetch notifications",
+          };
+        }
+      },
+      20000,
+    );
   }
   try {
     const response = await axios.get(`${API}/user/notifications`, {
       headers: getAuthHeaders(),
       params: {
         page,
-        limit
-      }
+        limit,
+      },
     });
     dataCache.set(cacheKey, response.data, 20000);
     return response.data;
   } catch (error) {
-    console.error("❌ Get Notifications Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Notifications Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       data: [],
@@ -986,196 +1280,264 @@ export const getNotifications = async (page = 1, limit = 20, useCache = true) =>
         page: 1,
         limit: 20,
         total: 0,
-        hasMore: false
+        hasMore: false,
       },
-      message: error.response?.data?.message || "Failed to fetch notifications"
+      message: error.response?.data?.message || "Failed to fetch notifications",
     };
   }
 };
 export const getUnreadNotificationsCount = async () => {
   try {
     const response = await axios.get(`${API}/user/notifications/count`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return {
       success: response.data.success,
-      count: response.data.data?.unreadCount || 0
+      count: response.data.data?.unreadCount || 0,
     };
   } catch (error) {
-    console.error("❌ Get Unread Count Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Unread Count Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       count: 0,
-      message: error.response?.data?.message || "Failed to fetch unread count"
+      message: error.response?.data?.message || "Failed to fetch unread count",
     };
   }
 };
 export const getSessions = async () => {
   try {
     const response = await axios.get(`${API}/sessions`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Get Sessions Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Sessions Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       data: {
         sessions: [],
-        total: 0
+        total: 0,
       },
-      message: error.response?.data?.message || "Failed to fetch sessions"
+      message: error.response?.data?.message || "Failed to fetch sessions",
     };
   }
 };
-export const logoutSession = async sessionId => {
+export const logoutSession = async (sessionId) => {
   try {
     if (!sessionId) {
       return {
         success: false,
-        message: "Session ID is required"
+        message: "Session ID is required",
       };
     }
     const response = await axios.delete(`${API}/sessions/${sessionId}`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Logout Session Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Logout Session Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to logout session"
+      message: error.response?.data?.message || "Failed to logout session",
     };
   }
 };
 export const logoutAllSessions = async () => {
   try {
-    const response = await axios.post(`${API}/sessions/logout-all`, {}, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/sessions/logout-all`,
+      {},
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Logout All Sessions Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Logout All Sessions Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to logout all sessions"
+      message: error.response?.data?.message || "Failed to logout all sessions",
     };
   }
 };
-export const markNotificationAsRead = async notificationId => {
+export const markNotificationAsRead = async (notificationId) => {
   try {
-    const response = await axios.patch(`${API}/user/notifications/${notificationId}/read`, {}, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.patch(
+      `${API}/user/notifications/${notificationId}/read`,
+      {},
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Mark as Read Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Mark as Read Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to mark as read"
+      message: error.response?.data?.message || "Failed to mark as read",
     };
   }
 };
 export const markAllNotificationsAsRead = async () => {
   try {
-    const response = await axios.patch(`${API}/user/notifications/mark-all-read`, {}, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.patch(
+      `${API}/user/notifications/mark-all-read`,
+      {},
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Mark All as Read Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Mark All as Read Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to mark all as read"
+      message: error.response?.data?.message || "Failed to mark all as read",
     };
   }
 };
 export const getNotificationSettings = async () => {
   try {
     const response = await axios.get(`${API}/user/notification-settings`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Get Notification Settings Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Notification Settings Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       data: null,
-      message: error.response?.data?.message || "Failed to fetch notification settings"
+      message:
+        error.response?.data?.message ||
+        "Failed to fetch notification settings",
     };
   }
 };
-export const updateNotificationSettings = async settings => {
+export const updateNotificationSettings = async (settings) => {
   try {
-    const response = await axios.patch(`${API}/user/notification-settings`, settings, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.patch(
+      `${API}/user/notification-settings`,
+      settings,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Update Notification Settings Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Update Notification Settings Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to update notification settings"
+      message:
+        error.response?.data?.message ||
+        "Failed to update notification settings",
     };
   }
 };
-export const addToFavorites = async profileId => {
-  try {
-    const idStr = String(profileId);
-    const response = await axios.post(`${API}/requests/favorites/add`, {
-      profileId: idStr
-    }, {
-      headers: getAuthHeaders()
-    });
-    return response.data;
-  } catch (error) {
-    console.error("❌ Add to Favorites Error:", error.response?.data || error.message);
-    return {
-      success: false,
-      message: error.response?.data?.message || "Failed to add to favorites"
-    };
-  }
-};
-export const removeFromFavorites = async profileId => {
+export const addToFavorites = async (profileId) => {
   try {
     const idStr = String(profileId);
-    const response = await axios.post(`${API}/requests/favorites/remove`, {
-      profileId: idStr
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/requests/favorites/add`,
+      {
+        profileId: idStr,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Remove from Favorites Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Add to Favorites Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to remove from favorites"
+      message: error.response?.data?.message || "Failed to add to favorites",
+    };
+  }
+};
+export const removeFromFavorites = async (profileId) => {
+  try {
+    const idStr = String(profileId);
+    const response = await axios.post(
+      `${API}/requests/favorites/remove`,
+      {
+        profileId: idStr,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "❌ Remove from Favorites Error:",
+      error.response?.data || error.message,
+    );
+    return {
+      success: false,
+      message:
+        error.response?.data?.message || "Failed to remove from favorites",
     };
   }
 };
 export const getFavorites = async () => {
   try {
     const response = await axios.get(`${API}/requests/favorites`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Get Favorites Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Favorites Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       data: [],
-      message: error.response?.data?.message || "Failed to fetch favorites"
+      message: error.response?.data?.message || "Failed to fetch favorites",
     };
   }
 };
 export const getAllProfiles = async (page = 1, limit = 10) => {
   try {
-    const response = await axios.get(`${API}/profiles?page=${page}&limit=${limit}`, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.get(
+      `${API}/profiles?page=${page}&limit=${limit}`,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Get All Profiles Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get All Profiles Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       data: [],
@@ -1183,237 +1545,334 @@ export const getAllProfiles = async (page = 1, limit = 10) => {
         page,
         limit,
         total: 0,
-        hasMore: false
+        hasMore: false,
       },
-      message: error.response?.data?.message || "Failed to fetch profiles"
+      message: error.response?.data?.message || "Failed to fetch profiles",
     };
   }
 };
-export const sendConnectionRequest = async receiverId => {
+export const sendConnectionRequest = async (receiverId) => {
   try {
     const idStr = String(receiverId);
-    const response = await axios.post(`${API}/requests/send`, {
-      receiverId: idStr
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/requests/send`,
+      {
+        receiverId: idStr,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Send Request Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Send Request Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to send connection request"
+      message:
+        error.response?.data?.message || "Failed to send connection request",
     };
   }
 };
 export const getSentRequests = async () => {
   try {
     const response = await axios.get(`${API}/requests/all`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Get Sent Requests Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Sent Requests Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       data: [],
-      message: error.response?.data?.message || "Failed to fetch sent requests"
+      message: error.response?.data?.message || "Failed to fetch sent requests",
     };
   }
 };
 export const getReceivedRequests = async () => {
   try {
     const response = await axios.get(`${API}/requests/all/received`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Get Received Requests Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Received Requests Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       data: [],
-      message: error.response?.data?.message || "Failed to fetch received requests"
+      message:
+        error.response?.data?.message || "Failed to fetch received requests",
     };
   }
 };
-export const acceptConnectionRequest = async requestId => {
+export const acceptConnectionRequest = async (requestId) => {
   try {
     const idStr = String(requestId);
-    const response = await axios.post(`${API}/requests/accept`, {
-      requestId: idStr
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/requests/accept`,
+      {
+        requestId: idStr,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Accept Request Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Accept Request Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to accept connection request"
+      message:
+        error.response?.data?.message || "Failed to accept connection request",
     };
   }
 };
-export const rejectConnectionRequest = async requestId => {
+export const rejectConnectionRequest = async (requestId) => {
   try {
     const idStr = String(requestId);
-    const response = await axios.post(`${API}/requests/reject`, {
-      requestId: idStr
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/requests/reject`,
+      {
+        requestId: idStr,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Reject Request Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Reject Request Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to reject connection request"
+      message:
+        error.response?.data?.message || "Failed to reject connection request",
     };
   }
 };
-export const rejectAcceptedConnection = async requestId => {
+export const rejectAcceptedConnection = async (requestId) => {
   try {
     const idStr = String(requestId);
-    const response = await axios.post(`${API}/requests/accepted/reject`, {
-      requestId: idStr
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/requests/accepted/reject`,
+      {
+        requestId: idStr,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Reject Accepted Connection Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Reject Accepted Connection Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to change connection status to rejected"
+      message:
+        error.response?.data?.message ||
+        "Failed to change connection status to rejected",
     };
   }
 };
-export const acceptRejectedConnection = async requestId => {
+export const acceptRejectedConnection = async (requestId) => {
   try {
     const idStr = String(requestId);
-    const response = await axios.post(`${API}/requests/rejected/accept`, {
-      requestId: idStr
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/requests/rejected/accept`,
+      {
+        requestId: idStr,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Accept Rejected Connection Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Accept Rejected Connection Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to change connection status to accepted"
+      message:
+        error.response?.data?.message ||
+        "Failed to change connection status to accepted",
     };
   }
 };
-export const withdrawConnectionRequest = async connectionId => {
+export const withdrawConnectionRequest = async (connectionId) => {
   try {
     const idStr = String(connectionId);
-    const response = await axios.post(`${API}/requests/withdraw`, {
-      connectionId: idStr
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/requests/withdraw`,
+      {
+        connectionId: idStr,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Withdraw Request Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Withdraw Request Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to withdraw connection request"
+      message:
+        error.response?.data?.message ||
+        "Failed to withdraw connection request",
     };
   }
 };
 export const getApprovedConnections = async (page = 1, limit = 20) => {
   try {
-    const response = await axios.get(`${API}/requests/approve?page=${page}&limit=${limit}`, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.get(
+      `${API}/requests/approve?page=${page}&limit=${limit}`,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Get Approved Connections Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Approved Connections Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       data: [],
-      message: error.response?.data?.message || "Failed to fetch approved connections"
+      message:
+        error.response?.data?.message || "Failed to fetch approved connections",
     };
   }
 };
 export const getCompare = async () => {
   try {
     const response = await axios.get(`${API}/user/compare`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ getCompare error:", error.response?.data || error.message);
+    console.error(
+      "❌ getCompare error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       data: [],
-      message: error.response?.data?.message || "Failed to fetch compare list"
+      message: error.response?.data?.message || "Failed to fetch compare list",
     };
   }
 };
-export const addToCompare = async profileIdOrIds => {
+export const addToCompare = async (profileIdOrIds) => {
   try {
-    const ids = Array.isArray(profileIdOrIds) ? profileIdOrIds.map(String) : [String(profileIdOrIds)];
-    const response = await axios.post(`${API}/user/compare`, {
-      profilesIds: ids
-    }, {
-      headers: getAuthHeaders()
-    });
+    const ids = Array.isArray(profileIdOrIds)
+      ? profileIdOrIds.map(String)
+      : [String(profileIdOrIds)];
+    const response = await axios.post(
+      `${API}/user/compare`,
+      {
+        profilesIds: ids,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ addToCompare error:", error.response?.data || error.message);
+    console.error(
+      "❌ addToCompare error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to add to compare"
+      message: error.response?.data?.message || "Failed to add to compare",
     };
   }
 };
-export const removeFromCompare = async profileIdOrIds => {
+export const removeFromCompare = async (profileIdOrIds) => {
   try {
-    const ids = Array.isArray(profileIdOrIds) ? profileIdOrIds.map(String) : [String(profileIdOrIds)];
+    const ids = Array.isArray(profileIdOrIds)
+      ? profileIdOrIds.map(String)
+      : [String(profileIdOrIds)];
     const response = await axios.delete(`${API}/user/compare`, {
       headers: getAuthHeaders(),
       data: {
-        profilesIds: ids
-      }
+        profilesIds: ids,
+      },
     });
     return response.data;
   } catch (error) {
-    console.error("❌ removeFromCompare error:", error.response?.data || error.message);
+    console.error(
+      "❌ removeFromCompare error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to remove from compare"
+      message: error.response?.data?.message || "Failed to remove from compare",
     };
   }
 };
-export const changePassword = async (oldPassword, newPassword, confirmPassword) => {
+export const changePassword = async (
+  oldPassword,
+  newPassword,
+  confirmPassword,
+) => {
   try {
-    const response = await axios.post(`${API}/user/change-password`, {
-      oldPassword,
-      newPassword,
-      confirmPassword
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user/change-password`,
+      {
+        oldPassword,
+        newPassword,
+        confirmPassword,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ changePassword error:", error.response?.data || error.message);
+    console.error(
+      "❌ changePassword error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
-export const blockUserProfile = async customId => {
+export const blockUserProfile = async (customId) => {
   try {
     if (!customId || typeof customId !== "string") {
       return {
         success: false,
-        message: "Invalid customId provided"
+        message: "Invalid customId provided",
       };
     }
-    const response = await axios.post(`${API}/user/block`, {
-      customId
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user/block`,
+      {
+        customId,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
     const status = error?.response?.status;
@@ -1429,23 +1888,27 @@ export const blockUserProfile = async customId => {
     console.error("❌ blockUserProfile error:", rawMsg);
     return {
       success: false,
-      message
+      message,
     };
   }
 };
-export const unblockUserProfile = async customId => {
+export const unblockUserProfile = async (customId) => {
   try {
     if (!customId || typeof customId !== "string") {
       return {
         success: false,
-        message: "Invalid customId provided"
+        message: "Invalid customId provided",
       };
     }
-    const response = await axios.post(`${API}/user/unblock`, {
-      customId
-    }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user/unblock`,
+      {
+        customId,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
     const status = error?.response?.status;
@@ -1453,89 +1916,118 @@ export const unblockUserProfile = async customId => {
     let message = rawMsg;
     if (status === 429 || /24 hours/i.test(rawMsg)) {
       message = "You can change block status for this profile after 24 hours";
-    } else if (/not in your blocked list/i.test(rawMsg) || /NotBlocked/i.test(rawMsg)) {
+    } else if (
+      /not in your blocked list/i.test(rawMsg) ||
+      /NotBlocked/i.test(rawMsg)
+    ) {
       message = "User is not in your blocked list";
     }
     console.error("❌ unblockUserProfile error:", rawMsg);
     return {
       success: false,
-      message
+      message,
     };
   }
 };
 export const getBlockedUsers = async (useCache = true) => {
   const cacheKey = "blocked_users";
   if (useCache) {
-    return cachedFetch(cacheKey, async () => {
-      try {
-        const response = await axios.get(`${API}/user/blocked`, {
-          headers: getAuthHeaders()
-        });
-        return response.data;
-      } catch (error) {
-        console.error("❌ getBlockedUsers error:", error.response?.data || error.message);
-        return {
-          success: false,
-          data: [],
-          message: error.response?.data?.message || "Failed to fetch blocked users"
-        };
-      }
-    }, 30000);
+    return cachedFetch(
+      cacheKey,
+      async () => {
+        try {
+          const response = await axios.get(`${API}/user/blocked`, {
+            headers: getAuthHeaders(),
+          });
+          return response.data;
+        } catch (error) {
+          console.error(
+            "❌ getBlockedUsers error:",
+            error.response?.data || error.message,
+          );
+          return {
+            success: false,
+            data: [],
+            message:
+              error.response?.data?.message || "Failed to fetch blocked users",
+          };
+        }
+      },
+      30000,
+    );
   }
   try {
     const response = await axios.get(`${API}/user/blocked`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ getBlockedUsers error:", error.response?.data || error.message);
+    console.error(
+      "❌ getBlockedUsers error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       data: [],
-      message: error.response?.data?.message || "Failed to fetch blocked users"
+      message: error.response?.data?.message || "Failed to fetch blocked users",
     };
   }
 };
-export const getProfileViews = async (page = 1, limit = 10, useCache = false) => {
+export const getProfileViews = async (
+  page = 1,
+  limit = 10,
+  useCache = false,
+) => {
   const cacheKey = `profile_views_${page}_${limit}`;
   if (useCache) {
-    return cachedFetch(cacheKey, async () => {
-      try {
-        const response = await axios.get(`${API}/user/profile-views`, {
-          params: {
-            page,
-            limit
-          },
-          headers: getAuthHeaders()
-        });
-        return response.data;
-      } catch (error) {
-        console.error("❌ getProfileViews error:", error.response?.data || error.message);
-        return {
-          success: false,
-          data: [],
-          message: error.response?.data?.message || "Failed to fetch profile views",
-          pagination: {
-            page: 1,
-            limit: 10,
-            total: 0,
-            totalPages: 0
-          }
-        };
-      }
-    }, 15000);
+    return cachedFetch(
+      cacheKey,
+      async () => {
+        try {
+          const response = await axios.get(`${API}/user/profile-views`, {
+            params: {
+              page,
+              limit,
+            },
+            headers: getAuthHeaders(),
+          });
+          return response.data;
+        } catch (error) {
+          console.error(
+            "❌ getProfileViews error:",
+            error.response?.data || error.message,
+          );
+          return {
+            success: false,
+            data: [],
+            message:
+              error.response?.data?.message || "Failed to fetch profile views",
+            pagination: {
+              page: 1,
+              limit: 10,
+              total: 0,
+              totalPages: 0,
+            },
+          };
+        }
+      },
+      15000,
+    );
   }
   try {
     const response = await axios.get(`${API}/user/profile-views`, {
       params: {
         page,
-        limit
+        limit,
       },
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ getProfileViews error:", error.response?.data || error.message);
+    console.error(
+      "❌ getProfileViews error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
       data: [],
@@ -1544,20 +2036,20 @@ export const getProfileViews = async (page = 1, limit = 10, useCache = false) =>
         page: 1,
         limit: 10,
         total: 0,
-        totalPages: 0
-      }
+        totalPages: 0,
+      },
     };
   }
 };
 export const downloadUserPdf = async (userId = null) => {
   try {
-    const currentUserId = userId || localStorage.getItem('userId');
-    
-    const queryParam = currentUserId ? `?userId=${currentUserId}` : '';
+    const currentUserId = userId || localStorage.getItem("userId");
+
+    const queryParam = currentUserId ? `?userId=${currentUserId}` : "";
     const response = await axios.get(`${API}/user/download-pdf${queryParam}`, {
       headers: {
-        ...getAuthHeaders()
-      }
+        ...getAuthHeaders(),
+      },
     });
 
     if (response.status !== 200 || !response.data?.success) {
@@ -1565,19 +2057,21 @@ export const downloadUserPdf = async (userId = null) => {
     }
 
     const pdfUrl = response.data.data?.url;
-    
+
     if (!pdfUrl) {
       throw new Error("PDF URL not found in response");
     }
 
     // Extract filename from URL or create a default one
-    const urlParts = pdfUrl.split('/');
-    const fileName = urlParts[urlParts.length - 1].split('?')[0] || `biodata_${Date.now()}.pdf`;
+    const urlParts = pdfUrl.split("/");
+    const fileName =
+      urlParts[urlParts.length - 1].split("?")[0] ||
+      `biodata_${Date.now()}.pdf`;
 
     // Create a temporary link element to trigger download
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = pdfUrl;
-    link.target = '_blank';
+    link.target = "_blank";
     link.download = fileName;
     document.body.appendChild(link);
     link.click();
@@ -1589,29 +2083,43 @@ export const downloadUserPdf = async (userId = null) => {
     toast.error(error.response?.data?.message || "Failed to download PDF.");
   }
 };
-export const updateGovernmentId = async formData => {
+export const updateGovernmentId = async (formData) => {
   try {
-    const response = await axios.put(`${API}/user-personal/upload/government-id`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data"
-      }
-    });
+    const response = await axios.put(
+      `${API}/user-personal/upload/government-id`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Update Government ID Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Update Government ID Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
-export const updateUserPhoto = async formData => {
+export const updateUserPhoto = async (formData) => {
   try {
-    const response = await axios.put(`${API}/user-personal/upload/photos`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data"
-      }
-    });
+    const response = await axios.put(
+      `${API}/user-personal/upload/photos`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Update User Photo Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Update User Photo Error:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
@@ -1619,15 +2127,24 @@ export const updateUserPhoto = async formData => {
 export const activateAccount = async (token) => {
   try {
     // If token is not provided, just reactivate the authenticated user
-    const response = await axios.post(`${API}/user/account/activate`, token ? { token } : {}, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user/account/activate`,
+      token ? { token } : {},
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Account Activation Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Account Activation Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Account activation failed. Please try again."
+      message:
+        error.response?.data?.message ||
+        "Account activation failed. Please try again.",
     };
   }
 };
@@ -1635,30 +2152,43 @@ export const activateAccount = async (token) => {
 export const getAccountStatus = async () => {
   try {
     const response = await axios.get(`${API}/user/account/status`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Get Account Status Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Account Status Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      status: 'active',
-      message: error.response?.data?.message || "Failed to fetch account status"
+      status: "active",
+      message:
+        error.response?.data?.message || "Failed to fetch account status",
     };
   }
 };
 
 export const deactivateAccount = async (reason) => {
   try {
-    const response = await axios.post(`${API}/user/account/deactivate`, { reason }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/user/account/deactivate`,
+      { reason },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Account Deactivation Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Account Deactivation Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Account deactivation failed. Please try again."
+      message:
+        error.response?.data?.message ||
+        "Account deactivation failed. Please try again.",
     };
   }
 };
@@ -1667,33 +2197,41 @@ export const deleteUserAccount = async (reason) => {
   try {
     const response = await axios.delete(`${API}/user/account`, {
       headers: getAuthHeaders(),
-      data: { reason }
+      data: { reason },
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Delete User Account Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Delete User Account Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to delete account. Please try again."
+      message:
+        error.response?.data?.message ||
+        "Failed to delete account. Please try again.",
     };
   }
 };
-
 
 export const createSupportTicket = async (subject, message, category) => {
   try {
     const payload = { subject, message, description: message, category };
     console.log("Creating ticket with payload:", payload);
-    
+
     const response = await axios.post(`${API}/support/tickets`, payload, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Create Support Ticket Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Create Support Ticket Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to create support ticket."
+      message:
+        error.response?.data?.message || "Failed to create support ticket.",
     };
   }
 };
@@ -1701,14 +2239,18 @@ export const createSupportTicket = async (subject, message, category) => {
 export const getSupportTickets = async () => {
   try {
     const response = await axios.get(`${API}/support/tickets`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Get Support Tickets Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Support Tickets Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to fetch support tickets."
+      message:
+        error.response?.data?.message || "Failed to fetch support tickets.",
     };
   }
 };
@@ -1716,14 +2258,18 @@ export const getSupportTickets = async () => {
 export const getSupportTicketDetails = async (ticketId) => {
   try {
     const response = await axios.get(`${API}/support/tickets/${ticketId}`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Get Ticket Details Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Ticket Details Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to fetch ticket details."
+      message:
+        error.response?.data?.message || "Failed to fetch ticket details.",
     };
   }
 };
@@ -1736,50 +2282,61 @@ export const getFAQs = async () => {
     console.error("❌ Get FAQs Error:", error.response?.data || error.message);
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to fetch FAQs."
+      message: error.response?.data?.message || "Failed to fetch FAQs.",
     };
   }
 };
-
-
 
 export const addTicketMessage = async (ticketId, text) => {
   try {
-    const response = await axios.post(`${API}/support/tickets/${ticketId}/messages`, { text }, {
-      headers: getAuthHeaders()
-    });
+    const response = await axios.post(
+      `${API}/support/tickets/${ticketId}/messages`,
+      { text },
+      {
+        headers: getAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Add Ticket Message Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Add Ticket Message Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to add message to ticket."
+      message:
+        error.response?.data?.message || "Failed to add message to ticket.",
     };
   }
 };
 
-export const reportProfile = async (customId, reason, description, reportType) => {
+export const reportProfile = async (
+  customId,
+  reason,
+  description,
+  reportType,
+) => {
   try {
     // Validate input
     if (!customId || !reason || !description || !reportType) {
       return {
         success: false,
-        message: "All fields are required."
+        message: "All fields are required.",
       };
     }
 
     if (description.length < 6 || description.length > 500) {
       return {
         success: false,
-        message: "Description must be between 6 and 500 characters."
+        message: "Description must be between 6 and 500 characters.",
       };
     }
 
-    const validReportTypes = ['spam', 'abuse', 'hate', 'other'];
+    const validReportTypes = ["spam", "abuse", "hate", "other"];
     if (!validReportTypes.includes(reportType)) {
       return {
         success: false,
-        message: "Invalid report type."
+        message: "Invalid report type.",
       };
     }
 
@@ -1789,18 +2346,21 @@ export const reportProfile = async (customId, reason, description, reportType) =
         customId,
         reason,
         description,
-        reportType
+        reportType,
       },
       {
-        headers: getAuthHeaders()
-      }
+        headers: getAuthHeaders(),
+      },
     );
     return response.data;
   } catch (error) {
-    console.error("❌ Report Profile Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Report Profile Error:",
+      error.response?.data || error.message,
+    );
     return {
       success: false,
-      message: error.response?.data?.message || "Failed to submit report."
+      message: error.response?.data?.message || "Failed to submit report.",
     };
   }
 };

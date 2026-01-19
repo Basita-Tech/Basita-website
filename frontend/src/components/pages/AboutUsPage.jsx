@@ -44,8 +44,8 @@ const AboutUsPage = () => {
                 We're not just a matrimony platform—we're your trusted companion in one of life's most important journeys.
               </p>
             </div>
-            <div className="bg-[#F9F7F5] rounded-2xl p-8 flex items-center justify-center h-64">
-              <Heart className="w-24 h-24 text-[#D4A052]" />
+            <div className="rounded-2xl p-0 flex items-center justify-center h-96 overflow-hidden">
+              <img src="/story.jpg" alt="Satfera story" className="w-full h-full object-cover" />
             </div>
           </div>
         </div>

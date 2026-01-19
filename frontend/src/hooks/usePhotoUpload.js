@@ -3,15 +3,14 @@ import {
   getPreSignedUrlForFile,
   uploadToS3,
   getUserId,
-  savePhotoMetadata
+  savePhotoMetadata,
 } from "../api/auth";
 const usePhotoUpload = () => {
   const userIdRef = useRef(null);
 
   const ensureUserId = useCallback(async () => {
     if (userIdRef.current) return userIdRef.current;
-    
-    
+
     try {
       const mongoId = await getUserId();
       if (mongoId) {
@@ -24,7 +23,7 @@ const usePhotoUpload = () => {
     } catch (e) {
       console.error("❌ Error fetching user ID:", e);
     }
-    
+
     console.warn("⚠️ No MongoDB _id found");
     return null;
   }, []);
@@ -36,7 +35,7 @@ const usePhotoUpload = () => {
     progress: {},
     errors: [],
     successCount: 0,
-    failedCount: 0
+    failedCount: 0,
   });
   const abortControllerRef = useRef(null);
   const isOnlineRef = useRef(navigator.onLine);
@@ -57,7 +56,7 @@ const usePhotoUpload = () => {
   const waitForNetwork = useCallback(async (maxWaitTime = 10000) => {
     if (isOnlineRef.current) return true;
     const startTime = Date.now();
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const checkInterval = setInterval(() => {
         if (isOnlineRef.current) {
           clearInterval(checkInterval);
@@ -69,236 +68,273 @@ const usePhotoUpload = () => {
       }, 500);
     });
   }, []);
-  const uploadPhotoWithRetry = useCallback(async (file, photoType, photoKey, isUpdate = false, photoIndex = null, maxRetries = 3) => {
-    let lastError = null;
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        if (!isOnlineRef.current) {
-          const networkRestored = await waitForNetwork(10000);
-          if (!networkRestored) {
-            throw new Error("No network connection. Please check your internet and try again.");
-          }
-        }
-        setUploadState(prev => ({
-          ...prev,
-          progress: {
-            ...prev.progress,
-            [photoKey]: {
-              ...prev.progress[photoKey],
-              attempts: attempt,
-              status: "uploading"
+  const uploadPhotoWithRetry = useCallback(
+    async (
+      file,
+      photoType,
+      photoKey,
+      isUpdate = false,
+      photoIndex = null,
+      maxRetries = 3,
+    ) => {
+      let lastError = null;
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          if (!isOnlineRef.current) {
+            const networkRestored = await waitForNetwork(10000);
+            if (!networkRestored) {
+              throw new Error(
+                "No network connection. Please check your internet and try again.",
+              );
             }
           }
-        }));
-
-        // For "other" photos, convert to "other-1" or "other-2" based on photoIndex
-        let actualPhotoType = photoType;
-        if (photoType === "other" && (photoIndex === 0 || photoIndex === 1)) {
-          actualPhotoType = photoIndex === 0 ? "other-1" : "other-2";
-        }
-        
-        const userId = await ensureUserId();
-        const presign = await getPreSignedUrlForFile(file, userId || photoKey, actualPhotoType);
-        if (!presign?.success || !presign?.url) {
-          throw new Error(presign?.message || "Failed to get pre-signed URL");
-        }
-
-        await uploadToS3(presign.url, file, (percentCompleted) => {
-          setUploadState(prev => ({
+          setUploadState((prev) => ({
             ...prev,
             progress: {
               ...prev.progress,
               [photoKey]: {
                 ...prev.progress[photoKey],
-                progress: percentCompleted,
-                status: "uploading"
-              }
-            }
-          }));
-        });
-
-        // Construct proper S3 object URL for payload
-        const bucketName = 'cdn.satfera.in';
-        const region = 'ap-south-1';
-        const uploadedUrl = `https://s3.${region}.amazonaws.com/${bucketName}/${userId || photoKey}-${actualPhotoType}`;
-        
-        if (!uploadedUrl) {
-          throw new Error("Failed to construct S3 object URL");
-        }
-
-        await savePhotoMetadata(userId || photoKey, actualPhotoType, uploadedUrl);
-
-        return { success: true, url: uploadedUrl, photoKey, photoType };
-      } catch (error) {
-        lastError = error;
-        console.error(`[PhotoUpload] Attempt ${attempt}/${maxRetries} failed for ${photoKey}:`, error.message);
-        const status = error.response?.status;
-        if (status && status >= 400 && status < 500 && status !== 429 && status !== 408) {
-          break;
-        }
-        if (attempt < maxRetries) {
-          const backoffDelay = Math.pow(2, attempt - 1) * 1000;
-          await new Promise(resolve => setTimeout(resolve, backoffDelay));
-        }
-      }
-    }
-    return {
-      success: false,
-      error: lastError?.response?.data?.message || lastError?.message || "Upload failed after multiple attempts",
-      photoKey,
-      photoType
-    };
-  }, [waitForNetwork, ensureUserId]);
-  const uploadPhotos = useCallback(async (photosToUpload, existingPhotos = {}) => {
-    const cleanupNetwork = setupNetworkMonitoring();
-    if (!photosToUpload || photosToUpload.length === 0) {
-      console.warn("[PhotoUpload] No photos to upload");
-      return {
-        success: true,
-        results: [],
-        errors: []
-      };
-    }
-    const initialProgress = {};
-    photosToUpload.forEach(({
-      key
-    }) => {
-      initialProgress[key] = {
-        status: "pending",
-        progress: 0,
-        attempts: 0,
-        url: null,
-        error: null
-      };
-    });
-    setUploadState({
-      isUploading: true,
-      currentPhoto: null,
-      currentPhotoIndex: 0,
-      totalPhotos: photosToUpload.length,
-      progress: initialProgress,
-      errors: [],
-      successCount: 0,
-      failedCount: 0
-    });
-    abortControllerRef.current = new AbortController();
-    const results = [];
-    const errors = [];
-    let successCount = 0;
-    let failedCount = 0;
-    try {
-      for (let i = 0; i < photosToUpload.length; i++) {
-        const {
-          key,
-          file,
-          photoType
-        } = photosToUpload[i];
-        if (abortControllerRef.current.signal.aborted) {
-          break;
-        }
-        setUploadState(prev => ({
-          ...prev,
-          currentPhoto: key,
-          currentPhotoIndex: i + 1
-        }));
-        const existingUrl = existingPhotos[key];
-        let photoIndex = null;
-        if (photoType === "personal") {
-          if (key === "compulsory1") photoIndex = 0;
-        } else if (photoType === "other") {
-          if (key === "optional1") photoIndex = 0;
-          if (key === "optional2") photoIndex = 1;
-        }
-        
-        // For array-based photos (personal, other) with photoIndex, always use PUT (update) method
-        const isUpdate = !!existingUrl || photoIndex !== null;
-        const uploadStartTime = Date.now();
-        const result = await uploadPhotoWithRetry(file, photoType, key, isUpdate, photoIndex);
-        const uploadDuration = Date.now() - uploadStartTime;
-        if (result.success) {
-          successCount++;
-          setUploadState(prev => ({
-            ...prev,
-            progress: {
-              ...prev.progress,
-              [key]: {
-                ...prev.progress[key],
-                status: "success",
-                progress: 100,
-                url: result.url
-              }
+                attempts: attempt,
+                status: "uploading",
+              },
             },
-            successCount: successCount
           }));
-          results.push(result);
-        } else {
-          failedCount++;
-          setUploadState(prev => ({
-            ...prev,
-            progress: {
-              ...prev.progress,
-              [key]: {
-                ...prev.progress[key],
-                status: "error",
-                progress: 0,
-                error: result.error
-              }
-            },
-            errors: [...prev.errors, {
-              key,
-              error: result.error
-            }],
-            failedCount: failedCount
-          }));
-          errors.push({
-            key,
-            error: result.error
+
+          // For "other" photos, convert to "other-1" or "other-2" based on photoIndex
+          let actualPhotoType = photoType;
+          if (photoType === "other" && (photoIndex === 0 || photoIndex === 1)) {
+            actualPhotoType = photoIndex === 0 ? "other-1" : "other-2";
+          }
+
+          const userId = await ensureUserId();
+          const presign = await getPreSignedUrlForFile(userId, actualPhotoType);
+          if (!presign?.success) {
+            throw new Error(presign?.message || "Failed to get pre-signed URL");
+          }
+
+          const { key } = presign.data;
+
+          await uploadToS3(presign.data.url, file, (percentCompleted) => {
+            setUploadState((prev) => ({
+              ...prev,
+              progress: {
+                ...prev.progress,
+                [photoKey]: {
+                  ...prev.progress[photoKey],
+                  progress: percentCompleted,
+                  status: "uploading",
+                },
+              },
+            }));
           });
-          console.error(`[PhotoUpload] Photo ${i + 1}/${photosToUpload.length} failed: ${result.error}`);
-        }
-        if (i < photosToUpload.length - 1) {
-          await new Promise(resolve => setTimeout(resolve, 800));
+
+          await savePhotoMetadata(userId || photoKey, actualPhotoType, key);
+
+          return {
+            success: true,
+            key,
+            url: `https://cdn.satfera.in/${key}`,
+            photoKey,
+            photoType: actualPhotoType,
+          };
+        } catch (error) {
+          lastError = error;
+          console.error(
+            `[PhotoUpload] Attempt ${attempt}/${maxRetries} failed for ${photoKey}:`,
+            error.message,
+          );
+          const status = error.response?.status;
+          if (
+            status &&
+            status >= 400 &&
+            status < 500 &&
+            status !== 429 &&
+            status !== 408
+          ) {
+            break;
+          }
+          if (attempt < maxRetries) {
+            const backoffDelay = Math.pow(2, attempt - 1) * 1000;
+            await new Promise((resolve) => setTimeout(resolve, backoffDelay));
+          }
         }
       }
-      setUploadState(prev => ({
-        ...prev,
-        isUploading: false,
-        currentPhoto: null
-      }));
-      cleanupNetwork();
-      return {
-        success: failedCount === 0,
-        results,
-        errors,
-        successCount,
-        failedCount,
-        totalPhotos: photosToUpload.length
-      };
-    } catch (error) {
-      console.error("[PhotoUpload] Fatal error during upload:", error);
-      setUploadState(prev => ({
-        ...prev,
-        isUploading: false,
-        currentPhoto: null,
-        errors: [...prev.errors, {
-          key: "fatal",
-          error: error.message
-        }]
-      }));
-      cleanupNetwork();
       return {
         success: false,
-        results,
-        errors: [...errors, {
-          key: "fatal",
-          error: error.message
-        }],
-        successCount,
-        failedCount,
-        totalPhotos: photosToUpload.length
+        error:
+          lastError?.response?.data?.message ||
+          lastError?.message ||
+          "Upload failed after multiple attempts",
+        photoKey,
+        photoType,
       };
-    }
-  }, [setupNetworkMonitoring, uploadPhotoWithRetry]);
+    },
+    [waitForNetwork, ensureUserId],
+  );
+  const uploadPhotos = useCallback(
+    async (photosToUpload, existingPhotos = {}) => {
+      const cleanupNetwork = setupNetworkMonitoring();
+      if (!photosToUpload || photosToUpload.length === 0) {
+        console.warn("[PhotoUpload] No photos to upload");
+        return {
+          success: true,
+          results: [],
+          errors: [],
+        };
+      }
+      const initialProgress = {};
+      photosToUpload.forEach(({ key }) => {
+        initialProgress[key] = {
+          status: "pending",
+          progress: 0,
+          attempts: 0,
+          url: null,
+          error: null,
+        };
+      });
+      setUploadState({
+        isUploading: true,
+        currentPhoto: null,
+        currentPhotoIndex: 0,
+        totalPhotos: photosToUpload.length,
+        progress: initialProgress,
+        errors: [],
+        successCount: 0,
+        failedCount: 0,
+      });
+      abortControllerRef.current = new AbortController();
+      const results = [];
+      const errors = [];
+      let successCount = 0;
+      let failedCount = 0;
+      try {
+        for (let i = 0; i < photosToUpload.length; i++) {
+          const { key, file, photoType } = photosToUpload[i];
+          if (abortControllerRef.current.signal.aborted) {
+            break;
+          }
+          setUploadState((prev) => ({
+            ...prev,
+            currentPhoto: key,
+            currentPhotoIndex: i + 1,
+          }));
+          const existingUrl = existingPhotos[key];
+          let photoIndex = null;
+          if (photoType === "personal") {
+            if (key === "compulsory1") photoIndex = 0;
+          } else if (photoType === "other") {
+            if (key === "optional1") photoIndex = 0;
+            if (key === "optional2") photoIndex = 1;
+          }
+
+          // For array-based photos (personal, other) with photoIndex, always use PUT (update) method
+          const isUpdate = !!existingUrl || photoIndex !== null;
+          const uploadStartTime = Date.now();
+          const result = await uploadPhotoWithRetry(
+            file,
+            photoType,
+            key,
+            isUpdate,
+            photoIndex,
+          );
+          const uploadDuration = Date.now() - uploadStartTime;
+          if (result.success) {
+            successCount++;
+            setUploadState((prev) => ({
+              ...prev,
+              progress: {
+                ...prev.progress,
+                [key]: {
+                  ...prev.progress[key],
+                  status: "success",
+                  progress: 100,
+                  url: result.url,
+                },
+              },
+              successCount: successCount,
+            }));
+            results.push(result);
+          } else {
+            failedCount++;
+            setUploadState((prev) => ({
+              ...prev,
+              progress: {
+                ...prev.progress,
+                [key]: {
+                  ...prev.progress[key],
+                  status: "error",
+                  progress: 0,
+                  error: result.error,
+                },
+              },
+              errors: [
+                ...prev.errors,
+                {
+                  key,
+                  error: result.error,
+                },
+              ],
+              failedCount: failedCount,
+            }));
+            errors.push({
+              key,
+              error: result.error,
+            });
+            console.error(
+              `[PhotoUpload] Photo ${i + 1}/${photosToUpload.length} failed: ${result.error}`,
+            );
+          }
+          if (i < photosToUpload.length - 1) {
+            await new Promise((resolve) => setTimeout(resolve, 800));
+          }
+        }
+        setUploadState((prev) => ({
+          ...prev,
+          isUploading: false,
+          currentPhoto: null,
+        }));
+        cleanupNetwork();
+        return {
+          success: failedCount === 0,
+          results,
+          errors,
+          successCount,
+          failedCount,
+          totalPhotos: photosToUpload.length,
+        };
+      } catch (error) {
+        console.error("[PhotoUpload] Fatal error during upload:", error);
+        setUploadState((prev) => ({
+          ...prev,
+          isUploading: false,
+          currentPhoto: null,
+          errors: [
+            ...prev.errors,
+            {
+              key: "fatal",
+              error: error.message,
+            },
+          ],
+        }));
+        cleanupNetwork();
+        return {
+          success: false,
+          results,
+          errors: [
+            ...errors,
+            {
+              key: "fatal",
+              error: error.message,
+            },
+          ],
+          successCount,
+          failedCount,
+          totalPhotos: photosToUpload.length,
+        };
+      }
+    },
+    [setupNetworkMonitoring, uploadPhotoWithRetry],
+  );
   const abortUpload = useCallback(() => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -313,25 +349,26 @@ const usePhotoUpload = () => {
       progress: {},
       errors: [],
       successCount: 0,
-      failedCount: 0
+      failedCount: 0,
     });
   }, []);
-  const retryFailedUploads = useCallback(async photosToUpload => {
-    const failedPhotos = photosToUpload.filter(({
-      key
-    }) => {
-      const photoProgress = uploadState.progress[key];
-      return photoProgress && photoProgress.status === "error";
-    });
-    if (failedPhotos.length === 0) {
-      return {
-        success: true,
-        results: [],
-        errors: []
-      };
-    }
-    return uploadPhotos(failedPhotos);
-  }, [uploadState.progress, uploadPhotos]);
+  const retryFailedUploads = useCallback(
+    async (photosToUpload) => {
+      const failedPhotos = photosToUpload.filter(({ key }) => {
+        const photoProgress = uploadState.progress[key];
+        return photoProgress && photoProgress.status === "error";
+      });
+      if (failedPhotos.length === 0) {
+        return {
+          success: true,
+          results: [],
+          errors: [],
+        };
+      }
+      return uploadPhotos(failedPhotos);
+    },
+    [uploadState.progress, uploadPhotos],
+  );
   return {
     uploadPhotos,
     abortUpload,
@@ -345,7 +382,7 @@ const usePhotoUpload = () => {
     currentPhotoIndex: uploadState.currentPhotoIndex,
     totalPhotos: uploadState.totalPhotos,
     successCount: uploadState.successCount,
-    failedCount: uploadState.failedCount
+    failedCount: uploadState.failedCount,
   };
 };
 export default usePhotoUpload;

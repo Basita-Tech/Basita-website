@@ -51,7 +51,7 @@ async function sendOtp(req: AuthenticatedRequest, res: Response) {
       user.isPhoneVerified = true;
       await user.save();
 
-      return res.status(200).json({
+      return res.status(201).json({
         success: true,
         message: "Phone verified successfully"
       });

@@ -33,15 +33,14 @@ export function setSecureTokenCookie(
     secure: isProduction,
     sameSite: isProduction ? "strict" : "lax",
     maxAge: options.maxAge || COOKIE_MAX_AGE,
-    path: "/",
-    ...(getCookieDomain() && { domain: getCookieDomain() })
+    path: "/"
   };
 
   res.cookie("token", token, tokenCookieOptions);
 
   if (isProduction) {
     logger.info(
-      `Cookie set in production: domain: ${getCookieDomain()}, secure: ${tokenCookieOptions.secure}, sameSite: ${tokenCookieOptions.sameSite}, httpOnly: ${tokenCookieOptions.httpOnly}, maxAge: ${tokenCookieOptions.maxAge}`
+      `Cookie set in production: secure: ${tokenCookieOptions.secure}, sameSite: ${tokenCookieOptions.sameSite}, httpOnly: ${tokenCookieOptions.httpOnly}, maxAge: ${tokenCookieOptions.maxAge}`
     );
   }
 }
@@ -64,8 +63,7 @@ export function setCSRFTokenCookie(res: Response, csrfToken: string): void {
     secure: isProduction,
     sameSite: isProduction ? "strict" : "lax",
     maxAge: COOKIE_MAX_AGE,
-    path: "/",
-    ...(getCookieDomain() && { domain: getCookieDomain() })
+    path: "/"
   };
 
   res.cookie("csrf_token", csrfToken, csrfCookieOptions);
@@ -84,18 +82,14 @@ export function clearAuthCookies(res: Response): void {
   const clearOptions: CookieOptions = {
     secure: isProduction,
     sameSite: isProduction ? "strict" : "lax",
-    path: "/",
-    ...(getCookieDomain() && { domain: getCookieDomain() })
+    path: "/"
   };
 
   res.clearCookie("token", clearOptions);
   res.clearCookie("csrf_token", clearOptions);
 
   if (isProduction) {
-    logger.info(
-      "Cookies cleared in production with domain:",
-      getCookieDomain()
-    );
+    logger.info("Cookies cleared in production");
   }
 }
 

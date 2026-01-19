@@ -121,8 +121,8 @@ const VerifyOTP = () => {
     ? Boolean(resolvedCountryCode && resolvedMobile)
     : resolvedCountryCode.replace("+", "") === "91";
 
-  // Only hide verified sections during 202/login flows; keep signup UI intact
-  const hideVerifiedSections = fromLogin;
+  // Keep sections visible after verification to show status
+  const hideVerifiedSections = false;
   const showEmailSection = hasEmail && !(hideVerifiedSections && isEmailVerified);
   const showMobileSection = requiresMobileOtp && !(hideVerifiedSections && isMobileVerified);
 
@@ -280,6 +280,8 @@ const VerifyOTP = () => {
         });
         const isSuccess = !!(res?.success || res?.data?.success || res?.data?.data?.success);
         if (isSuccess) {
+          const emailAutoKey = email ? `otpAutoSent_email_${email}` : "";
+          sessionStorage.setItem(emailAutoKey, "1");
           setEmailCountdown(OTP_VALID_TIME);
           setResendCooldown(RESEND_AFTER);
           setEmailOtp(Array(6).fill(""));
@@ -300,7 +302,11 @@ const VerifyOTP = () => {
     };
 
     if (fromLogin && hasEmail && !isEmailVerified && !isLocked && !initialEmailSentRef.current) {
+      const emailAutoKey = email ? `otpAutoSent_email_${email}` : "";
+      const alreadyAutoSent = emailAutoKey ? sessionStorage.getItem(emailAutoKey) : null;
+      if (!alreadyAutoSent) {
       sendInitialEmailOtp();
+      }
     }
   }, [email, hasEmail, isEmailVerified, isLocked, initialEmailSent, fromLogin]);
 
@@ -319,6 +325,8 @@ const VerifyOTP = () => {
         });
         const isSuccess = !!(res?.success || res?.data?.success || res?.data?.data?.success);
         if (isSuccess) {
+          const mobileAutoKey = resolvedCountryCode && resolvedMobile ? `otpAutoSent_mobile_${resolvedCountryCode}${resolvedMobile}` : "";
+          sessionStorage.setItem(mobileAutoKey, "1");
           setMobileCountdown(OTP_VALID_TIME);
           setResendCooldownMobile(RESEND_AFTER);
           setMobileOtp(Array(6).fill(""));
@@ -346,7 +354,11 @@ const VerifyOTP = () => {
       !isMobileLocked &&
       !initialMobileSentRef.current
     ) {
+      const mobileAutoKey = resolvedCountryCode && resolvedMobile ? `otpAutoSent_mobile_${resolvedCountryCode}${resolvedMobile}` : "";
+      const alreadyAutoSent = mobileAutoKey ? sessionStorage.getItem(mobileAutoKey) : null;
+      if (!alreadyAutoSent) {
       sendInitialMobileOtp();
+      }
     }
   }, [resolvedMobile, resolvedCountryCode, requiresMobileOtp, isMobileVerified, isMobileLocked, initialMobileSent, fromLogin]);
 
@@ -865,7 +877,7 @@ const VerifyOTP = () => {
                       onChange={e => handleOtpChange(idx, e.target.value)}
                       onKeyDown={e => handleOtpKeyDown(idx, e)}
                       onPaste={handleOtpPaste}
-                      className="otp-input"
+                      className={`otp-input ${isEmailVerified || emailCountdown === 0 || isLocked || isVerifying ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""}`}
                     />)}
                 </div>
                 <div className="text-center text-sm mt-2">
@@ -922,7 +934,7 @@ const VerifyOTP = () => {
                           onChange={e => handleMobileOtpChange(idx, e.target.value)}
                           onKeyDown={e => handleMobileOtpKeyDown(idx, e)}
                           onPaste={handleMobileOtpPaste}
-                          className="otp-input"
+                          className={`otp-input ${isMobileVerified || mobileCountdown === 0 || isMobileLocked || isVerifyingMobile ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""}`}
                         />
                       ))}
                     </div>

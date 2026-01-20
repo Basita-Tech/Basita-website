@@ -21,9 +21,6 @@ export default function SEO({
       {/* Indexing */}
       {noIndex && <meta name="robots" content="noindex, nofollow" />}
 
-      {/* Canonical */}
-      <link rel="canonical" href={url} />
-
       {/* Open Graph */}
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />

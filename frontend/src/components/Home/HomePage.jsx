@@ -7,7 +7,11 @@ import couple1 from "../../assets/couple1.png";
 import couple2 from "../../assets/couple2.png";
 import couple3 from "../../assets/couple3.png";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import { getOnboardingStatus, getProfileReviewStatus, getMembershipPlans } from "../../api/auth";
+import {
+  getOnboardingStatus,
+  getProfileReviewStatus,
+  getMembershipPlans,
+} from "../../api/auth";
 import Footer from "../Footer/Footer";
 import HomeNavbar from "../HomeNavbar";
 import SEO from "../SEO";
@@ -17,43 +21,48 @@ const colors = {
   goldLight: "#E4C48A",
   beige: "#F4EEE4",
   planBg: "#F9F7F5",
-  white: "#FFFFFF"
+  white: "#FFFFFF",
 };
-const featuredProfiles = [{
-  id: 1,
-  name: "Amit & Priya",
-  age: "26 & 24 yrs",
-  location: "Bangalore",
-  img: couple1
-}, {
-  id: 2,
-  name: "Rahul & Anjali",
-  age: "29 & 27 yrs",
-  location: "Mumbai",
-  img: couple2
-}, {
-  id: 3,
-  name: "Vikram & Neha",
-  age: "31 & 28 yrs",
-  location: "Delhi",
-  img: couple3
-}];
-const successStories = [{
-  id: 1,
-  name: "Rohan & Sneha",
-  story: "Met through Satfera, now happily married!",
-  img: "https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=crop&w=400&q=80"
-}, {
-  id: 2,
-  name: "Aakash & Meera",
-  story: "Found true love and companionship.",
-  img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80"
-}];
+const featuredProfiles = [
+  {
+    id: 1,
+    name: "Amit & Priya",
+    age: "26 & 24 yrs",
+    location: "Bangalore",
+    img: couple1,
+  },
+  {
+    id: 2,
+    name: "Rahul & Anjali",
+    age: "29 & 27 yrs",
+    location: "Mumbai",
+    img: couple2,
+  },
+  {
+    id: 3,
+    name: "Vikram & Neha",
+    age: "31 & 28 yrs",
+    location: "Delhi",
+    img: couple3,
+  },
+];
+const successStories = [
+  {
+    id: 1,
+    name: "Rohan & Sneha",
+    story: "Met through Satfera, now happily married!",
+    img: "https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=crop&w=400&q=80",
+  },
+  {
+    id: 2,
+    name: "Aakash & Meera",
+    story: "Found true love and companionship.",
+    img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80",
+  },
+];
 export default function HomePage() {
   const navigate = useNavigate();
-  const {
-    isAuthenticated
-  } = useContext(AuthContextr);
+  const { isAuthenticated } = useContext(AuthContextr);
   const [plans, setPlans] = useState([]);
   const [plansLoading, setPlansLoading] = useState(false);
   const [plansError, setPlansError] = useState("");
@@ -79,68 +88,95 @@ export default function HomePage() {
     };
     fetchPlans();
   }, []);
-  
+
   const handleSearch = async (e) => {
     e.preventDefault();
-    
-   
+
     if (isAuthenticated) {
-      
       try {
         const onboarding = await getOnboardingStatus();
         const data = onboarding?.data?.data || onboarding?.data || {};
-        const completedSteps = Array.isArray(data.completedSteps) ? data.completedSteps : [];
-        const isOnboardingCompleted = typeof data.isOnboardingCompleted !== "undefined" ? data.isOnboardingCompleted : completedSteps.length >= 7;
-        const steps = ["personal", "family", "education", "profession", "health", "expectation", "photos"];
-        
-        
-        if (data.profileReviewStatus === "pending" || data.profileReviewStatus === "rejected") {
+        const completedSteps = Array.isArray(data.completedSteps)
+          ? data.completedSteps
+          : [];
+        const isOnboardingCompleted =
+          typeof data.isOnboardingCompleted !== "undefined"
+            ? data.isOnboardingCompleted
+            : completedSteps.length >= 7;
+        const steps = [
+          "personal",
+          "family",
+          "education",
+          "profession",
+          "health",
+          "expectation",
+          "photos",
+        ];
+
+        if (
+          data.profileReviewStatus === "pending" ||
+          data.profileReviewStatus === "rejected"
+        ) {
           navigate("/onboarding/review");
           return;
         }
-        
-        
+
         if (completedSteps.length === 7 && !data.profileReviewStatus) {
           navigate("/onboarding/user?step=photos");
           return;
         }
-        
+
         if (!isOnboardingCompleted) {
-          const firstUncompletedStep = steps.find(step => !completedSteps.includes(step)) || "personal";
+          const firstUncompletedStep =
+            steps.find((step) => !completedSteps.includes(step)) || "personal";
           navigate(`/onboarding/user?step=${firstUncompletedStep}`);
           return;
         }
-        
-        
+
         navigate("/dashboard");
       } catch (err) {
         console.error("Failed to get onboarding status:", err);
-       
+
         navigate("/dashboard");
       }
     } else {
-      
       navigate("/signup");
     }
   };
-  
-  return <div className="min-h-screen w-full overflow-x-hidden bg-beige">
+
+  return (
+    <div className="min-h-screen w-full overflow-x-hidden bg-beige">
       <HomeNavbar />
       <SEO
-        title="Satfera – Trusted Matrimony Platform to Find Your Life Partner"
-        description="Satfera helps you find verified matrimonial profiles and meaningful relationships across India."
+        title="Satfera – Trusted Matrimony Platform for Life Partners"
+        description="Satfera is a trusted matrimony platform to find verified profiles, meaningful relationships, and your ideal life partner with privacy and security."
         path="/"
         schema={{
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Satfera",
           url: "https://www.satfera.in",
-          logo: "https://www.satfera.in/logo.png"
+          logo: "https://www.satfera.in/logo.png",
         }}
       />
+      <main className="sr-only">
+        <h1>Trusted Matrimony Platform to Find Your Life Partner</h1>
 
-      <section id="hero" className="relative flex items-center justify-center h-[450px] md:h-[600px] w-full overflow-hidden">
-        <img src={weddingCoupleImage} alt="Wedding Couple" className="absolute inset-0 w-full h-full object-cover" />
+        <h2>Why Choose Satfera for Matrimonial Matches?</h2>
+        <p>Satfera provides verified matrimonial profiles...</p>
+
+        <h2>Verified Matrimonial Profiles You Can Trust</h2>
+        <p>Every profile on Satfera is carefully reviewed...</p>
+      </main>
+      <section
+        id="hero"
+        className="relative flex items-center justify-center h-[450px] md:h-[600px] w-full overflow-hidden"
+      >
+        <img
+          src={weddingCoupleImage}
+          alt="Wedding Couple"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/50 to-black/60"></div>
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
@@ -172,7 +208,7 @@ export default function HomePage() {
                 <option>Hindu</option>
                 <option>Jain</option>
               </select>
-              <button 
+              <button
                 onClick={handleSearch}
                 className="bg-[#D4A052] text-white rounded-md font-semibold hover:opacity-90 transition py-2.5 sm:py-3 text-sm sm:text-base"
               >
@@ -194,12 +230,20 @@ export default function HomePage() {
 
           {}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {featuredProfiles.map(p => <div key={p.id} className="rounded-3xl shadow-2xl bg-white border border-[#E4C48A] overflow-hidden hover:shadow-3xl hover:scale-[1.04] transition-transform duration-300">
+            {featuredProfiles.map((p) => (
+              <div
+                key={p.id}
+                className="rounded-3xl shadow-2xl bg-white border border-[#E4C48A] overflow-hidden hover:shadow-3xl hover:scale-[1.04] transition-transform duration-300"
+              >
                 {}
                 <div className="w-full h-96 overflow-hidden">
                   {" "}
                   {}
-                  <img src={p.img} alt={p.name} className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500" />
+                  <img
+                    src={p.img}
+                    alt={p.name}
+                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
 
                 <div className="p-6">
@@ -207,11 +251,15 @@ export default function HomePage() {
                   <p className="text-gray-600 text-base">
                     {p.age} | {p.location}
                   </p>
-                  <button onClick={handleSearch} className="mt-6 w-full bg-[#D4A052] text-white py-3 rounded-md font-semibold hover:opacity-90 transition">
+                  <button
+                    onClick={handleSearch}
+                    className="mt-6 w-full bg-[#D4A052] text-white py-3 rounded-md font-semibold hover:opacity-90 transition"
+                  >
                     View Profile
                   </button>
                 </div>
-              </div>)}
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -230,15 +278,25 @@ export default function HomePage() {
           </p>
 
           {}
-          {plansError && <p className="text-red-600 mb-6 text-sm">{plansError}</p>}
+          {plansError && (
+            <p className="text-red-600 mb-6 text-sm">{plansError}</p>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             {(plansLoading ? Array(4).fill({}) : plans).map((plan, i) => {
-              const title = plan.monthName ? plan.monthName.replace(/_/g, " ") : "";
-              const price = typeof plan.price === "number" ? `₹${plan.price}` : "";
-              const features = Array.isArray(plan.features) ? plan.features : [];
+              const title = plan.monthName
+                ? plan.monthName.replace(/_/g, " ")
+                : "";
+              const price =
+                typeof plan.price === "number" ? `₹${plan.price}` : "";
+              const features = Array.isArray(plan.features)
+                ? plan.features
+                : [];
               const isSkeleton = plansLoading;
               return (
-                <div key={plan._id || i} className="bg-white rounded-2xl shadow-lg border border-[#E4C48A] p-8 hover:shadow-2xl hover:scale-[1.03] transition-transform duration-300">
+                <div
+                  key={plan._id || i}
+                  className="bg-white rounded-2xl shadow-lg border border-[#E4C48A] p-8 hover:shadow-2xl hover:scale-[1.03] transition-transform duration-300"
+                >
                   <h3 className="text-2xl font-bold mb-2 text-[#800000]">
                     {isSkeleton ? "\u00A0" : title || "Plan"}
                   </h3>
@@ -246,9 +304,15 @@ export default function HomePage() {
                     {isSkeleton ? "" : price}
                   </p>
                   <div className="text-gray-600 mb-6 text-sm space-y-2 text-left">
-                    {isSkeleton ? <div className="h-20 bg-gray-100 animate-pulse rounded" /> : features.length ? features.map((f, idx) => (
-                      <p key={idx}>{f.replace(/^•\s*/, "")}</p>
-                    )) : <p>No features listed</p>}
+                    {isSkeleton ? (
+                      <div className="h-20 bg-gray-100 animate-pulse rounded" />
+                    ) : features.length ? (
+                      features.map((f, idx) => (
+                        <p key={idx}>{f.replace(/^•\s*/, "")}</p>
+                      ))
+                    ) : (
+                      <p>No features listed</p>
+                    )}
                   </div>
                   <button
                     onClick={handleSearch}
@@ -269,12 +333,16 @@ export default function HomePage() {
         <h2 className="text-3xl font-bold text-[#800000] mb-6">
           Your Perfect Match Awaits
         </h2>
-        <button onClick={handleSearch} className="bg-[#D4A052] px-8 py-3 rounded-lg font-semibold text-white hover:opacity-90 transition no-underline inline-block">
+        <button
+          onClick={handleSearch}
+          className="bg-[#D4A052] px-8 py-3 rounded-lg font-semibold text-white hover:opacity-90 transition no-underline inline-block"
+        >
           Register Free Now
         </button>
       </section>
 
       {}
       <Footer />
-    </div>;
+    </div>
+  );
 }

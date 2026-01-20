@@ -847,13 +847,13 @@ function ActionButtonsSection({
   onAddClick,
   onRemoveClick
 }) {
-  const CompareButton = isUiInCompare ? <Button onClick={onRemoveClick} className="flex-1 bg-[#DDB84E] hover:bg-[#C8A227] text-white rounded-[12px] h-12">
+  const CompareButton = isUiInCompare ? <Button onClick={onRemoveClick} className="bg-[#DDB84E] hover:bg-[#C8A227] text-white rounded-[12px] h-12 w-80 mx-auto">
       Remove From Compare
-    </Button> : <Button onClick={onAddClick} className="flex-1 bg-[#f6f1e7] hover:bg-[#C8A227] hover:text-white border-2 border-[#c8a227] text-[#c8a227] rounded-[12px] h-12">
+    </Button> : <Button onClick={onAddClick} className="bg-[#f6f1e7] hover:bg-[#C8A227] hover:text-white border-2 border-[#c8a227] text-[#c8a227] rounded-[12px] h-12 w-80 mx-auto">
       Add to Compare
     </Button>;
   return <div className="bg-white rounded-[20px] p-6 sticky bottom-4 border border-gold-light shadow-md">
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
         {(status === "none" || status === "withdrawn" || status === "cancelled") && <>
             {onSendRequest && <Button onClick={() => onSendRequest(profileId)} className="flex-1 bg-[#DDB84E] hover:bg-[#C8A227] text-white rounded-[12px] h-12">
                 Send Request
@@ -879,10 +879,6 @@ function ActionButtonsSection({
           </>}
 
         {status === "accepted" && <>
-            <Button onClick={() => undefined} className="flex-1 bg-[#DDB84E] hover:bg-[#C8A227] text-white rounded-[12px] h-12 flex items-center justify-center gap-2">
-              <MessageCircle className="w-5 h-5" />
-              Chat
-            </Button>
             {CompareButton}
           </>}
 

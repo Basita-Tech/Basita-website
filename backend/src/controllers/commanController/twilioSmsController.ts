@@ -1,5 +1,4 @@
 import { Response } from "express";
-import jwt from "jsonwebtoken";
 import { AuthenticatedRequest } from "../../types";
 import { IUser, User } from "../../models";
 import { enqueueWelcomeEmail } from "../../lib/queue/enqueue";

@@ -1,6 +1,6 @@
 import { redisClient, safeRedisOperation } from ".";
 
-const OTP_ATTEMPT_LIMIT = 3;
+const OTP_ATTEMPT_LIMIT = 6;
 const OTP_RESEND_LIMIT = 10;
 const OTP_EXPIRY_SECONDS = 5 * 60; // 5 minutes
 const ATTEMPT_EXPIRY_SECONDS = 24 * 60 * 60; // 24 hours

@@ -132,8 +132,8 @@ export const authGatewayLimiter = createRedisRateLimiter({
  * 5 attempts per 10 minutes per identifier
  */
 export const otpGatewayLimiter = createRedisRateLimiter({
-    windowMs: 10 * 60 * 1000,
-    maxRequests: 5,
+    windowMs: 15 * 60 * 1000,
+    maxRequests: 10,
     keyPrefix: "rl:otp",
     keyGenerator: (req) => {
         const identifier = req.body?.email || req.body?.phoneNumber || getClientIp(req);
@@ -142,7 +142,7 @@ export const otpGatewayLimiter = createRedisRateLimiter({
     handler: (req, res) => {
         res.status(429).json({
             success: false,
-            message: "Too many OTP requests. Please try again in 10 minutes."
+            message: "Too many OTP requests. Please try again in 15 minutes."
         });
     }
 });

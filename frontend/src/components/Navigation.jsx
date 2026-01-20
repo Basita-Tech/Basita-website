@@ -174,7 +174,7 @@ export function Navigation({ activePage, onNavigate }) {
     setMobileMenuOpen(false);
   };
   return (
-    <nav className="sticky top-0 z-[100] bg-white border-b border-[#D4A052]/30 ">
+    <nav className="sticky top-0 z-50 bg-white border-b border-[#D4A052]/30 ">
       <div className="w-full mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-2 md:py-4">
         <div className="flex items-center justify-between w-full">
           {}
@@ -190,7 +190,7 @@ export function Navigation({ activePage, onNavigate }) {
           </div>
 
           {}
-          <div className="hidden lg:flex items-center justify-center gap-8">
+          <div className="hidden lg:flex items-center justify-center gap-4">
             {menuItems.map((item) => (
               <button
                 key={item.key}

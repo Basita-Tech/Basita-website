@@ -1,225 +1,269 @@
-import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from './ui/dialog';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Lock, Eye, EyeOff } from 'lucide-react';
-import { toast } from 'react-hot-toast';
-import { changePassword } from '../api/auth';
-export function ChangePasswordModal({
-  open,
-  onOpenChange
-}) {
-  const [formData, setFormData] = useState({
-    oldPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  });
-  const [showPasswords, setShowPasswords] = useState({
-    oldPassword: false,
-    newPassword: false,
-    confirmPassword: false
-  });
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [showRequirements, setShowRequirements] = useState(false);
+import { useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Lock, Eye, EyeOff } from "lucide-react";
+import toast from "react-hot-toast";
+import { changePassword } from "../api/auth";
 
-  // Reset state when modal closes
+const INITIAL_FORM = {
+  oldPassword: "",
+  newPassword: "",
+  confirmPassword: "",
+};
+
+const INITIAL_VISIBILITY = {
+  oldPassword: false,
+  newPassword: false,
+  confirmPassword: false,
+};
+
+function PasswordField({
+  id,
+  label,
+  value,
+  error,
+  show,
+  onChange,
+  onToggle,
+  onFocus,
+  onBlur,
+  placeholder,
+}) {
+  return (
+    <div className="space-y-1.5">
+      <Label htmlFor={id} className="text-xs font-medium">
+        {label}
+      </Label>
+
+      <div
+        className={`relative rounded-xl border ${
+          error ? "border-red-accent" : "border-border-subtle"
+        }`}
+      >
+        <Input
+          id={id}
+          type={show ? "text" : "password"}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          className="h-10 border-0 bg-transparent pr-12 rounded-xl"
+        />
+
+        <button
+          type="button"
+          onClick={onToggle}
+          className="absolute w-11 right-0 top-0 bottom-0 p-0 flex justify-center items-center bg-transparent text-gray-500 hover:text-gray-700 transition-colors"
+          tabIndex={-1}
+        >
+          {show ? <EyeOff size={20} /> : <Eye size={20} />}
+        </button>
+      </div>
+
+      {error && <p className="text-xs text-red-accent">{error}</p>}
+    </div>
+  );
+}
+
+export function ChangePasswordModal({ open, onOpenChange }) {
+  const [form, setForm] = useState(INITIAL_FORM);
+  const [errors, setErrors] = useState({});
+  const [visible, setVisible] = useState(INITIAL_VISIBILITY);
+  const [loading, setLoading] = useState(false);
+  const [showRules, setShowRules] = useState(false);
+
   useEffect(() => {
     if (!open) {
-      setFormData({
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: ''
-      });
+      setForm(INITIAL_FORM);
       setErrors({});
-      setShowRequirements(false);
-      setShowPasswords({
-        oldPassword: false,
-        newPassword: false,
-        confirmPassword: false
-      });
+      setVisible(INITIAL_VISIBILITY);
+      setShowRules(false);
     }
   }, [open]);
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.oldPassword) {
-      newErrors.oldPassword = 'Old password is required';
+
+  const validate = () => {
+    const next = {};
+
+    if (!form.oldPassword) {
+      next.oldPassword = "Old password is required";
     }
-    if (!formData.newPassword) {
-      newErrors.newPassword = 'New password is required';
-    } else if (formData.newPassword.length < 8) {
-      newErrors.newPassword = 'Password must be at least 8 characters';
+
+    if (!form.newPassword) {
+      next.newPassword = "New password is required";
+    } else if (form.newPassword.length < 8) {
+      next.newPassword = "Must be at least 8 characters";
+    } else if (form.newPassword === form.oldPassword) {
+      next.newPassword = "New password must be different";
     }
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.newPassword !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+
+    if (!form.confirmPassword) {
+      next.confirmPassword = "Please confirm your password";
+    } else if (form.confirmPassword !== form.newPassword) {
+      next.confirmPassword = "Passwords do not match";
     }
-    if (formData.oldPassword && formData.newPassword && formData.oldPassword === formData.newPassword) {
-      newErrors.newPassword = 'New password must be different from old password';
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+
+    setErrors(next);
+    return Object.keys(next).length === 0;
   };
-  const handleSubmit = async e => {
+
+  const updateField = (key, value) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+    if (errors[key]) {
+      setErrors((prev) => ({ ...prev, [key]: "" }));
+    }
+  };
+
+  const toggleVisibility = (key) => {
+    setVisible((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const submit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      setIsLoading(true);
-      try {
-        const response = await changePassword(formData.oldPassword, formData.newPassword, formData.confirmPassword);
-        if (response.success) {
-          toast.success(response.message || 'Password changed successfully');
-          setFormData({
-            oldPassword: '',
-            newPassword: '',
-            confirmPassword: ''
-          });
-          onOpenChange(false);
-        } else {
-          toast.error(response.message || 'Failed to change password');
-        }
-      } catch (error) {
-        const errorMessage = error.response?.data?.message || 'Failed to change password. Please try again.';
-        toast.error(errorMessage);
-        if (errorMessage.toLowerCase().includes('old password') || errorMessage.toLowerCase().includes('incorrect password')) {
-          setErrors({
-            oldPassword: errorMessage
-          });
-        }
-      } finally {
-        setIsLoading(false);
+    if (!validate()) return;
+
+    setLoading(true);
+    try {
+      const res = await changePassword(
+        form.oldPassword,
+        form.newPassword,
+        form.confirmPassword,
+      );
+
+      if (res?.success) {
+        toast.success(res.message || "Password changed successfully");
+        onOpenChange(false);
+      } else {
+        toast.error(res.message || "Failed to change password");
       }
+    } catch (err) {
+      const msg =
+        err?.response?.data?.message ||
+        "Failed to change password. Please try again.";
+      toast.error(msg);
+
+      if (msg.toLowerCase().includes("old password")) {
+        setErrors({ oldPassword: msg });
+      }
+    } finally {
+      setLoading(false);
     }
   };
-  const handleChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-    if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: ''
-      }));
-    }
-    // Show requirements when typing in new password field
-    if (field === 'newPassword') {
-      setShowRequirements(value.length > 0);
-    }
+
+  const rules = {
+    length: form.newPassword.length >= 8,
+    different:
+      form.oldPassword &&
+      form.newPassword &&
+      form.oldPassword !== form.newPassword,
+    mix:
+      /[A-Za-z]/.test(form.newPassword) &&
+      /\d/.test(form.newPassword) &&
+      /[@$!%*?&#_]/.test(form.newPassword),
   };
-  const togglePasswordVisibility = field => {
-    setShowPasswords(prev => ({
-      ...prev,
-      [field]: !prev[field]
-    }));
-  };
-  const hasMinLength = formData.newPassword.length >= 8;
-  const isDifferentFromOld = !!(formData.oldPassword && formData.newPassword && formData.oldPassword !== formData.newPassword);
-  const hasLetter = /[A-Za-z]/.test(formData.newPassword);
-  const hasNumber = /\d/.test(formData.newPassword);
-  const hasSymbol = /[@$!%*?&#_]/.test(formData.newPassword);
-  const hasMix = hasLetter && hasNumber && hasSymbol;
-    return <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showClose={false} className="sm:max-w-[420px] max-w-[90vw] rounded-[20px] p-0 sm:max-h-[90vh] max-h-[95vh] mx-auto my-6 sm:my-10 overflow-hidden bg-white gap-0 shadow-2xl border-2 border-border-subtle flex flex-col">
-        {}
-        <div className="bg-gradient-to-br from-gold via-gold/90 to-gold/80 px-4 sm:px-5 py-4 sm:py-5 text-center text-white relative overflow-hidden rounded-t-[18px] border-b border-gold/20 flex-shrink-0">
-          <DialogClose className="absolute left-3 top-3 z-50 w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/50">
-            <span className="sr-only">Close</span>
-            <span className="text-lg leading-none">×</span>
-          </DialogClose>
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
-            <div className="absolute bottom-0 left-0 w-20 h-20 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[420px] p-0 gap-0 overflow-hidden shadow-2xl">
+        <div className="relative bg-gold px-5 py-4 text-center text-white">
+          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+            <Lock className="h-8 text-white w-8" />
           </div>
-          <div className="relative z-10">
-            <div className="w-12 h-12 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-2">
-              <Lock className="w-6 h-6 text-white" />
-            </div>
-            <DialogHeader>
-              <DialogTitle className="text-white text-lg">Change Password</DialogTitle>
-            </DialogHeader>
-            <p className="text-white/90 text-xs mt-1">
-              Keep your account secure
-            </p>
-          </div>
+
+          <DialogHeader>
+            <DialogTitle className="text-lg">Change Password</DialogTitle>
+          </DialogHeader>
+
+          <p className="text-xs opacity-90">Keep your account secure</p>
         </div>
+        <form onSubmit={submit} className="space-y-4 px-5 py-4 bg-white">
+          <PasswordField
+            id="oldPassword"
+            label="Old Password"
+            value={form.oldPassword}
+            error={errors.oldPassword}
+            show={visible.oldPassword}
+            onChange={(v) => updateField("oldPassword", v)}
+            onToggle={() => toggleVisibility("oldPassword")}
+            placeholder="Enter old password"
+          />
 
-        {}
-        <form onSubmit={handleSubmit} className="px-4 sm:px-6 pt-4 sm:pt-5 pb-4 space-y-3 bg-white flex-1 overflow-y-auto">
-          {}
-          <div className="space-y-1.5">
-            <Label htmlFor="oldPassword" className="text-xs font-medium">
-              Old Password
-            </Label>
-            <div className="relative bg-white rounded-[12px] border border-border-subtle">
-              <Input id="oldPassword" type={showPasswords.oldPassword ? 'text' : 'password'} value={formData.oldPassword} onChange={e => handleChange('oldPassword', e.target.value)} placeholder="Enter your old password" className={`rounded-[12px] pr-12 bg-transparent border-transparent text-foreground placeholder:text-muted-foreground h-10 ${errors.oldPassword ? 'border-red-accent' : ''}`} />
-              <button type="button" onClick={() => togglePasswordVisibility('oldPassword')} className="absolute w-11 right-0 top-0 bottom-0 flex justify-center items-center text-gold hover:text-gold/90 transition-colors bg-transparent border-0 p-0" tabIndex={-1}>
-                {showPasswords.oldPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
+          <PasswordField
+            id="newPassword"
+            label="New Password"
+            value={form.newPassword}
+            error={errors.newPassword}
+            show={visible.newPassword}
+            onChange={(v) => updateField("newPassword", v)}
+            onToggle={() => toggleVisibility("newPassword")}
+            onFocus={() => setShowRules(true)}
+            onBlur={() => setShowRules(false)}
+            placeholder="Enter new password"
+          />
+
+          {showRules && (
+            <div className="rounded-xl bg-beige p-3 text-[11px] space-y-1">
+              <p className="font-medium">Password must:</p>
+              <ul className="space-y-0.5">
+                <li
+                  className={rules.length ? "text-green-600" : "text-red-500"}
+                >
+                  • Be at least 8 characters
+                </li>
+                <li
+                  className={
+                    rules.different ? "text-green-600" : "text-red-500"
+                  }
+                >
+                  • Be different from old password
+                </li>
+                <li className={rules.mix ? "text-green-600" : "text-red-500"}>
+                  • Include letters, numbers & symbols
+                </li>
+              </ul>
             </div>
-            {errors.oldPassword && <p className="text-xs text-red-accent">{errors.oldPassword}</p>}
-          </div>
+          )}
 
-          {}
-          <div className="space-y-1.5">
-            <Label htmlFor="newPassword" className="text-xs font-medium">
-              New Password
-            </Label>
-            <div className="relative bg-white rounded-[12px] border border-border-subtle">
-              <Input 
-                id="newPassword" 
-                type={showPasswords.newPassword ? 'text' : 'password'} 
-                value={formData.newPassword} 
-                onChange={e => handleChange('newPassword', e.target.value)} 
-                onFocus={() => setShowRequirements(true)}
-                onBlur={() => setShowRequirements(false)}
-                placeholder="Enter your new password" 
-                className={`rounded-[12px] pr-12 bg-transparent border-transparent text-foreground placeholder:text-muted-foreground h-10 ${errors.newPassword ? 'border-red-accent' : ''}`} 
-              />
-              <button type="button" onClick={() => togglePasswordVisibility('newPassword')} className="absolute w-11 right-0 top-0 bottom-0 flex justify-center items-center text-gold hover:text-gold/90 transition-colors bg-transparent border-0 p-0" tabIndex={-1}>
-                {showPasswords.newPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
-            {errors.newPassword && <p className="text-xs text-red-accent">{errors.newPassword}</p>}
-            
-            {}
-            {showRequirements && (
-              <div className="bg-beige rounded-[10px] p-2.5 mt-1.5">
-                <p className="text-[10px] font-medium mb-1">Password Requirements:</p>
-                <ul className="text-[10px] space-y-0.5">
-                  <li className={hasMinLength ? 'text-green-600' : 'text-red-500'}>• At least 8 characters long</li>
-                  <li className={isDifferentFromOld ? 'text-green-600' : 'text-red-500'}>• Must be different from old password</li>
-                  <li className={hasMix ? 'text-green-600' : 'text-red-500'}>• Use a mix of letters, numbers, and symbols</li>
-                </ul>
-              </div>
-            )}
-          </div>
+          <PasswordField
+            id="confirmPassword"
+            label="Confirm New Password"
+            value={form.confirmPassword}
+            error={errors.confirmPassword}
+            show={visible.confirmPassword}
+            onChange={(v) => updateField("confirmPassword", v)}
+            onToggle={() => toggleVisibility("confirmPassword")}
+            placeholder="Confirm new password"
+          />
 
-          {}
-          <div className="space-y-1.5">
-            <Label htmlFor="confirmPassword" className="text-xs font-medium">
-              Confirm New Password
-            </Label>
-            <div className="relative bg-white rounded-[12px] border border-border-subtle">
-              <Input id="confirmPassword" type={showPasswords.confirmPassword ? 'text' : 'password'} value={formData.confirmPassword} onChange={e => handleChange('confirmPassword', e.target.value)} placeholder="Confirm your new password" className={`rounded-[12px] pr-12 bg-transparent border-transparent text-foreground placeholder:text-muted-foreground h-10 ${errors.confirmPassword ? 'border-red-accent' : ''}`} />
-              <button type="button" onClick={() => togglePasswordVisibility('confirmPassword')} className="absolute w-11 right-0 top-0 bottom-0 flex justify-center items-center text-gold hover:text-gold/90 transition-colors bg-transparent border-0 p-0" tabIndex={-1}>
-                {showPasswords.confirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
-            {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword}</p>}
-          </div>
-
-          {}
-          <div className="flex flex-col sm:flex-row gap-2 pt-2">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading} className="flex-1 rounded-[12px] border-border-subtle h-10 sm:w-auto w-full text-sm">
+          <div className="flex gap-2 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={loading}
+              className="flex-1 rounded-xl"
+            >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading} className="flex-1 bg-gold hover:bg-gold/90 text-white rounded-[12px] h-10 sm:w-auto w-full text-sm">
-              {isLoading ? 'Changing...' : 'Change Password'}
+
+            <Button
+              type="submit"
+              disabled={loading}
+              className="flex-1 bg-gold hover:bg-gold/90 rounded-xl"
+            >
+              {loading ? "Changing..." : "Change Password"}
             </Button>
           </div>
         </form>
       </DialogContent>
-    </Dialog>;
+    </Dialog>
+  );
 }

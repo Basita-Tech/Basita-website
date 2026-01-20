@@ -1,149 +1,197 @@
-import React, { useState, useEffect } from 'react';
-import toast from 'react-hot-toast';
-import { X, Search } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Input } from './ui/input';
-import { TabsComponent } from './TabsComponent';
-import { ProfileCard } from './ProfileCard';
+import React, { useMemo, useState } from "react";
+import toast from "react-hot-toast";
+import { Search } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Input } from "./ui/input";
+import { TabsComponent } from "./TabsComponent";
+import { ProfileCard } from "./ProfileCard";
+
+const normalizeId = (p) => {
+  const u = p?.user || p;
+  return String(
+    u?.id ?? u?.userId ?? u?._id ?? p?.id ?? p?.userId ?? p?._id ?? "",
+  );
+};
+
+const normalizeName = (p) => {
+  const u = p?.user || p;
+  return (
+    p?.name ??
+    u?.name ??
+    `${u?.firstName ?? ""} ${u?.lastName ?? ""}`.trim() ??
+    "Unknown"
+  );
+};
+
+const prepareProfile = (p) => {
+  const u = p?.user || p;
+  const scoreDetail = p?.scoreDetail || u?.scoreDetail;
+
+  return {
+    ...u,
+    ...p,
+    id: normalizeId(p),
+    name: normalizeName(p),
+    age: u?.age,
+    profession:
+      p?.profession ??
+      u?.profession ??
+      u?.professional?.Occupation ??
+      u?.occupation ??
+      "",
+    city:
+      p?.city ??
+      u?.city ??
+      u?.personal?.city ??
+      u?.personal?.full_address?.city ??
+      "",
+    religion: u?.religion ?? u?.personal?.religion ?? "",
+    caste: u?.subCaste ?? u?.personal?.subCaste ?? "",
+    image: u?.closerPhoto?.url ?? p?.image ?? "",
+    compatibility: scoreDetail?.score ?? p?.compatibility ?? 0,
+    status: u?.status ?? p?.status ?? null,
+  };
+};
+
 export function AddProfileModal({
   open,
   onOpenChange,
-  profiles,
-  shortlistedProfiles,
+  profiles = [],
+  shortlistedProfiles = [],
   onAddToCompare,
   onRemoveCompare,
-  compareProfileIds,
-  shortlistedIds,
-  onToggleShortlist
+  compareProfileIds = [],
+  shortlistedIds = [],
+  onToggleShortlist,
 }) {
-  const [activeTab, setActiveTab] = useState('browse');
-  const [searchQuery, setSearchQuery] = useState('');
-  const tabs = [{
-    key: 'browse',
-    label: 'Browse All'
-  }, {
-    key: 'shortlisted',
-    label: 'Shortlisted'
-  }];
-  const getFilteredProfiles = () => {
-    const compareIdStrs = Array.isArray(compareProfileIds) ? compareProfileIds.map(id => String(id)) : [];
-    const shortlistedIdStrs = Array.isArray(shortlistedIds) ? shortlistedIds.map(id => String(id)) : [];
-    let baseProfiles = [];
-    if (activeTab === 'shortlisted') {
-      baseProfiles = Array.isArray(shortlistedProfiles) ? shortlistedProfiles : [];
-    } else {
-      baseProfiles = Array.isArray(profiles) ? profiles : [];
-    }
-    const canonicalId = p => {
-      const user = p?.user || p;
-      return String(user?.id ?? user?.userId ?? user?._id ?? p?.id ?? p?.userId ?? p?._id ?? '');
-    };
-    const normalizeName = p => {
-      const user = p?.user || p;
-      return String(p?.name ?? user?.name ?? `${user?.firstName ?? ''} ${user?.lastName ?? ''}`.trim() ?? 'Unknown');
-    };
-    const dedupMap = new Map();
-    for (const p of baseProfiles) {
-      const id = canonicalId(p);
-      if (!id) continue;
-      if (!dedupMap.has(id)) {
-        const user = p?.user || p;
-        const scoreDetail = p?.scoreDetail || user?.scoreDetail;
-        const safe = {
-          ...user,
-          ...p,
-          id,
-          name: normalizeName(p),
-          age: user?.age,
-          profession: p?.profession ?? user?.profession ?? user?.professional?.Occupation ?? user?.occupation ?? '',
-          city: p?.city ?? user?.city ?? user?.personal?.city ?? user?.personal?.full_address?.city ?? '',
-          religion: user?.religion ?? user?.personal?.religion ?? '',
-          caste: user?.subCaste ?? user?.personal?.subCaste ?? '',
-          image: user?.closerPhoto?.url ?? p?.image ?? '',
-          compatibility: scoreDetail?.score ?? p?.compatibility ?? 0,
-          status: user?.status ?? p?.status ?? null
-        };
-        dedupMap.set(id, safe);
-      }
-    }
-    const prepared = Array.from(dedupMap.values());
-    const availableProfiles = prepared.filter(p => {
-      const pid = String(p.id);
-      const isInCompare = compareIdStrs.includes(pid);
-      if (isInCompare) {}
-      return !isInCompare;
-    });
-    if (!searchQuery.trim()) {
-      return availableProfiles.slice(0, 6);
-    }
-    const q = searchQuery.toLowerCase();
-    return availableProfiles.filter(p => {
-      const name = (p.name || '').toLowerCase();
-      const prof = (p.profession || '').toLowerCase();
-      const city = (p.city || '').toLowerCase();
-      return name.includes(q) || prof.includes(q) || city.includes(q);
-    }).slice(0, 6);
-  };
-  const filteredProfiles = getFilteredProfiles();
+  const [activeTab, setActiveTab] = useState("browse");
+  const [searchQuery, setSearchQuery] = useState("");
   const [addingIds, setAddingIds] = useState([]);
-  useEffect(() => {
-    if (!open) return;
-    try {} catch (e) {
-      console.error('AddProfileModal debug error:', e);
+
+  const compareIdStrs = useMemo(
+    () => compareProfileIds.map((id) => String(id)),
+    [compareProfileIds],
+  );
+
+  const tabs = [
+    { key: "browse", label: "Browse All" },
+    { key: "shortlisted", label: "Shortlisted" },
+  ];
+
+  const filteredProfiles = useMemo(() => {
+    const base = activeTab === "shortlisted" ? shortlistedProfiles : profiles;
+
+    const dedup = new Map();
+
+    for (const p of base) {
+      const id = normalizeId(p);
+      if (!id || dedup.has(id)) continue;
+      dedup.set(id, prepareProfile(p));
     }
-  }, [open, activeTab, profiles, shortlistedProfiles, compareProfileIds, filteredProfiles]);
-  return <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl max-h-[80vh] !top-[52%] my-12 mx-4 overflow-hidden bg-white rounded-[20px] p-0 gap-0">
-        <div className="px-8 py-6 border-b border-border-subtle">
+
+    let result = Array.from(dedup.values()).filter(
+      (p) => !compareIdStrs.includes(String(p.id)),
+    );
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter((p) => {
+        return (
+          p.name.toLowerCase().includes(q) ||
+          p.profession.toLowerCase().includes(q) ||
+          p.city.toLowerCase().includes(q)
+        );
+      });
+    }
+
+    return result.slice(0, 6);
+  }, [activeTab, profiles, shortlistedProfiles, compareIdStrs, searchQuery]);
+
+  const handleAdd = async (id, profile) => {
+    const pid = String(id);
+    if (compareIdStrs.includes(pid)) return;
+
+    if (compareIdStrs.length >= 5) {
+      toast.error("You can compare up to 5 profiles only.");
+      return;
+    }
+
+    setAddingIds((s) => [...new Set([...s, pid])]);
+
+    try {
+      await onAddToCompare?.(id, profile);
+    } catch (err) {
+      console.error("Add to compare failed", err);
+      toast.error("Failed to add profile");
+    } finally {
+      setAddingIds((s) => s.filter((x) => x !== pid));
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-5xl p-0 bg-white">
+        <div className="px-8 py-6 border-b">
           <DialogHeader>
-            <DialogTitle>Add Profile to Compare</DialogTitle>
+            <DialogTitle className="text-lg font-semibold">
+              Add Profile to Compare
+            </DialogTitle>
           </DialogHeader>
         </div>
 
-        <div className="px-8 py-6 overflow-y-auto max-h-[calc(80vh-120px)]">
+        <div className="px-8 py-6 max-h-[75vh] overflow-y-auto">
           <div className="space-y-6">
-            <div className="relative w-full">
-              <Input placeholder="Search by name" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="w-full bg-input-background border-border-subtle rounded-[12px]" />
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+
+              <Input
+                placeholder="Search by name, profession or city"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="!pl-10 rounded-xl"
+              />
             </div>
 
-            {}
-            <TabsComponent tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+            <TabsComponent
+              tabs={tabs}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+            />
 
-            {}
-            {filteredProfiles.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredProfiles.map(profile => {
-              const pid = String(profile.id || profile.userId || profile._id || profile.user?.userId || profile.user?.id || '');
-              const isAdding = addingIds.includes(pid);
-              return <ProfileCard key={profile.id} {...profile} variant="browse" onView={id => undefined} onSendRequest={() => {}} onAddToCompare={async id => {
-                try {
-                  const compareIdStrs = Array.isArray(compareProfileIds) ? compareProfileIds.map(cid => String(cid)) : [];
-                  if (compareIdStrs.includes(String(id))) {
-                    return;
-                  }
-                  if (compareIdStrs.length >= 5) {
-                    alert('You can compare up to 5 profiles only.');
-                    return;
-                  }
-                  setAddingIds(s => Array.from(new Set([...s, String(id)])));
-                  if (typeof onAddToCompare === 'function') {
-                    await onAddToCompare(id, profile);
-                  }
-                } catch (e) {
-                  console.warn('AddProfileModal: add to compare failed', e);
-                } finally {
-                  setAddingIds(s => (s || []).filter(x => String(x) !== String(id)));
-                }
-              }} onRemoveCompare={onRemoveCompare} isInCompare={Array.isArray(compareProfileIds) ? compareProfileIds.some(cid => String(cid) === pid) : false} isShortlisted={Array.isArray(shortlistedIds) ? shortlistedIds.some(sid => String(sid) === pid) : false} onToggleShortlist={onToggleShortlist} />;
-            })}
-              </div> : <div className="text-center py-12 text-muted-foreground">
-                {searchQuery ? 'No profiles found matching your search' : activeTab === 'shortlisted' ? 'No shortlisted profiles available. Add profiles to your shortlist first.' : 'No profiles available to add. All available profiles might already be in comparison.'}
-                <div className="text-xs mt-2 text-gray-400">
-                  Debug: {Array.isArray(profiles) ? profiles.length : 0} total profiles, 
-                  {Array.isArray(compareProfileIds) ? compareProfileIds.length : 0} in compare
-                </div>
-              </div>}
+            {filteredProfiles.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredProfiles.map((profile) => {
+                  const pid = String(profile.id);
+                  return (
+                    <ProfileCard
+                      key={pid}
+                      {...profile}
+                      variant="browse"
+                      onView={() => {}}
+                      onSendRequest={() => {}}
+                      onAddToCompare={(id) => handleAdd(id, profile)}
+                      onRemoveCompare={onRemoveCompare}
+                      isInCompare={compareIdStrs.includes(pid)}
+                      isShortlisted={shortlistedIds.some(
+                        (sid) => String(sid) === pid,
+                      )}
+                      onToggleShortlist={onToggleShortlist}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-14 text-muted-foreground">
+                {searchQuery
+                  ? "No profiles match your search"
+                  : activeTab === "shortlisted"
+                    ? "No shortlisted profiles available"
+                    : "No profiles available to add"}
+              </div>
+            )}
           </div>
         </div>
       </DialogContent>
-    </Dialog>;
+    </Dialog>
+  );
 }

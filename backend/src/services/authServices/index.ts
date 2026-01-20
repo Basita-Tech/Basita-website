@@ -554,7 +554,7 @@ export class AuthService {
           freeMonths = parseInt(v, 10) || freeMonths;
       }
 
-      user.accountType = "free";
+      user.accountType = "premium";
       user.planDurationMonths = freeMonths;
       user.planExpiry = addMonths(new Date(), freeMonths);
       user.isActive = true;

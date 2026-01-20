@@ -116,10 +116,9 @@ const VerifyOTP = () => {
     : "";
   const resolvedMobile = (mobile || "").toString().trim();
   const hasEmail = Boolean(email);
-  // Login (202) requires OTP for any phone; signup enforces OTP only for +91
-  const requiresMobileOtp = fromLogin
-    ? Boolean(resolvedCountryCode && resolvedMobile)
-    : resolvedCountryCode.replace("+", "") === "91";
+  const isNonIndianWithPhone = resolvedMobile && resolvedCountryCode && resolvedCountryCode.replace("+", "") !== "91";
+  // OTP input is required only for Indian (+91) numbers
+  const requiresMobileOtp = resolvedCountryCode.replace("+", "") === "91";
 
   // Keep sections visible after verification to show status
   const hideVerifiedSections = false;
@@ -362,10 +361,8 @@ const VerifyOTP = () => {
     }
   }, [resolvedMobile, resolvedCountryCode, requiresMobileOtp, isMobileVerified, isMobileLocked, initialMobileSent, fromLogin]);
 
-  // Signup-only: auto-mark non-Indian numbers as verified (legacy behavior)
+  // Non-Indian numbers: send SMS and skip OTP input (login + signup)
   useEffect(() => {
-    if (fromLogin) return; // login flows must verify any number
-    const isNonIndianWithPhone = resolvedMobile && resolvedCountryCode && resolvedCountryCode.replace("+", "") !== "91";
     if (!isNonIndianWithPhone || nonIndianSmsSentRef.current || isMobileVerified) return;
 
     const autoVerify = async () => {
@@ -375,18 +372,18 @@ const VerifyOTP = () => {
           phoneNumber: resolvedMobile,
           countryCode: resolvedCountryCode,
           hash: SMS_HASH,
-          type: "signup"
+          type: fromLogin ? "login" : "signup"
         });
       } catch (err) {
         console.warn("Non-Indian SMS send failed; continuing with auto-verify", err?.message || err);
       }
       setIsMobileVerified(true);
-      setMobileSuccessMessage("Mobile auto-verified for this country");
+      setMobileSuccessMessage(fromLogin ? "SMS sent for this country" : "Mobile auto-verified for this country");
       persistOtpStatus({ mobileVerified: true });
     };
 
     autoVerify();
-  }, [fromLogin, resolvedMobile, resolvedCountryCode, isMobileVerified]);
+  }, [fromLogin, resolvedMobile, resolvedCountryCode, isMobileVerified, isNonIndianWithPhone]);
 
   const handleOtpChange = (index, value) => {
     if (!/^\d?$/.test(value)) return;

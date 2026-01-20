@@ -156,11 +156,18 @@ const LoginForm = () => {
       setLoading(false);
       return;
     }
-    // Default Indian phone prefix if user skips +91
+    // Normalize phone input. Only assume +91 for clear Indian mobile patterns.
     let sanitizedUsername = isEmail ? sanitizeEmail(formData.username) : sanitizePhone(formData.username);
     if (isPhone && sanitizedUsername && !sanitizedUsername.startsWith("+")) {
-      const digitsOnly = sanitizedUsername.replace(/^0+/, "");
-      sanitizedUsername = `+91${digitsOnly}`;
+      const digitsOnly = sanitizedUsername.replace(/\D/g, "").replace(/^0+/, "");
+      const looksIndian = digitsOnly.length === 10 && /^[6-9]/.test(digitsOnly);
+      if (looksIndian) {
+        sanitizedUsername = `+91${digitsOnly}`;
+      } else {
+        setError("Please include country code (e.g., +1 3170000000)");
+        setLoading(false);
+        return;
+      }
     }
     const sanitizedPassword = sanitizePassword(formData.password);
     if (!sanitizedUsername || !sanitizedPassword) {

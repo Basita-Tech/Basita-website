@@ -265,8 +265,25 @@ const VerifyOTP = () => {
     }
   }, [resendCooldownMobile, isMobileVerified, isMobileLocked, requiresMobileOtp]);
 
+  // Clear sessionStorage OTP flags on login to allow fresh auto-sends
+  useEffect(() => {
+    if (fromLogin) {
+      try {
+        const keysToRemove = [];
+        for (let i = 0; i < sessionStorage.length; i++) {
+          const key = sessionStorage.key(i);
+          if (key && key.startsWith("otpAutoSent_")) {
+            keysToRemove.push(key);
+          }
+        }
+        keysToRemove.forEach(key => sessionStorage.removeItem(key));
+      } catch (e) {
+        console.warn("Failed to clear OTP sessionStorage", e);
+      }
+    }
+  }, [fromLogin]);
 
-  // Auto-send email OTP on mount for pending verification (login) flows only
+  // Auto-send email OTP on mount for signup and login (if unverified).
   useEffect(() => {
     const sendInitialEmailOtp = async () => {
       try {
@@ -285,6 +302,7 @@ const VerifyOTP = () => {
           setResendCooldown(RESEND_AFTER);
           setEmailOtp(Array(6).fill(""));
           setInitialEmailSent(true);
+          return; // EXIT here after success - no fallback retry
         } else {
           const message = res?.message || res?.data?.message || "Failed to send OTP. Please try again.";
           setError(message);
@@ -292,7 +310,36 @@ const VerifyOTP = () => {
           setInitialEmailSent(false);
         }
       } catch (err) {
-        setError(err.response?.data?.message || "Unable to send OTP. Please try again.");
+        // On login flows, a 400 may indicate unsupported type or already verified.
+        // Fallback: retry with type "signup" once to maximize compatibility.
+        const status = err.response?.status;
+        const msg = err.response?.data?.message || "Unable to send OTP. Please try again.";
+        if (fromLogin && status === 400 && email) {
+          try {
+            const res2 = await sendEmailOtp({
+              email,
+              type: "signup",
+              resendAttempt: 0
+            });
+            const ok2 = !!(res2?.success || res2?.data?.success || res2?.data?.data?.success);
+            if (ok2) {
+              const emailAutoKey = email ? `otpAutoSent_email_${email}` : "";
+              sessionStorage.setItem(emailAutoKey, "1");
+              setEmailCountdown(OTP_VALID_TIME);
+              setResendCooldown(RESEND_AFTER);
+              setEmailOtp(Array(6).fill(""));
+              setInitialEmailSent(true);
+              setError("");
+              return;
+            }
+          } catch (fallbackErr) {
+            // swallow fallback error and proceed to soft error handling below
+          }
+        }
+        // Soft error: avoid breaking UI; show message only when not login or non-400
+        if (!fromLogin || (status && status !== 400)) {
+          setError(msg);
+        }
         initialEmailSentRef.current = false;
         setInitialEmailSent(false);
       } finally {
@@ -300,16 +347,20 @@ const VerifyOTP = () => {
       }
     };
 
-    if (fromLogin && hasEmail && !isEmailVerified && !isLocked && !initialEmailSentRef.current) {
-      const emailAutoKey = email ? `otpAutoSent_email_${email}` : "";
-      const alreadyAutoSent = emailAutoKey ? sessionStorage.getItem(emailAutoKey) : null;
-      if (!alreadyAutoSent) {
+    // Prevent multiple API calls using ref guard
+    if (initialEmailSentRef.current) return;
+    
+    const saved = getOtpCookie(email, countryCode, mobile);
+    const alreadyVerified = !!saved?.emailVerified;
+    
+    const emailAutoKey = email && !fromLogin ? `otpAutoSent_email_${email}` : "";
+    const alreadyAutoSent = emailAutoKey ? sessionStorage.getItem(emailAutoKey) : null;
+    if (hasEmail && !isEmailVerified && !alreadyVerified && !isLocked && !alreadyAutoSent) {
       sendInitialEmailOtp();
-      }
     }
-  }, [email, hasEmail, isEmailVerified, isLocked, initialEmailSent, fromLogin]);
+  }, [email, hasEmail, isEmailVerified, isLocked, fromLogin, countryCode, mobile]);
 
-  // Auto-send mobile OTP on mount for pending verification (login) flows (Indian numbers only)
+  
   useEffect(() => {
     const sendInitialMobileOtp = async () => {
       try {
@@ -319,7 +370,7 @@ const VerifyOTP = () => {
           phoneNumber: resolvedMobile,
           countryCode: resolvedCountryCode,
           hash: SMS_HASH,
-          type: "signup",
+          type: fromLogin ? "login" : "signup",
           resendAttempt: 0
         });
         const isSuccess = !!(res?.success || res?.data?.success || res?.data?.data?.success);
@@ -345,25 +396,24 @@ const VerifyOTP = () => {
       }
     };
 
+    // Prevent multiple API calls using ref guard
+    if (initialMobileSentRef.current) return;
+    
     if (
       fromLogin &&
       resolvedMobile &&
       requiresMobileOtp &&
       !isMobileVerified &&
-      !isMobileLocked &&
-      !initialMobileSentRef.current
+      !isMobileLocked
     ) {
-      const mobileAutoKey = resolvedCountryCode && resolvedMobile ? `otpAutoSent_mobile_${resolvedCountryCode}${resolvedMobile}` : "";
-      const alreadyAutoSent = mobileAutoKey ? sessionStorage.getItem(mobileAutoKey) : null;
-      if (!alreadyAutoSent) {
       sendInitialMobileOtp();
-      }
     }
-  }, [resolvedMobile, resolvedCountryCode, requiresMobileOtp, isMobileVerified, isMobileLocked, initialMobileSent, fromLogin]);
+  }, [resolvedMobile, resolvedCountryCode, requiresMobileOtp, isMobileVerified, isMobileLocked, fromLogin]);
 
   // Non-Indian numbers: send SMS and skip OTP input (login + signup)
   useEffect(() => {
-    if (!isNonIndianWithPhone || nonIndianSmsSentRef.current || isMobileVerified) return;
+    // Prevent multiple API calls using ref guard
+    if (nonIndianSmsSentRef.current || !isNonIndianWithPhone || isMobileVerified) return;
 
     const autoVerify = async () => {
       nonIndianSmsSentRef.current = true;

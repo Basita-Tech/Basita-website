@@ -188,6 +188,7 @@ const LoginForm = () => {
       
       if (response?.requiresOtpVerification) {
         const phone = response.phoneNumber || payload.phoneNumber || "";
+        const loginWithEmail = isEmail; // Track if user logged in with email
 
         // Parse phone to avoid greedy country codes like "+9163"
         const parsePhone = (value = "") => {
@@ -220,9 +221,12 @@ const LoginForm = () => {
         const derivedCountryCode = parsed.cc || "+91";
         const derivedMobile = parsed.mobile || "";
 
+        // Pass account email (if present) so email OTP can be verified when needed
+        const emailToVerify = response.email || payload.email || "";
+
         try {
           sessionStorage.setItem("otpState", JSON.stringify({
-            email: response.email || payload.email,
+            email: emailToVerify,
             countryCode: derivedCountryCode,
             mobile: derivedMobile,
             phoneNumber: phone,
@@ -232,7 +236,7 @@ const LoginForm = () => {
 
         navigate("/verify-otp", {
           state: {
-            email: response.email || payload.email,
+            email: emailToVerify,
             countryCode: derivedCountryCode,
             mobile: derivedMobile,
             phoneNumber: phone,

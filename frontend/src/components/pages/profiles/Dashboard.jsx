@@ -511,7 +511,7 @@ export function Dashboard({
               Recommendations
             </h3>
             <p className="text-muted-foreground m-0">
-              Curated profiles for you
+              Top profiles for you
             </p>
           </div>
         </div>

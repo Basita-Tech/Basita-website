@@ -9,7 +9,7 @@ const apiV2 = express();
 
 apiV2.use("/", recommendationRouterV2);
 
-apiV2.get("/pre-signed-url", asyncHandler(getPreSignedUrl));
+apiV2.get("/pre-signed-url", authenticate, asyncHandler(getPreSignedUrl));
 
 apiV2.put("/upload/photos", authenticate, asyncHandler(updatePhotoController));
 

@@ -1,209 +1,232 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { allCountries } from "country-telephone-data";
 import { forgotPassword, verifyEmailOtp } from "@/api/auth";
 import toast from "react-hot-toast";
+
 const ForgotPassword = () => {
-  const [resetType, setResetType] = useState("email");
-  const [formData, setFormData] = useState({
-    emailOrPhone: "",
-    countryCode: "+91",
-    otp: ""
-  });
-  const [step, setStep] = useState("input");
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpExpiry, setOtpExpiry] = useState(180);
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [step, setStep] = useState("input"); // 'input' | 'otp' | 'success'
+  const [otpExpiry, setOtpExpiry] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const intervalRef = useRef(null);
+
+  // Countdown Timer logic
   useEffect(() => {
-    if (otpSent && otpExpiry > 0 && !intervalRef.current) {
-      intervalRef.current = setInterval(() => {
-        setOtpExpiry(prev => {
-          if (prev <= 1) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-            return 0;
-          }
-          return prev - 1;
-        });
+    let timer;
+    if (otpExpiry > 0) {
+      timer = setInterval(() => {
+        setOtpExpiry((prev) => prev - 1);
       }, 1000);
     }
-    return () => clearInterval(intervalRef.current);
-  }, [otpSent, otpExpiry]);
-  const handleChange = e => {
-    const {
-      name,
-      value
-    } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === "emailOrPhone" && resetType === "email" ? value.toLowerCase() : value
-    }));
+    return () => clearInterval(timer);
+  }, [otpExpiry]);
+
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
-  const handleSendOtp = async e => {
+
+  const handleSendOtp = async (e) => {
     if (e) e.preventDefault();
-    let emailOrPhone = formData.emailOrPhone;
-    if (resetType === "email") emailOrPhone = emailOrPhone.toLowerCase();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (resetType === "email" && !emailRegex.test(emailOrPhone)) {
-      setError("Enter a valid email address");
-      return;
-    }
-    const data = await forgotPassword(emailOrPhone);
-    if (!data.success) {
-      toast.error(data.message);
-      return;
-    }
-    if (data.message) {
-      toast.success(data.message);
-      setStep("otp");
-      setError("");
-      setOtpExpiry(180);
-      return;
-    }
-    if (resetType === "mobile" && !/^\d{10}$/.test(emailOrPhone)) {
-      setError("Enter a valid 10-digit mobile number");
-      return;
-    }
-    setFormData({
-      ...formData,
-      emailOrPhone,
-      otp: ""
-    });
     setError("");
-    setStep("otp");
-    setOtpSent(true);
-    setOtpExpiry(180);
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = null;
+
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await forgotPassword(email.toLowerCase());
+      if (res.success) {
+        toast.success(res.message || "OTP sent successfully!");
+        setStep("otp");
+        setOtpExpiry(180); // 3 minutes
+      } else {
+        toast.error(res.message || "Failed to send OTP");
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
-  const handleVerifyOtp = async e => {
+
+  const handleVerifyOtp = async (e) => {
     e.preventDefault();
     if (otpExpiry <= 0) {
-      setError("OTP Expired. Please resend OTP.");
+      setError("OTP Expired. Please resend.");
       return;
     }
-    const data = {
-      otp: formData.otp,
-      email: resetType === "email" ? formData.emailOrPhone : undefined,
-      type: "forgot-password"
-    };
-    const res = await verifyEmailOtp(data);
-    if (!res.success) {
-      toast.error(res.message);
-      return;
+
+    setLoading(true);
+    try {
+      const res = await verifyEmailOtp({
+        otp,
+        email: email.toLowerCase(),
+        type: "forgot-password",
+      });
+
+      if (res.success) {
+        toast.success(res.data?.message || "OTP Verified Successfully!");
+        setStep("success");
+      } else {
+        toast.error(res.message || "Invalid OTP");
+      }
+    } catch (err) {
+      toast.error("Verification failed.");
+    } finally {
+      setLoading(false);
     }
-    toast.success(res.data.message);
-    setError("");
-    setStep("success");
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
   };
-  const maskEmail = email => {
-    if (!email) return "";
-    const [user, domain] = email.split("@");
-    return user[0] + "****@" + domain;
+
+  const maskEmail = (str) => {
+    const [user, domain] = str.split("@");
+    return `${user[0]}****@${domain}`;
   };
-  const maskPhone = phone => "****" + phone.slice(-4);
-  return <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="w-full max-w-md bg-[#FBFAF7] rounded-lg shadow-2xl p-8">
-        {}
-        {step === "input" && <>
-            <h3 className="text-3xl font-bold text-center text-gray-800 mb-2">
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        {/* STEP 1: Email Input */}
+        {step === "input" && (
+          <>
+            <h3 className="text-2xl font-bold text-center text-gray-900 mb-2">
               Forgot Password
             </h3>
-            <p className="text-center text-gray-500 mb-6 text-sm">
-              Select how you want to receive your OTP.
+            <p className="text-center text-gray-500 mb-8 text-sm">
+              Enter your email address to receive a verification code.
             </p>
 
-            {}
-            <div className="flex justify-center mb-6 gap-2 rounded-md p-1">
-              {["email", "mobile"].map(type => <button key={type} onClick={() => {
-            setResetType(type);
-            setFormData(prev => ({
-              ...prev,
-              emailOrPhone: ""
-            }));
-            setError("");
-          }} className={`px-6 py-2 rounded-md font-semibold text-sm md:text-base transition ${resetType === type ? "bg-[#D4A052] text-white" : "text-[#D4A052] hover:bg-[#D4A052] bg-transparent border border-[#D4A052]"}`}>
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
-                </button>)}
-            </div>
+            <form onSubmit={handleSendOtp} className="space-y-5">
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase ml-1">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  placeholder="name@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 mt-1 rounded-xl border border-gray-200 focus:border-[#D4A052] focus:ring-2 focus:ring-[#D4A052]/20 outline-none transition-all"
+                />
+              </div>
 
-            <form onSubmit={handleSendOtp} className="space-y-4">
-              {resetType === "email" ? <input type="email" name="emailOrPhone" placeholder="Enter your email" value={formData.emailOrPhone} onChange={handleChange} required autoCapitalize="none" autoComplete="email" style={{
-            textTransform: "lowercase"
-          }} className="w-full px-4 py-3 rounded-md border border-[#D4A052] focus:ring-2 focus:ring-[#D4A052] outline-none text-gray-800" /> : <div className="flex flex-col sm:flex-row gap-2">
-                  <select name="countryCode" value={formData.countryCode} onChange={handleChange} className="w-full sm:w-1/3 px-4 py-3 rounded-md border border-[#D4A052] focus:ring-2 focus:ring-[#D4A052] outline-none text-gray-800">
-                    {allCountries.map(c => <option key={c.iso2} value={`+${c.dialCode}`}>
-                        {`+${c.dialCode} (${c.name})`}
-                      </option>)}
-                  </select>
-                  <input type="tel" name="emailOrPhone" placeholder="Enter 10-digit mobile number" value={formData.emailOrPhone} onChange={handleChange} required className="w-full sm:w-2/3 px-4 py-3 rounded-md border border-[#D4A052] focus:ring-2 focus:ring-[#D4A052] outline-none text-gray-800" />
-                </div>}
+              {error && (
+                <p className="text-red-500 text-xs italic ml-1">{error}</p>
+              )}
 
-              {error && <p className="text-red-600 text-sm">{error}</p>}
-
-              <button type="submit" className="w-full py-3 rounded-md bg-[#D4A052] text-white font-semibold hover:bg-[#B3863F] transition">
-                Send OTP
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 rounded-xl bg-[#D4A052] text-white font-bold hover:bg-[#B3863F] transition-all disabled:opacity-50"
+              >
+                {loading ? "Sending..." : "Send Reset Code"}
               </button>
             </form>
-          </>}
+          </>
+        )}
 
-        {}
-        {step === "otp" && <>
-            <h3 className="text-3xl font-bold text-center text-gray-800 mb-2">
-              Verify OTP
+        {/* STEP 2: OTP Verification */}
+        {step === "otp" && (
+          <>
+            <h3 className="text-2xl font-bold text-center text-gray-900 mb-2">
+              Verify your Email
             </h3>
-            <p className="text-gray-500 text-center mb-4 text-sm">
-              An OTP has been sent to{" "}
-              {resetType === "email" ? maskEmail(formData.emailOrPhone) : maskPhone(formData.emailOrPhone)}
+            <p className="text-gray-500 text-center mb-8 text-sm">
+              We've sent a code to{" "}
+              <span className="font-medium text-gray-700">
+                {maskEmail(email)}
+              </span>
             </p>
-            <form onSubmit={handleVerifyOtp} className="space-y-4">
-              <input type="text" name="otp" placeholder="Enter OTP" value={formData.otp} onChange={handleChange} required disabled={otpExpiry <= 0} className="w-full px-4 py-3 rounded-md border border-[#D4A052] focus:ring-2 focus:ring-[#D4A052] outline-none text-gray-800" />
-              {error && <p className="text-red-600 text-sm">{error}</p>}
-              <button type="submit" disabled={otpExpiry <= 0} className="w-full py-3 rounded-md bg-[#D4A052] text-white font-semibold hover:bg-[#B3863F] transition">
-                Verify OTP
+
+            <form onSubmit={handleVerifyOtp} className="space-y-5">
+              <input
+                type="text"
+                placeholder="Enter 6-digit code"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                maxLength={6}
+                required
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#D4A052] focus:ring-2 focus:ring-[#D4A052]/20 text-center text-xl tracking-widest outline-none transition-all"
+              />
+
+              <button
+                type="submit"
+                disabled={loading || otpExpiry <= 0}
+                className="w-full py-3 rounded-xl bg-[#D4A052] text-white font-bold hover:bg-[#B3863F] transition-all disabled:opacity-50"
+              >
+                {loading ? "Verifying..." : "Verify OTP"}
               </button>
             </form>
-            <div className="text-center mt-2">
-              {otpExpiry > 0 ? <p className="text-gray-500 text-sm">
-                  OTP expires in {Math.floor(otpExpiry / 60)}m {otpExpiry % 60}s
-                </p> : <button onClick={() => handleSendOtp(null)} className="text-[#D4A052] text-sm underline">
-                  OTP Expired. Resend OTP
-                </button>}
-            </div>
-          </>}
 
-        {}
-        {step === "success" && <div className="text-center">
-            <h3 className="text-3xl font-bold text-green-600 mb-3">
-              OTP Verified!
-            </h3>
-            {resetType === "email" ? <>
-                <p className="text-gray-500 mb-4">
-                  A reset password link has been sent to your registered email.
+            <div className="text-center mt-6">
+              {otpExpiry > 0 ? (
+                <p className="text-gray-400 text-xs">
+                  Resend code in{" "}
+                  <span className="text-gray-600 font-bold">
+                    {Math.floor(otpExpiry / 60)}:
+                    {(otpExpiry % 60).toString().padStart(2, "0")}
+                  </span>
                 </p>
-                <a href={`mailto:${formData.emailOrPhone}?subject=Password Reset&body=Click the reset link`} className="w-full inline-block py-3 rounded-md bg-[#D4A052] text-white font-semibold hover:bg-[#B3863F] transition">
-                  Open Email
-                </a>
-              </> : <>
-                <p className="text-gray-500 mb-4">
-                  A reset password link has been sent via SMS to your mobile
-                  number.
-                </p>
-                <button className="w-full py-3 rounded-md bg-[#D4A052] text-white font-semibold cursor-not-allowed">
-                  Check your SMS
+              ) : (
+                <button
+                  onClick={handleSendOtp}
+                  className="text-[#D4A052] text-sm font-bold hover:underline"
+                >
+                  Didn't get the code? Resend
                 </button>
-              </>}
-          </div>}
+              )}
+            </div>
+          </>
+        )}
 
-        <div className="mt-6 text-center">
-          <Link to="/login" className="text-sm text-gray-700 hover:underline font-medium">
-            Back to Sign In
+        {/* STEP 3: Success Message */}
+        {step === "success" && (
+          <div className="text-center animate-in fade-in zoom-in duration-300">
+            <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg
+                className="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                ></path>
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              Check your Inbox
+            </h3>
+            <p className="text-gray-500 mb-8 text-sm">
+              Verification successful! A password reset link has been sent to
+              your email address.
+            </p>
+            <button
+              onClick={() => window.open(`mailto:${email}`)}
+              className="w-full py-3 rounded-xl bg-[#D4A052] text-white font-bold hover:bg-[#B3863F] transition-all"
+            >
+              Open Email App
+            </button>
+          </div>
+        )}
+
+        <div className="mt-8 text-center border-t border-gray-100 pt-6">
+          <Link
+            to="/login"
+            className="text-sm text-gray-500 hover:text-[#D4A052] font-semibold transition-colors"
+          >
+            ← Back to Login
           </Link>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default ForgotPassword;

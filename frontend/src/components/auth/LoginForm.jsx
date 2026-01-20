@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { loginUser, getOnboardingStatus, getProfileReviewStatus } from "../../api/auth";
+import {
+  loginUser,
+  getOnboardingStatus,
+  getProfileReviewStatus,
+} from "../../api/auth";
 import toast from "react-hot-toast";
 import { AuthContextr } from "../context/AuthContext";
 import axios from "../../api/http";
@@ -9,13 +13,10 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const toastShownRef = useRef(false);
-  const {
-    login: ctxLogin,
-    token: ctxToken
-  } = useContext(AuthContextr);
+  const { login: ctxLogin, token: ctxToken } = useContext(AuthContextr);
   const [formData, setFormData] = useState({
     username: "",
-    password: ""
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -27,9 +28,10 @@ const LoginForm = () => {
       const redirectTo = params.get("redirectTo");
       if (token) {
         try {
-          if (ctxLogin) ctxLogin({
-            token
-          });
+          if (ctxLogin)
+            ctxLogin({
+              token,
+            });
         } catch (e) {}
         navigate(redirectTo || "/");
         return true;
@@ -42,7 +44,7 @@ const LoginForm = () => {
         const API = import.meta.env.VITE_API_URL;
         try {
           const me = await axios.get(`${API}/auth/me`, {
-            withCredentials: true
+            withCredentials: true,
           });
           if (!me?.data?.success) {
             return;
@@ -55,38 +57,52 @@ const LoginForm = () => {
         }
         const os = await getOnboardingStatus();
         const onboardingData = os?.data?.data || os?.data || {};
-        const completedSteps = Array.isArray(onboardingData.completedSteps) ? onboardingData.completedSteps : [];
-        const isOnboardingCompleted = typeof onboardingData.isOnboardingCompleted !== "undefined" ? onboardingData.isOnboardingCompleted : completedSteps.length >= 7;
-        
+        const completedSteps = Array.isArray(onboardingData.completedSteps)
+          ? onboardingData.completedSteps
+          : [];
+        const isOnboardingCompleted =
+          typeof onboardingData.isOnboardingCompleted !== "undefined"
+            ? onboardingData.isOnboardingCompleted
+            : completedSteps.length >= 7;
+
         // If profile is pending review or rejected
-        if (onboardingData.profileReviewStatus === "pending" || onboardingData.profileReviewStatus === "rejected") {
+        if (
+          onboardingData.profileReviewStatus === "pending" ||
+          onboardingData.profileReviewStatus === "rejected"
+        ) {
           navigate("/onboarding/review", {
-            replace: true
+            replace: true,
           });
           return;
         }
-        
+
         // If all steps completed but not yet submitted for review, go to photos page
-        if (completedSteps.length === 7 && !onboardingData.profileReviewStatus) {
+        if (
+          completedSteps.length === 7 &&
+          !onboardingData.profileReviewStatus
+        ) {
           navigate("/onboarding/user?step=photos", {
-            replace: true
+            replace: true,
           });
           return;
         }
-        
+
         if (!isOnboardingCompleted) {
           navigate("/onboarding/user", {
-            replace: true
+            replace: true,
           });
           return;
         }
         try {
           const pr = await getProfileReviewStatus();
         } catch (e) {
-          console.warn("Review status check failed; continuing to dashboard.", e?.message || e);
+          console.warn(
+            "Review status check failed; continuing to dashboard.",
+            e?.message || e,
+          );
         }
         navigate("/dashboard", {
-          replace: true
+          replace: true,
         });
       } catch (err) {
         console.error("Error checking logged-in redirect:", err);
@@ -97,24 +113,26 @@ const LoginForm = () => {
     if (googleExistsFlag === "false") {
       if (!toastShownRef.current) {
         toastShownRef.current = true;
-        toast.error("No account found for this Google account. Please sign up or use email/phone login.");
+        toast.error(
+          "No account found for this Google account. Please sign up or use email/phone login.",
+        );
       }
       navigate("/login", {
-        replace: true
+        replace: true,
       });
       return;
     }
     checkLoggedInAndRedirect();
   }, [ctxToken]);
-  const handleAuthResponse = async apiResponse => {
+  const handleAuthResponse = async (apiResponse) => {
     try {
       const resp = apiResponse || {};
       if (resp.user) {
         ctxLogin(resp);
       }
-      
-      await new Promise(resolve => setTimeout(resolve, 200));
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
       if (resp.redirectTo) {
         navigate(resp.redirectTo, { replace: true });
         return;
@@ -126,15 +144,15 @@ const LoginForm = () => {
       console.error("Error handling auth response:", e);
     }
   };
-  const handleInputChange = e => {
+  const handleInputChange = (e) => {
     let value = e.target.value;
     if (e.target.name === "username") value = value.toLowerCase();
     setFormData({
       ...formData,
-      [e.target.name]: value
+      [e.target.name]: value,
     });
   };
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -142,9 +160,12 @@ const LoginForm = () => {
       sanitizeEmail,
       sanitizePhone,
       sanitizePassword,
-      containsXSSPatterns
+      containsXSSPatterns,
     } = await import("../../utils/sanitization");
-    if (containsXSSPatterns(formData.username) || containsXSSPatterns(formData.password)) {
+    if (
+      containsXSSPatterns(formData.username) ||
+      containsXSSPatterns(formData.password)
+    ) {
       setError("Invalid input detected. Please remove special characters.");
       setLoading(false);
       return;
@@ -157,9 +178,13 @@ const LoginForm = () => {
       return;
     }
     // Normalize phone input. Only assume +91 for clear Indian mobile patterns.
-    let sanitizedUsername = isEmail ? sanitizeEmail(formData.username) : sanitizePhone(formData.username);
+    let sanitizedUsername = isEmail
+      ? sanitizeEmail(formData.username)
+      : sanitizePhone(formData.username);
     if (isPhone && sanitizedUsername && !sanitizedUsername.startsWith("+")) {
-      const digitsOnly = sanitizedUsername.replace(/\D/g, "").replace(/^0+/, "");
+      const digitsOnly = sanitizedUsername
+        .replace(/\D/g, "")
+        .replace(/^0+/, "");
       const looksIndian = digitsOnly.length === 10 && /^[6-9]/.test(digitsOnly);
       if (looksIndian) {
         sanitizedUsername = `+91${digitsOnly}`;
@@ -177,15 +202,17 @@ const LoginForm = () => {
     }
     const payload = {
       password: sanitizedPassword,
-      ...(isEmail ? {
-        email: sanitizedUsername
-      } : {
-        phoneNumber: sanitizedUsername
-      })
+      ...(isEmail
+        ? {
+            email: sanitizedUsername,
+          }
+        : {
+            phoneNumber: sanitizedUsername,
+          }),
     };
     try {
       const response = await loginUser(payload);
-      
+
       if (response?.requiresOtpVerification) {
         const phone = response.phoneNumber || payload.phoneNumber || "";
         const loginWithEmail = isEmail; // Track if user logged in with email
@@ -225,13 +252,16 @@ const LoginForm = () => {
         const emailToVerify = response.email || payload.email || "";
 
         try {
-          sessionStorage.setItem("otpState", JSON.stringify({
-            email: emailToVerify,
-            countryCode: derivedCountryCode,
-            mobile: derivedMobile,
-            phoneNumber: phone,
-            fromLogin: true
-          }));
+          sessionStorage.setItem(
+            "otpState",
+            JSON.stringify({
+              email: emailToVerify,
+              countryCode: derivedCountryCode,
+              mobile: derivedMobile,
+              phoneNumber: phone,
+              fromLogin: true,
+            }),
+          );
         } catch (e) {}
 
         navigate("/verify-otp", {
@@ -240,33 +270,29 @@ const LoginForm = () => {
             countryCode: derivedCountryCode,
             mobile: derivedMobile,
             phoneNumber: phone,
-            fromLogin: true
-          }
+            fromLogin: true,
+          },
         });
         return;
       }
 
-  
       if (response?.redirectTo && response?.user) {
         ctxLogin(response);
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 200));
         navigate(response.redirectTo, { replace: true });
         return;
       }
 
-      
       if (!response?.success && !response?.user) {
         setError(response?.message || "Invalid credentials. Please try again.");
         return;
       }
-
 
       if (response?.success && response?.user) {
         await handleAuthResponse(response);
         return;
       }
 
-    
       if (response?.user) {
         await handleAuthResponse(response);
         return;
@@ -281,8 +307,10 @@ const LoginForm = () => {
       setLoading(false);
     }
   };
-  const inputClass = "w-full p-3 text-sm border border-[#D4A052] rounded-md focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] outline-none transition";
-  return <div className="min-h-screen flex justify-center items-center px-4 bg-gradient-to-br from-background via-cream to-secondary">
+  const inputClass =
+    "w-full p-3 text-sm border border-[#D4A052] rounded-md focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] outline-none transition";
+  return (
+    <div className="min-h-screen flex justify-center items-center px-4 bg-gradient-to-br from-background via-cream to-secondary">
       <div className="w-full max-w-sm shadow-xl rounded-2xl p-6 border-t-4 border-[#F9F7F5]">
         {}
         <div className="text-center mb-3">
@@ -297,24 +325,56 @@ const LoginForm = () => {
         {}
         <form onSubmit={handleSubmit} noValidate>
           <div className="mb-3">
-            <label htmlFor="username" className="block text-sm font-semibold text-gray-700 mb-1">
+            <label
+              htmlFor="username"
+              className="block text-sm font-semibold text-gray-700 mb-1"
+            >
               Username
             </label>
-            <input type="text" id="username" name="username" placeholder="Enter Your Username" value={formData.username} onChange={handleInputChange} required className={inputClass} autoCapitalize="none" autoCorrect="off" spellCheck="false" />
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Enter Your Username"
+              value={formData.username}
+              onChange={handleInputChange}
+              required
+              className={inputClass}
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck="false"
+            />
           </div>
 
           {}
           <div className="mb-3 relative">
-            <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold text-gray-700 mb-1"
+            >
               Password
             </label>
 
             {}
             <div className="relative">
-              <input type={showPassword ? "text" : "password"} id="password" name="password" placeholder="Enter Your Password" value={formData.password} onChange={handleInputChange} required className={inputClass + " pr-10"} />
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                placeholder="Enter Your Password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                className={inputClass + " pr-10"}
+              />
 
               {}
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute w-11 right-0 top-0 bottom-0 p-0 flex justify-center items-center text-white " tabIndex={-1}>
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute w-11 right-0 top-0 bottom-0 p-0 flex justify-center items-center bg-transparent text-gray-500 hover:text-gray-700 transition-colors"
+                tabIndex={-1}
+              >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
@@ -325,28 +385,56 @@ const LoginForm = () => {
 
           {}
           <div className="flex justify-between text-sm mb-3">
-            <Link to="/forgot-password" className="text-[#D4A052] font-medium hover:underline">
+            <Link
+              to="/forgot-password"
+              className="text-[#D4A052] font-medium hover:underline"
+            >
               Forgot Password?
-            </Link>
-            <Link to="/forgot-username" className="text-[#D4A052] font-medium hover:underline">
-              Forgot Username?
             </Link>
           </div>
 
           {}
-          <button type="submit" disabled={loading} className="w-full bg-[#D4A052] hover:bg-[#b38b40] text-white font-semibold py-3 text-sm rounded-full shadow-md transition-colors disabled:opacity-50">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#D4A052] hover:bg-[#b38b40] text-white font-semibold py-3 text-sm rounded-full shadow-md transition-colors disabled:opacity-50"
+          >
             {loading ? "Signing In..." : "Sign In"}
           </button>
 
           {}
           <div className="text-center my-3 text-gray-400 text-sm">OR</div>
 
-          <button onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/start`} className="w-full bg-white gap-2 border rounded-lg flex items-center justify-center py-2 hover:bg-gray-50">
-            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="18" height="18" viewBox="0 0 48 48">
-              <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
-              <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
-              <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
-              <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+          <button
+            onClick={() =>
+              (window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/start`)
+            }
+            className="w-full bg-white gap-2 border rounded-lg flex items-center justify-center py-2 hover:bg-gray-50"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              x="0px"
+              y="0px"
+              width="18"
+              height="18"
+              viewBox="0 0 48 48"
+            >
+              <path
+                fill="#FFC107"
+                d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
+              ></path>
+              <path
+                fill="#FF3D00"
+                d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
+              ></path>
+              <path
+                fill="#4CAF50"
+                d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
+              ></path>
+              <path
+                fill="#1976D2"
+                d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
+              ></path>
             </svg>
             Continue with Google
           </button>
@@ -355,11 +443,15 @@ const LoginForm = () => {
         {}
         <p className="text-center text-sm mt-4 text-gray-600">
           Don’t have an account?{" "}
-          <Link to="/signup" className="text-[#D4A052] font-semibold hover:underline">
+          <Link
+            to="/signup"
+            className="text-[#D4A052] font-semibold hover:underline"
+          >
             Sign up
           </Link>
         </p>
       </div>
-    </div>;
+    </div>
+  );
 };
 export default LoginForm;

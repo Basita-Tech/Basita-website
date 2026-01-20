@@ -1,37 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "../../api/http";
+import SEO from "../SEO";
 const SuccessPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const {
-    name,
-    email,
-    mobile
-  } = location.state || {};
+  const { name, email, mobile } = location.state || {};
   const [userData, setUserData] = useState({
     name: name || "",
     email: email || "",
-    mobile: mobile || ""
+    mobile: mobile || "",
   });
   useEffect(() => {
     const checkAuthAndRedirect = async () => {
       try {
         const API = import.meta.env.VITE_API_URL;
         const me = await axios.get(`${API}/auth/me`, {
-          withCredentials: true
+          withCredentials: true,
         });
-        
+
         // If user is authenticated, check their profile status
         if (me?.data?.success) {
           const user = me.data.data;
-          
+
           // Check if onboarding is completed
           if (user?.isOnboardingCompleted) {
             // Check if profile is approved (handle both isApproved and profileReviewStatus)
-            const isApproved = user?.isApproved === true || 
-                              user?.profileReviewStatus === "approved";
-            
+            const isApproved =
+              user?.isApproved === true ||
+              user?.profileReviewStatus === "approved";
+
             if (isApproved) {
               // Profile is approved, redirect to dashboard
               navigate("/userdashboard", { replace: true });
@@ -62,31 +60,53 @@ const SuccessPage = () => {
   }, [userData, navigate]);
   const handleCompleteProfile = () => {
     navigate("/onboarding/user", {
-      state: userData
+      state: userData,
     });
   };
   const handleSkip = () => {
     navigate("/");
   };
-  return <main className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-10">
-      <div className="shadow-xl rounded-3xl max-w-lg w-full p-8 md:p-10 text-center" style={{
-      backgroundColor: "#FBFAF7"
-    }}>
+  return (
+    <main className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-10">
+      <div
+        className="shadow-xl rounded-3xl max-w-lg w-full p-8 md:p-10 text-center"
+        style={{
+          backgroundColor: "#FBFAF7",
+        }}
+      >
+        <SEO
+          title="Registration Successful | Satfera"
+          description="You have successfully joined Satfera."
+          noIndex
+        />
+
         {}
         <div className="flex items-center justify-center mb-6">
-          <img src="/logo.png" alt="Satfera" className="h-20 md:h-24 w-auto drop-shadow-sm" style={{
-          filter: "brightness(1) saturate(1)"
-        }} loading="lazy" />
+          <img
+            src="/logo.png"
+            alt="Satfera"
+            className="h-20 md:h-24 w-auto drop-shadow-sm"
+            style={{
+              filter: "brightness(1) saturate(1)",
+            }}
+            loading="lazy"
+          />
         </div>
 
         {}
         <div className="mb-6">
-          <div className="inline-flex p-4 rounded-full" style={{
-          backgroundColor: "#FFF3D6"
-        }}>
-            <i className="bi bi-check-circle-fill text-4xl" style={{
-            color: "#D4A052"
-          }}></i>
+          <div
+            className="inline-flex p-4 rounded-full"
+            style={{
+              backgroundColor: "#FFF3D6",
+            }}
+          >
+            <i
+              className="bi bi-check-circle-fill text-4xl"
+              style={{
+                color: "#D4A052",
+              }}
+            ></i>
           </div>
         </div>
 
@@ -106,12 +126,19 @@ const SuccessPage = () => {
 
         {}
         <div className="flex flex-col gap-3 mb-6">
-          <button onClick={handleCompleteProfile} style={{
-          backgroundColor: "#D4A052"
-        }} className="hover:opacity-90 text-white font-semibold py-3 rounded-lg transition-all flex items-center justify-center gap-2 shadow-md">
+          <button
+            onClick={handleCompleteProfile}
+            style={{
+              backgroundColor: "#D4A052",
+            }}
+            className="hover:opacity-90 text-white font-semibold py-3 rounded-lg transition-all flex items-center justify-center gap-2 shadow-md"
+          >
             Complete Profile <i className="bi bi-arrow-right"></i>
           </button>
-          <button onClick={handleSkip} className="border-2 border-[#D4A052] bg-white text-[#D4A052] hover:bg-[#D4A052] hover:text-white py-3 rounded-lg transition-all font-semibold shadow-sm">
+          <button
+            onClick={handleSkip}
+            className="border-2 border-[#D4A052] bg-white text-[#D4A052] hover:bg-[#D4A052] hover:text-white py-3 rounded-lg transition-all font-semibold shadow-sm"
+          >
             Skip for Now
           </button>
         </div>
@@ -133,7 +160,9 @@ const SuccessPage = () => {
               {userData.mobile ? `+${userData.mobile}` : "Not Provided"}
             </li>
             <li>Login to your SATFERA account using these details.</li>
-            <li>Upload your ID proof (Aadhar, Driving Licence, or Passport).</li>
+            <li>
+              Upload your ID proof (Aadhar, Driving Licence, or Passport).
+            </li>
             <li>Upload clear face & full-length photographs.</li>
             <li>
               Complete personal details – education, profession, lifestyle, etc.
@@ -149,6 +178,7 @@ const SuccessPage = () => {
           📧 We’ve sent a welcome email to your registered email address.
         </div>
       </div>
-    </main>;
+    </main>
+  );
 };
 export default SuccessPage;

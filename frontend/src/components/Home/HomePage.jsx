@@ -10,6 +10,7 @@ import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { getOnboardingStatus, getProfileReviewStatus, getMembershipPlans } from "../../api/auth";
 import Footer from "../Footer/Footer";
 import HomeNavbar from "../HomeNavbar";
+import SEO from "../SEO";
 const colors = {
   maroon: "#800000",
   gold: "#D4A052",
@@ -125,7 +126,19 @@ export default function HomePage() {
   
   return <div className="min-h-screen w-full overflow-x-hidden bg-beige">
       <HomeNavbar />
-      {}
+      <SEO
+        title="Satfera – Trusted Matrimony Platform to Find Your Life Partner"
+        description="Satfera helps you find verified matrimonial profiles and meaningful relationships across India."
+        path="/"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Satfera",
+          url: "https://www.satfera.in",
+          logo: "https://www.satfera.in/logo.png"
+        }}
+      />
+
       <section id="hero" className="relative flex items-center justify-center h-[450px] md:h-[600px] w-full overflow-hidden">
         <img src={weddingCoupleImage} alt="Wedding Couple" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/50 to-black/60"></div>

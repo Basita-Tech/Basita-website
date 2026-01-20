@@ -1,5 +1,15 @@
-import LoginForm from './LoginForm';
+import SEO from "../SEO";
+import LoginForm from "./LoginForm";
 const LoginPage = () => {
-  return <LoginForm />;
+  return (
+    <>
+      <SEO
+        title="Login | Satfera"
+        description="Login to your Satfera account."
+        noIndex
+      />
+      <LoginForm />;
+    </>
+  );
 };
 export default LoginPage;

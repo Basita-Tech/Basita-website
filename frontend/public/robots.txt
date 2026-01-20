@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
-Disallow: /dashboard
 
-Sitemap: https://satfera.in/sitemap.xml
+Disallow: /login
+Disallow: /signup
+Disallow: /dashboard
+Disallow: /onboarding
+
+Sitemap: https://www.satfera.in/sitemap.xml

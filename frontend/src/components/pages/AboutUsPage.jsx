@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Heart, Users, Target, Award, Mail, Phone, MapPin } from "lucide-react";
 import Footer from "../Footer/Footer";
 import HomeNavbar from "../HomeNavbar";
+import SEO from "../SEO";
 
 const colors = {
   maroon: "#800000",
@@ -16,6 +17,11 @@ const colors = {
 const AboutUsPage = () => {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-beige">
+      <SEO
+        title="About Satfera | Trusted Indian Matrimony Platform"
+        description="Learn about Satfera’s mission to help people build meaningful matrimonial relationships."
+        path="/about"
+      />
       <HomeNavbar />
 
       {/* Hero Section */}

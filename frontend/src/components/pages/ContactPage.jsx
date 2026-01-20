@@ -2,18 +2,25 @@ import React from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
 import Footer from "../Footer/Footer";
 import HomeNavbar from "../HomeNavbar";
+import SEO from "../SEO";
 
 const colors = {
   maroon: "#800000",
   gold: "#D4A052",
   goldLight: "#E4C48A",
   beige: "#F4EEE4",
-  white: "#FFFFFF"
+  white: "#FFFFFF",
 };
 
 const ContactPage = () => {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-[#F9F7F5]">
+     <SEO
+        title="Contact Satfera | Matrimony Support & Help"
+        description="Get in touch with Satfera for matrimony support, inquiries, or assistance."
+        path="/contact"
+      />
+
       <HomeNavbar />
 
       {/* Hero Section */}
@@ -23,7 +30,8 @@ const ContactPage = () => {
             Contact Us
           </h1>
           <p className="text-lg text-gray-700">
-            We're here to help! Reach out to us through any of the channels below.
+            We're here to help! Reach out to us through any of the channels
+            below.
           </p>
         </div>
       </section>
@@ -37,9 +45,11 @@ const ContactPage = () => {
               <div className="w-16 h-16 bg-[#E4C48A] rounded-full flex items-center justify-center mx-auto mb-6">
                 <Mail className="w-8 h-8 text-[#800000]" />
               </div>
-              <h3 className="text-xl font-bold text-[#800000] mb-4">Email Us</h3>
-              <a 
-                href="mailto:support@satfera.in" 
+              <h3 className="text-xl font-bold text-[#800000] mb-4">
+                Email Us
+              </h3>
+              <a
+                href="mailto:support@satfera.in"
                 className="text-gray-700 hover:text-[#D4A052] transition-colors text-lg font-medium break-all"
               >
                 support@satfera.in
@@ -55,8 +65,8 @@ const ContactPage = () => {
                 <Phone className="w-8 h-8 text-[#800000]" />
               </div>
               <h3 className="text-xl font-bold text-[#800000] mb-4">Call Us</h3>
-              <a 
-                href="tel:+919925203929" 
+              <a
+                href="tel:+919925203929"
                 className="text-gray-700 hover:text-[#D4A052] transition-colors text-lg font-medium"
               >
                 +91 9925203929
@@ -71,7 +81,9 @@ const ContactPage = () => {
               <div className="w-16 h-16 bg-[#E4C48A] rounded-full flex items-center justify-center mx-auto mb-6">
                 <MapPin className="w-8 h-8 text-[#800000]" />
               </div>
-              <h3 className="text-xl font-bold text-[#800000] mb-4">Visit Us</h3>
+              <h3 className="text-xl font-bold text-[#800000] mb-4">
+                Visit Us
+              </h3>
               <p className="text-gray-700 text-lg font-medium mb-2">
                 Ahmedabad, India
               </p>

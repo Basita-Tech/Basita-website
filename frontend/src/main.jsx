@@ -5,11 +5,17 @@ import { AuthProvider } from "./components/context/AuthContext";
 import App from "./App.jsx";
 import "./index.css";
 import { Toaster } from "react-hot-toast";
-createRoot(document.getElementById("root")).render(<StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <App />
-        <Toaster position="top-right" />
-      </AuthProvider>
-    </BrowserRouter>
-  </StrictMode>);
+import { HelmetProvider } from "react-helmet-async";
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <HelmetProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <App />
+          <Toaster position="top-right" />
+        </AuthProvider>
+      </BrowserRouter>
+    </HelmetProvider>
+  </StrictMode>,
+);

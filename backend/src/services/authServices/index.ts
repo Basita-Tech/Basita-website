@@ -114,7 +114,7 @@ export class AuthService {
 
     if (!user?.isPhoneVerified || !user?.isEmailVerified) {
       const error: any = new Error(
-        !user.isPhoneVerified
+        !user?.isPhoneVerified
           ? "Please verify your phone number before logging in."
           : "Please verify your email before logging in."
       );
@@ -122,7 +122,7 @@ export class AuthService {
       error.reason = "OTP_VERIFICATION_PENDING";
       error.status = 202;
 
-      if (!user.isPhoneVerified) {
+      if (!user?.isPhoneVerified) {
         error.phoneNumber = user.phoneNumber;
       }
 
@@ -236,7 +236,7 @@ export class AuthService {
 
     if (!user?.isPhoneVerified || !user?.isEmailVerified) {
       const error: any = new Error(
-        !user.isPhoneVerified
+        !user?.isPhoneVerified
           ? "Please verify your phone number before logging in."
           : "Please verify your email before logging in."
       );
@@ -244,11 +244,11 @@ export class AuthService {
       error.reason = "OTP_VERIFICATION_PENDING";
       error.status = 202;
 
-      if (!user.isPhoneVerified) {
+      if (!user?.isPhoneVerified) {
         error.phoneNumber = user.phoneNumber;
       }
 
-      if (!user.isEmailVerified) {
+      if (!user?.isEmailVerified) {
         error.email = user.email;
       }
 

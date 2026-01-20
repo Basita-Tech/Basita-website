@@ -20,7 +20,7 @@ html, body, #root {
   margin: 0;
   padding: 0;
   background-color: var(--background);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   color: hsl(var(--foreground));
   -webkit-font-smoothing: antialiased;
 }

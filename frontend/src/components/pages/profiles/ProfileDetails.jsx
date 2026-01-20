@@ -113,45 +113,41 @@ export function ProfileDetails({
   const profileId = useMemo(() => String(profile?.id || profile?.userId || profile?._id || profile?.user?.userId || profile?.user?.id || id), [profile, id]);
   const photos = useMemo(() => {
     const arr = [];
-    if (profile?.closerPhoto?.url) arr.push({
-      url: profile.closerPhoto.url,
-      label: "Close-up Portrait",
-      ratio: 1 // 600x600
-    });
-    if (profile?.personalPhoto?.url) {
+    const seen = new Set();
+    const getUrl = photo => typeof photo === "string" ? photo : photo?.url;
+    const pushPhoto = (photo, label, ratio) => {
+      const url = getUrl(photo);
+      if (!url || seen.has(url)) return;
+      seen.add(url);
       arr.push({
-        url: profile.personalPhoto.url,
-        label: "Full Body",
-        ratio: 4 / 5, // 1080x1350
-        blurred: !!profile?.personalPhoto?.isBlurred
+        url,
+        label,
+        ratio,
+        blurred: !!(photo && photo.isBlurred)
       });
-    }
-    if (Array.isArray(profile?.personalPhotos)) {
-      profile.personalPhotos.forEach(p => {
-        if (p?.url) arr.push({
-          url: p.url,
-          label: "Full Body",
-          ratio: 4 / 5, // 1080x1350
-          blurred: !!p?.isBlurred
-        });
-      });
-    }
-    if (profile?.familyPhoto?.url) arr.push({
-      url: profile.familyPhoto.url,
-      label: "Family",
-      ratio: 4 / 3, // 1600x1200
-      blurred: !!profile?.familyPhoto?.isBlurred
-    });
-    if (Array.isArray(profile?.otherPhotos)) {
-      profile.otherPhotos.forEach(p => {
-        if (p?.url) arr.push({
-          url: p.url,
-          label: p.title || "Additional Photo",
-          ratio: 1, // 1200x1200
-          blurred: !!p?.isBlurred
-        });
-      });
-    }
+    };
+    const addMany = (photo, label, ratio) => {
+      if (!photo) return;
+      if (Array.isArray(photo)) {
+        photo.forEach(p => pushPhoto(p, label, ratio));
+      } else {
+        pushPhoto(photo, label, ratio);
+      }
+    };
+
+    // Handle multiple payload shapes and nested locations
+    const closerSources = [profile?.closerPhoto, profile?.user?.closerPhoto, profile?.photos?.closerPhoto];
+    closerSources.forEach(src => addMany(src, "Close-up Portrait", 1));
+
+    const personalSources = [profile?.personalPhoto, profile?.personalPhotos, profile?.user?.personalPhoto, profile?.user?.personalPhotos, profile?.photos?.personalPhoto, profile?.photos?.personalPhotos];
+    personalSources.forEach(src => addMany(src, "Full Body", 4 / 5));
+
+    const familySources = [profile?.familyPhoto, profile?.user?.familyPhoto, profile?.photos?.familyPhoto];
+    familySources.forEach(src => addMany(src, "Family", 4 / 3));
+
+    const otherSources = [profile?.otherPhotos, profile?.user?.otherPhotos, profile?.photos?.otherPhotos];
+    otherSources.forEach(src => addMany(src, "Additional Photo", 1));
+
     return arr;
   }, [profile]);
   const shortlistSource = useMemo(() => Array.isArray(shortlistedIds) && shortlistedIds.length > 0 ? shortlistedIds.map(s => String(s)) : [], [shortlistedIds]);

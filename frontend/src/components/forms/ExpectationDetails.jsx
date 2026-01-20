@@ -232,7 +232,7 @@ const ExpectationDetails = ({
             value: e,
             label: e
           })) || [],
-          maritalStatus: data.maritalStatus?.map(e => ({
+          maritalStatus: (Array.isArray(data.maritalStatus) ? data.maritalStatus : data.maritalStatus ? [data.maritalStatus] : []).map(e => ({
             value: e,
             label: e
           })) || [],
@@ -309,7 +309,7 @@ const ExpectationDetails = ({
           value: e,
           label: e
         })) || [],
-        maritalStatus: data.maritalStatus?.map(e => ({
+        maritalStatus: (Array.isArray(data.maritalStatus) ? data.maritalStatus : data.maritalStatus ? [data.maritalStatus] : []).map(e => ({
           value: e,
           label: e
         })) || [],

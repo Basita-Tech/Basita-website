@@ -18,20 +18,29 @@ import PrivacyPolicyPage from "./components/pages/PrivacyPolicyPage";
 import AboutUsPage from "./components/pages/AboutUsPage";
 import ContactPage from "./components/pages/ContactPage";
 import FAQPage from "./components/Home/FAQPage";
-const ProfileCompletion = lazy(() => import("./components/forms/ProfileCompletion"));
+import RouteChangeTracker from "./components/analytics/RouteChangeTracker";
+const ProfileCompletion = lazy(
+  () => import("./components/forms/ProfileCompletion"),
+);
 const MultiStepForm = lazy(() => import("./components/MultiStepForm"));
 const ReviewPage = lazy(() => import("./components/pages/ReviewPage"));
-const UserDashboard = lazy(() => import("./components/pages/UserDashboard").then(module => ({
-  default: module.UserDashboard
-})));
-const PageLoader = () => <div className="flex items-center justify-center min-h-screen">
+const UserDashboard = lazy(() =>
+  import("./components/pages/UserDashboard").then((module) => ({
+    default: module.UserDashboard,
+  })),
+);
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-screen">
     <div className="text-center">
       <Loader2 className="w-12 h-12 animate-spin text-[#C8A227] mx-auto mb-4" />
       <p className="text-gray-600">Loading...</p>
     </div>
-  </div>;
+  </div>
+);
 function App() {
-  return <>
+  return (
+    <>
+      <RouteChangeTracker />
       <ScrollToTop />
       <AuthMonitor />
       <Routes>
@@ -53,34 +62,59 @@ function App() {
         <Route path="/faq" element={<FAQPage />} />
 
         {}
-        <Route path="/complete-profile" element={<Suspense fallback={<PageLoader />}>
-            <ProfileCompletion />
-          </Suspense>} />
-        <Route path="/onboarding/user" element={<Suspense fallback={<PageLoader />}>
-            <MultiStepForm />
-          </Suspense>} />
-        <Route path="/onboarding/review" element={<ProtectedRoute>
+        <Route
+          path="/complete-profile"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ProfileCompletion />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/onboarding/user"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <MultiStepForm />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/onboarding/review"
+          element={
+            <ProtectedRoute>
               <Suspense fallback={<PageLoader />}>
                 <ReviewPage />
               </Suspense>
-            </ProtectedRoute>} /> 
+            </ProtectedRoute>
+          }
+        />
 
         {}
-        <Route path="/dashboard/*" element={<ProtectedRoute>
+        <Route
+          path="/dashboard/*"
+          element={
+            <ProtectedRoute>
               <Suspense fallback={<PageLoader />}>
                 <UserDashboard />
               </Suspense>
-            </ProtectedRoute>} />
+            </ProtectedRoute>
+          }
+        />
         {}
-        <Route path="/userdashboard/*" element={<ProtectedRoute>
+        <Route
+          path="/userdashboard/*"
+          element={
+            <ProtectedRoute>
               <Suspense fallback={<PageLoader />}>
                 <UserDashboard />
               </Suspense>
-            </ProtectedRoute>} />
+            </ProtectedRoute>
+          }
+        />
 
         {}
-
       </Routes>
-    </>;
+    </>
+  );
 }
 export default App;

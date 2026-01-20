@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { verifyEmailOtp, sendEmailOtp, sendSmsOtp, verifySmsOtp } from "../../api/auth";
 import toast from "react-hot-toast";
+import { trackEvent } from "../analytics/ga4";
 const OTP_VALID_TIME = 180;
 const RESEND_AFTER = 60;
 const MAX_RESEND = 5;
@@ -832,6 +833,7 @@ const VerifyOTP = () => {
         
         setTimeout(() => {
           clearPersistedOtpStatus();
+          trackEvent("signup_complete");
           navigate("/success", {
             state: {
               name,
@@ -839,7 +841,7 @@ const VerifyOTP = () => {
               mobile: resolvedCountryCode ? `${resolvedCountryCode}${resolvedMobile}`.replace(/\+/, "") : resolvedMobile
             }
           });
-        }, 1100);
+        }, 100);
       }
     } catch (err) {
       console.error("OTP Verification Error:", err);

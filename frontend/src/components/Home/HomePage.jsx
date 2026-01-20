@@ -91,7 +91,11 @@ export default function HomePage() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-
+    // TO-DO: Add track event on plan select with plan and price both.
+    // trackEvent("plan_selected", {
+    //   value: plan.price,
+    //   currency: "INR",
+    // });
     if (isAuthenticated) {
       try {
         const onboarding = await getOnboardingStatus();

@@ -59,11 +59,11 @@ async function updateProfileApproval(
     };
   }
 
-  if (newStatus === "rejected" || newStatus === "rectification") {
-    updateData.isVisible = false;
-  } else {
-    updateData.isVisible = true;
-  }
+  // if (newStatus === "rejected" || newStatus === "rectification") {
+  //   updateData.isVisible = false;
+  // } else {
+  //   updateData.isVisible = true;
+  // }
 
   await User.findByIdAndUpdate(objectId, updateData, { new: false });
 

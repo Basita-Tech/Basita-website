@@ -93,7 +93,7 @@ ${sigHash}`;
 }
 
 async function verifyOtp(req: AuthenticatedRequest, res: Response) {
-  const { countryCode, phoneNumber, code } = req.body;
+  const { countryCode, phoneNumber, code, type } = req.body;
 
   if (!phoneNumber || !code) {
     return res.status(400).json({
@@ -118,13 +118,14 @@ async function verifyOtp(req: AuthenticatedRequest, res: Response) {
     if (!user) {
       return timingSafe.fail(new Error("User not found"));
     }
-
-    if (user.isPhoneVerified) {
-      return res.status(200).json({
-        success: true,
-        message: "Phone number already verified",
-        user
-      });
+    if (type !== "sms_login") {
+      if (user.isPhoneVerified) {
+        return res.status(200).json({
+          success: true,
+          message: "Phone number already verified",
+          user
+        });
+      }
     }
 
     const attemptCount = await incrementAttempt(phoneNumber, "signup");

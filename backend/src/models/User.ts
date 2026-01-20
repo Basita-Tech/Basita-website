@@ -119,7 +119,7 @@ const userSchema: Schema = new Schema(
       minlength: [6, "Password must be at least 6 characters"],
       maxlength: [255, "Password hash too long"]
     },
-    isActive: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
     deactivatedAt: { type: Date },
     deactivationReason: {
       type: String,

@@ -16,7 +16,13 @@ class commonService {
               activeUsers: {
                 $sum: {
                   $cond: [
-                    { $and: ["$isActive", "$isOnboardingCompleted"] },
+                    {
+                      $and: [
+                        "$isActive",
+                        "$isOnboardingCompleted",
+                        { $eq: ["$profileReviewStatus", "approved"] }
+                      ]
+                    },
                     1,
                     0
                   ]

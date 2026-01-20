@@ -232,7 +232,13 @@ const ExpectationDetails = ({
             value: e,
             label: e
           })) || [],
-          maritalStatus: (Array.isArray(data.maritalStatus) ? data.maritalStatus : data.maritalStatus ? [data.maritalStatus] : []).map(e => ({
+          maritalStatus: (() => {
+            let ms = data.maritalStatus;
+            if (Array.isArray(ms)) return ms;
+            if (typeof ms === 'object' && ms !== null) return Object.values(ms).filter(v => typeof v === 'string');
+            if (typeof ms === 'string') return [ms];
+            return [];
+          })().map(e => ({
             value: e,
             label: e
           })) || [],
@@ -309,7 +315,13 @@ const ExpectationDetails = ({
           value: e,
           label: e
         })) || [],
-        maritalStatus: (Array.isArray(data.maritalStatus) ? data.maritalStatus : data.maritalStatus ? [data.maritalStatus] : []).map(e => ({
+        maritalStatus: (() => {
+          let ms = data.maritalStatus;
+          if (Array.isArray(ms)) return ms;
+          if (typeof ms === 'object' && ms !== null) return Object.values(ms).filter(v => typeof v === 'string');
+          if (typeof ms === 'string') return [ms];
+          return [];
+        })().map(e => ({
           value: e,
           label: e
         })) || [],

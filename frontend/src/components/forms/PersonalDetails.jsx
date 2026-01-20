@@ -77,6 +77,7 @@ const PersonalDetails = ({
     maritalStatus: ""
   });
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [errors, setErrors] = useState({
     pincode: "",
     city: "",

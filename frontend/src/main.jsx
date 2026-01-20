@@ -7,8 +7,11 @@ import "./index.css";
 import { Toaster } from "react-hot-toast";
 import { HelmetProvider } from "react-helmet-async";
 import { initGA } from "./components/analytics/ga4";
+import { hasAnalyticsConsent } from "./components/analytics/consent";
 
-initGA();
+if (hasAnalyticsConsent()) {
+  initGA();
+}
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

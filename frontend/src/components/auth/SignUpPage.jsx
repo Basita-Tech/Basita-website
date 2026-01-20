@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { AuthContextr } from "../context/AuthContext";
 import { sanitizeName, sanitizeEmail, sanitizePhone, sanitizeCountryCode, sanitizePassword, sanitizeString } from "../../utils/sanitization";
 import { validateName, validateEmail, validatePhone, validateDateOfBirth, validatePassword, validatePasswordMatch, validateCountryCode, validateProfileFor, validateGender, validateSignupForm, getPasswordStrength } from "../../utils/validation";
+import { trackEvent } from "../analytics/ga4";
 
 const SMS_HASH = "satfera";
 const profileOptions = [{
@@ -348,6 +349,7 @@ const SignUpPage = () => {
   };
   const handleSubmit = async e => {
     e.preventDefault();
+    trackEvent("signup_start");
     if (!validateForm()) return;
     setLoading(true);
     setErrors({});

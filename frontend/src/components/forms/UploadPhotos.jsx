@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import usePhotoUpload from "../../hooks/usePhotoUpload";
 import ImageCropperModal from "../ImageCropperModal";
+import { trackEvent } from "../analytics/ga4";
 const UploadPhotos = ({
   onPrevious
 }) => {
@@ -611,6 +612,8 @@ const UploadPhotos = ({
               optional2: "other"
             }[key]
           }));
+          trackEvent("profile_completed");
+
           const result = await retryFailedUploads(filesToUpload);
           if (result.successCount > 0) {
             const newUrls = {};

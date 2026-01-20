@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { cachedFetch, dataCache } from "../utils/cache";
 import { dedupeRequest } from "../utils/optimize";
 import { getCSRFToken } from "../utils/csrfProtection";
+import { trackEvent } from "@/components/analytics/ga4";
 const API = import.meta.env.VITE_API_URL;
 // Some envs point to /api/v1; normalize to base and derive v2
 const API_ROOT = API?.replace(/\/v1\/?$/i, "").replace(/\/$/, "");
@@ -114,7 +115,7 @@ export const loginUser = async (formData) => {
         phoneNumber: pendingPhone,
       };
     }
-
+    trackEvent("login_success");
     return data;
   } catch (error) {
     const status = error?.response?.status;

@@ -19,6 +19,7 @@ import AboutUsPage from "./components/pages/AboutUsPage";
 import ContactPage from "./components/pages/ContactPage";
 import FAQPage from "./components/Home/FAQPage";
 import RouteChangeTracker from "./components/analytics/RouteChangeTracker";
+import CookieConsentBanner from "./components/CookieConsentBanner";
 const ProfileCompletion = lazy(
   () => import("./components/forms/ProfileCompletion"),
 );
@@ -41,6 +42,7 @@ function App() {
   return (
     <>
       <RouteChangeTracker />
+      <CookieConsentBanner />
       <ScrollToTop />
       <AuthMonitor />
       <Routes>

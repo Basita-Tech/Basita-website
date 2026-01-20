@@ -156,7 +156,6 @@ export function ReportProfileDialog({ open, onOpenChange, onReportSuccess }) {
             onClick={() => handleOpenChange(false)}
             disabled={isSubmitting}
             className="flex-1 rounded-[12px] border-border-subtle h-11 sm:w-auto w-full">
-          >
             Cancel
           </Button>
           <Button
@@ -164,7 +163,6 @@ export function ReportProfileDialog({ open, onOpenChange, onReportSuccess }) {
             onClick={handleSubmit}
             disabled={isSubmitting || !customId.trim() || !reason.trim() || !description.trim()}
             className="flex-1 bg-white border-2 border-red-500 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-[12px] h-11 sm:w-auto w-full">
-          >
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />

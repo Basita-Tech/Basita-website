@@ -1,0 +1,3887 @@
+{
+  "info": {
+    "_postman_id": "6069039b-179c-4250-bda6-2189a6c82c27",
+    "name": "Satfera API",
+    "description": "API collection for Satfera backend endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "User login",
+          "id": "0de00349-3ea4-4bc6-8abe-ac9957af3a20",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user123@a.com\",\n  \"password\": \"Sanjay@1\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User registration",
+          "id": "d0caa749-c5be-4c49-bf53-447264b98e6a",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"password\": \"\",\n  \"name\": \"\",\n  \"phone\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/signup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Start Google OAuth",
+          "id": "7d6461bf-76f5-4489-a5c7-49c38ac6ec70",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/google/start",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "google",
+                "start"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Google OAuth callback",
+          "id": "82cfc5e2-f3b7-4184-825a-023e78d50598",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/google/callback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "google",
+                "callback"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request password reset",
+          "id": "9cb525d8-de85-4292-b15c-2f221a1c27f1",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/forgot-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset password",
+          "id": "c9678e33-6d5d-446e-adc2-61f09e2aeafa",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"\",\n  \"confirmPassword\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/reset-password/:token",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "reset-password",
+                ":token"
+              ],
+              "variable": [
+                {
+                  "key": "token"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send email OTP",
+          "id": "9862b80d-28b8-4cb0-aee0-36c6f1201588",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/send-email-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "send-email-otp"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify email OTP",
+          "id": "25425609-d5e9-447e-9031-11da3d609527",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"otp\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/verify-email-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "verify-email-otp"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send SMS OTP",
+          "id": "0aae1e09-c742-452d-b355-e3c40bf1c0f5",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/send-sms-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "send-sms-otp"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify SMS OTP",
+          "id": "499ab4b4-ce0f-4cad-8cb7-562d244a4936",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"\",\n  \"otp\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/verify-sms-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "verify-sms-otp"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get current user",
+          "id": "1332925c-a804-4541-9e55-17cc1f9f76f0",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout user",
+          "id": "e6d3821c-7715-45ed-b2b5-bc4afd87fb2e",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "2afc048c-cc60-4363-b6a9-984530cc119b"
+    },
+    {
+      "name": "Sessions",
+      "item": [
+        {
+          "name": "Get all active sessions",
+          "id": "c9ac6ed3-7394-4e08-8a01-ea092b46c150",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sessions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sessions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout specific session",
+          "id": "d42925e6-b490-450c-81f6-d4cf5832b720",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sessions/:sessionId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sessions",
+                ":sessionId"
+              ],
+              "variable": [
+                {
+                  "key": "sessionId"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout all sessions",
+          "id": "7475eea8-34c9-4630-9387-3934d978eb2d",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sessions/logout-all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sessions",
+                "logout-all"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "995506ff-1a55-44c5-b6a8-7cf88f182604"
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get user dashboard",
+          "id": "c66efa6e-4a0b-490c-bf46-6256a78d7c3d",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change password",
+          "id": "12552810-d09e-491e-9e73-1d25f6f44539",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"\",\n  \"newPassword\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/change-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get notifications",
+          "id": "faa3821e-ec47-4328-af0e-3f3fe25a712f",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "userId",
+                "value": "69065fa1118c4c9d5cd987f9",
+                "type": "text",
+                "disabled": true
+              },
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userId\": \"69065fa1118c4c9d5cd987f9\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/notifications?isRead=false",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "notifications"
+              ],
+              "query": [
+                {
+                  "key": "isRead",
+                  "value": "false"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update notification read status",
+          "id": "7bd83166-f5a5-411e-9cd7-776adabebc2f",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/notifications/694b947a83886c80a9a2fcf7/read",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "notifications",
+                "694b947a83886c80a9a2fcf7",
+                "read"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search users",
+          "id": "198f2eca-17e1-403d-aca0-39b0e1c6c897",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/search",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "search"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Block user",
+          "id": "87d9858c-77de-4c79-abda-e8ab60cf40e1",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/block",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "block"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unblock user",
+          "id": "05de4677-ca19-4f47-ae4a-cbaa909a8873",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/unblock",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "unblock"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get blocked users",
+          "id": "04c642b8-7cb1-4696-ae8c-bd7c2aa06845",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/blocked",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "blocked"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get profile views",
+          "id": "266be6f9-29c6-414f-94a2-39285a6567cc",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/profile-views",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "profile-views"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add to compare",
+          "id": "cd4b744d-9ddd-41ec-9b52-77c826fc3dc4",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/compare",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "compare"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get compare list",
+          "id": "46cd15dc-1682-4174-a9bf-c44e0eb50e42",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/compare",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "compare"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "d71f4f35-155a-41e0-b712-8bf15325c41e",
+              "name": "Get compare list",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/user/compare",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "user",
+                    "compare"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "cross-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "strict-origin-when-cross-origin"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains; preload"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "1; mode=block"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Access-Control-Expose-Headers",
+                  "value": "X-Total-Count,X-Page-Count"
+                },
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self' https:; img-src 'self' data: https: blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+                },
+                {
+                  "key": "Permissions-Policy",
+                  "value": "geolocation=(), microphone=(), camera=(), payment=()"
+                },
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1871"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"74f-3wNjVHWfJWAxJptFPSv9Dwgmk1A\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 08 Jan 2026 09:08:33 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "2026-01-08T09:09:56.064Z",
+              "body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"userId\": \"6953ab1113958e2354aaf07c\",\n            \"fullName\": \"Rushabh Dhawan\",\n            \"age\": 33,\n            \"height\": \"4'10\\\" / 147 cm\",\n            \"weight\": \"42 kg / 93 lbs\",\n            \"city\": \"Ahmedabad\",\n            \"religion\": \"Jain\",\n            \"caste\": \"Patel-Desai\",\n            \"education\": \"Doctorate\",\n            \"fieldOfStudy\": \"DM - Doctor of Medicine\",\n            \"profession\": \"Teacher\",\n            \"diet\": \"vegetarian\",\n            \"smoking\": \"no\",\n            \"drinking\": \"no\",\n            \"familyType\": \"Joint\",\n            \"isFavorite\": false,\n            \"closerPhoto\": {\n                \"url\": \"https://randomuser.me/api/portraits/men/26.jpg\"\n            },\n            \"compatibility\": 90\n        },\n        {\n            \"userId\": \"6953ab1113958e2354aaf199\",\n            \"fullName\": \"Chandraj Babu\",\n            \"age\": 32,\n            \"height\": \"4'10\\\" / 147 cm\",\n            \"weight\": \"42 kg / 93 lbs\",\n            \"city\": \"Ahmedabad\",\n            \"religion\": \"Jain\",\n            \"caste\": \"Patel-Desai\",\n            \"education\": \"Diploma\",\n            \"fieldOfStudy\": \"Diploma in Computer Applications\",\n            \"profession\": \"Entrepreneur\",\n            \"diet\": \"swaminarayan\",\n            \"smoking\": \"no\",\n            \"drinking\": \"no\",\n            \"familyType\": \"Joint\",\n            \"isFavorite\": false,\n            \"closerPhoto\": {\n                \"url\": \"https://randomuser.me/api/portraits/men/11.jpg\"\n            },\n            \"compatibility\": 90\n        },\n        {\n            \"userId\": \"6953ab1113958e2354aaf14f\",\n            \"fullName\": \"Amogh Ahuja\",\n            \"age\": 39,\n            \"height\": \"4'10\\\" / 147 cm\",\n            \"weight\": \"42 kg / 93 lbs\",\n            \"city\": \"Ahmedabad\",\n            \"religion\": \"Jain\",\n            \"caste\": \"Patel-Desai\",\n            \"education\": \"Doctorate\",\n            \"fieldOfStudy\": \"D.Sc - Doctor of Science\",\n            \"profession\": \"Entrepreneur\",\n            \"diet\": \"vegetarian\",\n            \"smoking\": \"no\",\n            \"drinking\": \"no\",\n            \"familyType\": \"Joint\",\n            \"isFavorite\": false,\n            \"closerPhoto\": {\n                \"url\": \"https://randomuser.me/api/portraits/men/37.jpg\"\n            },\n            \"compatibility\": 90\n        },\n        {\n            \"userId\": \"6953ab1113958e2354aaf1c0\",\n            \"fullName\": \"Chandraj Babu\",\n            \"age\": 35,\n            \"height\": \"4'10\\\" / 147 cm\",\n            \"weight\": \"42 kg / 93 lbs\",\n            \"city\": \"Ahmedabad\",\n            \"religion\": \"Hindu\",\n            \"caste\": \"Patel-Desai\",\n            \"education\": \"Doctorate\",\n            \"fieldOfStudy\": \"DM - Doctor of Medicine\",\n            \"profession\": \"Web Developer\",\n            \"diet\": \"vegetarian\",\n            \"smoking\": \"no\",\n            \"drinking\": \"no\",\n            \"familyType\": \"Joint\",\n            \"isFavorite\": false,\n            \"closerPhoto\": {\n                \"url\": \"https://randomuser.me/api/portraits/men/50.jpg\"\n            },\n            \"compatibility\": 90\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Remove from compare",
+          "id": "432dbb19-27c7-4ee3-ae1c-122a4fb27eb2",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/compare",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "compare"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deactivate account",
+          "id": "e61d425b-a15d-47a7-97f1-867103b51e55",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/account/deactivate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "account",
+                "deactivate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activate account",
+          "id": "cbb5fdca-dc28-4f8a-8263-18d909c0fb23",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/account/activate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "account",
+                "activate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get account status",
+          "id": "7ec38a9f-387f-44ee-9f34-249c1ad74279",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/account/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "account",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete account",
+          "id": "3de9565b-3268-4c4b-ac86-ec7c8ede212a",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/account",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "account"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get notification settings",
+          "id": "04133331-0bd0-4243-aea3-00339db2d504",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/notification-settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "notification-settings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update notification settings",
+          "id": "6b9f0987-c600-4154-bc9d-eb8491c01aa1",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/notification-settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "notification-settings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request email change",
+          "id": "1ff20bae-f392-4b96-b8a2-e23abdfc088b",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newEmail\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/email/request-change",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "email",
+                "request-change"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify email change",
+          "id": "7b64c192-24fd-4218-aa1d-f2988cf81e63",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"otp\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/email/verify-change",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "email",
+                "verify-change"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request phone change",
+          "id": "01446ecf-8a2d-4f90-8513-db063caf0526",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newPhone\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/phone/request-change",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "phone",
+                "request-change"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify phone change",
+          "id": "af97e5d1-7895-4fb1-8a69-577d7bb59a22",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"otp\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/phone/verify-change",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "phone",
+                "verify-change"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get contact info",
+          "id": "ad561709-f426-4333-9733-0d3f45005a6f",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/contact-info",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "contact-info"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Download user data as PDF",
+          "id": "f74887ab-a407-44be-a476-49dc66706f7b",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/download-pdf",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "download-pdf"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Report a profile",
+          "id": "829de350-723f-43eb-be7e-9131554fad73",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"\",\n  \"reason\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/report",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "report"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "3344e12b-726f-4117-b68a-6a4c274e1986"
+    },
+    {
+      "name": "User Personal",
+      "item": [
+        {
+          "name": "Create personal info",
+          "id": "8b3a0429-db9b-4c2a-827a-60afdbc0b0fe",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get personal info",
+          "id": "bca3b1f2-aede-4480-8011-d95e32c0e25c",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user-personal",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update personal info",
+          "id": "30da5b24-e7a5-4bb3-b8dc-8b7beafbc31f",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create family details",
+          "id": "3761ab28-625d-4a83-b3a0-aa9af5538da4",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/family",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "family"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get family details",
+          "id": "75206e6b-b400-49af-a5a6-dc3d92b01d17",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/family",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "family"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update family details",
+          "id": "da0f8c88-f0ab-4acb-afe4-99e6e13dce56",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/family",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "family"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get education details",
+          "id": "9128c9de-5751-45c1-ba78-1bae2927203b",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/education",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "education"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create education details",
+          "id": "1c0d80f4-ee2e-4987-bca8-4d2078c95c81",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/education",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "education"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update education details",
+          "id": "6bd9b92b-9fef-40b3-918a-01391c8b258c",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/education",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "education"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get health info",
+          "id": "929d5461-5c5c-4b96-9c01-9e082040b68e",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "health"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create health info",
+          "id": "cc797d3e-69b1-4ee2-bed2-4950755282f3",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "health"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update health info",
+          "id": "2a83a3ca-9a52-4ba0-befa-7bf3a213e35a",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "health"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get profession info",
+          "id": "2f3390bd-9cf7-4980-bab6-a957b14d5611",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/profession",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "profession"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create profession info",
+          "id": "d13c5d72-2b29-4cbc-8bfa-0ea035527d85",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/profession",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "profession"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update profession info",
+          "id": "f3f74ce0-9f50-4bef-abdb-a10de04622fd",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/profession",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "profession"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get expectations",
+          "id": "baf18272-929a-4870-a9ea-d79291adf1ac",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/expectations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "expectations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create expectations",
+          "id": "51468464-6dec-4b5b-8180-4abfd2d41f86",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/expectations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "expectations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update expectations",
+          "id": "8fd73fb7-ef4f-4b6e-af90-3d97ea9b6958",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/expectations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "expectations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get onboarding status",
+          "id": "e91d0c21-1dd8-4d91-9dda-d5ba3a3cd998",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/onboarding-status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "onboarding-status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update onboarding status",
+          "id": "99684cc6-839d-4f17-b388-daf549f2bffb",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/onboarding-status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "onboarding-status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload photos",
+          "id": "6a8bc71d-d025-4fe9-b446-7878b3100856",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "photos",
+                  "type": "file",
+                  "src": [
+                    ""
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/upload/photos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "upload",
+                "photos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get photos",
+          "id": "d9b8f25f-07d9-4fec-b562-2db574109332",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/upload/photos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "upload",
+                "photos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update photos",
+          "id": "5c800431-2230-423a-aacf-4f0ba09693af",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "photos",
+                  "type": "file",
+                  "src": [
+                    ""
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/upload/photos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "upload",
+                "photos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete photos",
+          "id": "51c95f23-6b86-4403-8261-0a66a5dd1c4a",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/upload/photos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "upload",
+                "photos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload government ID",
+          "id": "15af8328-1369-4f4c-bf22-026485259235",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "governmentId",
+                  "type": "file",
+                  "src": [
+                    ""
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/upload/government-id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "upload",
+                "government-id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get government ID",
+          "id": "74089467-98cc-4c03-a156-1a4c5852b539",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/upload/government-id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "upload",
+                "government-id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update government ID",
+          "id": "57a7ed48-5f6a-4403-a466-bdc8a19dddcf",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "governmentId",
+                  "type": "file",
+                  "src": [
+                    ""
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/upload/government-id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "upload",
+                "government-id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get profile review status",
+          "id": "6a23db47-35b9-47ff-b8ab-c1f975893144",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/review/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "review",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit profile for review",
+          "id": "0e50aa68-c7a4-4fee-8089-c35f03ba7d3d",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user-personal/review/submit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user-personal",
+                "review",
+                "submit"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "0655b2ac-1d4c-4fa1-af34-8b50b7feceb0"
+    },
+    {
+      "name": "Connections/Requests",
+      "item": [
+        {
+          "name": "Get sent requests",
+          "id": "97354c41-4588-4a98-8626-f3e92ec4901a",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/requests/all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get received requests",
+          "id": "2f5bdbf0-eabf-4021-b644-af66c416fa82",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/requests/all/received",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "all",
+                "received"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send connection request",
+          "id": "75ca6bc4-5242-4c5c-b196-af0b4979e27d",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/requests/send",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "send"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Accept request",
+          "id": "45a90663-7f3a-47b5-9bcb-d23ffaa01b1a",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requestId\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/requests/accept",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "accept"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject request",
+          "id": "225e98fa-dc98-43e5-873d-f12cd31b40e8",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requestId\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/requests/reject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "reject"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject accepted connection",
+          "id": "d78754fa-81b0-4a6d-855f-9bb3a8de0e2d",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/requests/accepted/reject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "accepted",
+                "reject"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Accept rejected connection",
+          "id": "84f64b5d-6903-4228-a681-735112b9841f",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/requests/rejected/accept",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "rejected",
+                "accept"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get approved connections",
+          "id": "a1ae94a3-8964-42b4-a352-a8ebebf98837",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/requests/approve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "approve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Withdraw connection request",
+          "id": "51477ed1-98c9-450a-81da-c74c7954a071",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/requests/withdraw",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "withdraw"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get favorites",
+          "id": "7a559b1a-20e1-4251-bc55-e350ccd63d90",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/requests/favorites",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "favorites"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add to favorites",
+          "id": "a872f857-b515-43c7-b9c3-cc545ed48baa",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/requests/favorites/add",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "favorites",
+                "add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove from favorites",
+          "id": "638ef805-4d88-4906-bb79-02f5c871a6b2",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/requests/favorites/remove",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "favorites",
+                "remove"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "2a59ac5e-723b-47e6-a451-1d25777c4e40"
+    },
+    {
+      "name": "Recommendations/Matches",
+      "item": [
+        {
+          "name": "Get matches",
+          "id": "4acec054-9e86-4146-b017-7095b846d26d",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/matches",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "matches"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "10",
+                  "uuid": "a0217108-0b06-4124-87ab-72d0bad886b9",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "uuid": "aa7af3ee-a8ba-47c7-8efd-78345ba54e48",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get candidate profile",
+          "id": "af2117ca-d909-4e34-b433-aa58088cd5ee",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/profile/:candidateId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "profile",
+                ":candidateId"
+              ],
+              "variable": [
+                {
+                  "key": "candidateId",
+                  "value": "6958d384b832f4db16887a75"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all profiles",
+          "id": "30edc312-8d76-400a-a0e7-7bffcbab8947",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/profiles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "profiles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get matches V2",
+          "id": "22ef6cb7-1291-4720-a9ff-5cab079414fb",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/v2/matches",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v2",
+                "matches"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "uuid": "a0217108-0b06-4124-87ab-72d0bad886b9",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "uuid": "aa7af3ee-a8ba-47c7-8efd-78345ba54e48",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "97fcf4e8-7267-4501-b58d-7ecddd4848b7"
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get queue statistics",
+          "id": "e99dc4c8-2cdd-4c24-9e22-245a30517f28",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/queue-stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "queue-stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restore deleted account",
+          "id": "52f3f001-8e7a-4f62-a559-3258103918a6",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/account/restore",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "account",
+                "restore"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Hard delete account",
+          "id": "c259736b-0949-4965-8c21-442a9e2f59d9",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/account/hard-delete",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "account",
+                "hard-delete"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get deleted accounts",
+          "id": "f456f0a0-2030-4301-b1c4-2f25f97da31e",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/accounts/deleted",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "accounts",
+                "deleted"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get dashboard statistics",
+          "id": "d319e405-a86a-48f4-bd64-9b2630a240ae",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/dashboard/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "dashboard",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve profile",
+          "id": "12ed785f-b8ff-4886-967c-bf06036e55ec",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"6954d24b8eb9dcbe354d5370\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/approve/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "approve",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject profile",
+          "id": "772dff94-f967-4664-a423-0ac0c471a413",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"694a930d1c6509113763defd\",\n  \"reason\": \"Testinnnnnggggg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/reject/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "reject",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request profile rectification",
+          "id": "d43578dd-54e9-4dde-8cee-4c6a867defd1",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"694cd7060d27d888e97ea215\",\n  \"reason\": \"test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/rectify/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "rectify",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get pending profiles",
+          "id": "00470489-9f15-4c70-a827-352377c35ca3",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/profiles/pending?status=rectification",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "profiles",
+                "pending"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "rectification",
+                  "uuid": "567ae496-c369-4a69-a30a-875e7f2f9828"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify user profile",
+          "id": "77bb8e6c-b106-46a9-8b24-9bd1e27108a9",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/profile/verify/:userId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "profile",
+                "verify",
+                ":userId"
+              ],
+              "variable": [
+                {
+                  "key": "userId"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unverify user profile",
+          "id": "574b9f1c-5345-450d-9b4e-b752fb6055a2",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/profile/unverify/:userId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "profile",
+                "unverify",
+                ":userId"
+              ],
+              "variable": [
+                {
+                  "key": "userId"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all profiles",
+          "id": "a62aeee3-cf82-458c-9801-587349fa519f",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/all/profiles?limit=10&isActive=false",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "all",
+                "profiles"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "isActive",
+                  "value": "false"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get user profile details",
+          "id": "8089200b-8507-4784-a35a-b4d9d983a273",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/profile/:userId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "profile",
+                ":userId"
+              ],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "694248ce0a5af7decd952685"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update user profile details",
+          "id": "update-user-profile-admin-001",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"diet\": \"veg & non-veg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/profile/:userId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "profile",
+                ":userId"
+              ],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "6953ab2913958e2354abe885"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get reports and analytics",
+          "id": "d4660e94-d4c3-4ca3-b975-0037b7cf038b",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/analytics",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "analytics"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all requests",
+          "id": "8c0d9052-cf9e-4cd5-90d3-89bd60df361f",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/request-sent?status=pending",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "request-sent"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "2",
+                  "type": "text",
+                  "uuid": "386154c5-c1db-4085-be43-a3f5cdb24fa7",
+                  "disabled": true
+                },
+                {
+                  "key": "maleToFemale",
+                  "value": "true",
+                  "uuid": "e575c02c-7d86-40b2-a375-6b60c1b94229",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "uuid": "f06fc16b-d5db-4f5e-a28a-d86b506922be"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get requests by username",
+          "id": "get-requests-by-username-001",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/request-sent?username=Sanjana",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "request-sent"
+              ],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "Sanjana",
+                  "description": "First or last name to match",
+                  "uuid": "652a4c0f-f489-42ce-8cda-4ff7cb867033"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send request reminder (admin)",
+          "id": "send-request-reminder-admin-001",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/request-sent/:id/reminder",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "request-sent",
+                ":id",
+                "reminder"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "695252f21742791daf9a0c8b"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get super profiles",
+          "id": "fe457787-07e1-49e7-bd11-64482f782e3b",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/super-profiles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "super-profiles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin change user password",
+          "id": "0098af89-cb8b-4303-bda4-379143fb878e",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"userId\": \"694248c80a5af7decd94d2ap\",\r\n    \"newPassword\": \"Sanjay@11\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/user/change-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "user",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "System health check",
+          "id": "6c7bde89-fb4b-4de2-9646-908cf4243054",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/system/health?detail=full",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "system",
+                "health"
+              ],
+              "query": [
+                {
+                  "key": "detail",
+                  "value": "full",
+                  "uuid": "71d948ba-02b7-4c4b-a289-18dfb2bafe89"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get reports",
+          "id": "f97dd477-d2f6-4919-8c26-f60ee5a8ae21",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "reports"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update reports",
+          "id": "4ae01b52-20fa-4947-9726-a47b34d89196",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "reports"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search",
+          "id": "f2ec64b5-bddb-48e3-9627-2574b7522bea",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/search?ageFrom=20&ageTo=25&page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "ageFrom",
+                  "value": "20",
+                  "uuid": "9b5dbcb8-89cf-4bc6-a46d-2e8d04e2f014"
+                },
+                {
+                  "key": "ageTo",
+                  "value": "25",
+                  "uuid": "7373aa75-f8a5-4644-8194-c93e2d61e0f0"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "uuid": "d64e0656-e80e-49b1-88c8-a6facdbd9a86"
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "uuid": "5fcc146f-1809-43f5-bc0d-bb2503001fcc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Email Templates",
+          "id": "email-template-get-all-001",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/email-templates",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "email-templates"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "SIGNUP",
+                  "disabled": true
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Email Templates ID",
+          "id": "6b8ad0ed-e989-445b-9dd7-a11e5439ba37",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/email-templates/694cd1a106cc310b8f7d7ce9",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "email-templates",
+                "694cd1a106cc310b8f7d7ce9"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Email Template",
+          "id": "email-template-create-003",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"WELCOME_EMAIL\",\n  \"subject\": \"Welcome to {{brandName}} – Your Matrimony Journey Begins\",\n  \"body\": \"<!doctype html>\\n<html>\\n<body>\\n  <h1>Welcome {{userName}}!</h1>\\n  <p>Your username is: {{username}}</p>\\n  <p>Login here: {{loginLink}}</p>\\n</body>\\n</html>\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/email-templates",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "email-templates"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Email Template",
+          "id": "email-template-update-004",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"Updated Subject - Welcome to {{brandName}}\",\n  \"body\": \"<!doctype html>\\n<html>\\n<body>\\n  <h1>Updated Welcome {{userName}}!</h1>\\n  <p>Your username is: {{username}}</p>\\n</body>\\n</html>\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/email-templates/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "email-templates",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Email Template",
+          "id": "email-template-delete-005",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/email-templates/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "email-templates",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all Premiums profiles",
+          "id": "bf7ca6eb-cee7-4037-b535-9881adb04971",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/profiles/all/premiums",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "profiles",
+                "all",
+                "premiums"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Audits",
+          "id": "28d4305b-4619-4bbe-9fbf-f59f13d5efee",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/audits",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "audits"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "988151eb-9968-443c-bbee-29608e5117e9"
+    },
+    {
+      "name": "Pricing Configurations",
+      "item": [
+        {
+          "name": "Get All Pricing Configs",
+          "id": "pricing-config-get-all-001",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/pricing-configs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "pricing-configs"
+              ],
+              "query": [
+                {
+                  "key": "monthName",
+                  "value": "",
+                  "description": "Optional: 1_month, 3_months, 6_months, 12_months",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Pricing Config by ID",
+          "id": "pricing-config-get-by-id-002",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/pricing-configs/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "pricing-configs",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create or Update Pricing Config",
+          "id": "pricing-config-create-update-003",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"monthName\": \"1_month\",\n  \"features\": [\n    \"Unlimited matches\",\n    \"Priority support\",\n    \"Profile boost\"\n  ],\n  \"price\": 9.99\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/pricing-configs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "pricing-configs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Pricing Config",
+          "id": "pricing-config-delete-004",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/pricing-configs/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "pricing-configs",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "694d1088c95370c5dbab7d42"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "pricing-config-folder-001"
+    },
+    {
+      "name": "Support",
+      "item": [
+        {
+          "name": "Create Support Ticket",
+          "id": "support-create-ticket-001",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"subject\": \"Issue with profile verification\",\n    \"category\": \"technical\",\n    \"message\": \"I am unable to verify my profile. Please help.\",\n    \"description\": \"Testttttttttttttttttttttttujd .ks;ghihojio; yohitt\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/support/tickets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "support",
+                "tickets"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Tickets",
+          "id": "support-get-user-tickets-002",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/support/tickets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "support",
+                "tickets"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Ticket Details",
+          "id": "support-get-ticket-details-003",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/support/tickets/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "support",
+                "tickets",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "6954edcaf81cf6a675ea1aa3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Message to Ticket",
+          "id": "support-add-message-004",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Thank you for your response. I tried the suggested solution but still facing the issue.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/support/tickets/:id/messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "support",
+                "tickets",
+                ":id",
+                "messages"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "6954edcaf81cf6a675ea1aa3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Tickets (Admin)",
+          "id": "support-get-user-tickets-007",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/support/tickets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "support",
+                "tickets"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Ticket Details (Admin)",
+          "id": "support-get-ticket-details-008",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/support/tickets/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "support",
+                "tickets",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "694d1540ee46635c6765d5d0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Ticket Status (Admin)",
+          "id": "support-admin-update-status-009",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"in_progress\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/support/tickets/:id/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "support",
+                "tickets",
+                ":id",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "694d0f7ac95370c5dbab7d2b"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Message to Ticket (Admin)",
+          "id": "support-admin-add-message-010",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"We have reviewed your issue and are working on a solution. Please try clearing your cache and cookies.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/support/tickets/:id/messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "support",
+                "tickets",
+                ":id",
+                "messages"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "694a50dd013bb076cdbfaae4"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "support-folder-main-011"
+    },
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Health check",
+          "id": "06797e66-032f-410f-b142-05ba60003b03",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "53ba7c38-21a1-4fa0-ae38-c9a19e934cb7"
+    }
+  ],
+  "variable": [
+    {
+      "id": "4d932070-f002-4fe3-8631-62f43b000d71",
+      "key": "baseUrl",
+      "value": "http://localhost:8000/api/v1"
+    }
+  ]
+}

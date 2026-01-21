@@ -349,7 +349,6 @@ const SignUpPage = () => {
   };
   const handleSubmit = async e => {
     e.preventDefault();
-    trackEvent("signup_start");
     if (!validateForm()) return;
     setLoading(true);
     setErrors({});
@@ -387,6 +386,7 @@ const SignUpPage = () => {
       };
       const res = await signupUser(payload);
       if (res?.success) {
+        trackEvent("signup_success");
         const backendOtpSent = res?.otpSent || res?.otpDispatched || res?.otpAlreadySent;
         try {
           // If backend already dispatched OTPs, skip client resend to avoid duplicates

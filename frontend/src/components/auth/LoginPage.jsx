@@ -6,7 +6,7 @@ const LoginPage = () => {
       <SEO
         title="Login | Satfera"
         description="Login to your Satfera account."
-        noIndex
+        path="/login"
       />
       <LoginForm />;
     </>

@@ -613,7 +613,7 @@ export async function requestPhoneChangeController(
 ) {
   try {
     const userId = req.user!.id;
-    const { newPhoneNumber } = req.body;
+    const { newPhoneNumber, countryCode } = req.body;
 
     if (!newPhoneNumber) {
       return res.status(400).json({
@@ -622,7 +622,18 @@ export async function requestPhoneChangeController(
       });
     }
 
-    const result = await requestPhoneChange(userId, newPhoneNumber);
+    if (!countryCode) {
+      return res.status(400).json({
+        success: false,
+        message: "Country Code is required"
+      });
+    }
+
+    const result = await requestPhoneChange(
+      userId,
+      newPhoneNumber,
+      countryCode
+    );
 
     return res.status(200).json(result);
   } catch (err: any) {
@@ -640,7 +651,7 @@ export async function verifyPhoneChangeController(
 ) {
   try {
     const userId = req.user!.id;
-    const { newPhoneNumber } = req.body;
+    const { newPhoneNumber, otp } = req.body;
 
     if (!newPhoneNumber) {
       return res.status(400).json({
@@ -649,7 +660,7 @@ export async function verifyPhoneChangeController(
       });
     }
 
-    const result = await verifyAndChangePhone(userId, newPhoneNumber);
+    const result = await verifyAndChangePhone(userId, newPhoneNumber, otp);
 
     return res.status(200).json(result);
   } catch (err: any) {
@@ -724,7 +735,13 @@ export async function reportProfileController(
         .json({ success: false, message: "reason is required" });
 
     try {
-      const result = await reportProfile(userId, customId, reason, description, reportType);
+      const result = await reportProfile(
+        userId,
+        customId,
+        reason,
+        description,
+        reportType
+      );
       return res.status(200).json({
         success: true,
         message: result.message
@@ -752,4 +769,3 @@ export async function reportProfileController(
     return res.status(500).json({ success: false, message: "Server error" });
   }
 }
-

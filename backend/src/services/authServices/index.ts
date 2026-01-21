@@ -39,7 +39,14 @@ async function sendWelcomeEmailOnce(user: any): Promise<boolean> {
       return false;
     }
 
-    const username = user.email || user.phoneNumber || "";
+    let username = "";
+
+    if (user.isEmailLoginEnabled && user.email) {
+      username = user.email;
+    } else if (user.isMobileLoginEnabled && user.phoneNumber) {
+      username = user.phoneNumber;
+    }
+
     const loginLink = `${process.env.FRONTEND_URL || ""}/login`;
 
     const enqueued = await enqueueWelcomeEmail(

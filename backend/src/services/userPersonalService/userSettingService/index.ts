@@ -26,8 +26,18 @@ import {
   setOtp
 } from "../../../lib/redis/otpRedis";
 import { Reports } from "../../../models/Reports";
+import {
+  generateSecureOTP,
+  TimingSafeAuth,
+  verifyOTPConstantTime
+} from "../../../utils/timingSafe";
 
 const ACCOUNT_STATUS_COOLDOWN_TTL = APP_CONFIG.ACCOUNT_STATUS_COOLDOWN_TTL;
+
+const SMS_API_KEY = process.env.SMS_API_KEY || "";
+const SMS_SENDER_ID = process.env.SMS_SENDER_ID || "";
+const SMS_ENTITY_ID = process.env.SMS_ENTITY_ID || "";
+const SMS_TEMPLATE_ID = process.env.SMS_TEMPLATE_ID || "";
 
 export const validateUserId = (userId: string) => {
   if (!userId) throw new Error("userId is required");
@@ -791,7 +801,8 @@ export async function verifyAndChangeEmail(
 
 export async function requestPhoneChange(
   userId: string,
-  newPhoneNumber: string
+  newPhoneNumber: string,
+  countryCode: string
 ): Promise<{ success: boolean; message: string }> {
   try {
     if (!newPhoneNumber || typeof newPhoneNumber !== "string") {
@@ -810,6 +821,7 @@ export async function requestPhoneChange(
       User.findOne({
         phoneNumber: normalizedPhone,
         isDeleted: false,
+        isVisible: true,
         _id: { $ne: userObjectId }
       }).lean()
     ]);
@@ -832,10 +844,47 @@ export async function requestPhoneChange(
       `Phone change request initiated for user ${userId}. User should verify via Twilio SMS.`
     );
 
+    if (countryCode !== "+91") {
+      const mobileNumber = `${countryCode}${newPhoneNumber}`;
+
+      const user = await User.findOne({
+        phoneNumber: mobileNumber,
+        isDeleted: false
+      });
+
+      user.isPhoneVerified = true;
+      await user.save();
+
+      return {
+        success: true,
+        message: "Phone verified successfully"
+      };
+    }
+
+    const resendCount = await getResendCount(newPhoneNumber, "signup");
+    if (resendCount >= OTP_RESEND_LIMIT) {
+      return {
+        success: false,
+        message: "OTP resend limit reached for today. Try again tomorrow."
+      };
+    }
+
+    const sigHash = "www.satfera.in";
+
+    const otp = generateSecureOTP(6);
+    await setOtp(newPhoneNumber, otp, "signup");
+    await incrementResend(newPhoneNumber, "signup");
+
+    const message = `Your Satfera OTP is ${otp}. Kindly do not share it with anyone.
+${sigHash}`;
+
+    const baseApiUrl = `https://ui.netsms.co.in/API/SendSMS.aspx?APIkey=${SMS_API_KEY}&SenderID=${SMS_SENDER_ID}&SMSType=4&Mobile=${newPhoneNumber}&MsgText=${encodeURIComponent(message)}&EntityID=${SMS_ENTITY_ID}&TemplateID=${SMS_TEMPLATE_ID}`;
+
+    await fetch(baseApiUrl);
+
     return {
       success: true,
-      message:
-        "Please verify your new phone number using the SMS verification endpoint"
+      message: "OTP sent successfully"
     };
   } catch (error: any) {
     logger.error("Error in requestPhoneChange:", error.message);
@@ -845,7 +894,8 @@ export async function requestPhoneChange(
 
 export async function verifyAndChangePhone(
   userId: string,
-  newPhoneNumber: string
+  newPhoneNumber: string,
+  code: string
 ): Promise<{ success: boolean; message: string }> {
   try {
     if (!newPhoneNumber || typeof newPhoneNumber !== "string") {
@@ -854,6 +904,7 @@ export async function verifyAndChangePhone(
 
     const userObjectId = validateUserId(userId);
     const normalizedPhone = newPhoneNumber.trim();
+    const timingSafe = new TimingSafeAuth(200);
 
     if (!normalizedPhone) {
       throw new Error("Invalid phone number format");
@@ -874,6 +925,26 @@ export async function verifyAndChangePhone(
 
     if (existingUser) {
       throw new Error("Phone number already in use by another account");
+    }
+
+    const attemptCount = await incrementAttempt(newPhoneNumber, "signup");
+    if (attemptCount > OTP_ATTEMPT_LIMIT) {
+      return timingSafe.fail(new Error("Maximum OTP attempts exceeded"));
+    }
+
+    const redisOtp = await getOtp(newPhoneNumber, "signup");
+    if (!redisOtp) {
+      return timingSafe.fail(new Error("OTP expired"));
+    }
+
+    const isValid = await verifyOTPConstantTime(code, redisOtp);
+
+    if (!isValid) {
+      await incrementAttempt(newPhoneNumber, "signup");
+      return {
+        success: false,
+        message: "Invalid OTP"
+      };
     }
 
     await User.findByIdAndUpdate(userObjectId, {

@@ -177,35 +177,54 @@ export async function issueLoginSession(
 ) {
   const userId = String(user._id);
   const ipAddress = getClientIp(req);
-  const jti = generateJTI();
 
-  const token = jwt.sign(
-    {
-      id: userId,
-      email: user.email,
-      jti,
-      iat: Math.floor(Date.now() / 1000)
-    },
-    process.env.JWT_SECRET!,
-    { expiresIn: "30d" }
-  );
+  let token: string;
 
-  const fingerprint = generateDeviceFingerprint(
-    req.get("user-agent") || "",
+  const existingSession = await SessionService.findExistingSession(
+    userId,
+    req,
     ipAddress
   );
 
-  await SessionService.createSession(
-    userId,
-    token,
-    jti,
-    req,
-    ipAddress,
-    APP_CONFIG.COOKIE_MAX_AGE,
-    fingerprint
-  );
+  if (existingSession) {
+    token = existingSession.token;
 
-  setSecureTokenCookie(res, token, { maxAge: APP_CONFIG.COOKIE_MAX_AGE });
+    await SessionService.updateSessionActivity(String(existingSession._id));
+
+    logger.info(`Reusing existing session for user ${userId} on ${ipAddress}`);
+  } else {
+    const jti = generateJTI();
+
+    token = jwt.sign(
+      {
+        id: userId,
+        email: user.email,
+        jti,
+        iat: Math.floor(Date.now() / 1000)
+      },
+      process.env.JWT_SECRET!,
+      { expiresIn: "30d" }
+    );
+
+    const fingerprint = generateDeviceFingerprint(
+      req.get("user-agent") || "",
+      ipAddress
+    );
+
+    await SessionService.createSession(
+      userId,
+      token,
+      jti,
+      req,
+      ipAddress,
+      APP_CONFIG.COOKIE_MAX_AGE,
+      fingerprint
+    );
+  }
+
+  setSecureTokenCookie(res, token, {
+    maxAge: APP_CONFIG.COOKIE_MAX_AGE
+  });
   setCSRFTokenCookie(res, generateCSRFToken());
 
   return token;

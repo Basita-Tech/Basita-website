@@ -6,7 +6,7 @@ export default function SEO({
   title,
   description,
   path = "",
-  image = `${BASE_URL}/og-image.jpg`,
+  image = `${BASE_URL}/og.png`,
   noIndex = false,
   schema,
 }) {

@@ -288,7 +288,6 @@ const VerifyOTP = () => {
   useEffect(() => {
     const sendInitialEmailOtp = async () => {
       try {
-        initialEmailSentRef.current = true;
         setIsVerifying(true);
         const res = await sendEmailOtp({
           email,
@@ -348,15 +347,22 @@ const VerifyOTP = () => {
       }
     };
 
-    // Prevent multiple API calls using ref guard
+    // Prevent multiple API calls using ref guard - SET IT BEFORE ASYNC CALL
     if (initialEmailSentRef.current) return;
     
     const saved = getOtpCookie(email, countryCode, mobile);
     const alreadyVerified = !!saved?.emailVerified;
     
-    const emailAutoKey = email && !fromLogin ? `otpAutoSent_email_${email}` : "";
+    // Check sessionStorage flag for all flows (signup and login)
+    const emailAutoKey = email ? `otpAutoSent_email_${email}` : "";
     const alreadyAutoSent = emailAutoKey ? sessionStorage.getItem(emailAutoKey) : null;
+    
+    console.log("[Email OTP Skip Check] alreadyVerified:", alreadyVerified, "alreadyAutoSent:", alreadyAutoSent);
+    
+    // Skip auto-send if OTP was already sent from SignUpPage or already verified in localStorage
     if (hasEmail && !isEmailVerified && !alreadyVerified && !isLocked && !alreadyAutoSent) {
+      // SET REF TO TRUE IMMEDIATELY to prevent double calls from StrictMode
+      initialEmailSentRef.current = true;
       sendInitialEmailOtp();
     }
   }, [email, hasEmail, isEmailVerified, isLocked, fromLogin, countryCode, mobile]);
@@ -365,7 +371,6 @@ const VerifyOTP = () => {
   useEffect(() => {
     const sendInitialMobileOtp = async () => {
       try {
-        initialMobileSentRef.current = true;
         setIsVerifyingMobile(true);
         const res = await sendSmsOtp({
           phoneNumber: resolvedMobile,
@@ -400,13 +405,27 @@ const VerifyOTP = () => {
     // Prevent multiple API calls using ref guard
     if (initialMobileSentRef.current) return;
     
+    // Check if mobile is already verified in localStorage
+    const savedMobileStatus = getOtpCookie(email, countryCode, mobile);
+    const mobileAlreadyVerified = !!savedMobileStatus?.mobileVerified;
+    
+    // Check sessionStorage flag to prevent duplicate sends from SignUpPage
+    const mobileAutoKey = resolvedCountryCode && resolvedMobile ? `otpAutoSent_mobile_${resolvedCountryCode}${resolvedMobile}` : "";
+    const alreadyAutoSent = mobileAutoKey ? sessionStorage.getItem(mobileAutoKey) : null;
+    
+    console.log("[Mobile OTP Skip Check] mobileAlreadyVerified:", mobileAlreadyVerified, "alreadyAutoSent:", alreadyAutoSent);
+    
     if (
       fromLogin &&
       resolvedMobile &&
       requiresMobileOtp &&
       !isMobileVerified &&
-      !isMobileLocked
+      !isMobileLocked &&
+      !mobileAlreadyVerified &&
+      !alreadyAutoSent
     ) {
+      // SET REF TO TRUE IMMEDIATELY to prevent double calls from StrictMode
+      initialMobileSentRef.current = true;
       sendInitialMobileOtp();
     }
   }, [resolvedMobile, resolvedCountryCode, requiresMobileOtp, isMobileVerified, isMobileLocked, fromLogin]);

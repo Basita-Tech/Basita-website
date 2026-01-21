@@ -409,7 +409,6 @@ const SignUpPage = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    trackEvent("signup_start");
     if (!validateForm()) return;
     setLoading(true);
     setErrors({});
@@ -497,7 +496,13 @@ const SignUpPage = () => {
           }
 
           if (emailOtpRes?.success) {
+            // Set sessionStorage flags to prevent VerifyOtp from auto-sending again
+            const emailAutoKey = `otpAutoSent_email_${payload.email}`;
+            sessionStorage.setItem(emailAutoKey, "1");
+            
             if (requiresSmsOtp && smsOtpRes?.success) {
+              const mobileAutoKey = `otpAutoSent_mobile_${sanitizedCountryCode}${sanitizedMobile}`;
+              sessionStorage.setItem(mobileAutoKey, "1");
               toast.success("OTPs sent to your email and mobile!");
             } else {
               toast.success("OTP sent successfully. Please check your email.");
@@ -509,6 +514,8 @@ const SignUpPage = () => {
                 countryCode: sanitizedCountryCode,
                 mobile: sanitizedMobile,
                 name: `${sanitizedFirstName} ${sanitizedLastName}`,
+                otpAlreadySent: true,
+                fromLogin: false,  // Explicitly set to prevent sessionStorage clearing
               },
             });
             return;

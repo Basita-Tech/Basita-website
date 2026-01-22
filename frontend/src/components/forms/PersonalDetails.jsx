@@ -39,27 +39,27 @@ const PersonalDetails = ({
 }) => {
   const navigate = useNavigate();
   
-  // Check if user is authenticated - redirect to login if not
-  useEffect(() => {
-    // Check for auth token in cookies
-    const getCookie = (name) => {
-      const nameEQ = name + "=";
-      const cookies = document.cookie.split(';');
-      for (let cookie of cookies) {
-        cookie = cookie.trim();
-        if (cookie.indexOf(nameEQ) === 0) {
-          return cookie.substring(nameEQ.length);
-        }
-      }
-      return null;
-    };
+  // // Check if user is authenticated - redirect to login if not
+  // useEffect(() => {
+  //   // Check for auth token in cookies
+  //   const getCookie = (name) => {
+  //     const nameEQ = name + "=";
+  //     const cookies = document.cookie.split(';');
+  //     for (let cookie of cookies) {
+  //       cookie = cookie.trim();
+  //       if (cookie.indexOf(nameEQ) === 0) {
+  //         return cookie.substring(nameEQ.length);
+  //       }
+  //     }
+  //     return null;
+  //   };
     
-    const token = getCookie("authToken") || getCookie("token") || getCookie("Authorization");
-    if (!token) {
-      console.log("[PersonalDetails] No auth token in cookies, redirecting to login");
-      navigate("/login", { replace: true });
-    }
-  }, [navigate]);
+  //   const token = getCookie("authToken") || getCookie("token") || getCookie("Authorization");
+  //   if (!token) {
+  //     console.log("[PersonalDetails] No auth token in cookies, redirecting to login");
+  //     navigate("/login", { replace: true });
+  //   }
+  // }, [navigate]);
   
   const minuteRef = useRef(null);
   const [formData, setFormData] = useState({
@@ -600,8 +600,8 @@ const PersonalDetails = ({
   const handlePrevious = () => navigate("/signup");
   const RequiredMark = () => <span className="text-red-500 ml-1">*</span>;
   
-  return <div className="min-h-screen w-full bg-[#F9F7F5] flex justify-center items-start py-2 px-2">
-      <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[#F9F7F5] transition-transform duration-300 hover:scale-[1.02]">
+    return <div className="min-h-screen w-full bg-[#F9F7F5] flex justify-center items-start py-2 px-2" style={{ minHeight: '100vh' }}>
+        <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[#F9F7F5] transition-transform duration-300 hover:scale-[1.02]" style={{ minHeight: '90vh' }}>
         {}
         <h2 className="text-2xl font-bold text-[#1f1e1d] text-center mb-8">
           Personal Details

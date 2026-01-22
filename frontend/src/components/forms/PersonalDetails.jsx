@@ -38,6 +38,29 @@ const PersonalDetails = ({
   onPrevious
 }) => {
   const navigate = useNavigate();
+  
+  // Check if user is authenticated - redirect to login if not
+  useEffect(() => {
+    // Check for auth token in cookies
+    const getCookie = (name) => {
+      const nameEQ = name + "=";
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.indexOf(nameEQ) === 0) {
+          return cookie.substring(nameEQ.length);
+        }
+      }
+      return null;
+    };
+    
+    const token = getCookie("authToken") || getCookie("token") || getCookie("Authorization");
+    if (!token) {
+      console.log("[PersonalDetails] No auth token in cookies, redirecting to login");
+      navigate("/login", { replace: true });
+    }
+  }, [navigate]);
+  
   const minuteRef = useRef(null);
   const [formData, setFormData] = useState({
     firstName: "",

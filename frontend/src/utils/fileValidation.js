@@ -158,7 +158,16 @@ export const validateFile = async (file, options = {}) => {
       dimensions
     } = await validateImageDimensions(file, dimensionConstraints);
     if (!valid) {
-      errors.push(`Image dimensions ${dimensions?.width}x${dimensions?.height} do not meet requirements`);
+      const hasDims = typeof dimensions?.width === "number" && typeof dimensions?.height === "number";
+      const { minWidth = 0, minHeight = 0, maxWidth = Infinity, maxHeight = Infinity } = dimensionConstraints || {};
+      const maxWText = Number.isFinite(maxWidth) ? maxWidth : "∞";
+      const maxHText = Number.isFinite(maxHeight) ? maxHeight : "∞";
+      const requirementText = `Required: ${minWidth}x${minHeight} to ${maxWText}x${maxHText}`;
+      if (hasDims) {
+        errors.push(`Image dimensions ${dimensions.width}x${dimensions.height} do not meet requirements. ${requirementText}`);
+      } else {
+        errors.push(`Unable to read image dimensions or image is invalid. ${requirementText}`);
+      }
     }
   }
   return {

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import usePhotoUpload from "../../hooks/usePhotoUpload";
 import ImageCropperModal from "../ImageCropperModal";
 import { trackEvent } from "../analytics/ga4";
+import { validateProfilePhoto, validateGovernmentID } from "@/utils/fileValidation";
 const UploadPhotos = ({
   onPrevious
 }) => {
@@ -110,7 +111,6 @@ const UploadPhotos = ({
     });
  
     if (type === "governmentId") {
-      const { validateGovernmentID } = await import("../../utils/fileValidation");
       const validation = await validateGovernmentID(file);
       if (!validation.valid) {
         toast.error(validation.errors[0] || "File validation failed");
@@ -133,7 +133,6 @@ const UploadPhotos = ({
     }
 
     // For photo files, validate first
-    const { validateProfilePhoto } = await import("../../utils/fileValidation");
     const validation = await validateProfilePhoto(file);
     if (!validation.valid) {
       toast.error(validation.errors[0] || "File validation failed");

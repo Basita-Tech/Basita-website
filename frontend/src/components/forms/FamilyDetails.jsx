@@ -206,22 +206,22 @@ const FamilyDetails = ({
       let res;
       if (existing?.data?.data) {
         res = await updateUserFamilyDetails(submissionData);
-        toast.success("✅ Family details updated successfully!");
+        toast.success("Family details updated successfully!");
       } else {
         res = await saveUserFamilyDetails(submissionData);
-        toast.success("✅ Family details saved successfully!");
+        toast.success("Family details saved successfully!");
       }
       if (onNext) onNext("education");
     } catch (error) {
-      console.error("❌ Save/Update Family Details Error:", error);
+      console.error("Save/Update Family Details Error:", error);
       if (error?.response?.data?.message?.includes("already exist")) {
-        toast("ℹ️ Family details already exist, updating instead...");
+        toast("Family details already exist, updating instead...");
         try {
           const res = await updateUserFamilyDetails(submissionData);
-          toast.success("✅ Family details updated successfully!");
+          toast.success("Family details updated successfully!");
           if (onNext) onNext("education");
         } catch (updateErr) {
-          console.error("❌ Update failed:", updateErr);
+          console.error("Update failed:", updateErr);
           toast.error("Failed to update family details.");
         }
       } else {

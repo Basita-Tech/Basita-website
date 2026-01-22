@@ -14,7 +14,7 @@ const usePhotoUpload = () => {
     try {
       const mongoId = await getUserId();
       if (mongoId) {
-        console.log("✅ MongoDB _id from /auth/me:", mongoId);
+        console.log("MongoDB _id from /auth/me:", mongoId);
         userIdRef.current = mongoId;
         return mongoId;
       } else {

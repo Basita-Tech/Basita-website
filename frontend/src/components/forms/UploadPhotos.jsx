@@ -228,7 +228,7 @@ const UploadPhotos = ({
             isOnboardingCompleted: true
           });
           if (updateRes && updateRes.success) {
-            toast.success("🎉 Profile marked complete.");
+            toast.success("Profile marked complete.");
             setShowReviewModal(true);
             setPhotos(initialPhotosState);
             Object.keys(initialPhotosState).forEach(k => {
@@ -307,7 +307,7 @@ const UploadPhotos = ({
             isOnboardingCompleted: true
           });
           if (updateRes && updateRes.success) {
-            toast.success("🎉 All photos uploaded successfully! Profile complete.");
+            toast.success("All photos uploaded successfully! Profile complete.");
             setShowReviewModal(true);
             setPhotos(initialPhotosState);
             Object.keys(initialPhotosState).forEach(k => {
@@ -321,7 +321,7 @@ const UploadPhotos = ({
           toast.error("Failed to update onboarding status. Please try again.");
         }
       } else {
-        toast.success(`✅ ${uploadResult.successCount} photo(s) uploaded successfully.`);
+        toast.success(`${uploadResult.successCount} photo(s) uploaded successfully.`);
         const succeeded = uploadResult.results.map(r => r.photoKey);
         if (succeeded.length > 0) {
           const govIdUploaded = succeeded.includes("governmentId");
@@ -586,16 +586,16 @@ const UploadPhotos = ({
                       {photoLabels[key] || key}
                     </span>
                     <span className={`font-semibold ${info.status === "success" ? "text-green-600" : info.status === "error" ? "text-red-600" : info.status === "uploading" ? "text-blue-600" : "text-gray-500"}`}>
-                      {info.status === "success" && "✓ Uploaded"}
-                      {info.status === "error" && "✗ Failed"}
-                      {info.status === "uploading" && "↻ Uploading..."}
-                      {info.status === "pending" && "⋯ Pending"}
+                      {info.status === "success" && "Uploaded"}
+                      {info.status === "error" && "Failed"}
+                      {info.status === "uploading" && "Uploading..."}
+                      {info.status === "pending" && "Pending"}
                     </span>
                   </div>)}
               </div>
 
               {!navigator.onLine && <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded">
-                  ⚠️ No internet connection. Waiting for network...
+                  No internet connection. Waiting for network...
                 </div>}
             </div>}
 
@@ -630,8 +630,8 @@ const UploadPhotos = ({
             toast.error(`${result.failedCount} upload(s) still failed. Please check your connection.`);
           }
           setUploading(false);
-        }} className="w-full py-3 rounded-lg font-semibold text-white bg-orange-500 hover:bg-orange-600 transition">
-              🔄 Retry Failed Uploads ({uploadState.failedCount})
+          }} className="w-full py-3 rounded-lg font-semibold text-white bg-orange-500 hover:bg-orange-600 transition">
+            Retry Failed Uploads ({uploadState.failedCount})
             </button>}
 
           <div className="flex justify-between mt-6">

@@ -5,6 +5,7 @@ import { AuthProvider } from "./components/context/AuthContext";
 import App from "./App.jsx";
 import "./index.css";
 import { Toaster } from "react-hot-toast";
+import { CheckCircle2 } from "lucide-react";
 import { HelmetProvider } from "react-helmet-async";
 import { initGA } from "./components/analytics/ga4";
 import { hasAnalyticsConsent } from "./components/analytics/consent";
@@ -19,7 +20,14 @@ createRoot(document.getElementById("root")).render(
       <BrowserRouter>
         <AuthProvider>
           <App />
-          <Toaster position="top-right" />
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              success: {
+                icon: <CheckCircle2 className="h-5 w-5 text-green-600" />
+              }
+            }}
+          />
         </AuthProvider>
       </BrowserRouter>
     </HelmetProvider>

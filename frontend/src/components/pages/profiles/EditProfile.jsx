@@ -842,7 +842,7 @@ export function EditProfile({
           } catch (refErr) {
             console.error("Failed to refetch family after update", refErr);
           }
-          toast.success("✅ Family details updated successfully");
+          toast.success("Family details updated successfully");
         } else {
           const res = await saveUserFamilyDetails(submissionData);
           try {
@@ -898,7 +898,7 @@ export function EditProfile({
           } catch (refErr) {
             console.error("Failed to refetch family after save", refErr);
           }
-          toast.success("✅ Family details saved successfully");
+          toast.success("Family details saved successfully");
         }
         return;
       }
@@ -984,7 +984,7 @@ export function EditProfile({
           } catch (refErr) {
             console.error("Failed to refetch expectations after update", refErr);
           }
-          toast.success("✅ Expectations updated successfully");
+          toast.success("Expectations updated successfully");
         } else {
           await saveUserExpectations(submissionData);
           try {
@@ -997,7 +997,7 @@ export function EditProfile({
           } catch (refErr) {
             console.error("Failed to refetch expectations after save", refErr);
           }
-          toast.success("✅ Expectations saved successfully");
+          toast.success("Expectations saved successfully");
         }
         return;
       }
@@ -1035,7 +1035,7 @@ export function EditProfile({
           } catch (refetchErr) {
             console.error("Failed to refetch education after update", refetchErr);
           }
-          toast.success("✅ Education details updated successfully");
+          toast.success("Education details updated successfully");
         } else {
           const resSave = await saveEducationalDetails(submissionData);
           console.info("Education save response ->", resSave);
@@ -1054,7 +1054,7 @@ export function EditProfile({
           } catch (refetchErr) {
             console.error("Failed to refetch education after save", refetchErr);
           }
-          toast.success("✅ Education details saved successfully");
+          toast.success("Education details saved successfully");
         }
         return;
       }
@@ -1099,7 +1099,7 @@ export function EditProfile({
           } catch (refetchErr) {
             console.error("Failed to refetch profession after update", refetchErr);
           }
-          toast.success("✅ Profession details updated successfully");
+          toast.success("Profession details updated successfully");
         } else {
           const resSave = await saveUserProfession(submissionData);
           console.info("Profession save response ->", resSave);
@@ -1120,7 +1120,7 @@ export function EditProfile({
           } catch (refetchErr) {
             console.error("Failed to refetch profession after save", refetchErr);
           }
-          toast.success("✅ Profession details saved successfully");
+          toast.success("Profession details saved successfully");
         }
         return;
       }
@@ -1216,7 +1216,7 @@ export function EditProfile({
           } catch (refetchErr) {
             console.error("Failed to refetch lifestyle after update", refetchErr);
           }
-          toast.success("✅ Lifestyle details updated successfully");
+          toast.success("Lifestyle details updated successfully");
         } else {
           const resSave = await saveUserHealth(submissionData);
           console.info("Lifestyle save response ->", resSave);
@@ -1247,7 +1247,7 @@ export function EditProfile({
           } catch (refetchErr) {
             console.error("Failed to refetch lifestyle after save", refetchErr);
           }
-          toast.success("✅ Lifestyle details saved successfully");
+          toast.success("Lifestyle details saved successfully");
         }
         return;
       }
@@ -1312,7 +1312,7 @@ export function EditProfile({
       } catch (refetchErr) {
         console.error("Failed to refetch personal after save", refetchErr);
       }
-      toast.success("✅ Personal details saved");
+      toast.success("Personal details saved");
     } catch (err) {
       console.error("Failed to save details", err);
       toast.error("Failed to save details");

@@ -139,22 +139,8 @@ const UploadPhotos = ({
         // Detect file type from URL if available
         const fileTypes = {};
         if (idData?.url) {
-          // Check if response includes fileType
-          if (idData?.fileType) {
-            fileTypes.governmentId = idData.fileType;
-          } else {
-            // Try to get from cached fileType or detect from URL
-            const cachedType = localStorage.getItem(`govId_fileType_${idData.url}`);
-            if (cachedType) {
-              fileTypes.governmentId = cachedType;
-            } else {
-              // Detect from URL
-              const detectedType = await detectFileTypeFromUrl(idData.url);
-              fileTypes.governmentId = detectedType;
-              // Cache it
-              localStorage.setItem(`govId_fileType_${idData.url}`, detectedType);
-            }
-          }
+          // Prefer server-provided type; otherwise detect from URL without storing locally
+          fileTypes.governmentId = idData.fileType || (await detectFileTypeFromUrl(idData.url));
         }
         setUploadedFileTypes(fileTypes);
         
@@ -398,11 +384,6 @@ const UploadPhotos = ({
               ...prev,
               governmentId: govIdFile.type
             }));
-            // Cache file type for future loads
-            const govIdUrl = uploadResult.results.find(r => r.photoKey === "governmentId")?.url;
-            if (govIdUrl) {
-              localStorage.setItem(`govId_fileType_${govIdUrl}`, govIdFile.type);
-            }
             toast.success(`Government ID ${fileType} uploaded successfully!`, {
               duration: 2000
             });

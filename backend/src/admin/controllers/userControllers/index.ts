@@ -9,6 +9,8 @@ import { APP_CONFIG } from "../../../utils/constants";
 import { buildEmailFromTemplate } from "../../../lib/emails/templateService";
 import { sendMail } from "../../../lib/emails";
 import { EmailTemplateType } from "../../../models";
+import { enqueueBulkEmailCampaign } from "../../../lib/queue/enqueue";
+import mongoose from "mongoose";
 
 export async function approveUserProfileController(
   req: AuthenticatedRequest,
@@ -809,6 +811,127 @@ export async function deactivateAccountController(
     return res.status(500).json({
       success: false,
       message: "Server error while deactivating account"
+    });
+  }
+}
+
+export async function bulkEmailController(req: Request, res: Response) {
+  try {
+    const { userIds, subject, emailMessage } = req.body;
+
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "userIds must be a non-empty array"
+      });
+    }
+
+    if (!subject || !emailMessage) {
+      return res.status(400).json({
+        success: false,
+        message: "subject and emailMessage are required"
+      });
+    }
+
+    const invalidIds = userIds.filter(
+      (id) => !mongoose.Types.ObjectId.isValid(id)
+    );
+
+    if (invalidIds.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid userIds detected",
+        invalidIds
+      });
+    }
+
+    const campaignId = `admin-${Date.now()}`;
+
+    const enqueued = await enqueueBulkEmailCampaign({
+      userIds,
+      subject,
+      html: emailMessage,
+      campaignId
+    });
+
+    if (!enqueued) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to enqueue bulk email campaign"
+      });
+    }
+
+    logger.info(`Admin bulk email campaign started`, {
+      campaignId,
+      totalUsers: userIds.length
+    });
+
+    return res.status(202).json({
+      success: true,
+      message: "Bulk email campaign queued successfully",
+      recipients: userIds.length
+    });
+  } catch (error: any) {
+    logger.error("Bulk email controller error", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+}
+
+export async function getBulkEmailUsersController(req: Request, res: Response) {
+  try {
+    const users = await User.find({
+      isActive: true,
+      isVisible: true,
+      isProfileApproved: true,
+      isDeleted: false
+    })
+      .select("_id firstName lastName gender")
+      .lean();
+
+    if (!users.length) {
+      return res.status(200).json({
+        success: true,
+        data: [],
+        message: "No eligible users found"
+      });
+    }
+
+    const userIds = users.map((u) => u._id);
+
+    const profiles = await Profile.find({
+      userId: { $in: userIds },
+      "settings.emailNotifications": { $ne: false }
+    })
+      .select("userId photos.closerPhoto")
+      .lean();
+
+    const profileMap = new Map(profiles.map((p) => [String(p.userId), p]));
+    const result = users
+      .filter((u) => profileMap.has(String(u._id)))
+      .map((u) => ({
+        userId: u._id,
+        name: `${u.firstName} ${u.lastName}`,
+        gender: u.gender,
+        photo: profileMap.get(String(u._id))?.photos?.closerPhoto.url || null
+      }));
+
+    return res.status(200).json({
+      success: true,
+      count: result.length,
+      data: result
+    });
+  } catch (error: any) {
+    logger.error("Get bulk email users error", {
+      error: error?.message
+    });
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
     });
   }
 }

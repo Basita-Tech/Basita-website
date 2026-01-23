@@ -342,3 +342,22 @@ export async function enqueueMatchRecalculation(
   }
 }
 
+export async function enqueueBulkEmailCampaign(payload: {
+  userIds: string[];
+  subject: string;
+  html: string;
+  campaignId: string;
+}): Promise<boolean> {
+  try {
+    await mainQueue.add("bulk-email-campaign", payload, {
+      jobId: `bulk-email-${payload.campaignId}`,
+      attempts: 2
+    });
+
+    logger.info(`Bulk email campaign enqueued: ${payload.campaignId}`);
+    return true;
+  } catch (error: any) {
+    logger.error("Failed to enqueue bulk email campaign", error);
+    return false;
+  }
+}

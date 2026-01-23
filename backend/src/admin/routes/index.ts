@@ -293,4 +293,16 @@ adminRouter.post(
   asyncHandler(adminController.activateAccountController)
 );
 
+adminRouter.get(
+  "/bulk/email",
+  authenticate,
+  asyncHandler(adminController.getBulkEmailUsersController)
+);
+
+adminRouter.post(
+  "/bulk/email",
+  authenticate,
+  asyncHandler(adminController.bulkEmailController)
+);
+
 export default adminRouter;

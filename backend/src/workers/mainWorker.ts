@@ -1,7 +1,7 @@
 import { Worker, Job } from "bullmq";
-import { redisConnection } from "../lib/queue";
+import { mainQueue, redisConnection } from "../lib/queue";
 import mongoose from "mongoose";
-import { User, Notification } from "../models";
+import { User, Notification, Profile } from "../models";
 import { logger } from "../lib/common/logger";
 import { invalidateNotificationCaches } from "../lib/redis/notificationCache";
 import { enqueueProfileReviewEmail } from "../lib/queue/enqueue";
@@ -10,7 +10,8 @@ import {
   sendProfileReviewSubmissionEmail,
   sendProfileApprovedEmail,
   sendProfileRejectedEmail,
-  sendProfileRectificationEmail
+  sendProfileRectificationEmail,
+  transporter
 } from "../lib/emails";
 import {
   NotificationJobData,
@@ -239,7 +240,9 @@ async function processProfileReviewEmail(
         await sendProfileApprovedEmail(
           data.email,
           data.userName,
-          data.dashboardLink || process.env.FRONTEND_URL || "https://satfera.com"
+          data.dashboardLink ||
+            process.env.FRONTEND_URL ||
+            "https://satfera.com"
         );
         break;
       case "rejected":
@@ -469,6 +472,12 @@ export const mainWorker = new Worker(
           return { success: true, ...result };
         }
 
+        case "bulk-email-campaign":
+          return await handleBulkEmailCampaign(job.data);
+
+        case "send-bulk-email":
+          return await handleSendBulkEmail(job.data);
+
         default:
           logger.warn(`Unknown main job type: ${job.name}`);
           throw new Error(`Unknown job type: ${job.name}`);
@@ -537,3 +546,82 @@ mainWorker.on("stalled", (jobId: string) => {
 });
 
 export default mainWorker;
+
+async function handleBulkEmailCampaign(data: {
+  userIds: string[];
+  subject: string;
+  html: string;
+  campaignId: string;
+}) {
+  const { userIds, subject, html, campaignId } = data;
+
+  if (!userIds?.length || !subject || !html) {
+    throw new Error("Invalid bulk email campaign data");
+  }
+
+  const users = await User.find({ _id: { $in: userIds } })
+    .select("_id email")
+    .lean();
+
+  const profiles = await Profile.find({
+    userId: { $in: userIds },
+    "settings.emailNotifications": { $ne: false }
+  })
+    .select("userId")
+    .lean();
+
+  const allowed = new Set(profiles.map((p) => String(p.userId)));
+
+  const recipients = users.filter((u) => u.email && allowed.has(String(u._id)));
+
+  const BATCH_SIZE = 100;
+
+  for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
+    await mainQueue.addBulk(
+      recipients.slice(i, i + BATCH_SIZE).map((u) => ({
+        name: "send-bulk-email",
+        data: {
+          campaignId,
+          userId: String(u._id),
+          email: u.email,
+          subject,
+          html
+        },
+        opts: {
+          jobId: `bulk-${campaignId}-${u._id}`,
+          attempts: 3,
+          backoff: { type: "exponential", delay: 5000 }
+        }
+      }))
+    );
+  }
+
+  logger.info(
+    `Bulk email campaign queued ${campaignId}, recipients: ${recipients.length}  `
+  );
+
+  return { success: true, recipients: recipients.length };
+}
+
+async function handleSendBulkEmail(data: {
+  email: string;
+  subject: string;
+  html: string;
+  userId?: string;
+  campaignId?: string;
+}) {
+  const { email, subject, html, campaignId, userId } = data;
+
+  if (!email) {
+    throw new Error("No email address");
+  }
+
+  const start = Date.now();
+
+  logger.info(
+    `Email sent successfully email: ${email}, userId: ${userId}, ${campaignId}, durationMs: ${Date.now() - start}`
+  );
+
+  await transporter.sendMail({ to: email, subject, html });
+  return { success: true };
+}

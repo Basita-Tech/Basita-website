@@ -4,7 +4,7 @@ import { EmailTemplateType } from "../../models";
 import { APP_CONFIG } from "../../utils/constants";
 import { logger } from "../common/logger";
 
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || "smtp.gmail.com",
   port: Number(process.env.SMTP_PORT) || 465,
   secure: process.env.SMTP_SECURE === "true",

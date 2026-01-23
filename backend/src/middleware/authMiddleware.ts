@@ -52,6 +52,12 @@ const extractToken = (req: AuthenticatedRequest): string | null => {
   return (authHeader as string) || req.cookies?.token || null;
 };
 
+const VISIBILITY_BYPASS_ROUTES = new Set([
+  "/user/account/activate",
+  "/user/logout",
+  "/auth/logout"
+]);
+
 export const authenticate = async (
   req: AuthenticatedRequest,
   res: Response,
@@ -164,6 +170,10 @@ export const authenticate = async (
       ).catch(() => {});
     }
 
+    const requestPath = req.originalUrl.split("?")[0];
+
+    const bypassVisibilityCheck = VISIBILITY_BYPASS_ROUTES.has(requestPath);
+
     if (user.planExpiry && user.role !== "admin") {
       const expiryDate = new Date(user.planExpiry);
       const now = new Date();
@@ -188,11 +198,11 @@ export const authenticate = async (
       }
     }
 
-    if (user.isVisible === false) {
+    if (user.isVisible === false && !bypassVisibilityCheck) {
       redisClient.del(cacheKey).catch(() => {});
       return res.status(200).json({
         success: false,
-        code: "DEACTIVET_ACCOUNT",
+        code: "DEACTIVATED_ACCOUNT",
         message: "Your account is decatived. Please aciveted to continue."
       });
     }

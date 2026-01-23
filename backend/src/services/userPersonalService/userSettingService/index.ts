@@ -495,7 +495,7 @@ export async function activateAccount(
     } catch (err: any) {
       logger.error("Failed to send activation email:", err.message);
     }
-
+    await redisClient.del(`auth:${userId}:*`);
     logger.info(`Account activated: ${userId}`);
     return {
       success: true,

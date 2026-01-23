@@ -88,7 +88,7 @@ async function updateProfileApproval(
         {
           type: reviewType,
           reason: updateData.reviewNotes,
-          dashboardLink: `${process.env.FRONTEND_URL || "https://satfera.in"}/dashboard`
+          dashboardLink: `${process.env.FRONTEND_URL || "https://satfera.com"}/dashboard`
         }
       );
 

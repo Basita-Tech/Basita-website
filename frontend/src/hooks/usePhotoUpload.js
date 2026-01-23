@@ -133,7 +133,7 @@ const usePhotoUpload = () => {
           return {
             success: true,
             key,
-            url: `https://cdn.satfera.in/${key}`,
+            url: `https://cdn.satfera.com/${key}`,
             photoKey,
             photoType: actualPhotoType,
           };

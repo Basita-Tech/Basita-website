@@ -186,7 +186,7 @@ export default function TermsAndConditionsPage() {
           <section>
             <h2 className="text-2xl font-bold text-[#800000] mb-4">3. Registration & Verification</h2>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Register by visiting satfera.in and creating an account</li>
+              <li>Register by visiting satfera.com and creating an account</li>
               <li>Complete profile forms covering:
                 <ul className="list-disc pl-6 mt-2">
                   <li>Personal details & Educational background</li>

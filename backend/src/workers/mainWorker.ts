@@ -239,7 +239,7 @@ async function processProfileReviewEmail(
         await sendProfileApprovedEmail(
           data.email,
           data.userName,
-          data.dashboardLink || process.env.FRONTEND_URL || "https://satfera.in"
+          data.dashboardLink || process.env.FRONTEND_URL || "https://satfera.com"
         );
         break;
       case "rejected":
@@ -346,7 +346,7 @@ async function processProfileReview(data: ProfileReviewJobData): Promise<void> {
     const names = data.userName.split(" ");
     const reviewData: any = {
       type: data.type as any,
-      dashboardLink: process.env.FRONTEND_URL || "https://satfera.in/dashboard"
+      dashboardLink: process.env.FRONTEND_URL || "https://satfera.com/dashboard"
     };
     if (data.reason) reviewData.reason = data.reason;
 

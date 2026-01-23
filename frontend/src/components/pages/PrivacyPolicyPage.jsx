@@ -21,7 +21,7 @@ export default function PrivacyPolicyPage() {
         </h1>
         <p className="text-sm text-gray-600 mb-2">Last Updated: January 2025</p>
         <p className="text-sm text-gray-600 mb-10">
-          by Jisal & Parul Patel | satfera.in
+          by Jisal & Parul Patel | satfera.com
         </p>
 
         <div className="space-y-8 text-gray-700 text-base leading-relaxed">
@@ -101,7 +101,7 @@ export default function PrivacyPolicyPage() {
               3. Registration & Verification
             </h2>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Register by visiting satfera.in and creating an account</li>
+              <li>Register by visiting satfera.com and creating an account</li>
               <li>
                 Complete profile forms covering:
                 <ul className="list-disc pl-6 mt-2">

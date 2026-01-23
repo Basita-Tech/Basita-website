@@ -60,8 +60,8 @@ export const APP_CONFIG = {
   },
 
   BRAND_NAME: "Satfera",
-  BRAND_LOGO_URL: "https://satfera.in/logo.png",
-  FRONTEND_URL: process.env.FRONTEND_URL || "https://satfera.in"
+  BRAND_LOGO_URL: "https://satfera.com/logo.png",
+  FRONTEND_URL: process.env.FRONTEND_URL || "https://satfera.com"
 };
 
 export const VALIDATION_MESSAGES = {

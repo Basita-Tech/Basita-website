@@ -41,7 +41,7 @@ const faqData = [
         id: "about-3",
         question: "Is Satfera available on mobile?",
         answer:
-          "Yes! Satfera is available on multiple platforms for your convenience. You can access Satfera through our website at satfera.in, download our app from the Google Play Store for Android devices, or get it from the Apple App Store for iOS devices. This means you can search for your life partner anytime, anywhere!",
+          "Yes! Satfera is available on multiple platforms for your convenience. You can access Satfera through our website at satfera.com, download our app from the Google Play Store for Android devices, or get it from the Apple App Store for iOS devices. This means you can search for your life partner anytime, anywhere!",
       },
       {
         id: "about-4",
@@ -58,7 +58,7 @@ const faqData = [
         id: "reg-1",
         question: "How do I register on Satfera?",
         answer:
-          "Getting started with Satfera is simple! Visit satfera.in or download our mobile app. Click on 'Register' and create your account with basic details. Once registered, log in to your account and you'll be guided through our comprehensive profile forms covering Personal details, Professional information, Health information, Family background, and Partner expectations. After completing all sections, submit your profile for review. Our admin team will verify your details within 24 hours to 2 days.",
+          "Getting started with Satfera is simple! Visit satfera.com or download our mobile app. Click on 'Register' and create your account with basic details. Once registered, log in to your account and you'll be guided through our comprehensive profile forms covering Personal details, Professional information, Health information, Family background, and Partner expectations. After completing all sections, submit your profile for review. Our admin team will verify your details within 24 hours to 2 days.",
       },
       {
         id: "reg-2",

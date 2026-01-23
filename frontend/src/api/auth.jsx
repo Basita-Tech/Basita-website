@@ -797,7 +797,7 @@ export const uploadPhotoViaS3 = async (file, userId, photoType, onProgress) => {
     return {
       success: true,
       key,
-      url: `https://cdn.satfera.in/${key}`,
+      url: `https://cdn.satfera.com/${key}`,
     };
   } catch (error) {
     console.error(

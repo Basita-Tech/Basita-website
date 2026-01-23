@@ -1044,7 +1044,7 @@ export async function downloadMyPdfData(
       current_address:
         `${userPersonal.full_address.street1 ? userPersonal.full_address.street1 : ""} ${userPersonal.full_address.street2 ? userPersonal.full_address.street2 : ""} ${userPersonal.full_address.city} ${userPersonal.full_address.state}, ${userPersonal.full_address.zipCode} ` ||
         "-",
-      profile_url: `https://satfera.in/dashboard/profile/${userPersonal.userId}`
+      profile_url: `https://satfera.com/dashboard/profile/${userPersonal.userId}`
     };
 
     let url;

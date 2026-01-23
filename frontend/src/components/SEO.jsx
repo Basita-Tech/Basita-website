@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 
-const BASE_URL = "https://www.satfera.in";
+const BASE_URL = "https://www.satfera.com";
 
 export default function SEO({
   title,

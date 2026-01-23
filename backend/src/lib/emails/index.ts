@@ -136,7 +136,7 @@ export async function sendWelcomeEmail(
     loginLink,
     supportContact: supportContact || "support@satfera.in",
     brandName: APP_CONFIG.BRAND_NAME || "SATFERA",
-    logoUrl: APP_CONFIG.BRAND_LOGO_URL || "https://www.satfera.in/logo.png"
+    logoUrl: APP_CONFIG.BRAND_LOGO_URL || "https://www.satfera.com/logo.png"
   };
 
   const template = await buildEmailFromTemplate(

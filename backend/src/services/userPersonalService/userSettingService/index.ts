@@ -869,7 +869,7 @@ export async function requestPhoneChange(
       };
     }
 
-    const sigHash = "www.satfera.in";
+    const sigHash = "www.satfera.com";
 
     const otp = generateSecureOTP(6);
     await setOtp(newPhoneNumber, otp, "signup");

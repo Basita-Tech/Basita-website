@@ -1,7 +1,7 @@
 import { SitemapStream, streamToPromise } from "sitemap";
 import { createWriteStream } from "fs";
 
-const BASE_URL = "https://www.satfera.in";
+const BASE_URL = "https://www.satfera.com";
 
 const routes = [
   "/",

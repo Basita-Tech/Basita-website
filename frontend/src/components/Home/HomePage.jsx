@@ -159,8 +159,8 @@ export default function HomePage() {
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Satfera",
-          url: "https://www.satfera.in",
-          logo: "https://www.satfera.in/logo.png",
+          url: "https://www.satfera.com",
+          logo: "https://www.satfera.com/logo.png",
         }}
       />
       <main className="sr-only">

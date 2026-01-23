@@ -64,7 +64,7 @@ async function sendOtp(req: AuthenticatedRequest, res: Response) {
       });
     }
 
-    const sigHash = hash ? hash : "www.satfera.in";
+    const sigHash = hash ? hash : "www.satfera.com";
 
     const otp = generateSecureOTP(6);
     await setOtp(phoneNumber, otp, "signup");

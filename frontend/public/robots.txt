@@ -6,4 +6,4 @@ Disallow: /signup
 Disallow: /dashboard
 Disallow: /onboarding
 
-Sitemap: https://www.satfera.in/sitemap.xml
+Sitemap: https://www.satfera.com/sitemap.xml

@@ -184,10 +184,10 @@ const EducationDetails = ({
       let res;
       if (existing?.data?.data) {
         res = await updateEducationalDetails(submissionData);
-        toast.success(" Education details updated successfully!");
+        toast.success("Education details updated successfully!");
       } else {
         res = await saveEducationalDetails(submissionData);
-        toast.success("✅ Education details saved successfully!");
+        toast.success("Education details saved successfully!");
       }
       if (onNext) onNext("education");
     } catch (error) {

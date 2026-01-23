@@ -13,5 +13,9 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-select']
+  },
+  // Enable sourcemaps to make production code debuggable in devtools
+  build: {
+    sourcemap: true
   }
 });

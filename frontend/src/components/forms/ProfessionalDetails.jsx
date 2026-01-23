@@ -133,13 +133,13 @@ const ProfessionDetails = ({
         navigate("/next-step");
       }
     } catch (err) {
-      console.error("❌ Failed to save profession details", err);
+      console.error("Failed to save profession details", err);
       const msg = err?.response?.data?.message || "Failed to save profession details.";
       setErrors(prev => ({
         ...prev,
         submit: msg
       }));
-      toast.error(`❌ ${msg}`);
+      toast.error(msg);
     }
   };
   useEffect(() => {

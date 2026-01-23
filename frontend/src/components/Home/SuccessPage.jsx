@@ -169,13 +169,13 @@ const SuccessPage = () => {
             </li>
           </ul>
           <p className="text-gray-500 mt-2 text-sm">
-            ✅ A verified profile increases your chances of better matches.
+            A verified profile increases your chances of better matches.
           </p>
         </div>
 
         {}
         <div className="bg-[#FFF6E5] text-[#D4A052] rounded-lg p-3 text-sm">
-          📧 We’ve sent a welcome email to your registered email address.
+          We’ve sent a welcome email to your registered email address.
         </div>
       </div>
     </main>

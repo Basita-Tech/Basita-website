@@ -345,6 +345,6 @@ export const DIET_OPTIONS = [
   "veg & non-veg"
 ];
 
-export const YES_NO_OPTIONS = ["yes", "no"];
+export const YES_NO_OPTIONS = ["Yes", "No"];
 
-export const YES_NO_OCCASIONAL_OPTIONS = ["yes", "no", "occasional"];
+export const YES_NO_OCCASIONAL_OPTIONS = ["Yes", "No", "Occasional"];

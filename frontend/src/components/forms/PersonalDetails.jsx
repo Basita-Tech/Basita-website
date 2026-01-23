@@ -1,5 +1,5 @@
 ﻿import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import CustomSelect from "../ui/CustomSelect";
 import LocationSelect from "../ui/LocationSelect";
 import { getOnboardingStatus, getUserPersonal, saveUserPersonal, updateUserPersonal } from "../../api/auth";
@@ -38,6 +38,29 @@ const PersonalDetails = ({
   onPrevious
 }) => {
   const navigate = useNavigate();
+  
+  // // Check if user is authenticated - redirect to login if not
+  // useEffect(() => {
+  //   // Check for auth token in cookies
+  //   const getCookie = (name) => {
+  //     const nameEQ = name + "=";
+  //     const cookies = document.cookie.split(';');
+  //     for (let cookie of cookies) {
+  //       cookie = cookie.trim();
+  //       if (cookie.indexOf(nameEQ) === 0) {
+  //         return cookie.substring(nameEQ.length);
+  //       }
+  //     }
+  //     return null;
+  //   };
+    
+  //   const token = getCookie("authToken") || getCookie("token") || getCookie("Authorization");
+  //   if (!token) {
+  //     console.log("[PersonalDetails] No auth token in cookies, redirecting to login");
+  //     navigate("/login", { replace: true });
+  //   }
+  // }, [navigate]);
+  
   const minuteRef = useRef(null);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -577,8 +600,27 @@ const PersonalDetails = ({
   const handlePrevious = () => navigate("/signup");
   const RequiredMark = () => <span className="text-red-500 ml-1">*</span>;
   
-  return <div className="min-h-screen w-full bg-[#F9F7F5] flex justify-center items-start py-2 px-2">
-      <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[#F9F7F5] transition-transform duration-300 hover:scale-[1.02]">
+  const [state, setState] = useState("loading"); // loading | authed | unauthed
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const res = await getOnboardingStatus(); // any lightweight auth check
+        if (!mounted) return;
+        const ok = res?.data?.success || res?.status === 200;
+        setState(ok ? "authed" : "unauthed");
+      } catch {
+        if (mounted) setState("unauthed");
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
+
+  if (state === "loading") return null; // or spinner
+  if (state === "unauthed") return <Navigate to="/login" replace />;
+  return <div className="min-h-screen w-full bg-[#F9F7F5] flex justify-center items-start py-2 px-2" style={{ minHeight: '100vh' }}>
+        <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[#F9F7F5] transition-transform duration-300 hover:scale-[1.02]" style={{ minHeight: '90vh' }}>
         {}
         <h2 className="text-2xl font-bold text-[#1f1e1d] text-center mb-8">
           Personal Details

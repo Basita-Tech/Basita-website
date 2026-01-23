@@ -103,7 +103,7 @@ const MultiStepForm = () => {
           navigate(`/onboarding/user?step=${nextStep}`, { replace: true });
         }
       } catch (err) {
-        console.error("❌ Failed to fetch onboarding progress:", err);
+        console.error("Failed to fetch onboarding progress:", err);
       } finally {
         setLoading(false);
       }
@@ -120,7 +120,7 @@ const MultiStepForm = () => {
         isOnboardingCompleted: isLastStep
       });
       if (isLastStep) {
-        toast.success("🎉 Onboarding completed successfully!");
+        toast.success("Onboarding completed successfully!");
       } else {
         const nextIndex = steps.findIndex(s => s.id === stepId) + 1;
         if (nextIndex < steps.length) {
@@ -132,7 +132,7 @@ const MultiStepForm = () => {
         }
       }
     } catch (err) {
-      console.error("❌ Failed to update onboarding status:", err);
+      console.error("Failed to update onboarding status:", err);
     }
   };
   const handlePrevious = stepId => {

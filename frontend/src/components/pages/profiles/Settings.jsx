@@ -677,7 +677,7 @@ export function Settings() {
                       readOnly
                       className="rounded-[12px] border-border-subtle bg-beige flex-1"
                     />
-                    <Button
+                    {/* <Button
                       variant="outline"
                       className="rounded-[12px] border-border-subtle whitespace-nowrap hover:!bg-[#C8A227]/10 hover:!border-[#C8A227] hover:!text-[#222222] active:!bg-[#C8A227]/30 focus-visible:ring-2 focus-visible:ring-[#C8A227]/50 transition-all sm:w-auto w-full"
                       onClick={() =>
@@ -690,7 +690,7 @@ export function Settings() {
                     >
                       <Phone className="w-4 h-4 mr-2" />
                       Edit
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
               </div>

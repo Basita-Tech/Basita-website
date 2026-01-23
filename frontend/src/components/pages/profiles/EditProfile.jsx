@@ -19,6 +19,7 @@ import usePhotoUpload from "../../../hooks/usePhotoUpload";
 import EditProfileCropperModal from "../../EditProfileCropperModal";
 import { getUserPersonal, getUserFamilyDetails, getEducationalDetails, getUserProfession, getUserExpectations, getUserPhotos, getUserHealth, updateUserPersonal, updateUserFamilyDetails, updateUserExpectations, updateUserHealth, updateEducationalDetails, saveEducationalDetails, saveUserProfession, updateUserProfession, saveUserHealth, saveUserFamilyDetails, saveUserExpectations } from "../../../api/auth";
 import toast from "react-hot-toast";
+import { validateProfilePhoto } from "@/utils/fileValidation";
 const FIELD_OF_STUDY_OPTIONS = ["Aeronautical Engineering", "B.Arch. - Bachelor of Architecture", "BCA - Bachelor of Computer Applications", "B.E. - Bachelor of Engineering", "B.Plan - Bachelor of Planning", "B.Sc. IT/CS - Bachelor of Science in IT/Computer Science", "B.S. Eng. - Bachelor of Science in Engineering", "B.Tech. - Bachelor of Technology", "Other Bachelor's Degree in Engineering / Computers", "M.Arch. - Master of Architecture", "MCA - Master of Computer Applications", "M.E. - Master of Engineering", "M.Sc. IT/CS - Master of Science in IT/Computer Science", "M.S. Eng. - Master of Science in Engineering", "M.Tech. - Master of Technology", "PGDCA - Post Graduate Diploma in Computer Applications", "Other Master's Degree in Engineering / Computers", "Aviation Degree", "B.A. - Bachelor of Arts", "B.Com. - Bachelor of Commerce", "B.Ed. - Bachelor of Education", "BFA - Bachelor of Fine Arts", "BFT - Bachelor of Fashion Technology", "BLIS - Bachelor of Library and Information Science", "B.M.M. - Bachelor of Mass Media", "B.Sc. - Bachelor of Science", "B.S.W. - Bachelor of Social Work", "B.Phil. - Bachelor of Philosophy", "Other Bachelor's Degree in Arts / Science / Commerce", "M.A. - Master of Arts", "M.Com. - Master of Commerce", "M.Ed. - Master of Education", "MFA - Master of Fine Arts", "MLIS - Master of Library and Information Science", "M.Sc. - Master of Science", "M.S.W. - Master of Social Work", "M.Phil. - Master of Philosophy", "Other Master's Degree in Arts / Science / Commerce", "BBA - Bachelor of Business Administration", "BFM - Bachelor of Financial Management", "BHM - Bachelor of Hotel Management", "BHA - Bachelor of Hospital Administration", "Other Bachelor's Degree in Management", "MBA - Master of Business Administration", "MFM - Master of Financial Management", "MHM - Master of Hotel Management", "MHRM - Master of Human Resource Management", "PGDM - Post Graduate Diploma in Management", "MHA - Master of Hospital Administration", "Other Master's Degree in Management", "BAMS - Bachelor of Ayurvedic Medicine and Surgery", "BDS - Bachelor of Dental Surgery", "BHMS - Bachelor of Homeopathic Medicine and Surgery", "BSMS - Bachelor of Siddha Medicine and Surgery", "BUMS - Bachelor of Unani Medicine and Surgery", "BVSc - Bachelor of Veterinary Science", "MBBS - Bachelor of Medicine, Bachelor of Surgery", "MDS - Master of Dental Surgery", "Doctor of Medicine / Master of Surgery", "MVSc - Master of Veterinary Science", "MCh - Master of Chirurgiae", "DNB - Diplomate of National Board", "BPharm - Bachelor of Pharmacy", "BPT - Bachelor of Physiotherapy", "B.Sc. Nursing - Bachelor of Science in Nursing", "Other Bachelor's Degree in Pharmacy / Nursing or Health Sciences", "MPharm - Master of Pharmacy", "MPT - Master of Physiotherapy", "Other Master's Degree in Pharmacy / Nursing or Health Sciences", "BGL - Bachelor of General Laws", "BL - Bachelor of Laws", "LLB - Bachelor of Legislative Law", "Other Bachelor's Degree in Legal", "LLM - Master of Laws", "ML - Master of Legal Studies", "Other Master's Degree in Legal", "CA - Chartered Accountant", "CFA - Chartered Financial Analyst", "CS - Company Secretary", "ICWA - Cost and Works Accountant", "Other Degree / Qualification in Finance", "IAS - Indian Administrative Service", "IPS - Indian Police Service", "IRS - Indian Revenue Service", "IES - Indian Engineering Services", "IFS - Indian Foreign Service", "Other Civil Services", "Ph.D. - Doctor of Philosophy", "DM - Doctor of Medicine", "Postdoctoral Fellow", "FNB - Fellow of National Board", "Diploma", "Polytechnic", "Other Diplomas", "Higher Secondary School / High School"];
 const EMPLOYMENT_DISPLAY_MAP = {
   business: "Business",
@@ -842,7 +843,7 @@ export function EditProfile({
           } catch (refErr) {
             console.error("Failed to refetch family after update", refErr);
           }
-          toast.success("✅ Family details updated successfully");
+          toast.success("Family details updated successfully");
         } else {
           const res = await saveUserFamilyDetails(submissionData);
           try {
@@ -898,7 +899,7 @@ export function EditProfile({
           } catch (refErr) {
             console.error("Failed to refetch family after save", refErr);
           }
-          toast.success("✅ Family details saved successfully");
+          toast.success("Family details saved successfully");
         }
         return;
       }
@@ -984,7 +985,7 @@ export function EditProfile({
           } catch (refErr) {
             console.error("Failed to refetch expectations after update", refErr);
           }
-          toast.success("✅ Expectations updated successfully");
+          toast.success("Expectations updated successfully");
         } else {
           await saveUserExpectations(submissionData);
           try {
@@ -997,7 +998,7 @@ export function EditProfile({
           } catch (refErr) {
             console.error("Failed to refetch expectations after save", refErr);
           }
-          toast.success("✅ Expectations saved successfully");
+          toast.success("Expectations saved successfully");
         }
         return;
       }
@@ -1035,7 +1036,7 @@ export function EditProfile({
           } catch (refetchErr) {
             console.error("Failed to refetch education after update", refetchErr);
           }
-          toast.success("✅ Education details updated successfully");
+          toast.success("Education details updated successfully");
         } else {
           const resSave = await saveEducationalDetails(submissionData);
           console.info("Education save response ->", resSave);
@@ -1054,7 +1055,7 @@ export function EditProfile({
           } catch (refetchErr) {
             console.error("Failed to refetch education after save", refetchErr);
           }
-          toast.success("✅ Education details saved successfully");
+          toast.success("Education details saved successfully");
         }
         return;
       }
@@ -1099,7 +1100,7 @@ export function EditProfile({
           } catch (refetchErr) {
             console.error("Failed to refetch profession after update", refetchErr);
           }
-          toast.success("✅ Profession details updated successfully");
+          toast.success("Profession details updated successfully");
         } else {
           const resSave = await saveUserProfession(submissionData);
           console.info("Profession save response ->", resSave);
@@ -1120,7 +1121,7 @@ export function EditProfile({
           } catch (refetchErr) {
             console.error("Failed to refetch profession after save", refetchErr);
           }
-          toast.success("✅ Profession details saved successfully");
+          toast.success("Profession details saved successfully");
         }
         return;
       }
@@ -1216,7 +1217,7 @@ export function EditProfile({
           } catch (refetchErr) {
             console.error("Failed to refetch lifestyle after update", refetchErr);
           }
-          toast.success("✅ Lifestyle details updated successfully");
+          toast.success("Lifestyle details updated successfully");
         } else {
           const resSave = await saveUserHealth(submissionData);
           console.info("Lifestyle save response ->", resSave);
@@ -1247,7 +1248,7 @@ export function EditProfile({
           } catch (refetchErr) {
             console.error("Failed to refetch lifestyle after save", refetchErr);
           }
-          toast.success("✅ Lifestyle details saved successfully");
+          toast.success("Lifestyle details saved successfully");
         }
         return;
       }
@@ -1312,7 +1313,7 @@ export function EditProfile({
       } catch (refetchErr) {
         console.error("Failed to refetch personal after save", refetchErr);
       }
-      toast.success("✅ Personal details saved");
+      toast.success("Personal details saved");
     } catch (err) {
       console.error("Failed to save details", err);
       toast.error("Failed to save details");
@@ -2757,7 +2758,7 @@ export function EditProfile({
                 <img src={src} alt={`photo-${slot.index}`} className="w-full h-full object-cover" />
               </a>
             ) : (
-              <div className="block w-full h-32 overflow-hidden rounded-md bg-gray-100 mb-2 border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-[#D4A052] transition-colors" onClick={() => handleReplacePhoto(slot.index)}>
+              <div className="w-full h-32 overflow-hidden rounded-md bg-gray-100 mb-2 border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-[#D4A052] transition-colors" onClick={() => handleReplacePhoto(slot.index)}>
                 <div className="text-center">
                   <svg className="w-8 h-8 text-gray-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -2851,7 +2852,6 @@ export function EditProfile({
       if (!file) return;
       
       // Validate file first
-      const { validateProfilePhoto } = await import("../../../utils/fileValidation");
       const validation = await validateProfilePhoto(file);
       if (!validation.valid) {
         toast.error(validation.errors[0] || "File validation failed");

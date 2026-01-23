@@ -724,7 +724,7 @@ export function UserDashboard() {
         return;
       }
       try {
-        toast.success('✅ Added to Compare');
+        toast.success('Added to Compare');
       } catch (e) {}
       if (Array.isArray(resp.ids) && resp.ids.length > 0) {
         const dedup = Array.from(new Set(resp.ids.map(String)));
@@ -810,7 +810,7 @@ export function UserDashboard() {
         return;
       }
       try {
-        toast.success('✅ Removed from Compare');
+        toast.success('Removed from Compare');
       } catch (e) {}
       if (Array.isArray(resp.ids)) {
         const dedup = Array.from(new Set(resp.ids.map(String)));

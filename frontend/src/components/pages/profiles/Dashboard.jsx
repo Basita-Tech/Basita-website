@@ -422,7 +422,7 @@ export function Dashboard({
               <span className="text-sm px-4 py-2 bg-[#f9f5ed] rounded-full border border-[#C8A22733]">
                 Account:{" "}
                 {(() => {
-                  const acct = user?.accountType?.str;
+                  const acct = user?.accountType;
                   const display = acct
                     ? acct.charAt(0).toUpperCase() + acct.slice(1)
                     : "Free";

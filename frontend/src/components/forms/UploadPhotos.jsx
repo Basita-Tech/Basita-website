@@ -6,6 +6,46 @@ import usePhotoUpload from "../../hooks/usePhotoUpload";
 import ImageCropperModal from "../ImageCropperModal";
 import { trackEvent } from "../analytics/ga4";
 import { validateProfilePhoto, validateGovernmentID } from "@/utils/fileValidation";
+
+// Helper function to detect file type from URL
+const detectFileTypeFromUrl = async (url) => {
+  try {
+    // Try HEAD request first (more efficient)
+    const headResponse = await fetch(url, { method: 'HEAD', mode: 'cors' });
+    const contentType = headResponse.headers.get('content-type');
+    if (contentType) {
+      return contentType;
+    }
+  } catch {
+    // HEAD might fail, try GET with abort
+  }
+  
+  try {
+    // Fallback: Try to fetch a small chunk to determine type
+    const getResponse = await fetch(url, { 
+      method: 'GET',
+      mode: 'cors',
+      headers: { 'Range': 'bytes=0-100' }
+    });
+    const contentType = getResponse.headers.get('content-type');
+    if (contentType) {
+      return contentType;
+    }
+    
+    // If all else fails, check the URL for hints
+    if (url.includes('.pdf')) {
+      return 'application/pdf';
+    }
+  } catch {
+    // If detection fails, check URL hints
+    if (url.includes('.pdf')) {
+      return 'application/pdf';
+    }
+  }
+  
+  // Default to image
+  return 'image/jpeg';
+};
 const UploadPhotos = ({
   onPrevious
 }) => {
@@ -36,6 +76,7 @@ const UploadPhotos = ({
     governmentId: null
   };
   const [uploadedUrls, setUploadedUrls] = useState({});
+  const [uploadedFileTypes, setUploadedFileTypes] = useState({});
   const [uploading, setUploading] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [initialHadRequired, setInitialHadRequired] = useState(false);
@@ -94,11 +135,36 @@ const UploadPhotos = ({
           governmentId: idData?.url || null
         };
         setUploadedUrls(urls);
+        
+        // Detect file type from URL if available
+        const fileTypes = {};
+        if (idData?.url) {
+          // Check if response includes fileType
+          if (idData?.fileType) {
+            fileTypes.governmentId = idData.fileType;
+          } else {
+            // Try to get from cached fileType or detect from URL
+            const cachedType = localStorage.getItem(`govId_fileType_${idData.url}`);
+            if (cachedType) {
+              fileTypes.governmentId = cachedType;
+            } else {
+              // Detect from URL
+              const detectedType = await detectFileTypeFromUrl(idData.url);
+              fileTypes.governmentId = detectedType;
+              // Cache it
+              localStorage.setItem(`govId_fileType_${idData.url}`, detectedType);
+            }
+          }
+        }
+        setUploadedFileTypes(fileTypes);
+        
         setInitialHadRequired(requiredKeys.every(k => Boolean(urls[k])));
-      } catch (err) {}
+      } catch (err) {
+        console.error('Error loading existing photos:', err);
+      }
     };
     loadExistingPhotos();
-  }, [showReviewModal]);
+  }, []);
   const handlePhotoChange = useCallback(async (e, type) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -328,6 +394,15 @@ const UploadPhotos = ({
             const govIdFile = photos.governmentId;
             const isPdf = govIdFile && govIdFile.type === "application/pdf";
             const fileType = isPdf ? "PDF" : "Photo";
+            setUploadedFileTypes(prev => ({
+              ...prev,
+              governmentId: govIdFile.type
+            }));
+            // Cache file type for future loads
+            const govIdUrl = uploadResult.results.find(r => r.photoKey === "governmentId")?.url;
+            if (govIdUrl) {
+              localStorage.setItem(`govId_fileType_${govIdUrl}`, govIdFile.type);
+            }
             toast.success(`Government ID ${fileType} uploaded successfully!`, {
               duration: 2000
             });
@@ -482,7 +557,7 @@ const UploadPhotos = ({
             )}
 
             {/* Show preview for selected image (not PDF) */}
-            {!selectedFileNames.governmentId && photos.governmentId && photos.governmentId.type.startsWith("image/") && (
+            {!selectedFileNames.governmentId && photos.governmentId && photos.governmentId.type.startsWith("image/") && previews.governmentId && (
               <img src={previews.governmentId} alt="Selected Government ID" className="mt-2 h-24 w-24 object-cover rounded-lg border" />
             )}
 
@@ -504,19 +579,15 @@ const UploadPhotos = ({
             )}
 
             {/* Show uploaded image (only when no new file is selected) */}
-            {!selectedFileNames.governmentId && !photos.governmentId && uploadedUrls.governmentId && !uploadedUrls.governmentId.includes(".pdf") && (
-              <img src={uploadedUrls.governmentId} alt="Government ID" className="mt-2 h-24 w-24 object-cover rounded-lg border" />
-            )}
-
-            {/* Show uploaded PDF link (only when no new file is selected) */}
-            {!selectedFileNames.governmentId && !photos.governmentId && uploadedUrls.governmentId && uploadedUrls.governmentId.includes(".pdf") && (
+            {/* For Government ID, always show as a link to view the document */}
+            {!selectedFileNames.governmentId && !photos.governmentId && uploadedUrls.governmentId ? (
               <a href={uploadedUrls.governmentId} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-lg text-green-700 hover:bg-green-100 transition-colors">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
-                <span className="text-sm font-medium">View Uploaded PDF</span>
+                <span className="text-sm font-medium">View Uploaded Government ID</span>
               </a>
-            )}
+            ) : null}
           </div>
 
           {}

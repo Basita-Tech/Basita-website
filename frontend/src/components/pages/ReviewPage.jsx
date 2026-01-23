@@ -98,6 +98,13 @@ const ReviewPage = () => {
   const isApproved = profileReviewStatus === "approved";
   const isRejected = profileReviewStatus === "rejected";
   const isRectification = profileReviewStatus === "rectification";
+  
+ 
+  if (!profileReviewStatus || profileReviewStatus === null) {
+    navigate("/onboarding/user?step=photos", { replace: true });
+    return null;
+  }
+  
   return <div className="min-h-screen flex items-center justify-center py-8 px-4" style={{
     backgroundColor: colors.beige
   }}>

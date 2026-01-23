@@ -18,6 +18,7 @@ import { EditContactModal } from "../../EditContactModal";
 import { BlockedUsersList } from "../../BlockedUsersList";
 import { BlockUserDialog } from "../../BlockUserDialog";
 import { ReportProfileDialog } from "../../ReportProfileDialog";
+import { PremiumUpgradeModal } from "../../PremiumUpgradeModal";
 import {
   Dialog,
   DialogContent,
@@ -69,6 +70,8 @@ import {
   XCircle,
   X,
   RefreshCw,
+  AlertTriangle,
+  Crown,
 } from "lucide-react";
 
 // Helper function to format last login time
@@ -158,6 +161,24 @@ export function Settings() {
   const [loggingOutSessionId, setLoggingOutSessionId] = useState(null);
   const [sessionsError, setSessionsError] = useState(null);
   const [isLoggingOutAll, setIsLoggingOutAll] = useState(false);
+  const [statusPromptOpen, setStatusPromptOpen] = useState(false);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
+
+  const planExpiryDate = userProfile?.planExpiry
+    ? new Date(userProfile.planExpiry)
+    : null;
+  const hasValidPlanExpiry =
+    planExpiryDate && !Number.isNaN(planExpiryDate.getTime());
+  const isPremiumExpired =
+    Boolean(hasValidPlanExpiry) && planExpiryDate.getTime() < Date.now();
+  const planExpiryLabel = hasValidPlanExpiry
+    ? planExpiryDate.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+    : null;
+  const hasStatusIssue = accountStatus === "deactivated" || isPremiumExpired;
   useEffect(() => {
     fetchUserProfile();
     fetchBlockedCount();
@@ -339,6 +360,11 @@ export function Settings() {
     }
   };
 
+  const openUpgradeModal = () => {
+    setStatusPromptOpen(false);
+    setPremiumModalOpen(true);
+  };
+
   const handleReactivateAccount = async () => {
     setIsReactivating(true);
     try {
@@ -347,6 +373,7 @@ export function Settings() {
       if (response?.success) {
         toast.success("Account reactivated successfully!");
         await fetchUserProfile();
+        setStatusPromptOpen(false);
       } else {
         toast.error(response?.message || "Failed to reactivate account");
       }
@@ -695,6 +722,48 @@ export function Settings() {
                 </div>
               </div>
             </div>
+
+            {hasStatusIssue && (
+              <div className="border border-amber-200 bg-amber-50 rounded-[12px] p-4 flex gap-3">
+                <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                  <AlertTriangle className="w-5 h-5 text-amber-700" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="m-0 text-amber-900 text-sm">
+                    {accountStatus === "deactivated"
+                      ? "Your account is deactivated"
+                      : "Premium plan expired"}
+                  </h4>
+                  <p className="text-sm text-amber-800 mt-1 mb-0">
+                    {accountStatus === "deactivated"
+                      ? "Reactivate to appear in searches and connect with matches."
+                      : planExpiryLabel
+                        ? `Your plan ended on ${planExpiryLabel}. Upgrade to keep premium access.`
+                        : "Your premium benefits have ended. Upgrade to continue."}
+                  </p>
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {accountStatus === "deactivated" && (
+                      <Button
+                        size="sm"
+                        className="bg-amber-700 hover:bg-amber-800 text-white rounded-[10px]"
+                        onClick={handleReactivateAccount}
+                        disabled={isReactivating}
+                      >
+                        {isReactivating ? "Activating..." : "Activate account"}
+                      </Button>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-amber-300 text-amber-900 hover:bg-amber-100 rounded-[10px]"
+                      onClick={() => setStatusPromptOpen(true)}
+                    >
+                      Review options
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {}
             <div className="pt-4 border-t border-border-subtle space-y-3">
@@ -1091,6 +1160,76 @@ export function Settings() {
         open={reportProfileDialogOpen}
         onOpenChange={setReportProfileDialogOpen}
       />
+
+      <PremiumUpgradeModal
+        open={premiumModalOpen}
+        onOpenChange={setPremiumModalOpen}
+      />
+
+      {/* Account Status Prompt */}
+      <Dialog
+        open={statusPromptOpen}
+        onOpenChange={setStatusPromptOpen}
+      >
+        <DialogContent className="sm:max-w-md rounded-[20px] p-0 gap-0 bg-white overflow-hidden">
+          <DialogHeader className="bg-gradient-to-br from-[#C8A227] via-[#D4A052] to-[#E4C48A] px-5 py-4 text-white relative overflow-hidden rounded-t-[20px]">
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
+              <div className="absolute bottom-0 left-0 w-20 h-20 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
+            </div>
+            <div className="relative z-10 flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                {accountStatus === "deactivated" ? (
+                  <AlertTriangle className="w-5 h-5 text-white" />
+                ) : (
+                  <Crown className="w-5 h-5 text-white" />
+                )}
+              </div>
+              <div>
+                <DialogTitle className="text-white text-lg m-0">
+                  {accountStatus === "deactivated"
+                    ? "Reactivate your account"
+                    : "Premium plan expired"}
+                </DialogTitle>
+                <DialogDescription className="text-white/80 text-sm m-0">
+                  Keep your profile discoverable and premium features active.
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+
+          <div className="px-5 py-5 space-y-4 bg-white">
+            <div className="rounded-[12px] border border-border-subtle bg-beige p-4">
+              <p className="text-sm text-[#2f2500] m-0">
+                {accountStatus === "deactivated"
+                  ? "Your profile is currently hidden. Reactivate to start receiving matches again."
+                  : planExpiryLabel
+                    ? `Your premium access ended on ${planExpiryLabel}. Upgrade to restore unlimited requests, chats, and visibility.`
+                    : "Your premium access has ended. Upgrade to restore unlimited requests, chats, and visibility."}
+              </p>
+            </div>
+
+            <DialogFooter className="flex flex-col sm:flex-row gap-3">
+              {accountStatus === "deactivated" && (
+                <Button
+                  onClick={handleReactivateAccount}
+                  disabled={isReactivating}
+                  className="w-full sm:w-1/2 bg-[#C8A227] hover:bg-[#B49520] text-white rounded-[12px] h-11"
+                >
+                  {isReactivating ? "Activating..." : "Activate account"}
+                </Button>
+              )}
+              <Button
+                variant="outline"
+                onClick={openUpgradeModal}
+                className="w-full sm:w-1/2 rounded-[12px] border-[#C8A227] text-[#3a2f00] hover:bg-[#C8A227]/10 h-11"
+              >
+                Upgrade to Premium
+              </Button>
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {}
       <Dialog open={logoutConfirmOpen} onOpenChange={setLogoutConfirmOpen}>

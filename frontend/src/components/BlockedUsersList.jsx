@@ -123,7 +123,7 @@ export function BlockedUsersList({
         </div>
 
         {}
-        {blockedUsers.length > 0 && <div className="mx-4 sm:mx-6 mb-4 flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-[12px] text-sm">
+        {blockedUsers.length > 0 && <div className="mx-auto w-[calc(100%-1.5rem)] sm:w-auto sm:mx-6 mb-4 flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-[12px] text-sm">
             <AlertCircle className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
             <p className="text-blue-800 text-xs m-0">
               Note: You can change block status for a profile once every 24 hours.

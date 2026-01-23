@@ -20,6 +20,8 @@ import ContactPage from "./components/pages/ContactPage";
 import FAQPage from "./components/Home/FAQPage";
 import RouteChangeTracker from "./components/analytics/RouteChangeTracker";
 import CookieConsentBanner from "./components/CookieConsentBanner";
+import { PremiumUpgradePage } from "./components/pages/PremiumUpgradePage";
+import { AccountReactivatePage } from "./components/pages/AccountReactivatePage";
 const ProfileCompletion = lazy(
   () => import("./components/forms/ProfileCompletion"),
 );
@@ -62,6 +64,8 @@ function App() {
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/faq" element={<FAQPage />} />
+        <Route path="/premium" element={<PremiumUpgradePage />} />
+        <Route path="/reactivate" element={<AccountReactivatePage />} />
 
         {}
         <Route

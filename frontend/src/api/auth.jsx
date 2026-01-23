@@ -184,6 +184,33 @@ export const loginUser = async (formData) => {
       };
     }
 
+    // Check for 200 status with deactivation or plan upgrade codes
+    if (status === 200 && data?.code) {
+      return {
+        success: false,
+        code: data.code,
+        message: data.message || "Account status issue",
+      };
+    }
+
+    // Check for 402 status (Payment required / Plan upgrade)
+    if (status === 402) {
+      return {
+        success: false,
+        code: data?.code || "PLAN_UPGRADE",
+        message: data.message || "Plan upgrade required",
+      };
+    }
+
+    // Always return code if present in error response
+    if (data?.code) {
+      return {
+        success: false,
+        code: data.code,
+        message: data.message || "Login failed",
+      };
+    }
+
     toast.error(data.message || "Login failed. Please retry.");
     return {
       success: false,

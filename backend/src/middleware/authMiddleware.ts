@@ -187,8 +187,10 @@ export const authenticate = async (
         });
       }
     }
-
-    if (user.isVisible === false) {
+    if (
+      req.route.path !== "/user/account/activate" &&
+      user.isVisible === false
+    ) {
       redisClient.del(cacheKey).catch(() => {});
       return res.status(200).json({
         success: false,

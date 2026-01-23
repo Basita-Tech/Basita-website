@@ -9,6 +9,7 @@ import {
 import toast from "react-hot-toast";
 import { AuthContextr } from "../context/AuthContext";
 import axios from "../../api/http";
+import { Button } from "../ui/button";
 const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,6 +22,18 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const redirectToStatusPage = (code, message) => {
+    if (code === "PLAN_UPGRADE") {
+      navigate("/premium", {
+        state: { message: message || "Your premium plan has expired." },
+      });
+    } else {
+      navigate("/reactivate", {
+        state: { message: message || "Your account is deactivated." },
+      });
+    }
+  };
   useEffect(() => {
     const handleUrlToken = () => {
       const params = new URLSearchParams(window.location.search);
@@ -213,6 +226,26 @@ const LoginForm = () => {
     try {
       const response = await loginUser(payload);
 
+      const code = response?.code || response?.errorCode;
+      const isDeactivated =
+        code === "DEACTIVET_ACCOUNT" ||
+        code === "DEACTIVATE_ACCOUNT" ||
+        (response?.message || "").toLowerCase().includes("decatived") ||
+        (response?.message || "").toLowerCase().includes("deactivated");
+      const isPlanUpgrade = code === "PLAN_UPGRADE";
+
+      if (isDeactivated || isPlanUpgrade) {
+        const targetCode = code || (isPlanUpgrade ? "PLAN_UPGRADE" : "DEACTIVET_ACCOUNT");
+        const targetMessage =
+          response?.message ||
+          (isPlanUpgrade
+            ? "Your premium plan has expired. Please upgrade to continue."
+            : "Your account is deactivated. Please activate to continue.");
+        setLoading(false);
+        redirectToStatusPage(targetCode, targetMessage);
+        return;
+      }
+
       if (response?.requiresOtpVerification) {
         const phone = response.phoneNumber || payload.phoneNumber || "";
         const loginWithEmail = isEmail; // Track if user logged in with email
@@ -279,6 +312,27 @@ const LoginForm = () => {
       if (response?.redirectTo && response?.user) {
         ctxLogin(response);
         await new Promise((resolve) => setTimeout(resolve, 200));
+        
+        // Check account status before navigation
+        const API = import.meta.env.VITE_API_URL;
+        try {
+          const meRes = await axios.get(`${API}/auth/me`, { withCredentials: true });
+          const meData = meRes?.data || {};
+          
+          if (meData?.success === false && (meData?.code === "DEACTIVET_ACCOUNT" || meData?.code === "PLAN_UPGRADE")) {
+            setLoading(false);
+            redirectToStatusPage(meData.code, meData.message || "Account status issue");
+            return;
+          }
+        } catch (err) {
+          const errData = err?.response?.data || {};
+          if (errData?.code === "DEACTIVET_ACCOUNT" || errData?.code === "PLAN_UPGRADE") {
+            setLoading(false);
+            redirectToStatusPage(errData.code, errData.message || "Account status issue");
+            return;
+          }
+        }
+        
         navigate(response.redirectTo, { replace: true });
         return;
       }
@@ -289,11 +343,51 @@ const LoginForm = () => {
       }
 
       if (response?.success && response?.user) {
+        // Check account status before proceeding
+        const API = import.meta.env.VITE_API_URL;
+        try {
+          const meRes = await axios.get(`${API}/auth/me`, { withCredentials: true });
+          const meData = meRes?.data || {};
+          
+          if (meData?.success === false && (meData?.code === "DEACTIVET_ACCOUNT" || meData?.code === "PLAN_UPGRADE")) {
+            setLoading(false);
+            redirectToStatusPage(meData.code, meData.message || "Account status issue");
+            return;
+          }
+        } catch (err) {
+          const errData = err?.response?.data || {};
+          if (errData?.code === "DEACTIVET_ACCOUNT" || errData?.code === "PLAN_UPGRADE") {
+            setLoading(false);
+            redirectToStatusPage(errData.code, errData.message || "Account status issue");
+            return;
+          }
+        }
+        
         await handleAuthResponse(response);
         return;
       }
 
       if (response?.user) {
+        // Check account status before proceeding
+        const API = import.meta.env.VITE_API_URL;
+        try {
+          const meRes = await axios.get(`${API}/auth/me`, { withCredentials: true });
+          const meData = meRes?.data || {};
+          
+          if (meData?.success === false && (meData?.code === "DEACTIVET_ACCOUNT" || meData?.code === "PLAN_UPGRADE")) {
+            setLoading(false);
+            redirectToStatusPage(meData.code, meData.message || "Account status issue");
+            return;
+          }
+        } catch (err) {
+          const errData = err?.response?.data || {};
+          if (errData?.code === "DEACTIVET_ACCOUNT" || errData?.code === "PLAN_UPGRADE") {
+            setLoading(false);
+            redirectToStatusPage(errData.code, errData.message || "Account status issue");
+            return;
+          }
+        }
+        
         await handleAuthResponse(response);
         return;
       }
@@ -302,11 +396,32 @@ const LoginForm = () => {
       setError("An unexpected error occurred. Please try again.");
     } catch (err) {
       console.error("Login error:", err);
-      setError("Invalid credentials. Please try again.");
+      const payload = err?.response?.data || {};
+      const code = payload?.code || payload?.errorCode;
+      const msg = payload?.message || "Invalid credentials. Please try again.";
+      const isDeactivated =
+        code === "DEACTIVET_ACCOUNT" ||
+        code === "DEACTIVATE_ACCOUNT" ||
+        (msg || "").toLowerCase().includes("decatived") ||
+        (msg || "").toLowerCase().includes("deactivated");
+      const isPlanUpgrade = code === "PLAN_UPGRADE";
+
+      if (isDeactivated || isPlanUpgrade) {
+        const targetCode = code || (isPlanUpgrade ? "PLAN_UPGRADE" : "DEACTIVET_ACCOUNT");
+        const targetMessage =
+          msg ||
+          (isPlanUpgrade
+            ? "Your premium plan has expired. Please upgrade to continue."
+            : "Your account is deactivated. Please activate to continue.");
+        redirectToStatusPage(targetCode, targetMessage);
+      } else {
+        setError(msg);
+      }
     } finally {
       setLoading(false);
     }
   };
+
   const inputClass =
     "w-full p-3 text-sm border border-[#D4A052] rounded-md focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] outline-none transition";
   return (
@@ -439,7 +554,6 @@ const LoginForm = () => {
             Continue with Google
           </button>
         </form>
-
         {}
         <p className="text-center text-sm mt-4 text-gray-600">
           Don’t have an account?{" "}

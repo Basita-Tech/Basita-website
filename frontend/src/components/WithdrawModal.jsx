@@ -6,7 +6,7 @@ export function WithdrawModal({
   onConfirm
 }) {
   return <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="rounded-[20px] max-w-md !top-[52%] my-12 mx-4">
+      <AlertDialogContent className="rounded-[20px] max-w-md !top-[52%] my-12 mx-auto w-[calc(100%-2rem)]">
         <AlertDialogHeader>
           <AlertDialogTitle style={{
           fontFamily: 'Playfair Display, serif'

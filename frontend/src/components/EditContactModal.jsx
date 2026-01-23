@@ -146,7 +146,7 @@ export function EditContactModal({
       overflow-hidden
     "
       >
-        <div className="relative bg-gradient-to-br from-gold via-gold/90 to-gold/80 px-5 py-4 text-center text-white border-b border-gold/20">
+        <div className="relative bg-gradient-to-br from-gold via-gold/90 to-gold/80 px-5 py-4 text-center text-white border-b border-gold/20 pr-6">
           <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
             <Icon className="w-8 h-8 text-white" />
           </div>
@@ -161,7 +161,7 @@ export function EditContactModal({
         </div>
 
         {/* Body */}
-        <div className="px-5 py-4 space-y-5 bg-white">
+        <div className="px-5 py-4 space-y-5 bg-white mr-0">
           {/* Contact input */}
           <div className="space-y-2">
             <Label htmlFor="contactValue" className="text-sm font-medium">

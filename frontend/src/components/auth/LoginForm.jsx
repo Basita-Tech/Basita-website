@@ -136,7 +136,7 @@ const LoginForm = () => {
       return;
     }
     checkLoggedInAndRedirect();
-  }, [ctxToken]);
+  }, []);
   const handleAuthResponse = async (apiResponse) => {
     try {
       const resp = apiResponse || {};

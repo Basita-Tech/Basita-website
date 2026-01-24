@@ -12,10 +12,37 @@ export default defineConfig({
     dedupe: ['react', 'react-dom']
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-select']
+    include: [
+      'react', 
+      'react-dom', 
+      'react-select',
+      'axios',
+      'react-router-dom',
+      'lucide-react',
+      'framer-motion',
+      'country-state-city'
+    ]
   },
-  // Enable sourcemaps to make production code debuggable in devtools
   build: {
-    sourcemap: true
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['lucide-react', 'framer-motion', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+          // Split country-state-city separately due to large size
+          'location-data': ['country-state-city'],
+          'form-libs': ['react-select', 'react-phone-input-2'],
+          'utils': ['axios', 'js-cookie', 'validator', 'dompurify']
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000,
+    minify: 'esbuild' // Use esbuild for faster builds
+  },
+  server: {
+    port: 5173,
+    strictPort: false,
+    host: true
   }
 });

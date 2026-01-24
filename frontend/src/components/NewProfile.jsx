@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { Heart, MapPin, ChevronLeft, ChevronRight, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { JOB_TITLES } from "../lib/constant";
-import LocationSelect from "./ui/LocationSelect";
+const LocationSelect = lazy(() => import("./ui/LocationSelect"));
 import { State, City } from "country-state-city";
 import { searchProfiles } from "../api/auth";
 const RELIGIONS = ["Hindu", "Jain"];
@@ -281,7 +281,9 @@ const NewProfile = () => {
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">City:</span>
                 <div className="min-w-[160px]">
-                  <LocationSelect type="city" name="city" value={filters.city} onChange={e => handleFilterChange('city', e.target.value)} countryCode="IN" stateCode="MH" placeholder="All Cities" className="border rounded-md px-3 py-1.5 text-sm" />
+                  <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-2 rounded-md border border-gray-300 text-sm" />}>
+                    <LocationSelect type="city" name="city" value={filters.city} onChange={e => handleFilterChange('city', e.target.value)} countryCode="IN" stateCode="MH" placeholder="All Cities" className="border rounded-md px-3 py-1.5 text-sm" />
+                  </Suspense>
                 </div>
               </div>
               <div className="flex items-center gap-2">

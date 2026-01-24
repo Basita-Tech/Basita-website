@@ -87,7 +87,7 @@ const UploadPhotos = ({
   
  
   const PHOTO_DIMENSIONS = {
-    compulsory3: { w: 600, h: 600, ratio: 1, label: "Close-up Portrait (600x600)" },      // 1:1
+    compulsory3: { w: 600, h: 600, ratio: 1, label: "Profile Photo (600x600)" },      // 1:1
     compulsory2: { w: 1600, h: 1200, ratio: 4/3, label: "Family Photo (1600x1200)" },     // 4:3
     compulsory1: { w: 1080, h: 1350, ratio: 4/5, label: "Full Body Photo (1080x1350)" },   // 4:5
     optional1: { w: 1080, h: 1350, ratio: 1, label: "Additional Photo 1 (1080x1350)" },  // 1:1
@@ -97,7 +97,7 @@ const UploadPhotos = ({
   const photoLabels = {
     compulsory1: "Full Body Photo",
     compulsory2: "Family Photo",
-    compulsory3: "Close-up Portrait",
+    compulsory3: "Profile Photo",
     optional1: "Additional Photo 1",
     optional2: "Additional Photo 2",
     governmentId: "Government ID"
@@ -445,7 +445,7 @@ const UploadPhotos = ({
           key: "compulsory2",
           hint: "Upload a photo with your family members"
         }, {
-          label: "Candidate Closer Photo (Required)",
+          label: "Candidate Profile Photo (Required)",
           key: "compulsory3",
           hint: "Upload a clear close-up face photo"
         }].map(({

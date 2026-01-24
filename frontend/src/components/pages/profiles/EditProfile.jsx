@@ -1,11 +1,12 @@
-﻿import React, { useState, useEffect, useMemo, useCallback } from "react";
+﻿import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from "react";
 import ReactSelect from "react-select";
 import { getNames } from "country-list";
 import { allCountries } from "country-telephone-data";
 import CreatableSelect from "react-select/creatable";
 import { State } from "country-state-city";
 import { nationalities, visaCategories, doshOptions, weightOptions, heightOptions, QUALIFICATION_LEVELS, EDUCATION_OPTIONS_BY_LEVEL, EMPLOYMENT_OPTIONS, INCOME_OPTIONS, JOB_TITLES, LEGAL_STATUSES, allCastes, DIET_OPTIONS, ZODIAC_SIGNS, RELIGIONS, DIVORCE_STATUSES, CHILDREN_LIVING_OPTIONS } from "@/lib/constant";
-import LocationSelect from "../../ui/LocationSelect";
+
+const LocationSelect = lazy(() => import("../../ui/LocationSelect"));
 import { getStateCode, getAllCountriesWithCodes } from "../../../lib/locationUtils";
 import { TabsComponent } from "../../TabsComponent";
 import { Label } from "../../ui/label";
@@ -1803,20 +1804,22 @@ export function EditProfile({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label className="mb-2">Birth State <span className="text-black">*</span></Label>
-            <LocationSelect type="state" name="birthState" value={personal.birthState || ""} onChange={e => {
-            handleInputChange(e);
-            setPersonal(prev => ({
-              ...prev,
-              birthCity: ""
-            }));
-            setPersonalErrors(prev => ({
-              ...prev,
-              birthState: "",
+            <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
+              <LocationSelect type="state" name="birthState" value={personal.birthState || ""} onChange={e => {
+              handleInputChange(e);
+              setPersonal(prev => ({
+                ...prev,
+                birthCity: ""
+              }));
+              setPersonalErrors(prev => ({
+                ...prev,
+                birthState: "",
               birthCity: ""
             }));
             const code = e.target.code || getStateCode("IN", e.target.value);
             setBirthStateCode(code || "");
           }} countryCode="IN" placeholder="Select state" className={`rounded-md ${personalErrors.birthState ? "border-red-500" : "border-gray-300"}`} />
+            </Suspense>
             {personalErrors.birthState && <p className="text-red-500 text-sm mt-1">
                 {personalErrors.birthState}
               </p>}
@@ -1824,7 +1827,9 @@ export function EditProfile({
 
           <div>
             <Label className="mb-2">Birth City <span className="text-black">*</span></Label>
-            <LocationSelect type="city" name="birthCity" value={personal.birthCity || ""} onChange={handleInputChange} countryCode="IN" stateCode={birthStateCode} placeholder="Select city" className={`rounded-md ${personalErrors.birthCity ? "border-red-500" : "border-gray-300"}`} disabled={!birthStateCode} />
+            <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
+              <LocationSelect type="city" name="birthCity" value={personal.birthCity || ""} onChange={handleInputChange} countryCode="IN" stateCode={birthStateCode} placeholder="Select city" className={`rounded-md ${personalErrors.birthCity ? "border-red-500" : "border-gray-300"}`} disabled={!birthStateCode} />
+            </Suspense>
             {personalErrors.birthCity && <p className="text-red-500 text-sm mt-1">
                 {personalErrors.birthCity}
               </p>}
@@ -1854,33 +1859,37 @@ export function EditProfile({
             {}
             <div className="space-y-2">
               <Label className="text-sm font-medium">State *</Label>
-              <LocationSelect type="state" name="state" value={personal.state || ""} onChange={e => {
-              setPersonal(p => ({
-                ...p,
-                state: e.target.value,
-                city: ""
-              }));
-              setPersonalErrors(prev => ({
-                ...prev,
-                state: ""
-              }));
-            }} countryCode="IN" placeholder="Select state" className={personalErrors.state ? "border-red-500" : ""} />
+              <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
+                <LocationSelect type="state" name="state" value={personal.state || ""} onChange={e => {
+                setPersonal(p => ({
+                  ...p,
+                  state: e.target.value,
+                  city: ""
+                }));
+                setPersonalErrors(prev => ({
+                  ...prev,
+                  state: ""
+                }));
+              }} countryCode="IN" placeholder="Select state" className={personalErrors.state ? "border-red-500" : ""} />
+              </Suspense>
               {personalErrors.state && <p className="text-red-500 text-sm">{personalErrors.state}</p>}
             </div>
 
             {}
             <div className="space-y-2">
               <Label className="text-sm font-medium">City *</Label>
-              <LocationSelect type="city" name="city" value={personal.city || ""} onChange={e => {
-              setPersonal(p => ({
-                ...p,
-                city: e.target.value
-              }));
+              <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
+                <LocationSelect type="city" name="city" value={personal.city || ""} onChange={e => {
+                setPersonal(p => ({
+                  ...p,
+                  city: e.target.value
+                }));
               setPersonalErrors(prev => ({
                 ...prev,
                 city: ""
               }));
             }} countryCode="IN" stateCode={getStateCode("IN", personal.state) || ""} placeholder="Select city" className={personalErrors.city ? "border-red-500" : ""} disabled={!personal.state} />
+              </Suspense>
               {personalErrors.city && <p className="text-red-500 text-sm">{personalErrors.city}</p>}
             </div>
           </div>
@@ -1980,16 +1989,18 @@ export function EditProfile({
       {personal.residingInIndia === "no" && <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
           <div>
             <Label className="mb-2">Residing Country *</Label>
-            <LocationSelect type="country" name="residingCountry" value={personal.residingCountry || ""} onChange={e => {
-          setPersonal(p => ({
-            ...p,
-            residingCountry: e.target.value
+            <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
+              <LocationSelect type="country" name="residingCountry" value={personal.residingCountry || ""} onChange={e => {
+            setPersonal(p => ({
+              ...p,
+              residingCountry: e.target.value
           }));
           setPersonalErrors(prev => ({
             ...prev,
             residingCountry: ""
           }));
         }} placeholder="Select Country" className={personalErrors.residingCountry ? "border-red-500" : ""} />
+            </Suspense>
             {personalErrors.residingCountry && <p className="text-red-500 text-sm mt-1">
                 {personalErrors.residingCountry}
               </p>}
@@ -2740,7 +2751,7 @@ export function EditProfile({
     const photoSlots = [
       { index: 0, label: "Personal Photo", dimensions: "1080x1350" },
       { index: 1, label: "Family Photo", dimensions: "1600x1200" },
-      { index: 2, label: "Closer Photo", dimensions: "1200x1200" },
+      { index: 2, label: "Profile Photo", dimensions: "1200x1200" },
       { index: 3, label: "Additional Photo 1", dimensions: "1080x1350" },
       { index: 4, label: "Additional Photo 2", dimensions: "1080x1350" }
     ];
@@ -2781,7 +2792,7 @@ export function EditProfile({
   function getPhotoLabel(index) {
     if (index === 0) return "Personal Photo";
     if (index === 1) return "Family Photo";
-    if (index === 2) return "Closer Photo";
+    if (index === 2) return "Profile Photo";
     return `Other Photo ${index - 2}`;
   }
   function mapIndexToPhotoType(index) {

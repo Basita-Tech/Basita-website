@@ -22,6 +22,7 @@ const QUALIFICATION_LEVELS = [
   "Undergraduate",
   "Associates Degree",
   "Bachelors",
+   "Doctor",
   "Honours Degree",
   "Masters",
   "Doctorate",

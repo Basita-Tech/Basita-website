@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
 import CustomSelect from "../ui/CustomSelect";
-import LocationSelect from "../ui/LocationSelect";
+const LocationSelect = lazy(() => import("../ui/LocationSelect"));
 import { getEducationalDetails, saveEducationalDetails, updateEducationalDetails } from "../../api/auth";
 import toast from "react-hot-toast";
 import {
@@ -260,7 +260,9 @@ const EducationDetails = ({
             <label className="block text-sm font-medium mb-1">
               Country of Education <RequiredMark />
             </label>
-            <LocationSelect type="country" name="countryOfEducation" value={formData.countryOfEducation} onChange={handleChange} placeholder="Select your country" className={getInputClass("countryOfEducation")} />
+            <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
+              <LocationSelect type="country" name="countryOfEducation" value={formData.countryOfEducation} onChange={handleChange} placeholder="Select your country" className={getInputClass("countryOfEducation")} />
+            </Suspense>
             {errors.countryOfEducation && <p className="text-red-500 text-sm mt-1">{errors.countryOfEducation}</p>}
           </div>
 

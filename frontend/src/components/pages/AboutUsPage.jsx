@@ -25,7 +25,7 @@ const AboutUsPage = () => {
       <HomeNavbar />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-[#F4EEE4] to-white text-gray-800 py-20 px-4">
+      <section className="bg-gradient-to-b from-[#F4EEE4] to-white text-gray-800 py-[16px] px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-5xl font-bold mb-4 text-[#800000]">About Satfera</h1>
           <p className="text-xl text-gray-700 max-w-3xl mx-auto">
@@ -35,7 +35,7 @@ const AboutUsPage = () => {
       </section>
 
       {/* Our Story */}
-      <section className="py-20 px-4 bg-white">
+      <section className="pt-8 pb-20 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>

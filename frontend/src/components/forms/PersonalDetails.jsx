@@ -1,7 +1,8 @@
-﻿import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
+﻿import React, { useState, useRef, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import CustomSelect from "../ui/CustomSelect";
-import LocationSelect from "../ui/LocationSelect";
+// Lazy load LocationSelect to reduce initial bundle size (country-state-city is 8.8MB)
+const LocationSelect = lazy(() => import("../ui/LocationSelect"));
 import { getOnboardingStatus, getUserPersonal, saveUserPersonal, updateUserPersonal } from "../../api/auth";
 import { getCountryCode, getStateCode, getAllCountries } from "../../lib/locationUtils";
 import toast from "react-hot-toast";
@@ -33,33 +34,23 @@ const SORTED_DOSH_OPTIONS = ["No Dosh", ...sortAlpha(doshOptions.filter(d => d !
 const SORTED_ZODIAC_SIGNS = sortAlpha(ZODIAC_SIGNS);
 const SORTED_RELIGIONS = sortAlpha(RELIGIONS);
 const SORTED_LEGAL_STATUSES = sortAlpha(LEGAL_STATUSES);
+
+
+const YEAR_OPTIONS = (() => {
+  const years = [];
+  const currentYear = new Date().getFullYear();
+  for (let i = 0; i < 50; i++) {
+    years.push(currentYear - i);
+  }
+  return years;
+})();
+
 const PersonalDetails = ({
   onNext,
   onPrevious
 }) => {
   const navigate = useNavigate();
   
-  // // Check if user is authenticated - redirect to login if not
-  // useEffect(() => {
-  //   // Check for auth token in cookies
-  //   const getCookie = (name) => {
-  //     const nameEQ = name + "=";
-  //     const cookies = document.cookie.split(';');
-  //     for (let cookie of cookies) {
-  //       cookie = cookie.trim();
-  //       if (cookie.indexOf(nameEQ) === 0) {
-  //         return cookie.substring(nameEQ.length);
-  //       }
-  //     }
-  //     return null;
-  //   };
-    
-  //   const token = getCookie("authToken") || getCookie("token") || getCookie("Authorization");
-  //   if (!token) {
-  //     console.log("[PersonalDetails] No auth token in cookies, redirecting to login");
-  //     navigate("/login", { replace: true });
-  //   }
-  // }, [navigate]);
   
   const minuteRef = useRef(null);
   const [formData, setFormData] = useState({
@@ -116,6 +107,7 @@ const PersonalDetails = ({
   const [birthCountryCode, setBirthCountryCode] = useState(null);
   const [birthStateCode, setBirthStateCode] = useState(null);
   const [residingCountryCode, setResidingCountryCode] = useState(null);
+  const [isPersonalCompleted, setIsPersonalCompleted] = useState(false);
   const handleHourInput = useCallback(e => {
     let value = e.target.value.replace(/\D/g, "");
     if (value.length > 2) value = value.slice(0, 2);
@@ -214,6 +206,21 @@ const PersonalDetails = ({
   useEffect(() => {
     const fetchPersonal = async () => {
       try {
+        // Verify authentication before fetching personal data
+        const authRes = await getOnboardingStatus();
+        const isAuthenticated = authRes?.data?.success || authRes?.status === 200;
+        
+        if (!isAuthenticated) {
+          navigate("/login", { replace: true });
+          setInitialLoading(false);
+          return;
+        }
+
+        // Cache the completion status to avoid calling getOnboardingStatus again during save
+        const isCompleted = Array.isArray(authRes?.data?.data?.completedSteps) && 
+                           authRes.data.data.completedSteps.includes("personal");
+        setIsPersonalCompleted(isCompleted);
+
         const res = await getUserPersonal();
         if (res?.data) {
           const data = res.data?.data || {};
@@ -279,12 +286,16 @@ const PersonalDetails = ({
         }
       } catch (err) {
         console.error("Failed to fetch personal details:", err);
+        // Handle 401 unauthorized - redirect to login
+        if (err?.response?.status === 401) {
+          navigate("/login", { replace: true });
+        }
       } finally {
         setInitialLoading(false);
       }
     };
     fetchPersonal();
-  }, []); // Only run once on mount
+  }, [navigate]); // Added navigate dependency
   const validateBirthState = () => {
     if (!formData.birthState) {
       setErrors(prev => ({
@@ -542,9 +553,9 @@ const PersonalDetails = ({
     }
     try {
       setLoading(true);
-      const personalStep = await getOnboardingStatus();
+      // Use cached completion status instead of calling getOnboardingStatus again
       let res;
-      const alreadyCompleted = Array.isArray(personalStep?.data?.data?.completedSteps) && personalStep.data.data.completedSteps.includes("personal");
+      const alreadyCompleted = isPersonalCompleted;
       if (alreadyCompleted) {
         res = await updateUserPersonal(payload);
       } else {
@@ -600,25 +611,8 @@ const PersonalDetails = ({
   const handlePrevious = () => navigate("/signup");
   const RequiredMark = () => <span className="text-red-500 ml-1">*</span>;
   
-  const [state, setState] = useState("loading"); // loading | authed | unauthed
-
-  useEffect(() => {
-    let mounted = true;
-    (async () => {
-      try {
-        const res = await getOnboardingStatus(); // any lightweight auth check
-        if (!mounted) return;
-        const ok = res?.data?.success || res?.status === 200;
-        setState(ok ? "authed" : "unauthed");
-      } catch {
-        if (mounted) setState("unauthed");
-      }
-    })();
-    return () => { mounted = false; };
-  }, []);
-
-  if (state === "loading") return null; // or spinner
-  if (state === "unauthed") return <Navigate to="/login" replace />;
+  // Auth check is now combined in data fetch effect to reduce API calls
+  if (initialLoading) return null; // Show loading state while fetching data
   return <div className="min-h-screen w-full bg-[#F9F7F5] flex justify-center items-start py-2 px-2" style={{ minHeight: '100vh' }}>
         <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[#F9F7F5] transition-transform duration-300 hover:scale-[1.02]" style={{ minHeight: '90vh' }}>
         {}
@@ -693,7 +687,8 @@ const PersonalDetails = ({
                 <label className="block text-sm font-medium mb-1">
                   Birth State <RequiredMark />
                 </label>
-                <LocationSelect type="state" name="birthState" value={formData.birthState} onChange={e => {
+                <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
+                  <LocationSelect type="state" name="birthState" value={formData.birthState} onChange={e => {
                 handleChange(e);
                 setFormData(prev => ({
                   ...prev,
@@ -702,6 +697,7 @@ const PersonalDetails = ({
                 const code = e.target.code || getStateCode("IN", e.target.value);
                 setBirthStateCode(code);
               }} countryCode="IN" placeholder="Select state" className={getInputClass("birthState")} />
+                </Suspense>
                 {errors.birthState && <p className="text-red-500 text-sm mt-1">
                     {errors.birthState}
                   </p>}
@@ -710,9 +706,11 @@ const PersonalDetails = ({
               {}
               <div>
                 <label className=" block text-sm font-medium mb-1">City <RequiredMark /></label>
-                <LocationSelect type="city" name="birthCity" value={formData.birthCity} onChange={e => {
+                <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
+                  <LocationSelect type="city" name="birthCity" value={formData.birthCity} onChange={e => {
                 handleChange(e);
               }} countryCode="IN" stateCode={birthStateCode} placeholder="Select city" className={getInputClass("birthCity")} />
+                </Suspense>
                 {errors.birthCity && <p className="text-red-500 text-sm mt-1">
                     {errors.birthCity}
                   </p>}
@@ -880,13 +878,15 @@ const PersonalDetails = ({
                   {}
                   <div>
                     <label className="block text-sm font-medium mb-1">State <RequiredMark /></label>
-                    <LocationSelect type="state" name="state" value={formData.state} onChange={e => {
+                    <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
+                      <LocationSelect type="state" name="state" value={formData.state} onChange={e => {
                     handleChange(e);
                     setFormData(prev => ({
                       ...prev,
                       city: ""
                     }));
                   }} countryCode="IN" placeholder="Select state" className={getInputClass("state")} />
+                    </Suspense>
                     {errors.state && <p className="text-red-500 text-sm mt-1">
                         {errors.state}
                       </p>}
@@ -895,7 +895,9 @@ const PersonalDetails = ({
                   {}
                   <div>
                     <label className="block text-sm font-medium mb-1">City <RequiredMark /></label>
-                    <LocationSelect type="city" name="city" value={formData.city} onChange={handleChange} countryCode="IN" stateCode={getStateCode("IN", formData.state) || ""} placeholder="Select city" className={getInputClass("city")} />
+                    <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
+                      <LocationSelect type="city" name="city" value={formData.city} onChange={handleChange} countryCode="IN" stateCode={getStateCode("IN", formData.state) || ""} placeholder="Select city" className={getInputClass("city")} />
+                    </Suspense>
                     {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
                   </div>
                 </div>
@@ -1002,16 +1004,11 @@ const PersonalDetails = ({
                       Since when are you separated?
                     </label>
                     <div className="flex gap-4 overflow-x-auto py-2">
-                      {Array.from({
-                  length: 50
-                }, (_, i) => {
-                  const year = new Date().getFullYear() - i;
-                  return <label key={year} className="flex items-center gap-1 flex-shrink-0">
+                      {YEAR_OPTIONS.map(year => <label key={year} className="flex items-center gap-1 flex-shrink-0">
                             <input type="radio" name="separatedSince" value={year} checked={separatedSince === year.toString()} onChange={e => setSeparationYear(e.target.value)} className="peer hidden" />
                             <span className="w-4 h-4 rounded-full border border-[#D4A052] peer-checked:bg-[#D4A052] peer-checked:border-[#D4A052] transition-all"></span>
                             <span className="text-sm">{year}</span>
-                          </label>;
-                })}
+                          </label>)}
                     </div>
                     {errors.separatedSince && <p className="text-xs text-red-500 mt-1">
                         {errors.separatedSince}
@@ -1093,11 +1090,13 @@ const PersonalDetails = ({
                   <label className="block text-sm font-medium mb-1 text-gray-700">
                     Residing In Which Country
                   </label>
-                  <LocationSelect type="country" name="residingCountry" value={formData.residingCountry} onChange={e => {
-                handleChange(e);
-                const code = getCountryCode(e.target.value);
-                setResidingCountryCode(code);
-              }} placeholder="Select Country" className={`w-full ${errors.residingCountry ? "border-red-500" : ""}`} />
+                  <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
+                    <LocationSelect type="country" name="residingCountry" value={formData.residingCountry} onChange={e => {
+                  handleChange(e);
+                  const code = getCountryCode(e.target.value);
+                  setResidingCountryCode(code);
+                }} placeholder="Select Country" className={`w-full ${errors.residingCountry ? "border-red-500" : ""}`} />
+                  </Suspense>
                   {errors.residingCountry && <p className="text-red-500 text-sm mt-1">
                       {errors.residingCountry}
                     </p>}

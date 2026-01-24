@@ -79,9 +79,11 @@ function App() {
         <Route
           path="/onboarding/user"
           element={
-            <Suspense fallback={<PageLoader />}>
-              <MultiStepForm />
-            </Suspense>
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoader />}>
+                <MultiStepForm />
+              </Suspense>
+            </ProtectedRoute>
           }
         />
         <Route

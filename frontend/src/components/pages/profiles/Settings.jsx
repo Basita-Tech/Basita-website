@@ -1233,7 +1233,7 @@ export function Settings() {
 
       {}
       <Dialog open={logoutConfirmOpen} onOpenChange={setLogoutConfirmOpen}>
-        <DialogContent className="sm:max-w-md rounded-[22px] p-0 gap-0 bg-white">
+        <DialogContent className="sm:max-w-md rounded-[22px] p-0 gap-0 bg-white" showClose={false}>
           <DialogHeader className="bg-gradient-to-br from-[#C8A227] via-[#D4A052] to-[#E4C48A] px-6 py-5 text-center text-white relative overflow-hidden rounded-t-[22px]">
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>

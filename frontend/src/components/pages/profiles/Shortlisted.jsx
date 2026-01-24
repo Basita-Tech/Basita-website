@@ -55,11 +55,6 @@ export function Shortlisted({
           <h2 className="m-0 mb-2 text-2xl font-semibold text-[#3a2f00]">Shortlisted Profiles</h2>
           <p className="text-muted-foreground m-0">Your saved profiles for easy access and comparison</p>
         </div>
-
-        {}
-        {compareProfiles.length >= 2 && <Button onClick={onNavigateToCompare} className="bg-gold hover:bg-gold/90 text-white rounded-[12px]">
-            Compare {compareProfiles.length} Profiles
-          </Button>}
       </div>
 
       {}

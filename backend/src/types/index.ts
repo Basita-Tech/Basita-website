@@ -137,3 +137,5 @@ export interface NotificationSettings {
   pushNotifications: boolean;
   smsNotifications: boolean;
 }
+
+export type Role = "admin" | "verification" | "support" | "account";

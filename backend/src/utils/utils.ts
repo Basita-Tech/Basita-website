@@ -14,6 +14,7 @@ import {
 } from "./secureToken";
 import { SessionService } from "../services";
 import { APP_CONFIG } from "./constants";
+import { Role } from "../types";
 
 export function calculateAge(dateOfBirth?: Date): number | undefined {
   if (!dateOfBirth) return undefined;
@@ -130,9 +131,27 @@ export function isAffirmative(v: any): boolean {
   return false;
 }
 
-export function isAdmin(role: string | undefined): boolean {
-  if (!role) return false;
-  return role === "admin";
+export function hasRole(
+  userRole: Role | undefined,
+  allowedRoles: Role[]
+): boolean {
+  if (!userRole) return false;
+  return allowedRoles.includes(userRole);
+}
+
+export function authorizeRoles(...allowedRoles: Role[]) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const userRole = req.user?.role as Role | undefined;
+
+    if (!hasRole(userRole, allowedRoles)) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied."
+      });
+    }
+
+    next();
+  };
 }
 
 export function generateTicketId(): string {

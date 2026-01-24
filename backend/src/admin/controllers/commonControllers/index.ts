@@ -1,24 +1,8 @@
-import { AuthenticatedRequest, LoginRequest } from "../../../types";
-import { Response, Request, CookieOptions } from "express";
+import { AuthenticatedRequest, Role } from "../../../types";
+import { Response, Request } from "express";
 import { adminSearchService, commonService } from "../../services";
-import { IUser, User } from "../../../models";
-import {
-  constantTimePasswordValidation,
-  constantTimeUserLookup,
-  generateJTI,
-  TimingSafeAuth
-} from "../../../utils/timingSafe";
-import { getClientIp } from "../../../utils/ipUtils";
-import { SessionService } from "../../../services";
-import { logger } from "../../../lib";
+import { Profile, User } from "../../../models";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { APP_CONFIG } from "../../../utils/constants";
-import {
-  generateCSRFToken,
-  generateDeviceFingerprint
-} from "../../../utils/secureToken";
-import { sanitizeError } from "../../../middleware/securityMiddleware";
 
 class commonControllers {
   static async getDashboardStatsController(
@@ -75,3 +59,146 @@ export async function adminSearchController(req: Request, res: Response) {
     });
   }
 }
+
+export const getStaffUsersController = async (req: Request, res: Response) => {
+  const staffRoles: Role[] = ["admin", "verification", "support", "account"];
+
+  const users = await User.find({ role: { $in: staffRoles } }).select(
+    "firstName lastName role isActive isDeleted email lastLoginAt"
+  );
+
+  res.json({
+    success: true,
+    data: users
+  });
+};
+
+export const createUserController = async (req: Request, res: Response) => {
+  const {
+    email,
+    password,
+    firstName,
+    lastName,
+    role,
+    phoneNumber
+  }: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    name: string;
+    role?: Role;
+    phoneNumber: string;
+  } = req.body;
+
+  const allowedRoles: Role[] = ["admin", "verification", "support", "account"];
+
+  if (!allowedRoles.includes(role)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid role"
+    });
+  }
+
+  const existingUser = await User.findOne({
+    $or: [{ email }, { phoneNumber }]
+  });
+
+  if (existingUser) {
+    return res.status(409).json({
+      success: false,
+      message: "User already exists"
+    });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = await User.create({
+    firstName,
+    lastName,
+    email,
+    password: hashedPassword,
+    role,
+    isActive: true,
+    isDeleted: false,
+    isEmailLoginEnabled: true,
+    isEmailVerified: true,
+    isPhoneVerified: true,
+    welcomeSent: true,
+    for_Profile: "myself",
+    gender: "male",
+    phoneNumber: phoneNumber,
+    pushToken: "pushToken"
+  });
+
+  await Profile.create({ userId: user.id });
+
+  res.status(201).json({
+    success: true,
+    message: "User created successfully",
+    data: {
+      id: user.id,
+      email: user.email,
+      role: user.role
+    }
+  });
+};
+
+export const removeUserController = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+
+  const user = await User.findOne({ _id: userId });
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found"
+    });
+  }
+
+  if (user.isDeleted) {
+    return res.status(400).json({
+      success: false,
+      message: "User already deleted"
+    });
+  }
+
+  user.isActive = false;
+  user.isVisible = false;
+  user.isDeleted = true;
+  user.deletedAt = new Date();
+  user.deletionReason = "Admin delete";
+
+  await user.save();
+
+  res.json({
+    success: true,
+    message: "User soft-deleted successfully"
+  });
+};
+
+export const restoreUserController = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+
+  const user = await User.findOne({ _id: userId, isDeleted: true });
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "Deleted user not found"
+    });
+  }
+
+  user.isDeleted = false;
+  user.isActive = true;
+  user.isVisible = true;
+  user.deletedAt = undefined;
+  user.deletionReason = undefined;
+
+  await user.save();
+
+  res.json({
+    success: true,
+    message: "User restored successfully"
+  });
+};

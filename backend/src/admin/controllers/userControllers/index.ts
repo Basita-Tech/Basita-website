@@ -446,7 +446,7 @@ export async function sendRequestReminder(
       matchScore: (conn as any).matchScore
         ? String((conn as any).matchScore)
         : "",
-      supportContact: "support@satfera.in",
+      supportContact: "support@satfera.com",
       dashboardLink: APP_CONFIG.FRONTEND_URL
     };
 

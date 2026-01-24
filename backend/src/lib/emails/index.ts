@@ -134,7 +134,7 @@ export async function sendWelcomeEmail(
     userName,
     username,
     loginLink,
-    supportContact: supportContact || "support@satfera.in",
+    supportContact: supportContact || "support@satfera.com",
     brandName: APP_CONFIG.BRAND_NAME || "SATFERA",
     logoUrl: APP_CONFIG.BRAND_LOGO_URL || "https://www.satfera.com/logo.png"
   };

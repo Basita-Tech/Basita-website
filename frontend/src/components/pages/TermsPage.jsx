@@ -87,10 +87,10 @@ export default function TermsPage() {
               <p>
                 <strong>Email:</strong>{" "}
                 <a
-                  href="mailto:support@satfera.in"
+                  href="mailto:support@satfera.com"
                   className="text-[#D4A052] hover:underline"
                 >
-                  support@satfera.in
+                  support@satfera.com
                 </a>
               </p>
               <p>

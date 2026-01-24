@@ -19,6 +19,7 @@ class commonService {
                     {
                       $and: [
                         "$isActive",
+                        "$isVisible",
                         "$isOnboardingCompleted",
                         { $eq: ["$profileReviewStatus", "approved"] }
                       ]
@@ -29,7 +30,18 @@ class commonService {
                 }
               },
               inactiveUsers: {
-                $sum: { $cond: [{ $not: ["$isActive"] }, 1, 0] }
+                $sum: {
+                  $cond: [
+                    {
+                      $or: [
+                        { $eq: ["$isActive", false] },
+                        { $eq: ["$isVisible", false] }
+                      ]
+                    },
+                    1,
+                    0
+                  ]
+                }
               }
             }
           }

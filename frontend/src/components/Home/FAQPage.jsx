@@ -586,11 +586,11 @@ export default function FAQPage() {
                 Reach out to our support team via email
               </p>
               <a
-                href="mailto:support@satfera.in"
+                href="mailto:support@satfera.com"
                 className="inline-block px-6 py-2 rounded-lg text-white font-semibold transition-colors"
                 style={{ backgroundColor: colors.maroon }}
               >
-                support@satfera.in
+                support@satfera.com
               </a>
             </div>
 

@@ -174,8 +174,8 @@ const AboutUsPage = () => {
               {
                 icon: Mail,
                 title: "Email",
-                value: "support@satfera.in",
-                href: "mailto:support@satfera.in"
+                value: "support@satfera.com",
+                href: "mailto:support@satfera.com"
               },
               {
                 icon: Phone,

@@ -49,10 +49,10 @@ const ContactPage = () => {
                 Email Us
               </h3>
               <a
-                href="mailto:support@satfera.in"
+                href="mailto:support@satfera.com"
                 className="text-gray-700 hover:text-[#D4A052] transition-colors text-lg font-medium break-all"
               >
-                support@satfera.in
+                support@satfera.com
               </a>
               <p className="text-sm text-gray-500 mt-4">
                 We'll respond within 24 hours

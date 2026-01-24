@@ -53,9 +53,8 @@ const extractToken = (req: AuthenticatedRequest): string | null => {
 };
 
 const VISIBILITY_BYPASS_ROUTES = new Set([
-  "/user/account/activate",
-  "/user/logout",
-  "/auth/logout"
+  "/api/v1/user/account/activate",
+  "/api/v1/auth/logout",
 ]);
 
 export const authenticate = async (
@@ -171,7 +170,7 @@ export const authenticate = async (
     }
 
     const requestPath = req.originalUrl.split("?")[0];
-
+    console.log(requestPath)
     const bypassVisibilityCheck = VISIBILITY_BYPASS_ROUTES.has(requestPath);
 
     if (user.planExpiry && user.role !== "admin") {

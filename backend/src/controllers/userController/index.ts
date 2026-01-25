@@ -262,8 +262,23 @@ export async function searchController(req: Request, res: Response) {
     if (name) filters.name = String(name);
     if (customId) filters.customId = String(customId);
     if (newProfile) filters.newProfile = String(newProfile) as any;
-    if (ageFrom) filters.ageFrom = parseInt(String(ageFrom), 10);
-    if (ageTo) filters.ageTo = parseInt(String(ageTo), 40);
+
+    const MIN_AGE = 20;
+    const MAX_AGE = 40;
+
+    let parsedAgeFrom = ageFrom ? parseInt(String(ageFrom), 10) : MIN_AGE;
+    let parsedAgeTo = ageTo ? parseInt(String(ageTo), 10) : MAX_AGE;
+
+    if (isNaN(parsedAgeFrom)) parsedAgeFrom = MIN_AGE;
+    if (isNaN(parsedAgeTo)) parsedAgeTo = MAX_AGE;
+
+    parsedAgeFrom = Math.max(MIN_AGE, Math.min(MAX_AGE, parsedAgeFrom));
+    parsedAgeTo = Math.max(MIN_AGE, Math.min(MAX_AGE, parsedAgeTo));
+
+    if (parsedAgeFrom > parsedAgeTo) parsedAgeTo = parsedAgeFrom;
+
+    filters.ageFrom = parsedAgeFrom;
+    filters.ageTo = parsedAgeTo;
     if (heightFrom) filters.heightFrom = Number(heightFrom);
     if (heightTo) filters.heightTo = Number(heightTo);
     if (weightFrom) filters.weightFrom = Number(weightFrom);

@@ -636,7 +636,8 @@ export async function searchService(
   }
 
   if (filters.education) {
-    const eduRegex = new RegExp(escapeRegex(filters.education), "i");
+    const eduPattern = `\\b${escapeRegex(filters.education)}\\b`;
+    const eduRegex = new RegExp(eduPattern, "i");
     pipeline.push(
       {
         $lookup: {

@@ -286,7 +286,7 @@ export default function HomePage() {
             <p className="text-red-600 mb-6 text-sm">{plansError}</p>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            {(plansLoading ? Array(4).fill({}) : plans).map((plan, i) => {
+            {(plansLoading ? Array(4).fill({}) : [...plans].reverse()).map((plan, i) => {
               const title = plan.monthName
                 ? plan.monthName.replace(/_/g, " ")
                 : "";

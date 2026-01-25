@@ -18,8 +18,21 @@ export default function LocationSelect({
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const [searchTerm, setSearchTerm] = useState('');
   const [options, setOptions] = useState([]);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth <= 600;
+  });
   const containerRef = React.useRef(null);
   const searchInputRef = React.useRef(null);
+
+  // Track viewport to toggle mobile input UX.
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(typeof window !== 'undefined' && window.innerWidth <= 600);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   useEffect(() => {
     try {
       let data = [];

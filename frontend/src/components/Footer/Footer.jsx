@@ -103,8 +103,19 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-[#d3c4a9] pt-4 text-center">
-          <p className="text-xs text-[#1f1f1f]">
+          <p className="text-xs text-[#1f1f1f] mb-2">
             © {currentYear} Satfera Matrimony. All rights reserved.
+          </p>
+          <p className="text-xs text-[#1f1f1f]">
+            Managed by{" "}
+            <a
+              href="https://basita.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#D4A052] hover:text-[#800000] font-semibold transition-colors duration-300"
+            >
+              Basita Technology
+            </a>
           </p>
         </div>
       </div>

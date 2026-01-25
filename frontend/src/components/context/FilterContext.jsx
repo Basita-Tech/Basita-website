@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from "react";
 const FilterContext = createContext();
 
 const DEFAULT_HEIGHT_RANGE = [122, 193];
-const DEFAULT_WEIGHT_RANGE = [40, 120];
+const DEFAULT_WEIGHT_RANGE = [40, 100];
 const DEFAULT_AGE_RANGE = [20, 40];
 
 const defaultFilters = {

@@ -34,7 +34,7 @@ const QUALIFICATION_LEVELS = [
 const HEIGHT_SLIDER_MIN = 122;
 const HEIGHT_SLIDER_MAX = 193;
 const DEFAULT_HEIGHT_RANGE = [HEIGHT_SLIDER_MIN, HEIGHT_SLIDER_MAX];
-const DEFAULT_WEIGHT_RANGE = [40, 120];
+const DEFAULT_WEIGHT_RANGE = [40, 100];
 const DEFAULT_AGE_RANGE = [20, 40];
 const parseHeightToCm = (value) => {
   if (value === null || value === undefined) return null;
@@ -695,7 +695,7 @@ export default function NewProfiles({
             </div>
             <Slider
               min={40}
-              max={120}
+              max={100}
               step={1}
               value={pendingFilters.weightRange}
               onValueChange={(value) =>

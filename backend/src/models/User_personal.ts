@@ -76,6 +76,8 @@ const userPersonalSchema = new Schema(
   { timestamps: true }
 );
 
+userPersonalSchema.index({ "full_address.state": 1 });
+
 export const UserPersonal: mongoose.Model<IUserPersonal> =
   (mongoose.models.UserPersonal as mongoose.Model<IUserPersonal>) ||
   mongoose.model<IUserPersonal>("UserPersonal", userPersonalSchema);

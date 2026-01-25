@@ -679,7 +679,8 @@ export async function getAllProfilesService(
   try {
     const matchCondition: any = {
       "user.role": "user",
-      "user.isActive": isActiveFilter
+      "user.isActive": isActiveFilter,
+      "user.isVisible": isActiveFilter
     };
 
     if (isActiveFilter === true) {

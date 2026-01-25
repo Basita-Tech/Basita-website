@@ -149,9 +149,10 @@ export async function getUserProfileViewsService(
   limit = 10
 ) {
   const skip = (page - 1) * limit;
+  const userObjectId = new mongoose.Types.ObjectId(userId);
 
   const pipeline: any[] = [
-    { $match: { candidate: new (require("mongoose").Types.ObjectId)(userId) } },
+    { $match: { candidate: userObjectId } },
     { $sort: { viewedAt: -1 } },
     { $group: { _id: "$viewer", lastViewedAt: { $first: "$viewedAt" } } },
     { $sort: { lastViewedAt: -1 } },
@@ -243,8 +244,7 @@ export async function getUserProfileViewsService(
       limit,
       hasMore: skip + validResults.length < total
     },
-    profileViewCount:
-      (profileViewDoc && (profileViewDoc as any).ProfileViewed) || 0
+    profileViewCount: total
   };
 }
 
@@ -635,6 +635,26 @@ export async function searchService(
     match._id.$ne = authObjId;
   }
 
+  if (filters.education) {
+    const eduRegex = new RegExp(escapeRegex(filters.education), "i");
+    pipeline.push(
+      {
+        $lookup: {
+          from: UserEducation.collection.name,
+          localField: "_id",
+          foreignField: "userId",
+          as: "education"
+        }
+      },
+      { $unwind: { path: "$education", preserveNullAndEmptyArrays: false } },
+      {
+        $match: {
+          "education.HighestEducation": { $regex: eduRegex }
+        }
+      }
+    );
+  }
+
   pipeline.push(
     {
       $lookup: {
@@ -662,16 +682,24 @@ export async function searchService(
         as: "profile"
       }
     },
-    { $unwind: { path: "$profile", preserveNullAndEmptyArrays: true } },
-    {
-      $lookup: {
-        from: UserEducation.collection.name,
-        localField: "_id",
-        foreignField: "userId",
-        as: "education"
-      }
-    },
-    { $unwind: { path: "$education", preserveNullAndEmptyArrays: true } },
+    { $unwind: { path: "$profile", preserveNullAndEmptyArrays: true } }
+  );
+
+  if (!filters.education) {
+    pipeline.push(
+      {
+        $lookup: {
+          from: UserEducation.collection.name,
+          localField: "_id",
+          foreignField: "userId",
+          as: "education"
+        }
+      },
+      { $unwind: { path: "$education", preserveNullAndEmptyArrays: true } }
+    );
+  }
+
+  pipeline.push(
     {
       $lookup: {
         from: UserHealth.collection.name,
@@ -799,17 +827,6 @@ export async function searchService(
             $regex: new RegExp(escapeRegex(filters.profession), "i")
           }
         }
-      ]
-    });
-  }
-
-  if (filters.education) {
-    const eduRegex = new RegExp(escapeRegex(filters.education), "i");
-    postMatch.$and = postMatch.$and || [];
-    postMatch.$and.push({
-      $or: [
-        { "education.HighestEducation": { $regex: eduRegex } },
-        { "education.FieldOfStudy": { $regex: eduRegex } }
       ]
     });
   }

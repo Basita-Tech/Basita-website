@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import ScrollToTop from "./components/ScrollToTop";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AuthMonitor from "./components/auth/AuthMonitor";
+import { FilterProvider } from "./components/context/FilterContext";
 import "./App.css";
 import RouteChangeTracker from "./components/analytics/RouteChangeTracker";
 import CookieConsentBanner from "./components/CookieConsentBanner";
@@ -42,7 +43,7 @@ const PageLoader = () => (
 );
 function App() {
   return (
-    <>
+    <FilterProvider>
       <RouteChangeTracker />
       <CookieConsentBanner />
       <ScrollToTop />
@@ -206,7 +207,7 @@ function App() {
 
         {}
       </Routes>
-    </>
+    </FilterProvider>
   );
 }
 export default App;

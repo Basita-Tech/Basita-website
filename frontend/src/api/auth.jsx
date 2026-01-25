@@ -1098,6 +1098,8 @@ export const searchProfiles = async (filters = {}) => {
     if (filters.customId) params.customId = filters.customId;
     if (filters.religion) params.religion = filters.religion;
     if (filters.caste) params.caste = filters.caste;
+    if (filters.state) params.state = filters.state;
+    if (filters.country) params.country = filters.country;
     if (filters.city) params.city = filters.city;
     if (filters.profession) params.profession = filters.profession;
     if (filters.education) params.education = filters.education;

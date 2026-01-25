@@ -12,8 +12,9 @@ import { Search } from "lucide-react";
 import { ProfileCard } from "../../ProfileCard";
 import { getAllProfiles, searchProfiles } from "../../../api/auth";
 import { useCompare } from "../../context/CompareContext";
+import { useFilters } from "../../context/FilterContext";
 import { getAllCountries } from "../../../lib/locationUtils";
-import { allCastes, JOB_TITLES, INDIAN_CITIES } from "../../../lib/constant";
+import { allCastes, JOB_TITLES, INDIAN_STATES } from "../../../lib/constant";
 import CustomSelect from "../../ui/CustomSelect";
 const RELIGIONS = ["Hindu", "Jain"];
 const COUNTRIES = getAllCountries();
@@ -22,9 +23,9 @@ const QUALIFICATION_LEVELS = [
   "Undergraduate",
   "Associates Degree",
   "Bachelors",
-   "Doctor",
   "Honours Degree",
   "Masters",
+  "Doctor",
   "Doctorate",
   "Diploma",
   "Trade School",
@@ -66,7 +67,7 @@ const hasActiveFilters = (filters) => {
     (filters.searchName && filters.searchName.length > 0) ||
     filters.selectedReligion !== "all" ||
     filters.selectedCaste !== "all" ||
-    filters.selectedCity !== "" ||
+    filters.selectedState !== "" ||
     filters.selectedProfession !== "" ||
     filters.selectedCountry !== "all" ||
     filters.selectedEducation !== "all" ||
@@ -88,33 +89,10 @@ export default function NewProfiles({
   compareProfiles = [],
   sentProfileIds = [],
 }) {
-  const [pendingFilters, setPendingFilters] = useState({
-    searchInput: "",
-    searchName: "",
-    selectedReligion: "all",
-    selectedCaste: "all",
-    selectedCity: "",
-    selectedProfession: "",
-    selectedCountry: "all",
-    selectedEducation: "all",
-    newProfileDuration: "all",
-    ageRange: [...DEFAULT_AGE_RANGE],
-    heightRange: [...DEFAULT_HEIGHT_RANGE],
-    weightRange: [...DEFAULT_WEIGHT_RANGE],
-  });
-  const [appliedFilters, setAppliedFilters] = useState({
-    searchName: "",
-    selectedReligion: "all",
-    selectedCaste: "all",
-    selectedCity: "",
-    selectedProfession: "",
-    selectedCountry: "all",
-    selectedEducation: "all",
-    newProfileDuration: "all",
-    ageRange: [...DEFAULT_AGE_RANGE],
-    heightRange: [...DEFAULT_HEIGHT_RANGE],
-    weightRange: [...DEFAULT_WEIGHT_RANGE],
-  });
+  const { filters: contextFilters, updateFilter, clearFilters, setAllFilters } = useFilters();
+  
+  const [pendingFilters, setPendingFilters] = useState(contextFilters);
+  const [appliedFilters, setAppliedFilters] = useState(contextFilters);
   const [allProfiles, setAllProfiles] = useState([]);
   const [loadingProfiles, setLoadingProfiles] = useState(false);
   const [errorProfiles, setErrorProfiles] = useState(null);
@@ -123,6 +101,172 @@ export default function NewProfiles({
   const [totalPages, setTotalPages] = useState(1);
   const [totalProfiles, setTotalProfiles] = useState(0);
   const pageSize = 12;
+
+  // Initialize from context on mount and trigger initial load
+  useEffect(() => {
+    const loadInitialFilters = async () => {
+      if (contextFilters && Object.keys(contextFilters).length > 0) {
+        setPendingFilters(contextFilters);
+        setAppliedFilters(contextFilters);
+        // Use the contextFilters directly to fetch profiles
+        const isFiltered = hasActiveFilters(contextFilters);
+        if (isFiltered) {
+          const backendFilters = {
+            page: 1,
+            limit: pageSize,
+          };
+          if (contextFilters.searchName)
+            backendFilters.name = contextFilters.searchName;
+          if (contextFilters.selectedReligion !== "all")
+            backendFilters.religion = contextFilters.selectedReligion;
+          if (contextFilters.selectedCaste !== "all")
+            backendFilters.caste = contextFilters.selectedCaste;
+          if (contextFilters.selectedState)
+            backendFilters.state = contextFilters.selectedState;
+          if (contextFilters.selectedCountry !== "all")
+            backendFilters.country = contextFilters.selectedCountry;
+          if (contextFilters.selectedProfession)
+            backendFilters.profession = contextFilters.selectedProfession;
+          if (contextFilters.selectedEducation !== "all")
+            backendFilters.education = contextFilters.selectedEducation;
+          if (contextFilters.newProfileDuration !== "all") {
+            const durationMap = {
+              today: "all",
+              week: "last1week",
+              "2weeks": "last3week",
+              month: "last1month",
+            };
+            backendFilters.newProfile =
+              durationMap[contextFilters.newProfileDuration] || "all";
+          }
+          if (contextFilters.ageRange[0] !== DEFAULT_AGE_RANGE[0])
+            backendFilters.ageFrom = contextFilters.ageRange[0];
+          if (contextFilters.ageRange[1] !== DEFAULT_AGE_RANGE[1])
+            backendFilters.ageTo = contextFilters.ageRange[1];
+          if (contextFilters.heightRange[0] !== DEFAULT_HEIGHT_RANGE[0])
+            backendFilters.heightFrom = contextFilters.heightRange[0];
+          if (contextFilters.heightRange[1] !== DEFAULT_HEIGHT_RANGE[1])
+            backendFilters.heightTo = contextFilters.heightRange[1];
+          if (contextFilters.weightRange[0] !== DEFAULT_WEIGHT_RANGE[0])
+            backendFilters.weightFrom = contextFilters.weightRange[0];
+          if (contextFilters.weightRange[1] !== DEFAULT_WEIGHT_RANGE[1])
+            backendFilters.weightTo = contextFilters.weightRange[1];
+          
+          setLoadingProfiles(true);
+          try {
+            const response = await searchProfiles(backendFilters);
+            const dataArray = Array.isArray(response?.data)
+              ? response.data
+              : response?.data?.listings || [];
+            const mapped = dataArray
+              .map((p) => {
+                const user = p.user || p;
+                const userId = user.userId || user.id || user._id;
+                if (!userId || userId === "undefined" || userId === "null") {
+                  return null;
+                }
+                return {
+                  id: userId,
+                  name:
+                    `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
+                    "Unknown",
+                  age: user.age,
+                  city: user.city,
+                  state: user.state,
+                  country: user.country,
+                  profession:
+                    user.profession ||
+                    user.occupation ||
+                    user.professional?.Occupation,
+                  religion: user.religion,
+                  caste: user.subCaste,
+                  education: user.education?.HighestEducation,
+                  height: user.personal?.height || user.height,
+                  heightCm: parseHeightToCm(user.personal?.height || user.height),
+                  weight: user.personal?.weight || user.weight,
+                  weightKg: parseWeightToKg(user.personal?.weight || user.weight),
+                  diet: user.healthAndLifestyle?.diet,
+                  image: user.closerPhoto?.url || "",
+                  compatibility: 0,
+                  status: null,
+                  createdAt: user.createdAt,
+                };
+              })
+              .filter(Boolean);
+            setAllProfiles(mapped);
+            const pagination = response?.pagination;
+            if (pagination) {
+              setTotalProfiles(pagination.total || 0);
+              setTotalPages(Math.ceil((pagination.total || 0) / pageSize));
+            } else {
+              setTotalProfiles(mapped.length);
+              setTotalPages(Math.ceil(mapped.length / pageSize));
+            }
+          } catch (error) {
+            console.error("❌ [NewProfiles] Error fetching profiles:", error);
+            setErrorProfiles(error.message || "Failed to load profiles");
+          } finally {
+            setLoadingProfiles(false);
+          }
+        } else {
+          // No filters, load all profiles
+          try {
+            const response = await getAllProfiles(1, pageSize);
+            const dataArray = Array.isArray(response?.data)
+              ? response.data
+              : response?.data?.listings || [];
+            const mapped = dataArray
+              .map((p) => {
+                const user = p.user || p;
+                const userId = user.userId || user.id || user._id;
+                if (!userId || userId === "undefined" || userId === "null") {
+                  return null;
+                }
+                return {
+                  id: userId,
+                  name:
+                    `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
+                    "Unknown",
+                  age: user.age,
+                  city: user.city,
+                  state: user.state,
+                  country: user.country,
+                  profession:
+                    user.profession ||
+                    user.occupation ||
+                    user.professional?.Occupation,
+                  religion: user.religion,
+                  caste: user.subCaste,
+                  education: user.education?.HighestEducation,
+                  height: user.personal?.height || user.height,
+                  heightCm: parseHeightToCm(user.personal?.height || user.height),
+                  weight: user.personal?.weight || user.weight,
+                  weightKg: parseWeightToKg(user.personal?.weight || user.weight),
+                  diet: user.healthAndLifestyle?.diet,
+                  image: user.closerPhoto?.url || "",
+                  compatibility: 0,
+                  status: null,
+                  createdAt: user.createdAt,
+                };
+              })
+              .filter(Boolean);
+            setAllProfiles(mapped);
+            const pagination = response?.pagination;
+            if (pagination) {
+              setTotalProfiles(pagination.total || 0);
+              setTotalPages(Math.ceil((pagination.total || 0) / pageSize));
+            }
+          } catch (error) {
+            console.error("❌ Error fetching profiles:", error);
+          }
+        }
+      }
+      setInitialLoadDone(true);
+    };
+    
+    loadInitialFilters();
+  }, []);
+
   const {
     addToCompare: ctxAddToCompare,
     removeFromCompare: ctxRemoveFromCompare,
@@ -143,6 +287,7 @@ export default function NewProfiles({
       ...prev,
       [key]: value,
     }));
+    updateFilter(key, value);
     if (
       key === "selectedReligion" &&
       value !== pendingFilters.selectedReligion
@@ -151,6 +296,7 @@ export default function NewProfiles({
         ...prev,
         selectedCaste: "all",
       }));
+      updateFilter("selectedCaste", "all");
     }
   };
   const handleSubmit = async (e, pageNum = 1) => {
@@ -173,8 +319,10 @@ export default function NewProfiles({
           backendFilters.religion = pendingFilters.selectedReligion;
         if (pendingFilters.selectedCaste !== "all")
           backendFilters.caste = pendingFilters.selectedCaste;
-        if (pendingFilters.selectedCity)
-          backendFilters.city = pendingFilters.selectedCity;
+        if (pendingFilters.selectedState)
+          backendFilters.state = pendingFilters.selectedState;
+        if (pendingFilters.selectedCountry !== "all")
+          backendFilters.country = pendingFilters.selectedCountry;
         if (pendingFilters.selectedProfession)
           backendFilters.profession = pendingFilters.selectedProfession;
         if (pendingFilters.selectedEducation !== "all")
@@ -274,11 +422,14 @@ export default function NewProfiles({
       setInitialLoadDone(true);
     }
   };
+
+  // Sync pendingFilters to Context (only when user changes, not on mount)
   useEffect(() => {
-    if (!initialLoadDone) {
-      handleSubmit();
+    if (initialLoadDone) {
+      setAllFilters(pendingFilters);
     }
-  }, [initialLoadDone]);
+  }, [pendingFilters]);
+
   const filteredProfiles = useMemo(() => {
     const normalize = (v) => (v ? v.toString().toLowerCase().trim() : "");
     return allProfiles.filter((p) => {
@@ -305,6 +456,39 @@ export default function NewProfiles({
         )
           return false;
       }
+      const isStateFilterActive =
+        appliedFilters.selectedState &&
+        normalize(appliedFilters.selectedState).length > 0;
+      if (isStateFilterActive) {
+        const stateNorm = normalize(p.state || "");
+        if (
+          !stateNorm ||
+          !stateNorm.includes(normalize(appliedFilters.selectedState))
+        )
+          return false;
+      }
+      const isProfessionFilterActive =
+        appliedFilters.selectedProfession &&
+        normalize(appliedFilters.selectedProfession).length > 0;
+      if (isProfessionFilterActive) {
+        const professionNorm = normalize(p.profession || "");
+        if (
+          !professionNorm ||
+          !professionNorm.includes(normalize(appliedFilters.selectedProfession))
+        )
+          return false;
+      }
+      const isEducationFilterActive =
+        appliedFilters.selectedEducation !== "all" &&
+        normalize(appliedFilters.selectedEducation).length > 0;
+      if (isEducationFilterActive) {
+        const educationNorm = normalize(p.education || "");
+        if (
+          !educationNorm ||
+          !educationNorm.includes(normalize(appliedFilters.selectedEducation))
+        )
+          return false;
+      }
       return true;
     });
   }, [allProfiles, appliedFilters, shortlistedIds, sentProfileIds]);
@@ -314,7 +498,8 @@ export default function NewProfiles({
     const pageHasProfiles = allProfiles.length > 0;
     const nothingVisible = filteredProfiles.length === 0;
     const hasMorePages = page < totalPages;
-    if (pageHasProfiles && nothingVisible && hasMorePages) {
+    // Only auto-fetch next page once if current page is completely empty
+    if (pageHasProfiles && nothingVisible && hasMorePages && page === 1) {
       handleSubmit(undefined, page + 1);
     }
   }, [
@@ -326,12 +511,12 @@ export default function NewProfiles({
     initialLoadDone,
   ]);
   const clearAllFilters = () => {
-    setPendingFilters({
+    const resetFilters = {
       searchInput: "",
       searchName: "",
       selectedReligion: "all",
       selectedCaste: "all",
-      selectedCity: "",
+      selectedState: "",
       selectedProfession: "",
       selectedCountry: "all",
       selectedEducation: "all",
@@ -339,7 +524,9 @@ export default function NewProfiles({
       ageRange: [...DEFAULT_AGE_RANGE],
       heightRange: [...DEFAULT_HEIGHT_RANGE],
       weightRange: [...DEFAULT_WEIGHT_RANGE],
-    });
+    };
+    setPendingFilters(resetFilters);
+    clearFilters();
   };
   const handleClearAndSubmit = () => {
     clearAllFilters();
@@ -348,7 +535,7 @@ export default function NewProfiles({
         searchName: "",
         selectedReligion: "all",
         selectedCaste: "all",
-        selectedCity: "",
+        selectedState: "",
         selectedProfession: "",
         selectedCountry: "all",
         selectedEducation: "all",
@@ -598,17 +785,17 @@ export default function NewProfiles({
 
           {}
           <div className="space-y-2">
-            <Label className="text-sm font-medium text-gray-700">City</Label>
+            <Label className="text-sm font-medium text-gray-700">State</Label>
             <CustomSelect
-              value={pendingFilters.selectedCity}
+              value={pendingFilters.selectedState}
               onChange={(e) =>
-                updatePendingFilter("selectedCity", e.target.value)
+                updatePendingFilter("selectedState", e.target.value)
               }
-              options={INDIAN_CITIES}
-              placeholder="All Cities"
+              options={INDIAN_STATES}
+              placeholder="All States"
               allowCustom
               className="bg-transparent text-[#3a2f00] font-medium h-10 py-2 rounded-xl border focus:ring-2 focus:ring-[#c8a227]/40 hover:border-[#c8a227]"
-              name="city"
+              name="state"
             />
           </div>
 

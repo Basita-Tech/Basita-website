@@ -180,7 +180,16 @@ export default function NewProfiles({
                     user.professional?.Occupation,
                   religion: user.religion,
                   caste: user.subCaste,
-                  education: user.education?.HighestEducation,
+                  education:
+                    user.education?.HighestEducation ||
+                    user.education ||
+                    user.highestEducation ||
+                    user.personal?.education ||
+                    user.professional?.Education ||
+                    user.professional?.education ||
+                    backendFilters.education ||
+                    contextFilters?.selectedEducation ||
+                    "",
                   height: user.personal?.height || user.height,
                   heightCm: parseHeightToCm(user.personal?.height || user.height),
                   weight: user.personal?.weight || user.weight,
@@ -210,56 +219,13 @@ export default function NewProfiles({
           }
         } else {
           // No filters, load all profiles
-          try {
-            const response = await getAllProfiles(1, pageSize);
-            const dataArray = Array.isArray(response?.data)
-              ? response.data
-              : response?.data?.listings || [];
-            const mapped = dataArray
-              .map((p) => {
-                const user = p.user || p;
-                const userId = user.userId || user.id || user._id;
-                if (!userId || userId === "undefined" || userId === "null") {
-                  return null;
-                }
-                return {
-                  id: userId,
-                  name:
-                    `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
-                    "Unknown",
-                  age: user.age,
-                  city: user.city,
-                  state: user.state,
-                  country: user.country,
-                  profession:
-                    user.profession ||
-                    user.occupation ||
-                    user.professional?.Occupation,
-                  religion: user.religion,
-                  caste: user.subCaste,
-                  education: user.education?.HighestEducation,
-                  height: user.personal?.height || user.height,
-                  heightCm: parseHeightToCm(user.personal?.height || user.height),
-                  weight: user.personal?.weight || user.weight,
-                  weightKg: parseWeightToKg(user.personal?.weight || user.weight),
-                  diet: user.healthAndLifestyle?.diet,
-                  image: user.closerPhoto?.url || "",
-                  compatibility: 0,
-                  status: null,
-                  createdAt: user.createdAt,
-                };
-              })
-              .filter(Boolean);
-            setAllProfiles(mapped);
-            const pagination = response?.pagination;
-            if (pagination) {
-              setTotalProfiles(pagination.total || 0);
-              setTotalPages(Math.ceil((pagination.total || 0) / pageSize));
-            }
-          } catch (error) {
-            console.error("❌ Error fetching profiles:", error);
-          }
+          await handleSubmit();
+          return;
         }
+      } else {
+        // No context filters stored yet, load all profiles
+        await handleSubmit();
+        return;
       }
       setInitialLoadDone(true);
     };
@@ -380,7 +346,15 @@ export default function NewProfiles({
                 user.professional?.Occupation,
               religion: user.religion,
               caste: user.subCaste,
-              education: user.education?.HighestEducation,
+              education:
+                user.education?.HighestEducation ||
+                user.education ||
+                user.highestEducation ||
+                user.personal?.education ||
+                user.professional?.Education ||
+                user.professional?.education ||
+                pendingFilters?.selectedEducation ||
+                "",
               height: user.personal?.height || user.height,
               heightCm: parseHeightToCm(user.personal?.height || user.height),
               weight: user.personal?.weight || user.weight,

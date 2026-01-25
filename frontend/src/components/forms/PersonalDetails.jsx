@@ -688,15 +688,24 @@ const PersonalDetails = ({
                   Birth State <RequiredMark />
                 </label>
                 <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
-                  <LocationSelect type="state" name="birthState" value={formData.birthState} onChange={e => {
-                handleChange(e);
-                setFormData(prev => ({
-                  ...prev,
-                  birthCity: ""
-                }));
-                const code = e.target.code || getStateCode("IN", e.target.value);
-                setBirthStateCode(code);
-              }} countryCode="IN" placeholder="Select state" className={getInputClass("birthState")} />
+                  <LocationSelect
+                    type="state"
+                    name="birthState"
+                    value={formData.birthState}
+                    allowCustom={true}
+                    onChange={e => {
+                      handleChange(e);
+                      setFormData(prev => ({
+                        ...prev,
+                        birthCity: ""
+                      }));
+                      const code = e.target.code || getStateCode("IN", e.target.value);
+                      setBirthStateCode(code);
+                    }}
+                    countryCode="IN"
+                    placeholder="Select state"
+                    className={getInputClass("birthState")}
+                  />
                 </Suspense>
                 {errors.birthState && <p className="text-red-500 text-sm mt-1">
                     {errors.birthState}
@@ -707,9 +716,19 @@ const PersonalDetails = ({
               <div>
                 <label className=" block text-sm font-medium mb-1">City <RequiredMark /></label>
                 <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
-                  <LocationSelect type="city" name="birthCity" value={formData.birthCity} onChange={e => {
-                handleChange(e);
-              }} countryCode="IN" stateCode={birthStateCode} placeholder="Select city" className={getInputClass("birthCity")} />
+                  <LocationSelect
+                    type="city"
+                    name="birthCity"
+                    value={formData.birthCity}
+                    allowCustom={true}
+                    onChange={e => {
+                      handleChange(e);
+                    }}
+                    countryCode="IN"
+                    stateCode={birthStateCode}
+                    placeholder="Select city"
+                    className={getInputClass("birthCity")}
+                  />
                 </Suspense>
                 {errors.birthCity && <p className="text-red-500 text-sm mt-1">
                     {errors.birthCity}
@@ -879,13 +898,22 @@ const PersonalDetails = ({
                   <div>
                     <label className="block text-sm font-medium mb-1">State <RequiredMark /></label>
                     <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
-                      <LocationSelect type="state" name="state" value={formData.state} onChange={e => {
-                    handleChange(e);
-                    setFormData(prev => ({
-                      ...prev,
-                      city: ""
-                    }));
-                  }} countryCode="IN" placeholder="Select state" className={getInputClass("state")} />
+                      <LocationSelect
+                        type="state"
+                        name="state"
+                        value={formData.state}
+                        allowCustom={true}
+                        onChange={e => {
+                          handleChange(e);
+                          setFormData(prev => ({
+                            ...prev,
+                            city: ""
+                          }));
+                        }}
+                        countryCode="IN"
+                        placeholder="Select state"
+                        className={getInputClass("state")}
+                      />
                     </Suspense>
                     {errors.state && <p className="text-red-500 text-sm mt-1">
                         {errors.state}
@@ -896,7 +924,17 @@ const PersonalDetails = ({
                   <div>
                     <label className="block text-sm font-medium mb-1">City <RequiredMark /></label>
                     <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
-                      <LocationSelect type="city" name="city" value={formData.city} onChange={handleChange} countryCode="IN" stateCode={getStateCode("IN", formData.state) || ""} placeholder="Select city" className={getInputClass("city")} />
+                      <LocationSelect
+                        type="city"
+                        name="city"
+                        value={formData.city}
+                        allowCustom={true}
+                        onChange={handleChange}
+                        countryCode="IN"
+                        stateCode={getStateCode("IN", formData.state) || ""}
+                        placeholder="Select city"
+                        className={getInputClass("city")}
+                      />
                     </Suspense>
                     {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
                   </div>

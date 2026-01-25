@@ -10,7 +10,8 @@ export default function LocationSelect({
   disabled = false,
   name,
   countryCode,
-  stateCode
+  stateCode,
+  allowCustom = false
 }) {
   const [open, setOpen] = useState(false);
   const [dropUp, setDropUp] = useState(false);
@@ -54,7 +55,9 @@ export default function LocationSelect({
     }
   }, [type, countryCode, stateCode]);
   const displayLabel = value || '';
-  const suppressKeyboard = options.length <= 15;
+  // Show button-only on mobile with ≤15 options, otherwise show search input.
+  // If allowCustom is true, always allow typing.
+  const suppressKeyboard = !allowCustom && isMobile && options.length <= 15;
   let filteredOptions;
   if (searchTerm.trim()) {
     if (type === 'country') {
@@ -69,7 +72,7 @@ export default function LocationSelect({
   } else {
     filteredOptions = options;
   }
-  const customAvailable = type === 'city' && !!searchTerm.trim() && !filteredOptions.some(opt => opt.name.toLowerCase() === searchTerm.trim().toLowerCase());
+  const customAvailable = allowCustom && !!searchTerm.trim() && !filteredOptions.some(opt => opt.name.toLowerCase() === searchTerm.trim().toLowerCase());
   useEffect(() => {
     const onDocClick = e => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
@@ -177,6 +180,16 @@ export default function LocationSelect({
     setHighlightIndex(0);
     if (!open) {
       setOpen(true);
+    }
+
+    // When custom entries are allowed, propagate typed value immediately so form state reflects free text.
+    if (allowCustom) {
+      onChange && onChange({
+        target: {
+          name,
+          value: newSearchTerm
+        }
+      });
     }
   };
   const handleInputKeyDown = e => {

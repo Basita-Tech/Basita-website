@@ -847,9 +847,9 @@ function ActionButtonsSection({
   onAddClick,
   onRemoveClick
 }) {
-  const CompareButton = isUiInCompare ? <Button onClick={onRemoveClick} className="bg-[#DDB84E] hover:bg-[#C8A227] text-white rounded-[12px] h-12 w-80 mx-auto">
+  const CompareButton = isUiInCompare ? <Button onClick={onRemoveClick} className="flex-1 bg-[#DDB84E] hover:bg-[#C8A227] text-white rounded-[12px] h-12">
       Remove From Compare
-    </Button> : <Button onClick={onAddClick} className="bg-[#f6f1e7] hover:bg-[#C8A227] hover:text-white border-2 border-[#c8a227] text-[#c8a227] rounded-[12px] h-12 w-80 mx-auto">
+    </Button> : <Button onClick={onAddClick} className="flex-1 bg-[#f6f1e7] hover:bg-[#C8A227] hover:text-white border-2 border-[#c8a227] text-[#c8a227] rounded-[12px] h-12">
       Add to Compare
     </Button>;
   return <div className="bg-white rounded-[20px] p-6 sticky bottom-4 border border-gold-light shadow-md">

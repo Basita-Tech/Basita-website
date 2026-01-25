@@ -149,9 +149,10 @@ export async function getUserProfileViewsService(
   limit = 10
 ) {
   const skip = (page - 1) * limit;
+  const userObjectId = new mongoose.Types.ObjectId(userId);
 
   const pipeline: any[] = [
-    { $match: { candidate: new (require("mongoose").Types.ObjectId)(userId) } },
+    { $match: { candidate: userObjectId } },
     { $sort: { viewedAt: -1 } },
     { $group: { _id: "$viewer", lastViewedAt: { $first: "$viewedAt" } } },
     { $sort: { lastViewedAt: -1 } },
@@ -243,8 +244,7 @@ export async function getUserProfileViewsService(
       limit,
       hasMore: skip + validResults.length < total
     },
-    profileViewCount:
-      (profileViewDoc && (profileViewDoc as any).ProfileViewed) || 0
+    profileViewCount: total
   };
 }
 

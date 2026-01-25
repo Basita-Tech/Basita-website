@@ -4,8 +4,8 @@ export interface IProfileView extends mongoose.Document {
   viewer: mongoose.Types.ObjectId;
   candidate: mongoose.Types.ObjectId;
   viewedAt: Date;
-  weekStartDate: Date;
-  weekNumber: number;
+  weekStartDate?: Date;
+  weekNumber?: number;
 }
 
 const ProfileViewSchema = new mongoose.Schema(
@@ -25,27 +25,27 @@ const ProfileViewSchema = new mongoose.Schema(
       default: Date.now
     },
     weekStartDate: {
-      type: Date,
-      required: true
+      type: Date
+      // Not required anymore - only set on first insert
     },
     weekNumber: {
-      type: Number,
-      required: true
+      type: Number
+      // Not required anymore - only set on first insert
     }
   },
   { timestamps: true }
 );
 
-ProfileViewSchema.index(
-  { viewer: 1, candidate: 1, weekStartDate: 1 },
-  { unique: true }
-);
+// One record per viewer-candidate pair (stores their latest view)
+ProfileViewSchema.index({ viewer: 1, candidate: 1 }, { unique: true });
 
-ProfileViewSchema.index({ candidate: 1, weekStartDate: -1 });
+// For querying who viewed a specific candidate, sorted by most recent
+ProfileViewSchema.index({ candidate: 1, viewedAt: -1 });
 
+// TTL index: auto-expire profile views after 90 days
 ProfileViewSchema.index(
-  { weekStartDate: 1 },
-  { expireAfterSeconds: 60 * 60 * 24 * 7 }
+  { viewedAt: 1 },
+  { expireAfterSeconds: 60 * 60 * 24 * 90 }
 );
 
 export const ProfileView =

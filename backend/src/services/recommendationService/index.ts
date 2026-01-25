@@ -811,31 +811,30 @@ export async function getDetailedProfile(
       const hasViewed = await hasViewedInLast24Hours(viewerId, candidateId);
 
       if (!hasViewed && viewerId.toString() !== candidateId.toString()) {
-        const weekStart = getWeekStartDate();
-        const weekNum = getWeekNumber();
         const now = new Date();
 
-        await Promise.all([
-          Profile.updateOne(
-            { userId: candidateId },
-            { $inc: { ProfileViewed: 1 } }
-          ),
+        const existingView = await ProfileView.findOne({
+          viewer: viewerId,
+          candidate: candidateId
+        }).lean();
 
+        const isFirstEverView = !existingView;
+
+        const updatePromises: Promise<any>[] = [
           ProfileView.updateOne(
             {
               viewer: viewerId,
-              candidate: candidateId,
-              weekStartDate: weekStart
+              candidate: candidateId
             },
             {
               $set: {
-                viewedAt: now,
-                weekNumber: weekNum
+                viewedAt: now
               },
               $setOnInsert: {
                 viewer: viewerId,
                 candidate: candidateId,
-                weekStartDate: weekStart
+                weekStartDate: getWeekStartDate(),
+                weekNumber: getWeekNumber()
               }
             },
             { upsert: true }
@@ -850,12 +849,23 @@ export async function getDetailedProfile(
             message: `${viewer?.firstName || "Someone"} viewed your profile`,
             meta: { viewer: viewerId }
           })
-        ]);
+        ];
+
+        if (isFirstEverView) {
+          updatePromises.push(
+            Profile.updateOne(
+              { userId: candidateId },
+              { $inc: { ProfileViewed: 1 } }
+            )
+          );
+        }
+
+        await Promise.all(updatePromises);
 
         await sendNotificationToUser(
           candidateId.toString() as string,
           "Profile view 👀",
-          `${viewer.firstName} viewed your profile`
+          `${viewer?.firstName || "Someone"} viewed your profile`
         );
       }
     } catch (err: any) {

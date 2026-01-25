@@ -464,7 +464,7 @@ export function Dashboard({
                 )}
                 {downloadingPdf ? "Downloading..." : "Download PDF"}
               </Button>
-              <Button className="w-full sm:w-auto bg-[#C8A227] hover:bg-[#B49520] text-white rounded-[12px] flex items-center justify-center gap-2 text-sm">
+              <Button className="w-full sm:w-auto bg-[#C8A227] hover:bg-[#B49520] text-white rounded-[12px] flex items-center justify-center gap-2 text-sm hidden">
                 <Sparkles className="w-4 h-4" />
                 Upgrade to Premium
               </Button>

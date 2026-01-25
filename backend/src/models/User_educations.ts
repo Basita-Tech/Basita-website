@@ -27,6 +27,8 @@ const userEducationSchema = new Schema(
   }
 );
 
+userEducationSchema.index({ HighestEducation: 1 });
+
 export const UserEducation: mongoose.Model<IUserEducation> =
   (mongoose.models.UserEducation as mongoose.Model<IUserEducation>) ||
   mongoose.model<IUserEducation>("UserEducation", userEducationSchema);

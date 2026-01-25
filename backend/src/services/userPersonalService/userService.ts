@@ -635,6 +635,26 @@ export async function searchService(
     match._id.$ne = authObjId;
   }
 
+  if (filters.education) {
+    const eduRegex = new RegExp(escapeRegex(filters.education), "i");
+    pipeline.push(
+      {
+        $lookup: {
+          from: UserEducation.collection.name,
+          localField: "_id",
+          foreignField: "userId",
+          as: "education"
+        }
+      },
+      { $unwind: { path: "$education", preserveNullAndEmptyArrays: false } },
+      {
+        $match: {
+          "education.HighestEducation": { $regex: eduRegex }
+        }
+      }
+    );
+  }
+
   pipeline.push(
     {
       $lookup: {
@@ -662,16 +682,24 @@ export async function searchService(
         as: "profile"
       }
     },
-    { $unwind: { path: "$profile", preserveNullAndEmptyArrays: true } },
-    {
-      $lookup: {
-        from: UserEducation.collection.name,
-        localField: "_id",
-        foreignField: "userId",
-        as: "education"
-      }
-    },
-    { $unwind: { path: "$education", preserveNullAndEmptyArrays: true } },
+    { $unwind: { path: "$profile", preserveNullAndEmptyArrays: true } }
+  );
+
+  if (!filters.education) {
+    pipeline.push(
+      {
+        $lookup: {
+          from: UserEducation.collection.name,
+          localField: "_id",
+          foreignField: "userId",
+          as: "education"
+        }
+      },
+      { $unwind: { path: "$education", preserveNullAndEmptyArrays: true } }
+    );
+  }
+
+  pipeline.push(
     {
       $lookup: {
         from: UserHealth.collection.name,
@@ -799,17 +827,6 @@ export async function searchService(
             $regex: new RegExp(escapeRegex(filters.profession), "i")
           }
         }
-      ]
-    });
-  }
-
-  if (filters.education) {
-    const eduRegex = new RegExp(escapeRegex(filters.education), "i");
-    postMatch.$and = postMatch.$and || [];
-    postMatch.$and.push({
-      $or: [
-        { "education.HighestEducation": { $regex: eduRegex } },
-        { "education.FieldOfStudy": { $regex: eduRegex } }
       ]
     });
   }

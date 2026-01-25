@@ -249,6 +249,7 @@ export async function searchController(req: Request, res: Response) {
       religion,
       caste,
       city,
+      state,
       profession,
       education,
       sortBy,
@@ -268,7 +269,8 @@ export async function searchController(req: Request, res: Response) {
     if (weightTo) filters.weightTo = Number(weightTo);
     if (religion) filters.religion = String(religion);
     if (caste) filters.caste = String(caste);
-    if (city) filters.city = String(city);
+    // if (city) filters.city = String(city); // City search disabled - using state instead
+    if (state) filters.state = String(state);
     if (profession) filters.profession = String(profession);
     if (education) filters.education = String(education);
 

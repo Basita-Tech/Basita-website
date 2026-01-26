@@ -379,10 +379,10 @@ export default function PrivacyPolicyPage() {
               <p>
                 <strong>Phone:</strong>{" "}
                 <a
-                  href="tel:+919925203929"
+                  href="tel:+919879003964"
                   className="text-[#D4A052] hover:underline"
                 >
-                  +91 9925203929
+                  +91 9879003964
                 </a>
               </p>
               <p>

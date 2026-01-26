@@ -610,7 +610,7 @@ export default function FAQPage() {
                 className="inline-block px-6 py-2 rounded-lg text-white font-semibold transition-colors"
                 style={{ backgroundColor: colors.maroon }}
               >
-                +91 9925203929
+                +91 9879003964
               </a>
             </div>
           </div>

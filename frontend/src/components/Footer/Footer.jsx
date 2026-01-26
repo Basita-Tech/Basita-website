@@ -34,12 +34,12 @@ export default function Footer() {
     },
   ];
 
-  const socialLinks = [
-    { icon: Facebook, href: "https://facebook.com/satfera", label: "Facebook" },
-    { icon: Instagram, href: "https://instagram.com/satfera", label: "Instagram" },
-    { icon: Twitter, href: "https://twitter.com/satfera", label: "Twitter" },
-    { icon: Linkedin, href: "https://linkedin.com/company/satfera", label: "LinkedIn" },
-  ];
+  // const socialLinks = [
+  //   { icon: Facebook, href: "https://facebook.com/satfera", label: "Facebook" },
+  //   { icon: Instagram, href: "https://instagram.com/satfera", label: "Instagram" },
+  //   { icon: Twitter, href: "https://twitter.com/satfera", label: "Twitter" },
+  //   { icon: Linkedin, href: "https://linkedin.com/company/satfera", label: "LinkedIn" },
+  // ];
 
   return (
     <footer
@@ -50,13 +50,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-start gap-8 md:gap-12 mb-8">
           <div className="md:col-span-1 text-center sm:text-left">
             <div className="mb-3 flex sm:block justify-center">
-              <img src="/logo.png" alt="Satfera Logo" className="h-14 sm:h-12 md:h-16 w-auto object-contain" />
+              <img src="/logo.png" alt="Satfera Logo" className="h-20 sm:h-16 md:h-20 w-auto object-contain" />
             </div>
             <p className="text-xs mb-3 text-[#1f1f1f]">
               
             </p>
 
-            <div className="flex justify-center sm:justify-start gap-3">
+            {/* <div className="flex justify-center sm:justify-start gap-3">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
                 return (
@@ -72,7 +72,7 @@ export default function Footer() {
                   </a>
                 );
               })}
-            </div>
+            </div> */}
           </div>
 
           {footerSections.map((section) => (
@@ -104,7 +104,7 @@ export default function Footer() {
 
         <div className="border-t border-[#d3c4a9] pt-4 text-center">
           <p className="text-xs text-[#1f1f1f] mb-2">
-            © {currentYear} Satfera Matrimony. All rights reserved.
+            © {currentYear} Satfera . All rights reserved.
           </p>
           <p className="text-xs text-[#1f1f1f]">
             Managed by{" "}

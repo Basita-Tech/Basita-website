@@ -66,10 +66,10 @@ const ContactPage = () => {
               </div>
               <h3 className="text-xl font-bold text-[#800000] mb-4">Call Us</h3>
               <a
-                href="tel:+919925203929"
+                href="tel:+919879003964"
                 className="text-gray-700 hover:text-[#D4A052] transition-colors text-lg font-medium"
               >
-                +91 9925203929
+                +91 9879003964
               </a>
               <p className="text-sm text-gray-500 mt-4">
                 Mon-Sat, 9:00 AM - 6:00 PM IST

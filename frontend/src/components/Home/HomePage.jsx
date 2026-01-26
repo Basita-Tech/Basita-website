@@ -246,7 +246,7 @@ export default function HomePage() {
                   <img
                     src={p.img}
                     alt={p.name}
-                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover object-center filter blur-sm hover:scale-105 transition-transform duration-500"
                   />
                 </div>
 

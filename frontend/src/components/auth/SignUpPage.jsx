@@ -31,7 +31,7 @@ import {
 import { trackEvent } from "../analytics/ga4";
 import SEO from "../SEO";
 
-const SMS_HASH = "satfera";
+const SMS_HASH = "Satfera";
 const profileOptions = [
   {
     value: "myself",

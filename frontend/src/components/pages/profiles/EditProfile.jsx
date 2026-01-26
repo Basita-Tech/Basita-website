@@ -1,13 +1,11 @@
 ﻿import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from "react";
 import ReactSelect from "react-select";
-import { getNames } from "country-list";
 import { allCountries } from "country-telephone-data";
 import CreatableSelect from "react-select/creatable";
-import { State } from "country-state-city";
 import { nationalities, visaCategories, doshOptions, weightOptions, heightOptions, QUALIFICATION_LEVELS, EDUCATION_OPTIONS_BY_LEVEL, EMPLOYMENT_OPTIONS, INCOME_OPTIONS, JOB_TITLES, LEGAL_STATUSES, allCastes, DIET_OPTIONS, ZODIAC_SIGNS, RELIGIONS, DIVORCE_STATUSES, CHILDREN_LIVING_OPTIONS } from "@/lib/constant";
 
 const LocationSelect = lazy(() => import("../../ui/LocationSelect"));
-import { getStateCode, getAllCountriesWithCodes } from "../../../lib/locationUtils";
+import { getStateCode } from "../../../lib/locationUtils";
 import { TabsComponent } from "../../TabsComponent";
 import { Label } from "../../ui/label";
 import CustomSelect from "../../ui/CustomSelect";
@@ -41,9 +39,6 @@ const EXPECT_DIET_OPTIONS = ["Any", ...DIET_OPTIONS.map(d => d.charAt(0).toUpper
 const AGE_OPTIONS = Array.from({
   length: 21
 }, (_, i) => 20 + i);
-const ALL_COUNTRIES = getAllCountriesWithCodes().map(c => c.name);
-const INDIAN_STATES = State.getStatesOfCountry("IN").map(s => s.name).sort();
-const ABROAD_OPTIONS = ["Any", ...ALL_COUNTRIES];
 const countryCodes = allCountries.map(c => ({
   code: `+${c.dialCode}`,
   country: c.name
@@ -54,6 +49,21 @@ export function EditProfile({
   const {
     uploadPhotos
   } = usePhotoUpload();
+  
+  // Lazy load location data on first use to avoid bloating bundle
+  const [abroadOptions, setAbroadOptions] = useState(["Any"]);
+  const [indianStates, setIndianStates] = useState([]);
+
+  useEffect(() => {
+    Promise.all([
+      import("../../../lib/locationUtils").then(m => m.getAllCountriesWithCodes()),
+      import("../../../lib/locationUtils").then(m => m.getIndianStates())
+    ]).then(([countries, states]) => {
+      setAbroadOptions(["Any", ...countries.map(c => c.name)]);
+      setIndianStates(states);
+    });
+  }, []);
+  
   const [activeTab, setActiveTab] = useState("personal");
   
 
@@ -141,7 +151,10 @@ export function EditProfile({
   const [initialProfession, setInitialProfession] = useState(null);
   const [initialLifestyle, setInitialLifestyle] = useState(null);
   const [initialExpectations, setInitialExpectations] = useState(null);
-  const countries = useMemo(() => getNames(), []);
+  
+  // Derive countries list from abroadOptions (which is loaded async)
+  const countries = useMemo(() => abroadOptions.filter(c => c !== "Any"), [abroadOptions]);
+  
   const filteredFieldOfStudyOptions = useMemo(() => {
     if (!education.highestEducation) {
       const allOptions = Object.values(EDUCATION_OPTIONS_BY_LEVEL).flat();
@@ -332,6 +345,7 @@ export function EditProfile({
   const [showChildrenFields, setShowChildrenFields] = useState(false);
   const [showDivorceFields, setShowDivorceFields] = useState(false);
   const [birthStateCode, setBirthStateCode] = useState("");
+  const [stateCode, setStateCode] = useState("");
   useEffect(() => {
     const load = async () => {
       try {
@@ -402,8 +416,14 @@ export function EditProfile({
         }));
         setInitialPersonal(personalMapped);
         if (personalMapped.birthState) {
-          const code = getStateCode("IN", personalMapped.birthState);
-          setBirthStateCode(code || "");
+          getStateCode("IN", personalMapped.birthState).then(code => {
+            setBirthStateCode(code || "");
+          });
+        }
+        if (personalMapped.state) {
+          getStateCode("IN", personalMapped.state).then(code => {
+            setStateCode(code || "");
+          });
         }
         const maritalStatus = personalMapped.maritalStatus;
         if (maritalStatus) {
@@ -1816,8 +1836,14 @@ export function EditProfile({
                 birthState: "",
               birthCity: ""
             }));
-            const code = e.target.code || getStateCode("IN", e.target.value);
-            setBirthStateCode(code || "");
+            // Always resolve state code async to avoid Promise objects
+            if (e.target.code && typeof e.target.code === 'string') {
+              setBirthStateCode(e.target.code);
+            } else if (e.target.value) {
+              getStateCode("IN", e.target.value).then(code => {
+                setBirthStateCode(code || "");
+              });
+            }
           }} countryCode="IN" placeholder="Select state" className={`rounded-md ${personalErrors.birthState ? "border-red-500" : "border-gray-300"}`} />
             </Suspense>
             {personalErrors.birthState && <p className="text-red-500 text-sm mt-1">
@@ -1870,6 +1896,16 @@ export function EditProfile({
                   ...prev,
                   state: ""
                 }));
+                // Always resolve state code async to avoid Promise objects
+                if (e.target.code && typeof e.target.code === 'string') {
+                  setStateCode(e.target.code);
+                  setPersonal(p => ({ ...p, city: "" }));
+                } else if (e.target.value) {
+                  getStateCode("IN", e.target.value).then(code => {
+                    setStateCode(code || "");
+                  });
+                  setPersonal(p => ({ ...p, city: "" }));
+                }
               }} countryCode="IN" placeholder="Select state" className={personalErrors.state ? "border-red-500" : ""} />
               </Suspense>
               {personalErrors.state && <p className="text-red-500 text-sm">{personalErrors.state}</p>}
@@ -1888,7 +1924,7 @@ export function EditProfile({
                 ...prev,
                 city: ""
               }));
-            }} countryCode="IN" stateCode={getStateCode("IN", personal.state) || ""} placeholder="Select city" className={personalErrors.city ? "border-red-500" : ""} disabled={!personal.state} />
+            }} countryCode="IN" stateCode={stateCode || ""} placeholder="Select city" className={personalErrors.city ? "border-red-500" : ""} disabled={!personal.state} />
               </Suspense>
               {personalErrors.city && <p className="text-red-500 text-sm">{personalErrors.city}</p>}
             </div>
@@ -2169,7 +2205,7 @@ export function EditProfile({
               ...prev,
               partnerState: ""
             }));
-          }} options={toOptions(["Any", ...INDIAN_STATES])} classNamePrefix="react-select" styles={multiStyles} components={{
+          }} options={toOptions(["Any", ...indianStates])} classNamePrefix="react-select" styles={multiStyles} components={{
             IndicatorSeparator: () => null
           }} menuPlacement="auto" menuPosition="fixed" menuPortalTarget={document.body} placeholder="Search and select states" />
               {expectationErrors.partnerState && <p className="text-red-500 text-sm mt-1">
@@ -2192,7 +2228,7 @@ export function EditProfile({
               ...prev,
               partnerCountry: ""
             }));
-          }} options={toOptions(ABROAD_OPTIONS)} classNamePrefix="react-select" styles={multiStyles} components={{
+          }} options={toOptions(abroadOptions)} classNamePrefix="react-select" styles={multiStyles} components={{
             IndicatorSeparator: () => null
           }} menuPlacement="auto" menuPosition="fixed" menuPortalTarget={document.body} placeholder="Search and select countries" />
               {expectationErrors.partnerCountry && <p className="text-red-500 text-sm mt-1">

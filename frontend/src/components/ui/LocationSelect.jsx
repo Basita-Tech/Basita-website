@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Country, State, City } from 'country-state-city';
-import { searchCountries, searchStates, searchCities, hasCitiesData } from '../../lib/locationUtils';
+import { searchCountries, searchStates, searchCities, hasCitiesData, getAllCountriesData, getStatesData, getCitiesData } from '../../lib/locationUtils';
 export default function LocationSelect({
   type = 'country',
   value,
@@ -34,54 +33,48 @@ export default function LocationSelect({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   useEffect(() => {
-    try {
-      let data = [];
-      if (type === 'country') {
-        data = Country.getAllCountries().map(c => ({
-          name: c.name,
-          code: c.isoCode
-        }));
-      } else if (type === 'state' && countryCode) {
-        data = State.getStatesOfCountry(countryCode).map(s => ({
-          name: s.name,
-          code: s.isoCode
-        }));
-      } else if (type === 'city' && countryCode && stateCode) {
-        try {
-          const hasCities = hasCitiesData(countryCode, stateCode);
-          if (!hasCities) {
-            console.warn(`No city data available for ${countryCode}-${stateCode}`);
+    let mounted = true;
+    const loadData = async () => {
+      try {
+        let data = [];
+        if (type === 'country') {
+          data = await getAllCountriesData();
+        } else if (type === 'state' && countryCode) {
+          data = await getStatesData(countryCode);
+        } else if (type === 'city' && countryCode && stateCode) {
+          try {
+            const hasCities = await hasCitiesData(countryCode, stateCode);
+            if (!hasCities) {
+              console.warn(`No city data available for ${countryCode}-${stateCode}`);
+            }
+            data = await getCitiesData(countryCode, stateCode);
+          } catch (cityError) {
+            console.error(`Error loading cities for ${countryCode}-${stateCode}:`, cityError);
+            data = [];
           }
-          const cities = City.getCitiesOfState(countryCode, stateCode);
-          data = (cities || []).map(c => ({
-            name: c.name
-          }));
-        } catch (cityError) {
-          console.error(`Error loading cities for ${countryCode}-${stateCode}:`, cityError);
-          data = [];
+        }
+        if (mounted) {
+          setOptions(data);
+        }
+      } catch (error) {
+        console.error('LocationSelect error:', error);
+        if (mounted) {
+          setOptions([]);
         }
       }
-      setOptions(data);
-    } catch (error) {
-      console.error('LocationSelect error:', error);
-      setOptions([]);
-    }
+    };
+    loadData();
+    return () => { mounted = false; };
   }, [type, countryCode, stateCode]);
   const displayLabel = value || '';
   // Show button-only on mobile with ≤15 options, otherwise show search input.
   // If allowCustom is true, always allow typing.
   const suppressKeyboard = !allowCustom && isMobile && options.length <= 15;
+  // Filter options client-side from already-loaded data
   let filteredOptions;
   if (searchTerm.trim()) {
-    if (type === 'country') {
-      filteredOptions = searchCountries(searchTerm);
-    } else if (type === 'state' && countryCode) {
-      filteredOptions = searchStates(countryCode, searchTerm);
-    } else if (type === 'city' && countryCode && stateCode) {
-      filteredOptions = searchCities(countryCode, stateCode, searchTerm);
-    } else {
-      filteredOptions = options.filter(opt => opt.name.toLowerCase().includes(searchTerm.toLowerCase()));
-    }
+    const term = searchTerm.toLowerCase();
+    filteredOptions = options.filter(opt => opt.name.toLowerCase().includes(term));
   } else {
     filteredOptions = options;
   }

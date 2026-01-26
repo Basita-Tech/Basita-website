@@ -19,9 +19,9 @@ export default defineConfig({
       'axios',
       'react-router-dom',
       'lucide-react',
-      'framer-motion',
-      'country-state-city'
-    ]
+      'framer-motion'
+    ],
+    exclude: ['country-state-city']
   },
   build: {
     sourcemap: false,
@@ -30,8 +30,6 @@ export default defineConfig({
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'ui-vendor': ['lucide-react', 'framer-motion', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
-          // Split country-state-city separately due to large size
-          'location-data': ['country-state-city'],
           'form-libs': ['react-select', 'react-phone-input-2'],
           'utils': ['axios', 'js-cookie', 'validator', 'dompurify']
         }

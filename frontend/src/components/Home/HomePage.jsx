@@ -180,6 +180,7 @@ export default function HomePage() {
           src={weddingCoupleImage}
           alt="Wedding Couple"
           className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/50 to-black/60"></div>
 
@@ -247,6 +248,7 @@ export default function HomePage() {
                     src={p.img}
                     alt={p.name}
                     className="w-full h-full object-cover object-center filter blur-sm hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
                   />
                 </div>
 

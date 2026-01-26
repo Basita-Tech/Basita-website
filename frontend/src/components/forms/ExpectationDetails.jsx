@@ -4,7 +4,6 @@ import Select from "react-select";
 import CustomSelect from "../ui/CustomSelect";
 import NoKeyboardInput from "../ui/NoKeyboardInput";
 import toast from "react-hot-toast";
-import { getAllCountriesWithCodes, getAllStatesWithCodes } from "../../lib/locationUtils";
 import { LEGAL_STATUSES, EMPLOYMENT_OPTIONS, allCastes, QUALIFICATION_LEVELS, DIET_OPTIONS } from "@/lib/constant";
 const sortAlpha = list => [...list].sort((a, b) => a.localeCompare(b, undefined, {
   sensitivity: "base"
@@ -45,6 +44,28 @@ const ExpectationDetails = ({
     preferredAgeTo: ""
   });
   const [errors, setErrors] = useState({});
+  const [countryOptions, setCountryOptions] = useState([{ value: "Any", label: "Any" }]);
+  const [stateOptions, setStateOptions] = useState([{ value: "Any", label: "Any" }]);
+  
+  // Load location data asynchronously
+  useEffect(() => {
+    Promise.all([
+      import("../../lib/locationUtils").then(m => m.getAllCountriesWithCodes()),
+      import("../../lib/locationUtils").then(m => m.getAllStatesWithCodes("IN"))
+    ]).then(([countries, states]) => {
+      setCountryOptions([
+        { value: "Any", label: "Any" },
+        ...countries.map(c => ({ value: c.name, label: c.name }))
+      ]);
+      setStateOptions([
+        { value: "Any", label: "Any" },
+        ...states.map(s => ({ value: s.name, label: s.name }))
+      ]);
+    }).catch(err => {
+      console.error("Failed to load location data:", err);
+    });
+  }, []);
+  
   const maritalStatuses = useMemo(() => sortAlphaWithPinned(["Any", ...LEGAL_STATUSES], ["Any"]), []);
   const professionOptions = useMemo(() => sortAlphaWithPinned(["Any", ...EMPLOYMENT_OPTIONS], ["Any"]), []);
   const castOptions = useMemo(() => allCastes, []);
@@ -54,26 +75,6 @@ const ExpectationDetails = ({
   const ageOptions = useMemo(() => Array.from({
     length: 21
   }, (_, i) => 20 + i), []);
-  const countryOptions = useMemo(() => {
-    const countries = getAllCountriesWithCodes();
-    return [{
-      value: "Any",
-      label: "Any"
-    }, ...countries.map(c => ({
-      value: c.name,
-      label: c.name
-    }))];
-  }, []);
-  const stateOptions = useMemo(() => {
-    const states = getAllStatesWithCodes("IN");
-    return [{
-      value: "Any",
-      label: "Any"
-    }, ...states.map(s => ({
-      value: s.name,
-      label: s.name
-    }))];
-  }, []);
   const handleChange = useCallback((field, value) => {
     if (field === "preferredAgeFrom" || field === "preferredAgeTo") {
       if (value === "" || value === null || value === undefined) {

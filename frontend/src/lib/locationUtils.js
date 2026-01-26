@@ -1,129 +1,77 @@
-import { Country, State, City } from 'country-state-city';
-let countryNameToCodeMap = null;
-export const getCountryCode = countryName => {
-  if (!countryName) return null;
-  if (!countryNameToCodeMap) {
-    countryNameToCodeMap = {};
-    Country.getAllCountries().forEach(country => {
-      countryNameToCodeMap[country.name] = country.isoCode;
-    });
-  }
-  return countryNameToCodeMap[countryName] || null;
+// This file re-exports location utilities, but all country-state-city code
+// is isolated in locationDataLoader.js which is only loaded when needed
+
+export const getCountryCode = async (countryName) => {
+  const module = await import('./locationDataLoader.js');
+  return module.getCountryCode(countryName);
 };
-export const getStateCode = (countryCode, stateName) => {
-  if (!countryCode || !stateName) return null;
-  try {
-    const states = State.getStatesOfCountry(countryCode);
-    const state = states.find(s => s.name === stateName);
-    return state ? state.isoCode : null;
-  } catch (error) {
-    console.error('Error getting state code:', error);
-    return null;
-  }
+
+export const getStateCode = async (countryCode, stateName) => {
+  const module = await import('./locationDataLoader.js');
+  return module.getStateCode(countryCode, stateName);
 };
-export const getAllCountries = () => {
-  return Country.getAllCountries().map(c => c.name).sort((a, b) => a.localeCompare(b));
+
+export const getAllCountries = async () => {
+  const module = await import('./locationDataLoader.js');
+  return module.getAllCountries();
 };
-export const searchCountries = searchTerm => {
-  if (!searchTerm || searchTerm.trim() === '') {
-    return getAllCountriesWithCodes();
-  }
-  const term = searchTerm.toLowerCase().trim();
-  const countries = getAllCountriesWithCodes();
-  const aliases = {
-    'usa': 'United States',
-    'us': 'United States',
-    'uk': 'United Kingdom',
-    'gb': 'United Kingdom',
-    'uae': 'United Arab Emirates',
-    'india': 'India',
-    'in': 'India'
-  };
-  const aliasMatch = aliases[term];
-  if (aliasMatch) {
-    return countries.filter(c => c.name.toLowerCase() === aliasMatch.toLowerCase());
-  }
-  return countries.filter(c => c.name.toLowerCase().includes(term) || c.code.toLowerCase().includes(term));
+
+export const searchCountries = async (searchTerm) => {
+  const module = await import('./locationDataLoader.js');
+  return module.searchCountries(searchTerm);
 };
-export const getAllCountriesWithCodes = () => {
-  return Country.getAllCountries().map(c => ({
-    name: c.name,
-    code: c.isoCode
-  })).sort((a, b) => a.name.localeCompare(b.name));
+
+export const getAllCountriesWithCodes = async () => {
+  const module = await import('./locationDataLoader.js');
+  return module.getAllCountriesWithCodes();
 };
-export const searchStates = (countryCode, searchTerm) => {
-  if (!countryCode) return [];
-  if (!searchTerm || searchTerm.trim() === '') {
-    return getAllStatesWithCodes(countryCode);
-  }
-  const term = searchTerm.toLowerCase().trim();
-  const states = getAllStatesWithCodes(countryCode);
-  const stateAliases = {
-    'ca': 'California',
-    'ny': 'New York',
-    'tx': 'Texas',
-    'fl': 'Florida',
-    'il': 'Illinois',
-    'pa': 'Pennsylvania',
-    'oh': 'Ohio',
-    'ga': 'Georgia',
-    'nc': 'North Carolina',
-    'mi': 'Michigan',
-    'mh': 'Maharashtra',
-    'up': 'Uttar Pradesh',
-    'ka': 'Karnataka',
-    'tn': 'Tamil Nadu',
-    'gj': 'Gujarat'
-  };
-  const aliasMatch = stateAliases[term];
-  if (aliasMatch) {
-    return states.filter(s => s.name.toLowerCase() === aliasMatch.toLowerCase());
-  }
-  return states.filter(s => s.name.toLowerCase().includes(term) || s.code.toLowerCase().includes(term));
+
+export const searchStates = async (countryCode, searchTerm) => {
+  const module = await import('./locationDataLoader.js');
+  return module.searchStates(countryCode, searchTerm);
 };
-export const getAllStatesWithCodes = countryCode => {
-  if (!countryCode) return [];
-  try {
-    return State.getStatesOfCountry(countryCode).map(s => ({
-      name: s.name,
-      code: s.isoCode
-    })).sort((a, b) => a.name.localeCompare(b.name));
-  } catch (error) {
-    console.error('Error getting states:', error);
-    return [];
-  }
+
+export const getAllStatesWithCodes = async (countryCode) => {
+  const module = await import('./locationDataLoader.js');
+  return module.getAllStatesWithCodes(countryCode);
 };
-export const searchCities = (countryCode, stateCode, searchTerm) => {
-  if (!countryCode || !stateCode) return [];
-  if (!searchTerm || searchTerm.trim() === '') {
-    return getAllCitiesWithNames(countryCode, stateCode);
-  }
-  const term = searchTerm.toLowerCase().trim();
-  const cities = getAllCitiesWithNames(countryCode, stateCode);
-  return cities.filter(c => c.name.toLowerCase().includes(term));
+
+export const searchCities = async (countryCode, stateCode, searchTerm) => {
+  const module = await import('./locationDataLoader.js');
+  return module.searchCities(countryCode, stateCode, searchTerm);
 };
-export const hasCitiesData = (countryCode, stateCode) => {
-  if (!countryCode || !stateCode) return false;
-  try {
-    const cities = City.getCitiesOfState(countryCode, stateCode);
-    return cities && cities.length > 0;
-  } catch (error) {
-    return false;
-  }
+
+export const hasCitiesData = async (countryCode, stateCode) => {
+  const module = await import('./locationDataLoader.js');
+  return module.hasCitiesData(countryCode, stateCode);
 };
-export const getAllCitiesWithNames = (countryCode, stateCode) => {
-  if (!countryCode || !stateCode) return [];
-  try {
-    const cities = City.getCitiesOfState(countryCode, stateCode);
-    if (!cities || cities.length === 0) {
-      console.warn(`No cities found for ${countryCode}-${stateCode}`);
-      return [];
-    }
-    return cities.map(c => ({
-      name: c.name
-    })).sort((a, b) => a.name.localeCompare(b.name));
-  } catch (error) {
-    console.error('Error getting cities:', error);
-    return [];
-  }
+
+export const getIndianStates = async () => {
+  const module = await import('./locationDataLoader.js');
+  return module.getIndianStates();
+};
+
+export const getIndianCities = async () => {
+  const module = await import('./locationDataLoader.js');
+  return module.getIndianCities();
+};
+
+export const getAllCountriesData = async () => {
+  const module = await import('./locationDataLoader.js');
+  return module.getAllCountriesData();
+};
+
+export const getStatesData = async (countryCode) => {
+  const module = await import('./locationDataLoader.js');
+  return module.getStatesData(countryCode);
+};
+
+export const getCitiesData = async (countryCode, stateCode) => {
+  const module = await import('./locationDataLoader.js');
+  return module.getCitiesData(countryCode, stateCode);
+};
+
+export const getAllCitiesWithNames = async (countryCode, stateCode) => {
+  const module = await import('./locationDataLoader.js');
+  return module.getAllCitiesWithNames(countryCode, stateCode);
 };

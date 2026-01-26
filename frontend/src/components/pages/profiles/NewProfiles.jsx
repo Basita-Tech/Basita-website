@@ -17,7 +17,6 @@ import { getAllCountries } from "../../../lib/locationUtils";
 import { allCastes, JOB_TITLES, INDIAN_STATES } from "../../../lib/constant";
 import CustomSelect from "../../ui/CustomSelect";
 const RELIGIONS = ["Hindu", "Jain"];
-const COUNTRIES = getAllCountries();
 const QUALIFICATION_LEVELS = [
   "High School",
   "Undergraduate",
@@ -100,7 +99,18 @@ export default function NewProfiles({
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProfiles, setTotalProfiles] = useState(0);
+  const [countries, setCountries] = useState([]);
   const pageSize = 12;
+
+  // Load countries asynchronously
+  useEffect(() => {
+    getAllCountries().then(data => {
+      setCountries(data || []);
+    }).catch(err => {
+      console.error("Failed to load countries:", err);
+      setCountries([]);
+    });
+  }, []);
 
   // Initialize from context on mount and trigger initial load
   useEffect(() => {
@@ -500,26 +510,81 @@ export default function NewProfiles({
       weightRange: [...DEFAULT_WEIGHT_RANGE],
     };
     setPendingFilters(resetFilters);
+    setAppliedFilters(resetFilters);
+    setPage(1);
     clearFilters();
+    return resetFilters;
   };
-  const handleClearAndSubmit = () => {
-    clearAllFilters();
-    setTimeout(() => {
-      setAppliedFilters({
-        searchName: "",
-        selectedReligion: "all",
-        selectedCaste: "all",
-        selectedState: "",
-        selectedProfession: "",
-        selectedCountry: "all",
-        selectedEducation: "all",
-        newProfileDuration: "all",
-        ageRange: [...DEFAULT_AGE_RANGE],
-        heightRange: [...DEFAULT_HEIGHT_RANGE],
-        weightRange: [...DEFAULT_WEIGHT_RANGE],
-      });
-      handleSubmit(undefined, 1);
-    }, 50);
+  
+  const handleClearAndSubmit = async () => {
+    const resetFilters = clearAllFilters();
+    // Load all profiles without any filters
+    setErrorProfiles(null);
+    setLoadingProfiles(true);
+    try {
+      const response = await getAllProfiles(1, pageSize);
+      const dataArray = Array.isArray(response?.data)
+        ? response.data
+        : response?.data?.listings || [];
+      const pagination = response?.pagination;
+      if (response?.success && Array.isArray(dataArray)) {
+        const mapped = dataArray
+          .map((p) => {
+            const user = p.user || p;
+            const userId = user.userId || user.id || user._id;
+            if (!userId || userId === "undefined" || userId === "null") {
+              return null;
+            }
+            return {
+              id: userId,
+              name:
+                `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
+                "Unknown",
+              age: user.age,
+              city: user.city,
+              state: user.state,
+              country: user.country,
+              profession:
+                user.profession ||
+                user.occupation ||
+                user.professional?.Occupation,
+              religion: user.religion,
+              caste: user.subCaste,
+              education:
+                user.education?.HighestEducation ||
+                user.education ||
+                user.highestEducation ||
+                user.personal?.education ||
+                user.professional?.Education ||
+                user.professional?.education ||
+                "",
+              height: user.personal?.height || user.height,
+              heightCm: parseHeightToCm(user.personal?.height || user.height),
+              weight: user.personal?.weight || user.weight,
+              weightKg: parseWeightToKg(user.personal?.weight || user.weight),
+              diet: user.healthAndLifestyle?.diet,
+              image: user.closerPhoto?.url || "",
+              compatibility: 0,
+              status: null,
+              createdAt: user.createdAt,
+            };
+          })
+          .filter(Boolean);
+        setAllProfiles(mapped);
+        setTotalPages(pagination?.pages || 1);
+        setTotalProfiles(pagination?.total || 0);
+      } else {
+        setAllProfiles([]);
+        setTotalPages(1);
+        setTotalProfiles(0);
+      }
+    } catch (error) {
+      console.error("Error fetching profiles:", error);
+      setErrorProfiles("Failed to load profiles");
+      setAllProfiles([]);
+    } finally {
+      setLoadingProfiles(false);
+    }
   };
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages && newPage !== page) {
@@ -722,7 +787,7 @@ export default function NewProfiles({
                     : "all",
                 )
               }
-              options={COUNTRIES}
+              options={countries}
               placeholder="All Countries"
               allowCustom
               className="bg-transparent text-[#3a2f00] font-medium h-10 py-2 rounded-xl border focus:ring-2 focus:ring-[#c8a227]/40 hover:border-[#c8a227]"

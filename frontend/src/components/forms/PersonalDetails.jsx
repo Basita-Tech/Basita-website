@@ -4,7 +4,6 @@ import CustomSelect from "../ui/CustomSelect";
 // Lazy load LocationSelect to reduce initial bundle size (country-state-city is 8.8MB)
 const LocationSelect = lazy(() => import("../ui/LocationSelect"));
 import { getOnboardingStatus, getUserPersonal, saveUserPersonal, updateUserPersonal } from "../../api/auth";
-import { getCountryCode, getStateCode, getAllCountries } from "../../lib/locationUtils";
 import toast from "react-hot-toast";
 import { 
   nationalities, 
@@ -26,7 +25,6 @@ const sortAlpha = list => [...list].sort((a, b) => a.localeCompare(b, undefined,
   sensitivity: "base"
 }));
 
-const COUNTRIES = getAllCountries();
 const SORTED_CASTES = sortAlpha(allCastes);
 const SORTED_NATIONALITIES = sortAlpha(nationalities);
 const SORTED_VISA_CATEGORIES = sortAlpha(visaCategories);
@@ -51,6 +49,22 @@ const PersonalDetails = ({
 }) => {
   const navigate = useNavigate();
   
+  // Lazy-load location utilities on first use to avoid bloating main bundle
+  const [locationUtils, setLocationUtils] = useState(null);
+  const getCountryCode = useCallback((countryName) => {
+    if (!locationUtils) return null;
+    return locationUtils.getCountryCode(countryName);
+  }, [locationUtils]);
+  const getStateCode = useCallback((countryCode, stateName) => {
+    if (!locationUtils) return null;
+    return locationUtils.getStateCode(countryCode, stateName);
+  }, [locationUtils]);
+
+  useEffect(() => {
+    import("../../lib/locationUtils").then(module => {
+      setLocationUtils(module);
+    });
+  }, []);
   
   const minuteRef = useRef(null);
   const [formData, setFormData] = useState({
@@ -107,6 +121,7 @@ const PersonalDetails = ({
   const [birthCountryCode, setBirthCountryCode] = useState(null);
   const [birthStateCode, setBirthStateCode] = useState(null);
   const [residingCountryCode, setResidingCountryCode] = useState(null);
+  const [stateCode, setStateCode] = useState(null);
   const [isPersonalCompleted, setIsPersonalCompleted] = useState(false);
   const handleHourInput = useCallback(e => {
     let value = e.target.value.replace(/\D/g, "");
@@ -271,6 +286,13 @@ const PersonalDetails = ({
           
           // Single setState call
           setFormData(mapped);
+          
+          // Initialize state code for city dropdown if state exists
+          if (locationUtils && mapped.state) {
+            locationUtils.getStateCode("IN", mapped.state).then(code => {
+              setStateCode(code);
+            });
+          }
           
           // Batch other state updates
           const status = data.marriedStatus || "";
@@ -699,8 +721,14 @@ const PersonalDetails = ({
                         ...prev,
                         birthCity: ""
                       }));
-                      const code = e.target.code || getStateCode("IN", e.target.value);
-                      setBirthStateCode(code);
+                      // Update birth state code asynchronously
+                      if (locationUtils && e.target.value) {
+                        locationUtils.getStateCode("IN", e.target.value).then(code => {
+                          setBirthStateCode(code);
+                        });
+                      } else {
+                        setBirthStateCode(e.target.code || null);
+                      }
                     }}
                     countryCode="IN"
                     placeholder="Select state"
@@ -909,6 +937,14 @@ const PersonalDetails = ({
                             ...prev,
                             city: ""
                           }));
+                          // Update state code asynchronously
+                          if (locationUtils && e.target.value) {
+                            locationUtils.getStateCode("IN", e.target.value).then(code => {
+                              setStateCode(code);
+                            });
+                          } else {
+                            setStateCode(null);
+                          }
                         }}
                         countryCode="IN"
                         placeholder="Select state"
@@ -931,7 +967,7 @@ const PersonalDetails = ({
                         allowCustom={true}
                         onChange={handleChange}
                         countryCode="IN"
-                        stateCode={getStateCode("IN", formData.state) || ""}
+                        stateCode={stateCode || ""}
                         placeholder="Select city"
                         className={getInputClass("city")}
                       />

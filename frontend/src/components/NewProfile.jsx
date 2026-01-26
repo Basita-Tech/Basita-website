@@ -5,8 +5,8 @@ import { Heart, MapPin, ChevronLeft, ChevronRight, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { JOB_TITLES } from "../lib/constant";
 const LocationSelect = lazy(() => import("./ui/LocationSelect"));
-import { State, City } from "country-state-city";
 import { searchProfiles } from "../api/auth";
+import { getIndianCities } from "../lib/locationUtils";
 const RELIGIONS = ["Hindu", "Jain"];
 const CASTES = ["Patel-Desai", "Patel-Kadva", "Patel-Leva", "Patel", "Brahmin-Audichya", "Brahmin", "Jain-Digambar", "Jain-Swetamber", "Jain-Vanta", "Vaishnav-Vania"];
 const NEW_PROFILE_DURATIONS = [{
@@ -38,21 +38,13 @@ const NewProfile = () => {
   const [loading, setLoading] = useState(false);
   const [favorites, setFavorites] = useState(new Set());
   const [shouldFetch, setShouldFetch] = useState(true);
-  const indianCities = useMemo(() => {
-    try {
-      const states = State.getStatesOfCountry("IN");
-      const cities = new Set();
-      states.forEach(state => {
-        try {
-          const stateCities = City.getCitiesOfState("IN", state.isoCode);
-          stateCities.forEach(city => cities.add(city.name));
-        } catch (e) {}
-      });
-      return Array.from(cities).sort();
-    } catch (error) {
-      console.error("Error loading Indian cities:", error);
-      return [];
-    }
+  const [indianCities, setIndianCities] = useState([]);
+
+  // Lazy load Indian cities on first render to avoid bloating bundle
+  useEffect(() => {
+    import("../lib/locationUtils").then(m => m.getIndianCities()).then(cities => {
+      setIndianCities(cities);
+    });
   }, []);
   const [filters, setFilters] = useState({
     name: "",

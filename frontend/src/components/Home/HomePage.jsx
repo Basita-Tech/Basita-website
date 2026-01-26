@@ -246,7 +246,7 @@ export default function HomePage() {
                   <img
                     src={p.img}
                     alt={p.name}
-                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover object-center filter blur-sm hover:scale-105 transition-transform duration-500"
                   />
                 </div>
 
@@ -276,9 +276,13 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-[#800000] mb-4">
             Membership Plans
           </h2>
-          <p className="text-gray-700 mb-12">
+          <p className="text-gray-700 mb-3">
             Choose a plan that fits your needs and start connecting with your
             perfect match today.
+          </p>
+          
+          <p className="text-lg font-bold mb-12 text-[#D4A052]">
+            🎉 Early Access Offer: Be among the first 500 users and enjoy 6 months of free access to our premium, paid features! 🎉
           </p>
 
           {}

@@ -180,8 +180,8 @@ const AboutUsPage = () => {
               {
                 icon: Phone,
                 title: "Phone",
-                value: "+91 9925203929",
-                href: "tel:+919925203929"
+                value: "+91 9879003964",
+                href: "tel:+919879003964"
               },
               {
                 icon: MapPin,

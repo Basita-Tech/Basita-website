@@ -200,11 +200,14 @@ export async function getPendingProfilesController(
     });
   }
 
+  const gender = req.query.gender as string;
+
   try {
     const result = await adminService.getPendingProfilesService(
       page,
       limit,
-      status
+      status,
+      gender
     );
 
     return res.status(result.success ? 200 : 400).json(result);

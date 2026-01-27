@@ -197,14 +197,16 @@ export async function rectifyUserProfileService(
 export async function getPendingProfilesService(
   page: number,
   limit: number,
-  status: "pending" | "approved" | "rejected" | "rectification"
+  status: "pending" | "approved" | "rejected" | "rectification",
+  gender: string
 ) {
   const skip = (page - 1) * limit;
 
   try {
     const userFilter = {
       role: "user",
-      profileReviewStatus: status
+      profileReviewStatus: status,
+      ...(gender && { gender })
     };
 
     const totalCount = await User.countDocuments(userFilter);

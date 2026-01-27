@@ -143,7 +143,7 @@ adminRouter.get(
 adminRouter.get(
   "/profile/:userId",
   authenticate,
-  authorizeRoles("admin"),
+  authorizeRoles("admin", "verification"),
   asyncHandler(adminController.getUserProfileDetailsController)
 );
 

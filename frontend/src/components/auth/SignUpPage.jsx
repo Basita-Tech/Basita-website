@@ -678,7 +678,7 @@ const SignUpPage = () => {
                 <input
                   type="text"
                   name="firstName"
-                  placeholder="First Name *"
+                  placeholder="Candidate's Name *"
                   value={formData.firstName}
                   onChange={handleInputChange}
                   onBlur={() => handleNameBlur("firstName")}
@@ -698,7 +698,7 @@ const SignUpPage = () => {
                 <input
                   type="text"
                   name="middleName"
-                  placeholder="Middle Name"
+                  placeholder="Father's Name"
                   value={formData.middleName}
                   onChange={handleInputChange}
                   onBlur={() => handleNameBlur("middleName")}
@@ -712,7 +712,7 @@ const SignUpPage = () => {
                 <input
                   type="text"
                   name="lastName"
-                  placeholder="Last Name *"
+                  placeholder="Surname*"
                   value={formData.lastName}
                   onChange={handleInputChange}
                   onBlur={() => handleNameBlur("lastName")}

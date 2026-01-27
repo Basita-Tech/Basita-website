@@ -65,7 +65,7 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 rounded-full bg-[#1a1a1a] text-white hover:bg-[#D4A052] hover:text-[#800000] transition-all duration-300"
+                    className="p-2 rounded-full bg-[#1a1a1a] text-white hover:bg-[var(--brand-primary)] hover:text-[var(--brand-maroon)] transition-all duration-300"
                     aria-label={social.label}
                   >
                     <Icon className="w-4 h-4" />
@@ -77,7 +77,7 @@ export default function Footer() {
 
           {footerSections.map((section) => (
             <div key={section.title} className="text-center sm:text-left">
-              <h4 className="text-sm font-semibold mb-3 text-[#D4A052]">
+              <h4 className="text-sm font-semibold mb-3 text-[var(--brand-primary)]">
                 {section.title}
               </h4>
               <ul className="space-y-1.5">
@@ -90,7 +90,7 @@ export default function Footer() {
                     ) : (
                       <Link
                         to={link.href}
-                        className="text-xs text-[#1f1f1f] hover:text-[#D4A052] transition-colors duration-300"
+                        className="text-xs text-[#1f1f1f] hover:text-[var(--brand-primary)] transition-colors duration-300"
                       >
                         {link.name}
                       </Link>
@@ -112,7 +112,7 @@ export default function Footer() {
               href="https://basita.in/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#D4A052] hover:text-[#800000] font-semibold transition-colors duration-300"
+              className="text-[var(--brand-primary)] hover:text-[var(--brand-maroon)] font-semibold transition-colors duration-300"
             >
               Basita Technology
             </a>

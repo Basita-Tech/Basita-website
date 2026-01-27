@@ -593,12 +593,12 @@ export default function NewProfiles({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 md:gap-6 p-3 md:p-6 bg-[#faf8f3] min-h-screen">
+    <div className="flex flex-col lg:flex-row gap-4 md:gap-6 p-3 md:p-6 bg-[var(--brand-bg-page)] min-h-screen">
       {}
       <aside className="w-full lg:w-80 flex-shrink-0 self-start">
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl shadow-md border border-[#e6dec5] p-4 md:p-6 space-y-4 md:space-y-6 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-auto"
+          className="bg-white rounded-2xl shadow-md border border-[var(--brand-border-soft)] p-4 md:p-6 space-y-4 md:space-y-6 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-auto"
         >
           {}
           <div className="flex items-center justify-between">
@@ -625,7 +625,7 @@ export default function NewProfiles({
                     handleSubmit();
                   }
                 }}
-                className="w-full pl-10 h-10 rounded-xl border border-[#e0d3af] focus:border-[#c8a227] focus:ring-[#c8a227]/40 outline-none"
+                className="w-full pl-10 h-10 rounded-xl border border-[var(--brand-border-muted)] focus:border-[var(--brand-primary-dark)] focus:ring-[rgb(var(--brand-primary-dark-rgb)/0.4)] outline-none"
               />
             </div>
           </div>
@@ -641,7 +641,7 @@ export default function NewProfiles({
                 updatePendingFilter("newProfileDuration", value)
               }
             >
-              <SelectTrigger className="rounded-xl bg-transparent text-[#3a2f00] font-medium border focus:ring-2 focus:ring-[#d4af37]/40">
+              <SelectTrigger className="rounded-xl bg-transparent text-[var(--brand-text-dark)] font-medium border focus:ring-2 focus:ring-[rgb(var(--brand-accent-rgb)/0.4)]">
                 <SelectValue placeholder="Select duration" />
               </SelectTrigger>
               <SelectContent>
@@ -670,7 +670,7 @@ export default function NewProfiles({
               step={1}
               value={pendingFilters.ageRange}
               onValueChange={(value) => updatePendingFilter("ageRange", value)}
-              className="[&_[role=slider]]:bg-[#d4af37] [&_[role=track]]:bg-[#f1e6c7]"
+              className="[&_[role=slider]]:bg-[var(--brand-accent)] [&_[role=track]]:bg-[var(--brand-track)]"
             />
           </div>
 
@@ -685,7 +685,7 @@ export default function NewProfiles({
                 updatePendingFilter("selectedReligion", value)
               }
             >
-              <SelectTrigger className="rounded-xl bg-transparent text-[#3a2f00] font-medium border focus:ring-2 focus:ring-[#d4af37]/40">
+              <SelectTrigger className="rounded-xl bg-transparent text-[var(--brand-text-dark)] font-medium border focus:ring-2 focus:ring-[rgb(var(--brand-accent-rgb)/0.4)]">
                 <SelectValue placeholder="Select religion" />
               </SelectTrigger>
               <SelectContent>
@@ -719,7 +719,7 @@ export default function NewProfiles({
               options={casteOptions}
               placeholder="All Castes"
               allowCustom
-              className="bg-transparent text-[#3a2f00] font-medium h-10 py-2 rounded-xl border focus:ring-2 focus:ring-[#c8a227]/40 hover:border-[#c8a227]"
+              className="bg-transparent text-[var(--brand-text-dark)] font-medium h-10 py-2 rounded-xl border focus:ring-2 focus:ring-[rgb(var(--brand-primary-dark-rgb)/0.4)] hover:border-[var(--brand-primary-dark)]"
               name="caste"
             />
           </div>
@@ -743,7 +743,7 @@ export default function NewProfiles({
               onValueChange={(value) =>
                 updatePendingFilter("heightRange", value)
               }
-              className="[&_[role=slider]]:bg-[#d4af37] [&_[role=track]]:bg-[#f1e6c7]"
+              className="[&_[role=slider]]:bg-[var(--brand-accent)] [&_[role=track]]:bg-[var(--brand-track)]"
             />
           </div>
 
@@ -766,7 +766,7 @@ export default function NewProfiles({
               onValueChange={(value) =>
                 updatePendingFilter("weightRange", value)
               }
-              className="[&_[role=slider]]:bg-[#c8a227] [&_[role=track]]:bg-[#f1e6c7]"
+              className="[&_[role=slider]]:bg-[var(--brand-primary-dark)] [&_[role=track]]:bg-[var(--brand-track)]"
             />
           </div>
 
@@ -790,7 +790,7 @@ export default function NewProfiles({
               options={countries}
               placeholder="All Countries"
               allowCustom
-              className="bg-transparent text-[#3a2f00] font-medium h-10 py-2 rounded-xl border focus:ring-2 focus:ring-[#c8a227]/40 hover:border-[#c8a227]"
+              className="bg-transparent text-[var(--brand-text-dark)] font-medium h-10 py-2 rounded-xl border focus:ring-2 focus:ring-[rgb(var(--brand-primary-dark-rgb)/0.4)] hover:border-[var(--brand-primary-dark)]"
               name="country"
             />
           </div>
@@ -817,7 +817,7 @@ export default function NewProfiles({
               options={QUALIFICATION_LEVELS}
               placeholder="All Education Levels"
               allowCustom
-              className="bg-transparent text-[#3a2f00] font-medium h-10 py-2 rounded-xl border focus:ring-2 focus:ring-[#c8a227]/40 hover:border-[#c8a227]"
+              className="bg-transparent text-[var(--brand-text-dark)] font-medium h-10 py-2 rounded-xl border focus:ring-2 focus:ring-[rgb(var(--brand-primary-dark-rgb)/0.4)] hover:border-[var(--brand-primary-dark)]"
               name="education"
             />
           </div>
@@ -833,7 +833,7 @@ export default function NewProfiles({
               options={INDIAN_STATES}
               placeholder="All States"
               allowCustom
-              className="bg-transparent text-[#3a2f00] font-medium h-10 py-2 rounded-xl border focus:ring-2 focus:ring-[#c8a227]/40 hover:border-[#c8a227]"
+              className="bg-transparent text-[var(--brand-text-dark)] font-medium h-10 py-2 rounded-xl border focus:ring-2 focus:ring-[rgb(var(--brand-primary-dark-rgb)/0.4)] hover:border-[var(--brand-primary-dark)]"
               name="state"
             />
           </div>
@@ -851,7 +851,7 @@ export default function NewProfiles({
               options={JOB_TITLES}
               placeholder="All Professions"
               allowCustom
-              className="bg-transparent text-[#3a2f00] font-medium h-10 py-2 rounded-xl border focus:ring-2 focus:ring-[#c8a227]/40 hover:border-[#c8a227]"
+              className="bg-transparent text-[var(--brand-text-dark)] font-medium h-10 py-2 rounded-xl border focus:ring-2 focus:ring-[rgb(var(--brand-primary-dark-rgb)/0.4)] hover:border-[var(--brand-primary-dark)]"
               name="profession"
             />
           </div>
@@ -860,7 +860,7 @@ export default function NewProfiles({
           <div className="flex gap-2 pt-4 border-t border-gray-200">
             <button
               type="submit"
-              className="flex-1 bg-[#c8a227] text-white font-semibold py-2 rounded-lg hover:bg-[#b9941c] transition-colors"
+              className="flex-1 bg-[var(--brand-primary-dark)] text-white font-semibold py-2 rounded-lg hover:bg-[var(--brand-primary-dark-hover-2)] transition-colors"
             >
               Search
             </button>
@@ -878,7 +878,7 @@ export default function NewProfiles({
       {}
       <section className="flex-1">
         <div className="mb-6">
-          <h2 className="text-2xl font-semibold text-[#3a2f00]">
+          <h2 className="text-2xl font-semibold text-[var(--brand-text-dark)]">
             New Profiles
           </h2>
           <p className="text-gray-500">
@@ -891,7 +891,7 @@ export default function NewProfiles({
         {}
         {loadingProfiles && (
           <div className="py-16 text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C8A227] mx-auto" />
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--brand-primary-dark)] mx-auto" />
             <p className="mt-4 text-gray-600">Loading profiles...</p>
           </div>
         )}
@@ -952,7 +952,7 @@ export default function NewProfiles({
 
                 {}
                 {filteredProfiles.length > 0 && totalPages > 1 && (
-                  <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white rounded-xl p-4 shadow-sm border border-[#e6dec5]">
+                  <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white rounded-xl p-4 shadow-sm border border-[var(--brand-border-soft)]">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-gray-700">
                       <span>
                         Showing {(page - 1) * pageSize + 1}-
@@ -968,7 +968,7 @@ export default function NewProfiles({
                       <button
                         onClick={() => handlePageChange(page - 1)}
                         disabled={page === 1}
-                        className="px-3 py-1 rounded-full text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed bg-white border border-gray-300 text-gray-700 hover:bg-[#d4af37] hover:text-white hover:border-[#d4af37]"
+                        className="px-3 py-1 rounded-full text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed bg-white border border-gray-300 text-gray-700 hover:bg-[var(--brand-accent)] hover:text-white hover:border-[var(--brand-accent)]"
                       >
                         Prev
                       </button>
@@ -987,7 +987,7 @@ export default function NewProfiles({
                               <button
                                 key={pNum}
                                 onClick={() => handlePageChange(pNum)}
-                                className={`rounded-full text-sm border transition-all ${pNum === page ? "bg-[#c8a227] text-white border-[#c8a227]" : "bg-white border-gray-300 text-gray-700 hover:bg-[#f9f5ed]"}`}
+                                className={`rounded-full text-sm border transition-all ${pNum === page ? "bg-[var(--brand-primary-dark)] text-white border-[var(--brand-primary-dark)]" : "bg-white border-gray-300 text-gray-700 hover:bg-[var(--brand-bg-soft)]"}`}
                               >
                                 {pNum}
                               </button>
@@ -1006,7 +1006,7 @@ export default function NewProfiles({
                       <button
                         onClick={() => handlePageChange(page + 1)}
                         disabled={page >= totalPages}
-                        className="px-3 py-1 rounded-full text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed bg-white border border-gray-300 text-gray-700 hover:bg-[#c8a227] hover:text-white hover:border-[#c8a227]"
+                        className="px-3 py-1 rounded-full text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed bg-white border border-gray-300 text-gray-700 hover:bg-[var(--brand-primary-dark)] hover:text-white hover:border-[var(--brand-primary-dark)]"
                       >
                         Next
                       </button>

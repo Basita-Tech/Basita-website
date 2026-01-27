@@ -20,6 +20,13 @@ const TARGETS = {
     mime: 'image/jpeg'
   }
 };
+function getRootCssVar(name, fallback) {
+  if (typeof window === 'undefined') {
+    return fallback;
+  }
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return value || fallback;
+}
 function loadImageFromFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -77,7 +84,7 @@ export async function processAndAdjustImage(file, category = 'other') {
     canvas.width = target.w;
     canvas.height = target.h;
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = getRootCssVar('--app-white', '#ffffff');
     ctx.fillRect(0, 0, target.w, target.h);
     const {
       sx,

@@ -35,7 +35,7 @@ export function ApprovedProfiles({
   return <div className="max-w-[1440px] mx-auto px-3 md:px-6 lg:px-8 py-6 space-y-6">
       {}
       <div>
-        <h2 className="m-0 mb-2 text-2xl font-semibold text-[#3a2f00]">Approved Profiles</h2>
+        <h2 className="m-0 mb-2 text-2xl font-semibold text-[var(--brand-text-dark)]">Approved Profiles</h2>
         <p className="text-muted-foreground m-0">Mutual matches – both parties have shown interest</p>
       </div>
 
@@ -44,8 +44,8 @@ export function ApprovedProfiles({
           {approvedProfiles.map(profile => <ProfileCard key={profile.id} {...profile} variant="approved" onView={onViewProfile} onAddToCompare={onAddToCompare} onRemoveCompare={onRemoveCompare} onChat={() => setPremiumModal(true)} onDownloadPDF={() => handleDownloadPDF(profile)} isInCompare={Array.isArray(compareProfiles) ? compareProfiles.map(String).includes(String(profile.id || profile._id || profile.userId)) : false} isShortlisted={Array.isArray(shortlistedIds) ? shortlistedIds.some(sid => String(sid) === String(profile.id)) : false} onToggleShortlist={onToggleShortlist} />)}
         </div> : <div className="bg-white rounded-[20px] p-16 satfera-shadow text-center">
           <div className="flex flex-col items-center gap-4 max-w-md mx-auto">
-            <div className="w-20 h-20 rounded-full bg-[#f9f5ed] flex items-center justify-center">
-              <Users className="w-10 h-10 text-[#c8a227]" />
+            <div className="w-20 h-20 rounded-full bg-[var(--brand-bg-soft)] flex items-center justify-center">
+              <Users className="w-10 h-10 text-[var(--brand-primary-dark)]" />
             </div>
             <h3 className="m-0 text-gray-900">No approved matches yet</h3>
             <p className="text-muted-foreground m-0">

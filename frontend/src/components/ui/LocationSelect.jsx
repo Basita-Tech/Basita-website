@@ -170,7 +170,7 @@ export default function LocationSelect({
     }
   }, [open]);
   const themeBase = 'w-full rounded-md p-2.5 sm:p-3 text-sm transition box-border bg-white';
-  const borderBase = 'border border-[#D4A052] focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A]';
+  const borderBase = 'border border-[var(--brand-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)]';
   const triggerClasses = `${themeBase} ${borderBase} ${className} pr-10 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-text'}`;
   const handleInputChange = e => {
     const newSearchTerm = e.target.value;
@@ -252,7 +252,7 @@ export default function LocationSelect({
       <svg className={`absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600 pointer-events-none transition-transform duration-200 ${open ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-      {open && <ul tabIndex={-1} className={`max-h-48 overflow-auto focus:outline-none p-0 m-0 list-none absolute left-0 right-0 bg-white border border-[#e4c48a] rounded-md z-10 ${dropUp ? 'bottom-full mb-2' : 'top-full mt-1'}`} role="listbox">
+      {open && <ul tabIndex={-1} className={`max-h-48 overflow-auto focus:outline-none p-0 m-0 list-none absolute left-0 right-0 bg-white border border-[var(--brand-gold)] rounded-md z-10 ${dropUp ? 'bottom-full mb-2' : 'top-full mt-1'}`} role="listbox">
           {placeholder && !searchTerm && <li role="option" aria-selected={value === ''} className={`px-3 py-2 text-sm cursor-pointer ${value === '' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`} onMouseEnter={() => setHighlightIndex(-1)} onMouseDown={e => {
         e.preventDefault();
         onChange && onChange({

@@ -99,7 +99,7 @@ const ResetPassword = () => {
   if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-        <div className="w-full max-w-md bg-[#FBFAF7] rounded-lg shadow-2xl p-8">
+        <div className="w-full max-w-md bg-[var(--brand-card)] rounded-lg shadow-2xl p-8">
           <div className="text-center">
             <CheckCircle size={64} className="text-green-600 mx-auto mb-4" />
             <h3 className="text-3xl font-bold text-green-600 mb-3">
@@ -110,7 +110,7 @@ const ResetPassword = () => {
             </p>
             <Link
               to="/login"
-              className="inline-block w-full py-3 rounded-md bg-[#D4A052] text-white font-semibold hover:bg-[#B3863F] transition"
+              className="inline-block w-full py-3 rounded-md bg-[var(--brand-primary)] text-white font-semibold hover:bg-[var(--brand-primary-hover-2)] transition"
             >
               Go to Login
             </Link>
@@ -122,10 +122,10 @@ const ResetPassword = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="w-full max-w-md bg-[#FBFAF7] rounded-lg shadow-2xl p-8">
+      <div className="w-full max-w-md bg-[var(--brand-card)] rounded-lg shadow-2xl p-8">
         <div className="text-center mb-6">
           <div className="flex justify-center items-center mb-2">
-            <Lock size={28} className="text-[#D4A052] mr-2" />
+            <Lock size={28} className="text-[var(--brand-primary)] mr-2" />
             <h1 className="text-3xl font-bold text-gray-800">
               Reset Password
             </h1>
@@ -150,7 +150,7 @@ const ResetPassword = () => {
                 onChange={handleChange}
                 required
                 placeholder="Enter new password"
-                className="w-full px-4 py-3 pr-10 rounded-md border border-[#D4A052] focus:ring-2 focus:ring-[#D4A052] outline-none text-gray-800"
+                className="w-full px-4 py-3 pr-10 rounded-md border border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)] outline-none text-gray-800"
               />
               <button
                 type="button"
@@ -180,7 +180,7 @@ const ResetPassword = () => {
                 onChange={handleChange}
                 required
                 placeholder="Re-enter new password"
-                className="w-full px-4 py-3 pr-10 rounded-md border border-[#D4A052] focus:ring-2 focus:ring-[#D4A052] outline-none text-gray-800"
+                className="w-full px-4 py-3 pr-10 rounded-md border border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)] outline-none text-gray-800"
               />
               <button
                 type="button"
@@ -204,7 +204,7 @@ const ResetPassword = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-md bg-[#D4A052] text-white font-semibold hover:bg-[#B3863F] transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 rounded-md bg-[var(--brand-primary)] text-white font-semibold hover:bg-[var(--brand-primary-hover-2)] transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center justify-center">

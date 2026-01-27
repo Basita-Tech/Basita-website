@@ -58,7 +58,7 @@ const ProtectedRoute = ({
   }, []);
   if (authState.status === "checking") {
     return <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C8A227]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--brand-primary-dark)]"></div>
       </div>;
   }
   if (authState.status === "redirect" && authState.redirect) {
@@ -70,7 +70,7 @@ const ProtectedRoute = ({
   if (authState.status === "offline") {
     return <div className="flex flex-col items-center justify-center min-h-screen gap-4 text-center px-4">
         <p className="text-lg font-medium">Connection issue. Please check your network and retry.</p>
-        <button type="button" onClick={checkAuth} className="px-4 py-2 rounded bg-[#C8A227] text-white hover:opacity-90">
+        <button type="button" onClick={checkAuth} className="px-4 py-2 rounded bg-[var(--brand-primary-dark)] text-white hover:opacity-90">
           Retry
         </button>
       </div>;

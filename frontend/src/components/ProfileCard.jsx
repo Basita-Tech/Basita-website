@@ -174,14 +174,14 @@ export function ProfileCard({
                   }
                   navigate(`/dashboard/profile/${profileId}`);
                 }}
-                className="flex-1 bg-[#f9f5ed] text-[#c8a227] border-[1.5px] border-[#c8a227] rounded-full font-medium hover:bg-[#c8a227] hover:text-white transition-all duration-200 flex items-center justify-center gap-1 h-10 text-sm"
+                className="flex-1 bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-[1.5px] border-[var(--brand-primary-dark)] rounded-full font-medium hover:bg-[var(--brand-primary-dark)] hover:text-white transition-all duration-200 flex items-center justify-center gap-1 h-10 text-sm"
               >
                 <Eye className="w-4 h-4" />
                 View
               </Button>
 
               <Button
-                className="flex-1 bg-[#c8a227] border-[1.5px] border-[#c8a227] text-white rounded-full font-medium hover:bg-[#b49520] transition-all duration-200 h-10 text-sm"
+                className="flex-1 bg-[var(--brand-primary-dark)] border-[1.5px] border-[var(--brand-primary-dark)] text-white rounded-full font-medium hover:bg-[var(--brand-primary-dark-hover-4)] transition-all duration-200 h-10 text-sm"
                 onClick={handleSendRequestClick}
               >
                 Send Request
@@ -192,7 +192,7 @@ export function ProfileCard({
               {isUiInCompare ? (
                 <Button
                   onClick={handleRemoveClick}
-                  className="w-full bg-[#c8a227] text-white rounded-full hover:bg-[#b49520] font-medium h-10 text-sm"
+                  className="w-full bg-[var(--brand-primary-dark)] text-white rounded-full hover:bg-[var(--brand-primary-dark-hover-4)] font-medium h-10 text-sm"
                 >
                   Remove Compare
                 </Button>
@@ -200,7 +200,7 @@ export function ProfileCard({
                 <Button
                   variant="outline"
                   onClick={handleAddClick}
-                  className="w-full border-[1.5px] border-[#c8a227] text-[#c8a227] font-medium rounded-full bg-[#f9f5ed] hover:bg-[#c8a227] hover:text-white transition-all duration-200 h-10 text-sm"
+                  className="w-full border-[1.5px] border-[var(--brand-primary-dark)] text-[var(--brand-primary-dark)] font-medium rounded-full bg-[var(--brand-bg-soft)] hover:bg-[var(--brand-primary-dark)] hover:text-white transition-all duration-200 h-10 text-sm"
                 >
                   Add to Compare
                 </Button>
@@ -222,8 +222,8 @@ export function ProfileCard({
                 }
                 navigate(`/dashboard/profile/${profileId}`);
               }}
-              className="flex-1 bg-[#f9f5ed] text-[#c8a227] border-[1.3px] border-[#e0c36a] rounded-full font-medium 
-              hover:bg-[#c8a227] hover:text-white hover:border-[#c8a227] transition-all duration-200 flex items-center justify-center gap-2"
+              className="flex-1 bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-[1.3px] border-[var(--brand-border-gold)] rounded-full font-medium 
+              hover:bg-[var(--brand-primary-dark)] hover:text-white hover:border-[var(--brand-primary-dark)] transition-all duration-200 flex items-center justify-center gap-2"
             >
               <Eye size={16} />
               <span>View Profile</span>
@@ -231,7 +231,7 @@ export function ProfileCard({
             <Button
               size="sm"
               onClick={handleSendRequestClick}
-              className="flex-1 bg-[#c8a227] text-white rounded-[12px]"
+              className="flex-1 bg-[var(--brand-primary-dark)] text-white rounded-[12px]"
             >
               Send Request
             </Button>
@@ -243,8 +243,8 @@ export function ProfileCard({
           <div className="flex gap-2 mt-2 pr-6 pb-6 items-center">
             <Button
               onClick={() => onView?.(profile || { id })}
-              className="flex-1 h-[38px] bg-[#f9f5ed] text-[#c8a227] border-[1.3px] border-[#c8a227] rounded-full font-medium 
-              hover:bg-[#c8a227] hover:text-white hover:border-[#c8a227] transition-all duration-200 flex items-center justify-center gap-2"
+              className="flex-1 h-[38px] bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-[1.3px] border-[var(--brand-primary-dark)] rounded-full font-medium 
+              hover:bg-[var(--brand-primary-dark)] hover:text-white hover:border-[var(--brand-primary-dark)] transition-all duration-200 flex items-center justify-center gap-2"
             >
               <Eye size={16} />
               <span>View </span>
@@ -265,8 +265,8 @@ export function ProfileCard({
                 return (
                   <Button
                     onClick={() => onWithdraw?.(id)}
-                    className=" flex-1  h-[38px] bg-[#f9f5ed] text-[#d64545] border-[1.3px] border-[#d64545] rounded-full font-medium 
-                hover:bg-[#d64545] hover:text-white hover:border-[#d64545] transition-all duration-200"
+                    className=" flex-1  h-[38px] bg-[var(--brand-bg-soft)] text-[#d64545] border-[1.3px] border-[#d64545] rounded-full font-medium 
+                  hover:bg-[#d64545] hover:text-white hover:border-[#d64545] transition-all duration-200"
                   >
                     Withdraw
                   </Button>
@@ -280,8 +280,8 @@ export function ProfileCard({
           <div className="flex flex-col gap-2 mt-2 pr-6 pb-6">
             <Button
               onClick={() => onView?.(profile || { id })}
-              className="w-full h-[38px] bg-[#f9f5ed] text-[#c8a227] border-[1.3px] border-[#c8a227] rounded-full font-medium 
-              hover:bg-[#c8a227] hover:text-white hover:border-[#c8a227] transition-all duration-200 flex items-center justify-center gap-2"
+              className="w-full h-[38px] bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-[1.3px] border-[var(--brand-primary-dark)] rounded-full font-medium 
+              hover:bg-[var(--brand-primary-dark)] hover:text-white hover:border-[var(--brand-primary-dark)] transition-all duration-200 flex items-center justify-center gap-2"
             >
               <Eye size={16} />
               <span>View </span>
@@ -293,8 +293,8 @@ export function ProfileCard({
                 return (
                   <Button
                     onClick={() => onAccept?.(profile || { id })}
-                    className="w-full h-[38px] bg-[#c8a227] text-white rounded-full font-medium 
-                    hover:bg-[#b8941e] transition-all duration-200"
+                    className="w-full h-[38px] bg-[var(--brand-primary-dark)] text-white rounded-full font-medium 
+                    hover:bg-[var(--brand-primary-dark-hover-3)] transition-all duration-200"
                   >
                     ✓ Accept
                   </Button>
@@ -305,7 +305,7 @@ export function ProfileCard({
                   <Button
                     variant="outline"
                     onClick={() => onReject?.(profile || { id })}
-                    className="w-full h-[38px] bg-[#f9f5ed] text-[#d64545] border-[1.3px] border-[#d64545] rounded-full font-medium 
+                    className="w-full h-[38px] bg-[var(--brand-bg-soft)] text-[#d64545] border-[1.3px] border-[#d64545] rounded-full font-medium 
                     hover:bg-[#d64545] hover:text-white hover:border-[#d64545] transition-all duration-200"
                   >
                     ✕ Reject
@@ -316,15 +316,15 @@ export function ProfileCard({
                 <div className="flex gap-2">
                   <Button
                     onClick={() => onAccept?.(profile || { id })}
-                    className="flex-1 h-[38px] bg-[#c8a227] text-white rounded-full font-medium 
-                    hover:bg-[#b8941e] transition-all duration-200"
+                    className="flex-1 h-[38px] bg-[var(--brand-primary-dark)] text-white rounded-full font-medium 
+                    hover:bg-[var(--brand-primary-dark-hover-3)] transition-all duration-200"
                   >
                     ✓ Accept
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => onReject?.(profile || { id })}
-                    className="flex-1 h-[38px] bg-[#f9f5ed] text-[#d64545] border-[1.3px] border-[#d64545] rounded-full font-medium 
+                    className="flex-1 h-[38px] bg-[var(--brand-bg-soft)] text-[#d64545] border-[1.3px] border-[#d64545] rounded-full font-medium 
                     hover:bg-[#d64545] hover:text-white hover:border-[#d64545] transition-all duration-200"
                   >
                     ✕ Reject
@@ -341,8 +341,8 @@ export function ProfileCard({
             <div className="flex items-center gap-2">
               <Button
                 onClick={() => onView?.(profile || { id })}
-                className="flex-1 bg-[#f9f5ed] text-[#c8a227]  hover:text-white  border-[1.3px] border-[#c8a227] rounded-full font-medium py-2 
-          hover:bg-[#c8a227] transition-all duration-200 flex items-center justify-center gap-2"
+                    className="flex-1 bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)]  hover:text-white  border-[1.3px] border-[var(--brand-primary-dark)] rounded-full font-medium py-2 
+                  hover:bg-[var(--brand-primary-dark)] transition-all duration-200 flex items-center justify-center gap-2"
               >
                 <Eye size={16} />
                 <span>View </span>
@@ -355,8 +355,8 @@ export function ProfileCard({
                 }}
                 className={`flex-1 rounded-full font-medium py-2 px-3 border transition-all duration-200 whitespace-nowrap ${
                   isUiInCompare
-                    ? "bg-[#c8a227] text-white border-[#c8a227] hover:bg-[#c8a227]"
-                    : "bg-[#f9f5ed] text-[#c8a227]  border-[1.3px] hover:text-white border-[#c8a227] hover:bg-[#c8a227]"
+                    ? "bg-[var(--brand-primary-dark)] text-white border-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark)]"
+                    : "bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)]  border-[1.3px] hover:text-white border-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark)]"
                 }`}
               >
                 {isUiInCompare ? "Remove Compare" : "Add to Compare"}
@@ -368,8 +368,8 @@ export function ProfileCard({
                 {onReject && (
                   <Button
                     onClick={() => onReject?.(profile || { id })}
-                    className="flex-1 bg-[#f9f5ed] text-[#d64545] border-[1.3px] border-[#d64545] rounded-full py-2 font-medium flex items-center justify-center gap-2 
-              hover:bg-[#d64545] hover:text-white transition-all duration-200"
+                      className="flex-1 bg-[var(--brand-bg-soft)] text-[#d64545] border-[1.3px] border-[#d64545] rounded-full py-2 font-medium flex items-center justify-center gap-2 
+                    hover:bg-[#d64545] hover:text-white transition-all duration-200"
                   >
                     ✕ Reject
                   </Button>
@@ -377,8 +377,8 @@ export function ProfileCard({
                 {onDownloadPDF && (
                   <Button
                     onClick={() => onDownloadPDF?.(profile || { id })}
-                    className="flex-1 bg-[#f9f5ed] text-[#c8a227] border-[1.3px] border-[#c8a227] rounded-full py-2 font-medium flex items-center justify-center gap-2 
-              hover:bg-[#c8a227] hover:text-white transition-all duration-200"
+                      className="flex-1 bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-[1.3px] border-[var(--brand-primary-dark)] rounded-full py-2 font-medium flex items-center justify-center gap-2 
+                    hover:bg-[var(--brand-primary-dark)] hover:text-white transition-all duration-200"
                   >
                     <Download size={16} />
                     PDF
@@ -395,8 +395,8 @@ export function ProfileCard({
             <div className="flex items-center gap-3">
               <Button
                 onClick={() => onView?.(profile || { id })}
-                className="flex-1 h-11 bg-[#f9f5ed] text-[#c8a227] border-[1.3px] border-[#c8a227] rounded-full font-medium text-[14px] 
-                  hover:bg-[#c8a227] hover:text-white transition-all duration-200 flex items-center justify-center gap-2"
+                className="flex-1 h-11 bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-[1.3px] border-[var(--brand-primary-dark)] rounded-full font-medium text-[14px] 
+                  hover:bg-[var(--brand-primary-dark)] hover:text-white transition-all duration-200 flex items-center justify-center gap-2"
               >
                 <Eye size={16} />
                 <span>View </span>
@@ -409,8 +409,8 @@ export function ProfileCard({
                 }}
                 className={`flex-1 h-11 rounded-full font-medium text-[14px] border transition-all duration-200 ${
                   isUiInCompare
-                    ? "bg-[#c8a227] text-white border-[#c8a227]"
-                    : "bg-[#f9f5ed] text-[#c8a227] border-[1.3px] hover:bg-[#c8a227] hover:text-white border-[#c8a227]"
+                    ? "bg-[var(--brand-primary-dark)] text-white border-[var(--brand-primary-dark)]"
+                    : "bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-[1.3px] hover:bg-[var(--brand-primary-dark)] hover:text-white border-[var(--brand-primary-dark)]"
                 }`}
               >
                 {isUiInCompare ? "Remove From Compare" : "Add toCompare"}
@@ -422,8 +422,8 @@ export function ProfileCard({
                 }}
                 className={`flex-1 h-[38px] rounded-full font-medium text-[13px] border transition-all duration-200 px-4 ${
                   isUiInCompare
-                    ? "bg-[#c8a227] text-white border-[#c8a227]"
-                    : "bg-[#f9f5ed] text-[#c8a227]  border-[1.3px] border-[#c8a227] hover:bg-[#c8a227] hover:text-white"
+                    ? "bg-[var(--brand-primary-dark)] text-white border-[var(--brand-primary-dark)]"
+                    : "bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)]  border-[1.3px] border-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark)] hover:text-white"
                 }`}
               >
                 {isUiInCompare ? "Remove From Compare" : "Add to Compare"}
@@ -446,9 +446,9 @@ export function ProfileCard({
                   }
                   navigate(`/dashboard/profile/${profileId}`);
                 }}
-                className="flex-1 h-[38px] bg-[#f9f5ed] text-[#c8a227] border-[1.3px] border-[#c8a227] rounded-full 
-          font-medium text-[13px] hover:bg-[#c8a227] hover:text-white hover:border-[#c8a227] 
-          transition-all duration-200 px-4 flex items-center justify-center gap-2"
+                    className="flex-1 h-[38px] bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-[1.3px] border-[var(--brand-primary-dark)] rounded-full 
+                  font-medium text-[13px] hover:bg-[var(--brand-primary-dark)] hover:text-white hover:border-[var(--brand-primary-dark)] 
+                  transition-all duration-200 px-4 flex items-center justify-center gap-2"
               >
                 <Eye size={16} />
                 <span>View </span>
@@ -456,8 +456,8 @@ export function ProfileCard({
 
               <Button
                 onClick={handleSendRequestClick}
-                className="w-full h-[38px] bg-[#c8a227] text-white rounded-full font-medium text-[13px] 
-          hover:bg-[#b8941e] transition-all duration-200 px-4"
+                    className="w-full h-[38px] bg-[var(--brand-primary-dark)] text-white rounded-full font-medium text-[13px] 
+                  hover:bg-[var(--brand-primary-dark-hover-3)] transition-all duration-200 px-4"
               >
                 Send Request
               </Button>
@@ -471,8 +471,8 @@ export function ProfileCard({
                 }}
                 className={`flex-1 h-[38px] rounded-full font-medium text-[13px] border transition-all duration-200 px-4 ${
                   isUiInCompare
-                    ? "bg-[#c8a227] text-white border-[#c8a227]"
-                    : "bg-[#f9f5ed] text-[#c8a227]  border-[1.3px] border-[#c8a227] hover:bg-[#c8a227] hover:text-white"
+                    ? "bg-[var(--brand-primary-dark)] text-white border-[var(--brand-primary-dark)]"
+                    : "bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)]  border-[1.3px] border-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark)] hover:text-white"
                 }`}
               >
                 {isUiInCompare ? "Remove From Compare" : "Add to Compare"}
@@ -520,13 +520,13 @@ export function ProfileCard({
             />
             <div
               style={{ display: "none" }}
-              className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#fefdfb] via-[#f9f5ed] to-[#f5f0e3] flex items-center justify-center rounded-t-[20px] border-b-2 border-[#e6dec5]"
+              className="absolute inset-0 w-full h-full bg-gradient-to-br from-[var(--brand-bg-softest)] via-[var(--brand-bg-soft)] to-[var(--brand-bg-alt)] flex items-center justify-center rounded-t-[20px] border-b-2 border-[var(--brand-border-soft)]"
             >
               <div className="text-center space-y-3">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-white to-[#fef9f0] shadow-md flex items-center justify-center mx-auto border-4 border-[#e4c48a]/20">
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-white to-[var(--brand-bg-softer)] shadow-md flex items-center justify-center mx-auto border-4 border-[rgb(var(--brand-gold-rgb)/0.2)]">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-12 w-12 text-[#c8a227]"
+                    className="h-12 w-12 text-[var(--brand-primary-dark)]"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -546,12 +546,12 @@ export function ProfileCard({
             </div>
           </div>
         ) : (
-          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#fefdfb] via-[#f9f5ed] to-[#f5f0e3] flex items-center justify-center rounded-t-[20px] border-b-2 border-[#e6dec5]">
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[var(--brand-bg-softest)] via-[var(--brand-bg-soft)] to-[var(--brand-bg-alt)] flex items-center justify-center rounded-t-[20px] border-b-2 border-[var(--brand-border-soft)]">
             <div className="text-center space-y-3">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-white to-[#fef9f0] shadow-md flex items-center justify-center mx-auto border-4 border-[#e4c48a]/20">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-white to-[var(--brand-bg-softer)] shadow-md flex items-center justify-center mx-auto border-4 border-[rgb(var(--brand-gold-rgb)/0.2)]">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-12 w-12 text-[#c8a227]"
+                  className="h-12 w-12 text-[var(--brand-primary-dark)]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -574,7 +574,7 @@ export function ProfileCard({
         {/* single compatibility badge (fixed duplicate bug) */}
         {!["newprofiles"].includes(variant) && compatibility ? (
           <div className="absolute top-3 left-3 z-20">
-            <div className="bg-[#c8a227] backdrop-blur-md text-white text-[13px] font-semibold px-3 py-[4px] rounded-full shadow border border-[#e0c36a]/80">
+            <div className="bg-[var(--brand-primary-dark)] backdrop-blur-md text-white text-[13px] font-semibold px-3 py-[4px] rounded-full shadow border border-[rgb(var(--brand-border-gold-rgb)/0.8)]">
               {compatibility}% Match
             </div>
           </div>
@@ -589,7 +589,7 @@ export function ProfileCard({
               const s = String(status || "").toLowerCase();
               const badgeClass =
                 s === "accepted"
-                  ? "bg-[#f9f5ed] text-[#c8a227] border-[#e9d8a6]"
+                  ? "bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-[var(--brand-border-gold-soft)]"
                   : s === "pending"
                     ? "bg-yellow-50 text-[#f54800] border-yellow-200"
                     : s === "rejected"
@@ -615,12 +615,12 @@ export function ProfileCard({
             whileTap={{ scale: 0.9 }}
             onClick={handleToggleShortlistClick}
             className={`absolute top-3 right-3 p-2 rounded-full flex items-center justify-center w-auto
-    shadow-none border-none bg-transparent hover:bg-[#fff8e1]/60 transition-all z-50
-    ${isShortlisted ? "bg-[#fff8e1]/80" : ""}`}
+    shadow-none border-none bg-transparent hover:bg-[rgb(var(--brand-like-bg-rgb)/0.6)] transition-all z-50
+    ${isShortlisted ? "bg-[rgb(var(--brand-like-bg-rgb)/0.8)]" : ""}`}
           >
             <Star
               size={20}
-              className={`transition-all duration-200 ${isShortlisted ? "text-[#c8a227] fill-[#c8a227]" : "text-[#c8a227]"}`}
+              className={`transition-all duration-200 ${isShortlisted ? "text-[var(--brand-primary-dark)] fill-[var(--brand-primary-dark)]" : "text-[var(--brand-primary-dark)]"}`}
               strokeWidth={2}
             />
           </motion.button>
@@ -668,7 +668,7 @@ export function ProfileCard({
           {religion && (
             <span
               className="text-black px-4 py-[4px] rounded-full text-sm font-semibold max-w-[160px] h-7 flex items-center overflow-hidden text-ellipsis whitespace-nowrap"
-              style={{ backgroundColor: "#f6f1e6" }}
+              style={{ backgroundColor: "var(--brand-badge-bg)" }}
               title={religion}
             >
               {religion}
@@ -676,7 +676,7 @@ export function ProfileCard({
           )}
           {caste && (
             <span
-              className="text-black px-3 min-w-0 max-w-[160px] h-7 flex items-center justify-center rounded-full text-sm font-semibold bg-[#f6f1e6] truncate"
+              className="text-black px-3 min-w-0 max-w-[160px] h-7 flex items-center justify-center rounded-full text-sm font-semibold bg-[var(--brand-badge-bg)] truncate"
               title={caste}
             >
               {caste}

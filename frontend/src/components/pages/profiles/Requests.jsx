@@ -75,7 +75,7 @@ export function Requests({
     </div>;
   return <div className="max-w-[1440px] mx-auto px-3 md:px-6 lg:px-8 py-6 space-y-6">
       <div>
-        <h2 className="m-0 mb-2 text-2xl font-semibold text-[#3a2f00]">Requests</h2>
+        <h2 className="m-0 mb-2 text-2xl font-semibold text-[var(--brand-text-dark)]">Requests</h2>
         <p className="text-muted-foreground m-0">Manage your sent and received interest requests</p>
       </div>
 
@@ -92,7 +92,7 @@ export function Requests({
           }].map(tab => <button key={tab.key} onClick={() => {
             setActiveTab(tab.key);
             setStatusFilter("all");
-          }} className={`px-4 py-2 -mb-[1px] transition-all duration-200 ${activeTab === tab.key ? "text-[#D4A052] border-b-2 border-[#D4A052] font-semibold bg-transparent" : "text-gray-500 hover:text-[#D4A052] border-b-2 border-transparent bg-transparent"}`}>
+          }} className={`px-4 py-2 -mb-[1px] transition-all duration-200 ${activeTab === tab.key ? "text-[var(--brand-primary)] border-b-2 border-[var(--brand-primary)] font-semibold bg-transparent" : "text-gray-500 hover:text-[var(--brand-primary)] border-b-2 border-transparent bg-transparent"}`}>
                 {tab.label}
               </button>)}
           </div>

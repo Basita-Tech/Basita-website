@@ -1042,7 +1042,7 @@ export function UserDashboard() {
     } : undefined;
     navigate(`/dashboard/profile/${id}`, { state });
   };
-  return <div className="min-h-screen bg-[#f9f5ed] flex flex-col">
+  return <div className="min-h-screen bg-[var(--brand-bg-soft)] flex flex-col">
 
       {}
       <Navigation activePage={activePage} onNavigate={handleNavigate} />
@@ -1079,7 +1079,7 @@ export function UserDashboard() {
             {loadingProfileViews ? <div className="max-w-[1440px] mx-auto px-4 md:px-6 lg:px-8 py-6">
                 <div className="bg-white rounded-[20px] p-8 text-center">
                   <div className="flex flex-col items-center gap-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#c8a227]"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--brand-primary-dark)]"></div>
                     <p className="text-gray-600">Loading profile views...</p>
                   </div>
                 </div>

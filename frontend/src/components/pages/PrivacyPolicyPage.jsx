@@ -16,17 +16,17 @@ export default function PrivacyPolicyPage() {
 
       {/* Privacy Policy Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#800000] mb-3">
+        <h1 className="text-3xl sm:text-4xl font-bold text-[var(--brand-maroon)] mb-3">
           Privacy Policy
         </h1>
         <p className="text-sm text-gray-600 mb-2">Last Updated: January 2025</p>
         <p className="text-sm text-gray-600 mb-10">
-          by Jisal & Parul Patel | satfera.com
+          by Jisal &amp; Parul Patel | satfera.com
         </p>
 
         <div className="space-y-8 text-gray-700 text-base leading-relaxed">
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
               1. Introduction
             </h2>
             <p>
@@ -64,7 +64,7 @@ export default function PrivacyPolicyPage() {
 
           {/* Eligibility */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
               2. Eligibility
             </h2>
             <ul className="list-disc pl-6 space-y-2">
@@ -97,17 +97,17 @@ export default function PrivacyPolicyPage() {
 
           {/* Registration & Verification */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
-              3. Registration & Verification
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
+              3. Registration &amp; Verification
             </h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>Register by visiting satfera.com and creating an account</li>
               <li>
                 Complete profile forms covering:
                 <ul className="list-disc pl-6 mt-2">
-                  <li>Personal details & Educational background</li>
-                  <li>Professional information & Health information</li>
-                  <li>Family background & Partner expectations</li>
+                  <li>Personal details &amp; Educational background</li>
+                  <li>Professional information &amp; Health information</li>
+                  <li>Family background &amp; Partner expectations</li>
                 </ul>
               </li>
               <li>
@@ -135,7 +135,7 @@ export default function PrivacyPolicyPage() {
 
           {/* Membership */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
               4. Membership
             </h2>
             <ul className="list-disc pl-6 space-y-2">
@@ -160,7 +160,7 @@ export default function PrivacyPolicyPage() {
 
           {/* User Responsibilities */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
               5. User Responsibilities
             </h2>
             <ul className="list-disc pl-6 space-y-2">
@@ -180,7 +180,7 @@ export default function PrivacyPolicyPage() {
 
           {/* Prohibited Activities */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
               6. Prohibited Activities
             </h2>
             <p className="mb-3">
@@ -205,8 +205,8 @@ export default function PrivacyPolicyPage() {
 
           {/* Profile Visibility & Contact */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
-              7. Profile Visibility & Contact
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
+              7. Profile Visibility &amp; Contact
             </h2>
             <p className="mb-3">
               <strong>Visible to all members:</strong>
@@ -237,13 +237,13 @@ export default function PrivacyPolicyPage() {
 
           {/* Blocking & Reporting */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
-              8. Blocking & Reporting
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
+              8. Blocking &amp; Reporting
             </h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>
-                Block any user from Settings &gt; Privacy &amp; Safety &gt;
-                Block a User
+                Block any user from Settings &gt; Privacy &amp; Safety &gt; Block
+                a User
               </li>
               <li>
                 Blocked users cannot view your profile or send you requests
@@ -259,7 +259,7 @@ export default function PrivacyPolicyPage() {
 
           {/* Marriage Finalization */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
               9. Marriage Finalization
             </h2>
             <ul className="list-disc pl-6 space-y-2">
@@ -273,8 +273,8 @@ export default function PrivacyPolicyPage() {
 
           {/* Account Deactivation & Deletion */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
-              10. Account Deactivation & Deletion
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
+              10. Account Deactivation &amp; Deletion
             </h2>
             <p className="mb-3">
               <strong>Deactivation (Temporary):</strong>
@@ -296,7 +296,7 @@ export default function PrivacyPolicyPage() {
 
           {/* Termination by Satfera */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
               11. Termination by Satfera
             </h2>
             <p className="mb-3">
@@ -314,8 +314,8 @@ export default function PrivacyPolicyPage() {
 
           {/* Disclaimer & Liability */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
-              12. Disclaimer & Liability
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
+              12. Disclaimer &amp; Liability
             </h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>
@@ -341,7 +341,7 @@ export default function PrivacyPolicyPage() {
 
           {/* Changes to Terms */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
               13. Changes to Terms
             </h2>
             <ul className="list-disc pl-6 space-y-2">
@@ -359,7 +359,7 @@ export default function PrivacyPolicyPage() {
 
           {/* Contact Us */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
               Contact Us
             </h2>
             <p className="mb-3">
@@ -371,7 +371,7 @@ export default function PrivacyPolicyPage() {
                 <strong>Email:</strong>{" "}
                 <a
                   href="mailto:support@satfera.com"
-                  className="text-[#D4A052] hover:underline"
+                  className="text-[var(--brand-primary)] hover:underline"
                 >
                   support@satfera.com
                 </a>
@@ -380,7 +380,7 @@ export default function PrivacyPolicyPage() {
                 <strong>Phone:</strong>{" "}
                 <a
                   href="tel:+919879003964"
-                  className="text-[#D4A052] hover:underline"
+                  className="text-[var(--brand-primary)] hover:underline"
                 >
                   +91 9879003964
                 </a>

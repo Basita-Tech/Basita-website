@@ -16,7 +16,7 @@ export default function TermsPage() {
 
       {/* Terms Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#800000] mb-3">
+        <h1 className="text-3xl sm:text-4xl font-bold text-[var(--brand-maroon)] mb-3">
           Terms & Conditions
         </h1>
         <p className="text-sm text-gray-600 mb-10">
@@ -76,7 +76,7 @@ export default function TermsPage() {
           </p>
 
           <section className="mt-8 pt-8 border-t border-gray-300">
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">
               Contact Us
             </h2>
             <p className="mb-3">
@@ -88,7 +88,7 @@ export default function TermsPage() {
                 <strong>Email:</strong>{" "}
                 <a
                   href="mailto:support@satfera.com"
-                  className="text-[#D4A052] hover:underline"
+                  className="text-[var(--brand-primary)] hover:underline"
                 >
                   support@satfera.com
                 </a>
@@ -97,7 +97,7 @@ export default function TermsPage() {
                 <strong>Phone:</strong>{" "}
                 <a
                   href="tel:+919879003964"
-                  className="text-[#D4A052] hover:underline"
+                  className="text-[var(--brand-primary)] hover:underline"
                 >
                   +91 9879003964
                 </a>

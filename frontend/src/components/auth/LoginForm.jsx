@@ -423,16 +423,16 @@ const LoginForm = () => {
   };
 
   const inputClass =
-    "w-full p-3 text-sm border border-[#D4A052] rounded-md focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] outline-none transition";
+    "w-full p-3 text-sm border border-[var(--brand-primary)] rounded-md focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] outline-none transition";
   return (
     <div className="min-h-screen flex justify-center items-center px-4 bg-gradient-to-br from-background via-cream to-secondary">
-      <div className="w-full max-w-sm shadow-xl rounded-2xl p-6 border-t-4 border-[#F9F7F5]">
+      <div className="w-full max-w-sm shadow-xl rounded-2xl p-6 border-t-4 border-[var(--brand-bg)]">
         {}
         <div className="text-center mb-3">
           <h2 className="text-2xl font-bold text-gray-800 mb-1">
             Welcome Back!
           </h2>
-          <p className="text-[#D4A052] text-sm font-medium">
+          <p className="text-[var(--brand-primary)] text-sm font-medium">
             Sign in to continue your journey
           </p>
         </div>
@@ -502,7 +502,7 @@ const LoginForm = () => {
           <div className="flex justify-between text-sm mb-3">
             <Link
               to="/forgot-password"
-              className="text-[#D4A052] font-medium hover:underline"
+              className="text-[var(--brand-primary)] font-medium hover:underline"
             >
               Forgot Password?
             </Link>
@@ -512,7 +512,7 @@ const LoginForm = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#D4A052] hover:bg-[#b38b40] text-white font-semibold py-3 text-sm rounded-full shadow-md transition-colors disabled:opacity-50"
+            className="w-full bg-[var(--brand-primary)] hover:bg-[var(--brand-primary-hover)] text-white font-semibold py-3 text-sm rounded-full shadow-md transition-colors disabled:opacity-50"
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>
@@ -559,7 +559,7 @@ const LoginForm = () => {
           Don’t have an account?{" "}
           <Link
             to="/signup"
-            className="text-[#D4A052] font-semibold hover:underline"
+            className="text-[var(--brand-primary)] font-semibold hover:underline"
           >
             Sign up
           </Link>

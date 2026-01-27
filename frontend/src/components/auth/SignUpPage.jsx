@@ -591,16 +591,16 @@ const SignUpPage = () => {
     }
   };
   return (
-    <div className="min-h-screen w-full bg-[#F9F7F5] flex justify-center items-center px-2.5 sm:px-4">
+    <div className="min-h-screen w-full bg-[var(--brand-bg)] flex justify-center items-center px-2.5 sm:px-4">
       <SEO
         title="Register | Satfera"
         description="Register a Satfera account."
         path="/signup"
       />
-      <div className="bg-[#FBFAF7] rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 w-full max-w-xl hover:scale-[1.01] sm:hover:scale-[1.02] transition-transform duration-300">
+      <div className="bg-[var(--brand-card)] rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 w-full max-w-xl hover:scale-[1.01] sm:hover:scale-[1.02] transition-transform duration-300">
         <Link
           to="/"
-          className="text-[#D4A052] text-xs sm:text-sm flex items-center mb-4 sm:mb-6 hover:text-[#E4C48A] transition-colors"
+          className="text-[var(--brand-primary)] text-xs sm:text-sm flex items-center mb-4 sm:mb-6 hover:text-[var(--brand-gold)] transition-colors"
         >
           <ArrowLeft className="mr-1 w-4 h-4 sm:w-5 sm:h-5" /> Back to Home
         </Link>
@@ -628,7 +628,7 @@ const SignUpPage = () => {
                   type="button"
                   onClick={() => handleProfileForChange(opt.value)}
                   className={`px-4 py-3 text-sm font-medium shadow-md border rounded-md transition-all duration-200 
-                    ${formData.profileFor === opt.value ? "bg-[#D4A052] text-white border-[#E4C48A] font-semibold" : "bg-white text-gray-700 border-[#E4C48A] hover:bg-[#FFF9F2]"}`}
+                    ${formData.profileFor === opt.value ? "bg-[var(--brand-primary)] text-white border-[var(--brand-gold)] font-semibold" : "bg-white text-gray-700 border-[var(--brand-gold)] hover:bg-[#FFF9F2]"}`}
                 >
                   {opt.label}
                 </button>
@@ -654,7 +654,7 @@ const SignUpPage = () => {
                     type="button"
                     onClick={() => handleGenderSelect(g)}
                     className={`px-4 py-3 text-sm font-medium shadow-md border rounded-md transition-all duration-200
-            ${formData.gender === g ? "bg-[#D4A052] text-white border-[#E4C48A] font-semibold" : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"}`}
+            ${formData.gender === g ? "bg-[var(--brand-primary)] text-white border-[var(--brand-gold)] font-semibold" : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"}`}
                   >
                     {g === "male" ? "Male" : "Female"}
                   </button>
@@ -683,8 +683,8 @@ const SignUpPage = () => {
                   onChange={handleInputChange}
                   onBlur={() => handleNameBlur("firstName")}
                   autoComplete="off"
-                  className={`w-full p-3 rounded-md border text-sm ${errors.firstName ? "border-red-500" : "border-[#E4C48A]"} 
-    focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition`}
+                  className={`w-full p-3 rounded-md border text-sm ${errors.firstName ? "border-red-500" : "border-[var(--brand-gold)]"} 
+    focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
                 />
 
                 {errors.firstName && (
@@ -703,8 +703,8 @@ const SignUpPage = () => {
                   onChange={handleInputChange}
                   onBlur={() => handleNameBlur("middleName")}
                   autoComplete="off"
-                  className={`w-full p-3 rounded-md border text-sm ${errors.middleName ? "border-red-500" : "border-[#E4C48A]"} 
-    focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition`}
+                  className={`w-full p-3 rounded-md border text-sm ${errors.middleName ? "border-red-500" : "border-[var(--brand-gold)]"} 
+    focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
                 />
               </div>
 
@@ -717,8 +717,8 @@ const SignUpPage = () => {
                   onChange={handleInputChange}
                   onBlur={() => handleNameBlur("lastName")}
                   autoComplete="off"
-                  className={`w-full p-3 rounded-md border text-sm ${errors.lastName ? "border-red-500" : "border-[#E4C48A]"} 
-    focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition`}
+                  className={`w-full p-3 rounded-md border text-sm ${errors.lastName ? "border-red-500" : "border-[var(--brand-gold)]"} 
+    focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
                 />
                 {errors.lastName && (
                   <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
@@ -743,7 +743,7 @@ const SignUpPage = () => {
                 onChange={handleInputChange}
                 onBlur={handleDOBBlur}
                 autoComplete="off"
-                className={`w-full p-3 rounded-md border text-sm ${errors.dobDay ? "border-red-500" : "border-[#E4C48A]"} focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition`}
+                className={`w-full p-3 rounded-md border text-sm ${errors.dobDay ? "border-red-500" : "border-[var(--brand-gold)]"} focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
               />
               <input
                 type="text"
@@ -754,7 +754,7 @@ const SignUpPage = () => {
                 onChange={handleInputChange}
                 onBlur={handleDOBBlur}
                 autoComplete="off"
-                className={`w-full p-3 rounded-md border text-sm ${errors.dobMonth ? "border-red-500" : "border-[#E4C48A]"} focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition`}
+                className={`w-full p-3 rounded-md border text-sm ${errors.dobMonth ? "border-red-500" : "border-[var(--brand-gold)]"} focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
               />
               <input
                 type="text"
@@ -765,7 +765,7 @@ const SignUpPage = () => {
                 onChange={handleInputChange}
                 onBlur={handleDOBBlur}
                 autoComplete="off"
-                className={`w-full p-3 rounded-md border text-sm ${errors.dobYear ? "border-red-500" : "border-[#E4C48A]"} focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition`}
+                className={`w-full p-3 rounded-md border text-sm ${errors.dobYear ? "border-red-500" : "border-[var(--brand-gold)]"} focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
               />
             </div>
 
@@ -787,7 +787,7 @@ const SignUpPage = () => {
               value={formData.email}
               onChange={handleInputChange}
               autoComplete="off"
-              className={`w-full p-3 rounded-md border text-sm ${errors.email ? "border-red-500" : "border-[#E4C48A]"} focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition`}
+              className={`w-full p-3 rounded-md border text-sm ${errors.email ? "border-red-500" : "border-[var(--brand-gold)]"} focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
             />
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email}</p>
@@ -848,7 +848,7 @@ const SignUpPage = () => {
                 maxLength={formData.countryCode === "+91" ? 10 : 15}
                 onChange={handleInputChange}
                 autoComplete="off"
-                className={`w-full p-3 rounded-md border text-sm ${errors.mobile ? "border-red-500" : "border-[#E4C48A]"} focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition`}
+                className={`w-full p-3 rounded-md border text-sm ${errors.mobile ? "border-red-500" : "border-[var(--brand-gold)]"} focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
               />
             </div>
 
@@ -890,8 +890,8 @@ const SignUpPage = () => {
                 value={formData.password}
                 onChange={handleInputChange}
                 autoComplete="new-password"
-                className={`w-full p-3 pr-12 rounded-md border text-sm ${errors.password ? "border-red-500" : "border-[#E4C48A]"} 
-    focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition`}
+                className={`w-full p-3 pr-12 rounded-md border text-sm ${errors.password ? "border-red-500" : "border-[var(--brand-gold)]"} 
+    focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
               />
               <span
                 className="absolute inset-y-0 right-3 flex items-center text-gray-500 cursor-pointer"
@@ -960,8 +960,8 @@ const SignUpPage = () => {
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 autoComplete="new-password"
-                className={`w-full p-3 pr-12 rounded-md border text-sm ${errors.confirmPassword ? "border-red-500" : "border-[#E4C48A]"} 
-    focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition`}
+                className={`w-full p-3 pr-12 rounded-md border text-sm ${errors.confirmPassword ? "border-red-500" : "border-[var(--brand-gold)]"} 
+    focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
               />
               <span
                 className="absolute inset-y-0 right-3 flex items-center text-gray-500 cursor-pointer"
@@ -994,7 +994,7 @@ const SignUpPage = () => {
                   termsAccepted: "",
                 }));
               }}
-              className="w-4 h-4 accent-[#D4AF37] mt-1 flex-shrink-0"
+              className="w-4 h-4 accent-[var(--brand-accent)] mt-1 flex-shrink-0"
             />
             <label className="text-xs sm:text-sm text-gray-700">
               I agree to the{" "}
@@ -1017,7 +1017,7 @@ const SignUpPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full bg-[#D4A052] hover:bg-[#E4C48A] text-white p-3 rounded-full font-semibold text-sm shadow-lg transition-colors duration-300 
+            className={`w-full bg-[var(--brand-primary)] hover:bg-[var(--brand-gold)] text-white p-3 rounded-full font-semibold text-sm shadow-lg transition-colors duration-300 
     ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             {loading ? "Creating..." : "Create Profile"}
@@ -1103,7 +1103,7 @@ const SignUpPage = () => {
               {}
               <div className="flex-shrink-0 border-t border-gray-200 px-5 sm:px-8 py-4 sm:py-6 flex justify-end bg-white">
                 <button
-                  className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg bg-[#D4A052] hover:bg-[#C8A227] text-white text-sm sm:text-base font-semibold transition shadow-md"
+                  className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg bg-[var(--brand-primary)] hover:bg-[var(--brand-primary-dark)] text-white text-sm sm:text-base font-semibold transition shadow-md"
                   onClick={() => setShowDisclaimer(false)}
                 >
                   Close

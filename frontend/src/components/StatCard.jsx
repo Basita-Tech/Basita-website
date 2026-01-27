@@ -20,7 +20,7 @@ export function StatCard({
           </div>
         </div>
 
-        {onViewClick && <button onClick={onViewClick} className="flex items-center gap-1 text-sm text-[#C8A227] hover:text-[#A88A1E] transition-colors self-start group bg-transparent border-none p-0 shadow-none">
+        {onViewClick && <button onClick={onViewClick} className="flex items-center gap-1 text-sm text-[var(--brand-primary-dark)] hover:text-[var(--brand-primary-dark-hover-5)] transition-colors self-start group bg-transparent border-none p-0 shadow-none">
   View
   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
       </button>}

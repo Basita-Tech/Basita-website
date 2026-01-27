@@ -14,16 +14,16 @@ export function Slider({
   }, [value, defaultValue, min, max]);
   return <SliderPrimitive.Root data-slot="slider" defaultValue={defaultValue} value={value} min={min} max={max} className={cn("relative flex w-full touch-none items-center select-none data-[disabled]:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col", className)} {...props}>
       {}
-      <SliderPrimitive.Track data-slot="slider-track" className={cn("relative grow overflow-hidden rounded-full bg-[#f5f0e8] data-[orientation=horizontal]:h-2 data-[orientation=vertical]:w-2")}>
+      <SliderPrimitive.Track data-slot="slider-track" className={cn("relative grow overflow-hidden rounded-full bg-[var(--brand-track-bg)] data-[orientation=horizontal]:h-2 data-[orientation=vertical]:w-2")}>
         {}
-        <SliderPrimitive.Range data-slot="slider-range" className={cn("absolute bg-[#c8a227] data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full")} />
+        <SliderPrimitive.Range data-slot="slider-range" className={cn("absolute bg-[var(--brand-primary-dark)] data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full")} />
       </SliderPrimitive.Track>
 
       {}
       {Array.from({
       length: _values.length
-    }, (_, index) => <SliderPrimitive.Thumb data-slot="slider-thumb" key={index} className="block size-5 rounded-full bg-white border-[2px] border-[#c8a227] shadow-sm 
-                     hover:ring-4 hover:ring-[#c8a227]/30 focus-visible:ring-4 focus-visible:ring-[#c8a227]/30 
-                     transition-all" />)}
+    }, (_, index) => <SliderPrimitive.Thumb data-slot="slider-thumb" key={index} className="block size-5 rounded-full bg-white border-[2px] border-[var(--brand-primary-dark)] shadow-sm 
+             hover:ring-4 hover:ring-[rgb(var(--brand-primary-dark-rgb)/0.3)] focus-visible:ring-4 focus-visible:ring-[rgb(var(--brand-primary-dark-rgb)/0.3)] 
+             transition-all" />)}
     </SliderPrimitive.Root>;
 }

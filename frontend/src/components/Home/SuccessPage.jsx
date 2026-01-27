@@ -98,13 +98,13 @@ const SuccessPage = () => {
           <div
             className="inline-flex p-4 rounded-full"
             style={{
-              backgroundColor: "#FFF3D6",
+              backgroundColor: "var(--brand-bg-welcome)",
             }}
           >
             <i
               className="bi bi-check-circle-fill text-4xl"
               style={{
-                color: "#D4A052",
+                color: "var(--brand-primary)",
               }}
             ></i>
           </div>
@@ -115,7 +115,7 @@ const SuccessPage = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-1">
             Welcome, {userData?.name}!
           </h2>
-          <h3 className="text-[#D4A052] font-semibold mb-2">
+          <h3 className="text-[var(--brand-primary)] font-semibold mb-2">
             Account Created Successfully!
           </h3>
           <p className="text-gray-600">
@@ -129,7 +129,7 @@ const SuccessPage = () => {
           <button
             onClick={handleCompleteProfile}
             style={{
-              backgroundColor: "#D4A052",
+              backgroundColor: "var(--brand-primary)",
             }}
             className="hover:opacity-90 text-white font-semibold py-3 rounded-lg transition-all flex items-center justify-center gap-2 shadow-md"
           >
@@ -137,7 +137,7 @@ const SuccessPage = () => {
           </button>
           <button
             onClick={handleSkip}
-            className="border-2 border-[#D4A052] bg-white text-[#D4A052] hover:bg-[#D4A052] hover:text-white py-3 rounded-lg transition-all font-semibold shadow-sm"
+            className="border-2 border-[var(--brand-primary)] bg-white text-[var(--brand-primary)] hover:bg-[var(--brand-primary)] hover:text-white py-3 rounded-lg transition-all font-semibold shadow-sm"
           >
             Skip for Now
           </button>
@@ -174,7 +174,7 @@ const SuccessPage = () => {
         </div>
 
         {}
-        <div className="bg-[#FFF6E5] text-[#D4A052] rounded-lg p-3 text-sm">
+        <div className="bg-[var(--brand-bg-welcome-2)] text-[var(--brand-primary)] rounded-lg p-3 text-sm">
           We’ve sent a welcome email to your registered email address.
         </div>
       </div>

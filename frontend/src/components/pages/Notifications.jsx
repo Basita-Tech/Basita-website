@@ -73,7 +73,7 @@ export default function Notifications() {
       case "shortlisted":
         return <Heart className="w-5 h-5 text-red-500" />;
       case "match":
-        return <CheckCheck className="w-5 h-5 text-[#D4A052]" />;
+        return <CheckCheck className="w-5 h-5 text-[var(--brand-primary)]" />;
       default:
         return <Bell className="w-5 h-5 text-gray-500" />;
     }
@@ -125,14 +125,14 @@ export default function Notifications() {
           animation: fadeIn 0.3s ease-out;
         }
       `}</style>
-      <Card className="border-[#D4A052]/30 shadow-lg transition-all duration-300">
-        <CardHeader className="border-b border-[#D4A052]/20">
+      <Card className="border-[rgb(var(--brand-primary-rgb)/0.3)] shadow-lg transition-all duration-300">
+        <CardHeader className="border-b border-[rgb(var(--brand-primary-rgb)/0.2)]">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl font-bold text-[#800000] flex items-center gap-2">
+            <CardTitle className="text-2xl font-bold text-[var(--brand-maroon)] flex items-center gap-2">
               <Bell className="w-6 h-6" />
               Notifications
             </CardTitle>
-            {notifications.some(n => !n.isRead) && <Button onClick={handleMarkAllAsRead} variant="outline" size="sm" className="text-[#D4A052] border-[#D4A052] hover:bg-[#D4A052] hover:text-white">
+            {notifications.some(n => !n.isRead) && <Button onClick={handleMarkAllAsRead} variant="outline" size="sm" className="text-[var(--brand-primary)] border-[var(--brand-primary)] hover:bg-[var(--brand-primary)] hover:text-white">
                 <CheckCheck className="w-4 h-4 mr-2" />
                 Mark all as read
               </Button>}
@@ -150,8 +150,8 @@ export default function Notifications() {
               <p className="text-gray-400 text-sm mt-2">
                 You'll see updates about connections, matches, and more here
               </p>
-            </div> : <div className="divide-y divide-[#D4A052]/10 animate-fadeIn">
-              {notifications.map((notification, idx) => <div key={notification._id} className={`p-4 hover:bg-[#D4A052]/5 transition-all duration-200 cursor-pointer ${!notification.isRead ? "bg-blue-50/30" : ""}`} style={{ animation: `slideIn 0.3s ease-out ${idx * 50}ms forwards`, opacity: 0 }} onClick={() => !notification.isRead && handleMarkAsRead(notification._id)}>
+            </div> : <div className="divide-y divide-[rgb(var(--brand-primary-rgb)/0.1)] animate-fadeIn">
+              {notifications.map((notification, idx) => <div key={notification._id} className={`p-4 hover:bg-[rgb(var(--brand-primary-rgb)/0.05)] transition-all duration-200 cursor-pointer ${!notification.isRead ? "bg-blue-50/30" : ""}`} style={{ animation: `slideIn 0.3s ease-out ${idx * 50}ms forwards`, opacity: 0 }} onClick={() => !notification.isRead && handleMarkAsRead(notification._id)}>
                   <div className="flex gap-4">
                     {}
                     <div className="flex-shrink-0 mt-1">
@@ -162,7 +162,7 @@ export default function Notifications() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1">
-                          <h3 className="font-semibold text-[#800000] mb-1">
+                          <h3 className="font-semibold text-[var(--brand-maroon)] mb-1">
                             {notification.title}
                           </h3>
                           <p className="text-sm text-gray-600 leading-relaxed">
@@ -183,13 +183,13 @@ export default function Notifications() {
             </div>}
 
           {}
-          {notifications.length > 0 && <div className="flex flex-col gap-4 px-4 py-4 border-t border-[#D4A052]/20">
+          {notifications.length > 0 && <div className="flex flex-col gap-4 px-4 py-4 border-t border-[rgb(var(--brand-primary-rgb)/0.2)]">
               <p className="text-sm text-gray-500">
                 Showing {notifications.length} of {pagination.total} notifications
               </p>
               
               <div className="flex items-center justify-center gap-1 flex-wrap">
-                <Button onClick={() => handlePageChange(pagination.page - 1)} disabled={pagination.page === 1} variant="outline" size="sm" className="border-[#D4A052]/30">
+                <Button onClick={() => handlePageChange(pagination.page - 1)} disabled={pagination.page === 1} variant="outline" size="sm" className="border-[rgb(var(--brand-primary-rgb)/0.3)]">
                   Previous
                 </Button>
                 
@@ -212,14 +212,14 @@ export default function Notifications() {
                       onClick={() => handlePageChange(pageNum)}
                       variant={isActive ? "default" : "outline"}
                       size="sm"
-                      className={`w-10 h-10 rounded-full ${isActive ? "bg-[#C8A227] hover:bg-[#b39120] text-white border-[#C8A227]" : "border-[#D4A052]/30"}`}
+                      className={`w-10 h-10 rounded-full ${isActive ? "bg-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark-hover)] text-white border-[var(--brand-primary-dark)]" : "border-[rgb(var(--brand-primary-rgb)/0.3)]"}`}
                     >
                       {pageNum}
                     </Button>
                   );
                 })}
                 
-                <Button onClick={() => handlePageChange(pagination.page + 1)} disabled={!pagination.hasMore} variant="outline" size="sm" className="border-[#D4A052]/30">
+                <Button onClick={() => handlePageChange(pagination.page + 1)} disabled={!pagination.hasMore} variant="outline" size="sm" className="border-[rgb(var(--brand-primary-rgb)/0.3)]">
                   Next
                 </Button>
               </div>

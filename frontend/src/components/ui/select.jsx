@@ -54,7 +54,7 @@ function SelectItem({
   return <SelectPrimitive.Item data-slot="select-item" className={cn("relative flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 pr-8 pl-2 text-sm text-gray-800 outline-none select-none transition-colors", "focus:bg-[#f5f5f5] focus:text-black", "data-[disabled]:pointer-events-none data-[disabled]:opacity-50", "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", className)} {...props}>
       <span className="absolute right-2 flex size-3.5 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
-          <CheckIcon className="size-4 text-[#d4af37]" />
+          <CheckIcon className="size-4 text-[var(--brand-accent)]" />
         </SelectPrimitive.ItemIndicator>
       </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>

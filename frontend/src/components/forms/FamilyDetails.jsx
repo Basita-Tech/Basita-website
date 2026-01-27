@@ -244,8 +244,8 @@ const FamilyDetails = ({
       onSelect();
     }
   }, []);
-  return <div className="min-h-screen w-full bg-[#F9F7F5] flex justify-center items-start py-2 px-2">
-      <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[#F9F7F5] transition-transform duration-300">
+    return <div className="min-h-screen w-full bg-[var(--brand-bg)] flex justify-center items-start py-2 px-2">
+      <div className="bg-[var(--brand-card)] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[var(--brand-bg)] transition-transform duration-300">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-black">Family Details</h2>
         </div>
@@ -260,7 +260,7 @@ const FamilyDetails = ({
                 <label className="text-sm font-medium mb-1">
                   Father's {field}
                 </label>
-                <input type="text" name={`father${field}`} placeholder={`Father's ${field}`} value={formData[`father${field}`]} onChange={handleChange} className="w-full border border-[#D4A052] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition" />
+                <input type="text" name={`father${field}`} placeholder={`Father's ${field}`} value={formData[`father${field}`]} onChange={handleChange} className="w-full border border-[var(--brand-primary)] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition" />
               </div>)}
 
             {}
@@ -268,7 +268,7 @@ const FamilyDetails = ({
               <label className="text-sm font-medium mb-1">Father's Phone</label>
               <div className="flex flex-col sm:flex-row gap-2">
                 <SearchableCountryCode className="w-full sm:w-32" value={formData.fatherPhoneCode} onChange={code => handlePhoneChange("fatherPhoneCode", code)} countryCodes={countryCodes} />
-                <input type="tel" name="fatherPhone" placeholder="Phone Number" value={formData.fatherPhone} onChange={e => handlePhoneChange("fatherPhone", e.target.value)} className="flex-1 border border-[#D4A052] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition" />
+                <input type="tel" name="fatherPhone" placeholder="Phone Number" value={formData.fatherPhone} onChange={e => handlePhoneChange("fatherPhone", e.target.value)} className="flex-1 border border-[var(--brand-primary)] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition" />
               </div>
             </div>
           </div>
@@ -281,7 +281,7 @@ const FamilyDetails = ({
                 <label className="text-sm font-medium mb-1">
                   Mother's {field}
                 </label>
-                <input type="text" name={`mother${field}`} placeholder={`Mother's ${field}`} value={formData[`mother${field}`]} onChange={handleChange} className="w-full border border-[#D4A052] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition" />
+                <input type="text" name={`mother${field}`} placeholder={`Mother's ${field}`} value={formData[`mother${field}`]} onChange={handleChange} className="w-full border border-[var(--brand-primary)] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition" />
               </div>)}
 
             {}
@@ -289,7 +289,7 @@ const FamilyDetails = ({
               <label className="text-sm font-medium mb-1">Mother's Phone</label>
               <div className="flex flex-col sm:flex-row gap-2">
                 <SearchableCountryCode className="w-full sm:w-32" value={formData.motherPhoneCode} onChange={code => handlePhoneChange("motherPhoneCode", code)} countryCodes={countryCodes} />
-                <input type="tel" name="motherPhone" placeholder="Phone Number" value={formData.motherPhone} onChange={e => handlePhoneChange("motherPhone", e.target.value)} className="flex-1 border border-[#D4A052] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition" />
+                <input type="tel" name="motherPhone" placeholder="Phone Number" value={formData.motherPhone} onChange={e => handlePhoneChange("motherPhone", e.target.value)} className="flex-1 border border-[var(--brand-primary)] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition" />
               </div>
             </div>
           </div>
@@ -325,7 +325,7 @@ const FamilyDetails = ({
             placeholder
           }) => <div className="flex flex-col" key={key}>
                 <label className="text-sm font-medium mb-1">{label}</label>
-                <input type="text" name={key} placeholder={placeholder} value={formData[key]} onChange={handleChange} className="w-full border border-[#D4A052] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition" />
+                <input type="text" name={key} placeholder={placeholder} value={formData[key]} onChange={handleChange} className="w-full border border-[var(--brand-primary)] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition" />
               </div>)}
           </div>
 
@@ -346,9 +346,9 @@ const FamilyDetails = ({
                 hasSiblings: option === "Yes",
                 siblingCount: 0,
                 siblings: []
-              })))} className={`appearance-none w-4 h-4 rounded-full border border-[#E4C48A] transition duration-200
-            ${formData.hasSiblings === (option === "Yes") ? "bg-[#D4A052] border-[#D4A052]" : "border-[#E4C48A]"}
-                  focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A052] focus-visible:ring-offset-1`} />
+              })))} className={`appearance-none w-4 h-4 rounded-full border border-[var(--brand-gold)] transition duration-200
+            ${formData.hasSiblings === (option === "Yes") ? "bg-[var(--brand-primary)] border-[var(--brand-primary)]" : "border-[var(--brand-gold)]"}
+                  focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)] focus-visible:ring-offset-1`} />
                   <span className="text-gray-700">{option}</span>
                 </label>)}
             </div>
@@ -357,26 +357,26 @@ const FamilyDetails = ({
                 <label className="text-sm font-medium mb-2">
                   How many siblings?
                 </label>
-                <CustomSelect name="siblingCount" value={formData.siblingCount} onChange={e => handleSiblingCount(Number(e.target.value))} options={["1", "2", "3", "4", "5", "6"]} placeholder="Select" className="w-full border border-[#D4A052] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition" />
+                <CustomSelect name="siblingCount" value={formData.siblingCount} onChange={e => handleSiblingCount(Number(e.target.value))} options={["1", "2", "3", "4", "5", "6"]} placeholder="Select" className="w-full border border-[var(--brand-primary)] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition" />
 
                 {formData.siblings.map((sibling, index) => <div key={index} className="border p-3 rounded-md bg-purple-50 space-y-2">
                     <div className="flex flex-col">
                       <label className="text-sm font-medium">
                         Sibling {index + 1} Name
                       </label>
-                      <input type="text" placeholder={`Sibling ${index + 1} Name`} value={sibling.name} onChange={e => handleSiblingChange(index, "name", e.target.value)} className="w-full border border-[#D4A052] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition" />
+                      <input type="text" placeholder={`Sibling ${index + 1} Name`} value={sibling.name} onChange={e => handleSiblingChange(index, "name", e.target.value)} className="w-full border border-[var(--brand-primary)] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition" />
                     </div>
 
                     <div className="flex flex-col">
                       <label className="text-sm font-medium">Relation</label>
-                      <CustomSelect name={`sibling-${index}-relation`} value={sibling.relation} onChange={e => handleSiblingChange(index, "relation", e.target.value)} options={["Elder Brother", "Younger Brother", "Elder Sister", "Younger Sister"]} placeholder="Select" className="w-full border border-[#D4A052] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition" />
+                      <CustomSelect name={`sibling-${index}-relation`} value={sibling.relation} onChange={e => handleSiblingChange(index, "relation", e.target.value)} options={["Elder Brother", "Younger Brother", "Elder Sister", "Younger Sister"]} placeholder="Select" className="w-full border border-[var(--brand-primary)] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition" />
                     </div>
 
                     {["Elder Brother", "Younger Brother", "Elder Sister", "Younger Sister"].includes(sibling.relation) && <div className="flex flex-col">
                         <label className="text-sm font-medium">
                           Marital Status
                         </label>
-                        <CustomSelect name={`sibling-${index}-maritalStatus`} value={sibling.maritalStatus} onChange={e => handleSiblingChange(index, "maritalStatus", e.target.value)} options={["Married", "Unmarried"]} placeholder="Select" className="w-full border border-[#D4A052] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition" />
+                        <CustomSelect name={`sibling-${index}-maritalStatus`} value={sibling.maritalStatus} onChange={e => handleSiblingChange(index, "maritalStatus", e.target.value)} options={["Married", "Unmarried"]} placeholder="Select" className="w-full border border-[var(--brand-primary)] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition" />
                       </div>}
                   </div>)}
               </div>}
@@ -390,9 +390,9 @@ const FamilyDetails = ({
                   <input type="radio" name="familyType" value={type} checked={formData.familyType === type} onChange={handleChange} onKeyDown={e => handleRadioKeyDown(e, () => setFormData(prev => ({
                 ...prev,
                 familyType: type
-              })))} className={`appearance-none w-4 h-4 rounded-full border border-[#E4C48A] transition duration-200
-            ${formData.familyType === type ? "bg-[#D4A052] border-[#D4A052]" : "border-[#E4C48A]"}
-            focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A052] focus-visible:ring-offset-1`} />
+              })))} className={`appearance-none w-4 h-4 rounded-full border border-[var(--brand-gold)] transition duration-200
+            ${formData.familyType === type ? "bg-[var(--brand-primary)] border-[var(--brand-primary)]" : "border-[var(--brand-gold)]"}
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)] focus-visible:ring-offset-1`} />
                   <span className="text-gray-700">{type}</span>
                 </label>)}
             </div>
@@ -400,12 +400,12 @@ const FamilyDetails = ({
 
           <div className="pt-6 flex justify-between items-center gap-4">
             {}
-            <button type="button" onClick={handlePrevious} className="w-full sm:w-1/2 py-3 rounded-xl font-medium bg-[#EEEAE6] text-gray-800 hover:bg-[#E4C48A] hover:text-white transition-all duration-300 shadow-sm">
+            <button type="button" onClick={handlePrevious} className="w-full sm:w-1/2 py-3 rounded-xl font-medium bg-[#EEEAE6] text-gray-800 hover:bg-[var(--brand-gold)] hover:text-white transition-all duration-300 shadow-sm">
               Previous
             </button>
 
             {}
-            <button type="submit" className="w-full sm:w-1/2 py-3 rounded-xl font-medium bg-[#D4A052] text-white hover:bg-[#C18E47] transition-all duration-300 shadow-sm">
+            <button type="submit" className="w-full sm:w-1/2 py-3 rounded-xl font-medium bg-[var(--brand-primary)] text-white hover:bg-[var(--brand-primary-hover-deep)] transition-all duration-300 shadow-sm">
               Save & Next
             </button>
           </div>

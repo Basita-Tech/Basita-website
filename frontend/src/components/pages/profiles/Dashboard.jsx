@@ -264,7 +264,7 @@ export function Dashboard({
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-[#C8A227] mx-auto mb-4" />
+          <Loader2 className="w-12 h-12 animate-spin text-[var(--brand-primary-dark)] mx-auto mb-4" />
           <p className="text-gray-600">Loading dashboard...</p>
         </div>
       </div>
@@ -296,7 +296,7 @@ export function Dashboard({
             />
             <label
               htmlFor="dashboard-upload"
-              className="absolute bottom-1 right-1 bg-[#C8A227] p-2 rounded-full shadow-md cursor-pointer hover:bg-[#B49520] border border-white flex items-center justify-center"
+              className="absolute bottom-1 right-1 bg-[var(--brand-primary-dark)] p-2 rounded-full shadow-md cursor-pointer hover:bg-[var(--brand-primary-dark-hover-4)] border border-white flex items-center justify-center"
               title="Upload new photo"
             >
               <Camera className="w-4 h-4 text-white" />
@@ -391,7 +391,7 @@ export function Dashboard({
                   const customId = user?.customId || user?.userId || user?.id;
                   if (!customId) return null;
                   return (
-                    <span className="inline-flex items-center rounded-full px-3 py-[4px] text-[12px] font-medium border bg-[#f9f5ed] text-[#c8a227] border-[#e9d8a6]">
+                    <span className="inline-flex items-center rounded-full px-3 py-[4px] text-[12px] font-medium border bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-[var(--brand-border-gold-soft)]">
                       ID: {String(customId)}
                     </span>
                   );
@@ -406,7 +406,7 @@ export function Dashboard({
                     year: "numeric",
                   });
                   return (
-                    <span className="inline-flex items-center rounded-full px-3 py-[4px] text-[12px] font-medium border bg-[#f9f5ed] text-[#c8a227] border-[#e9d8a6]">
+                    <span className="inline-flex items-center rounded-full px-3 py-[4px] text-[12px] font-medium border bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-[var(--brand-border-gold-soft)]">
                       Plan Expires: {formattedDate}
                     </span>
                   );
@@ -419,7 +419,7 @@ export function Dashboard({
             </div>
 
             <div className="flex items-center justify-center md:justify-start mt-3 mb-4">
-              <span className="text-sm px-4 py-2 bg-[#f9f5ed] rounded-full border border-[#C8A22733]">
+              <span className="text-sm px-4 py-2 bg-[var(--brand-bg-soft)] rounded-full border border-[rgb(var(--brand-primary-dark-rgb)/0.2)]">
                 Account:{" "}
                 {(() => {
                   const acct = user?.accountType;
@@ -435,7 +435,7 @@ export function Dashboard({
               <Button
                 variant="outline"
                 onClick={() => navigate("/dashboard/edit-profile")}
-                className="w-full sm:w-auto rounded-[12px] bg-[#f9f5ed] text-[#C8A227] border-[1.3px] border-[#e0c36a] font-medium hover:bg-[#C8A227] hover:text-white hover:border-[#C8A227] transition-all duration-200 text-sm"
+                className="w-full sm:w-auto rounded-[12px] bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-[1.3px] border-[var(--brand-border-gold)] font-medium hover:bg-[var(--brand-primary-dark)] hover:text-white hover:border-[var(--brand-primary-dark)] transition-all duration-200 text-sm"
               >
                 Edit Profile
               </Button>
@@ -455,7 +455,7 @@ export function Dashboard({
                   }
                 }}
                 disabled={downloadingPdf}
-                className="w-full sm:w-auto rounded-[12px] bg-[#f9f5ed] text-[#C8A227] border-[1.3px] border-[#e0c36a] font-medium hover:bg-[#C8A227] hover:text-white hover:border-[#C8A227] transition-all duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto rounded-[12px] bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-[1.3px] border-[var(--brand-border-gold)] font-medium hover:bg-[var(--brand-primary-dark)] hover:text-white hover:border-[var(--brand-primary-dark)] transition-all duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {downloadingPdf ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -464,7 +464,7 @@ export function Dashboard({
                 )}
                 {downloadingPdf ? "Downloading..." : "Download PDF"}
               </Button>
-              <Button className="w-full sm:w-auto bg-[#C8A227] hover:bg-[#B49520] text-white rounded-[12px] flex items-center justify-center gap-2 text-sm hidden">
+              <Button className="w-full sm:w-auto bg-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark-hover-4)] text-white rounded-[12px] flex items-center justify-center gap-2 text-sm hidden">
                 <Sparkles className="w-4 h-4" />
                 Upgrade to Premium
               </Button>
@@ -518,7 +518,7 @@ export function Dashboard({
 
         {recommendationsLoading && (
           <div className="py-16 text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C8A227] mx-auto" />
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--brand-primary-dark)] mx-auto" />
             <p className="mt-4 text-gray-600">Loading recommendations...</p>
           </div>
         )}
@@ -591,9 +591,9 @@ export function Dashboard({
                   }}
                   onMouseEnter={(e) => {
                     if (currentPage !== 1) {
-                      e.currentTarget.style.backgroundColor = "#C8A227";
+                      e.currentTarget.style.backgroundColor = "var(--brand-primary-dark)";
                       e.currentTarget.style.color = "white";
-                      e.currentTarget.style.borderColor = "#C8A227";
+                      e.currentTarget.style.borderColor = "var(--brand-primary-dark)";
                     }
                   }}
                   onMouseLeave={(e) => {
@@ -627,16 +627,16 @@ export function Dashboard({
                           key={pageNum}
                           onClick={() => handlePageChange(pageNum)}
                           style={{
-                            backgroundColor: isActive ? "#C8A227" : "white",
+                            backgroundColor: isActive ? "var(--brand-primary-dark)" : "white",
                             color: isActive ? "white" : "#374151",
-                            borderColor: isActive ? "#C8A227" : "#d1d5db",
+                            borderColor: isActive ? "var(--brand-primary-dark)" : "#d1d5db",
                           }}
                           onMouseEnter={(e) => {
                             if (!isActive) {
-                              e.currentTarget.style.backgroundColor = "#f9f5ed";
-                              e.currentTarget.style.borderColor = "#C8A227";
+                              e.currentTarget.style.backgroundColor = "var(--brand-bg-soft)";
+                              e.currentTarget.style.borderColor = "var(--brand-primary-dark)";
                             } else {
-                              e.currentTarget.style.backgroundColor = "#B49520";
+                              e.currentTarget.style.backgroundColor = "var(--brand-primary-dark-hover-4)";
                             }
                           }}
                           onMouseLeave={(e) => {
@@ -644,7 +644,7 @@ export function Dashboard({
                               e.currentTarget.style.backgroundColor = "white";
                               e.currentTarget.style.borderColor = "#d1d5db";
                             } else {
-                              e.currentTarget.style.backgroundColor = "#C8A227";
+                              e.currentTarget.style.backgroundColor = "var(--brand-primary-dark)";
                             }
                           }}
                           className="inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border shadow-sm w-10 h-10"
@@ -677,9 +677,9 @@ export function Dashboard({
                   }}
                   onMouseEnter={(e) => {
                     if (currentPage < totalPages) {
-                      e.currentTarget.style.backgroundColor = "#C8A227";
+                      e.currentTarget.style.backgroundColor = "var(--brand-primary-dark)";
                       e.currentTarget.style.color = "white";
-                      e.currentTarget.style.borderColor = "#C8A227";
+                      e.currentTarget.style.borderColor = "var(--brand-primary-dark)";
                     }
                   }}
                   onMouseLeave={(e) => {

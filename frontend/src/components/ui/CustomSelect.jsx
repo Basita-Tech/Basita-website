@@ -23,6 +23,8 @@ export default function CustomSelect({
   });
   const containerRef = useRef(null);
   const searchInputRef = useRef(null);
+  const isScrollingRef = useRef(false);
+  const scrollTimeoutRef = useRef(null);
 
   // Update mobile detection on window resize
   useEffect(() => {
@@ -62,6 +64,8 @@ export default function CustomSelect({
 
   useEffect(() => {
     const onDocClick = (e) => {
+      // Don't close if scrolling
+      if (isScrollingRef.current) return;
       // Close if clicking outside the container
       if (containerRef.current && !containerRef.current.contains(e.target)) {
         setOpen(false);
@@ -174,7 +178,7 @@ export default function CustomSelect({
   const [isFocused, setIsFocused] = useState(false);
   const themeBase = 'w-full rounded-md p-2.5 sm:p-3 text-sm transition box-border bg-white';
   const borderBase = 'border transition-colors duration-200';
-  const borderColor = isFocused ? 'border-[#D4A052] ring-1 ring-[#D4A052] focus:border-[#D4A052] focus:ring-1 focus:ring-[#D4A052] focus:outline-none' : 'border-[#D4A052]';
+  const borderColor = isFocused ? 'border-[var(--brand-primary)] ring-1 ring-[var(--brand-primary)] focus:border-[var(--brand-primary)] focus:ring-1 focus:ring-[var(--brand-primary)] focus:outline-none' : 'border-[var(--brand-primary)]';
   const triggerClasses = `${themeBase} ${borderBase} ${borderColor} ${className} pr-10 ${disabled ? 'opacity-50 cursor-not-allowed' : (suppressKeyboard ? 'cursor-pointer' : 'cursor-text')}`;
 
   const handleInputChange = (e) => {
@@ -259,11 +263,17 @@ export default function CustomSelect({
           value={displayValue}
           onChange={handleInputChange}
           onFocus={() => setIsFocused(true)}
-          onBlur={() => {
-            setIsFocused(false);
-            setOpen(false);
-            setHighlightIndex(-1);
-            setSearchTerm('');
+          onBlur={(e) => {
+            // Delay closing to check if click is within the dropdown
+            setTimeout(() => {
+              // Check if the new focused element is within our container
+              if (containerRef.current && !containerRef.current.contains(document.activeElement)) {
+                setIsFocused(false);
+                setOpen(false);
+                setHighlightIndex(-1);
+                setSearchTerm('');
+              }
+            }, 150);
           }}
           onMouseDown={(e) => {
             if (suppressKeyboard && !disabled) {
@@ -294,6 +304,28 @@ export default function CustomSelect({
           tabIndex={-1}
           className={`max-h-48 overflow-auto focus:outline-none p-0 m-0 list-none absolute left-0 right-0 bg-white border border-gray-300 rounded-md z-10 ${dropUp ? 'bottom-full mb-2' : 'top-full mt-1'}`}
           role="listbox"
+          onMouseDown={(e) => {
+            // Detect scrollbar clicks: if clicking on the UL element itself (not a child LI),
+            // or if click is in the scrollbar region (right edge of the element)
+            const rect = e.currentTarget.getBoundingClientRect();
+            const isScrollbarClick = e.clientX > rect.right - 20; // 20px scrollbar width buffer
+            
+            if (e.target === e.currentTarget || isScrollbarClick) {
+              // Clicking scrollbar - mark as scrolling immediately
+              isScrollingRef.current = true;
+              if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+              scrollTimeoutRef.current = setTimeout(() => {
+                isScrollingRef.current = false;
+              }, 150);
+            }
+          }}
+          onScroll={() => {
+            isScrollingRef.current = true;
+            if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+            scrollTimeoutRef.current = setTimeout(() => {
+              isScrollingRef.current = false;
+            }, 100);
+          }}
         >
           {placeholder && !searchTerm && (
             <li
@@ -301,8 +333,12 @@ export default function CustomSelect({
               aria-selected={value === ''}
               className={`px-3 py-2 text-sm cursor-pointer ${value === '' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
               onMouseEnter={() => setHighlightIndex(-1)}
-              onMouseDown={(e) => {
-                e.preventDefault();
+              onClick={(e) => {
+                if (isScrollingRef.current) return; // Don't select if scrolling
+                // Check if clicking in scrollbar area
+                const ul = e.currentTarget.parentElement;
+                const rect = ul.getBoundingClientRect();
+                if (e.clientX > rect.right - 20) return; // Clicked scrollbar
                 onChange && onChange({ target: { name, value: '' } });
                 setOpen(false);
                 setSearchTerm('');
@@ -327,8 +363,12 @@ export default function CustomSelect({
                   aria-selected={selected}
                   className={`px-3 py-2 text-sm cursor-pointer ${selected ? 'bg-blue-600 text-white' : highlighted ? 'bg-gray-100' : 'text-gray-700 hover:bg-gray-50'}`}
                   onMouseEnter={() => setHighlightIndex(idx)}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
+                  onClick={(e) => {
+                    if (isScrollingRef.current) return; // Don't select if scrolling
+                    // Check if clicking in scrollbar area
+                    const ul = e.currentTarget.parentElement;
+                    const rect = ul.getBoundingClientRect();
+                    if (e.clientX > rect.right - 20) return; // Clicked scrollbar
                     onChange && onChange({ target: { name, value: opt } });
                     setOpen(false);
                     setSearchTerm('');
@@ -347,8 +387,12 @@ export default function CustomSelect({
               aria-selected={false}
               className={`px-3 py-2 text-sm cursor-pointer ${highlightIndex === filteredOptions.length ? 'bg-gray-100' : 'text-gray-700 hover:bg-gray-50'}`}
               onMouseEnter={() => setHighlightIndex(filteredOptions.length)}
-                onMouseDown={(e) => {
-                  e.preventDefault();
+              onClick={(e) => {
+                  if (isScrollingRef.current) return; // Don't select if scrolling
+                  // Check if clicking in scrollbar area
+                  const ul = e.currentTarget.parentElement;
+                  const rect = ul.getBoundingClientRect();
+                  if (e.clientX > rect.right - 20) return; // Clicked scrollbar
                   let sel = searchTerm.trim();
                   if (preserveCase) {
                     sel = sel.charAt(0).toUpperCase() + sel.slice(1);

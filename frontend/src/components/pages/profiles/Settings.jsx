@@ -617,7 +617,7 @@ export function Settings() {
   return (
     <div className="max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8 py-4 md:py-6 lg:py-8">
       <div className="mb-6">
-        <h2 className="m-0 mb-2 text-2xl font-semibold text-[#3a2f00]">
+        <h2 className="m-0 mb-2 text-2xl font-semibold text-[var(--brand-text-dark)]">
           Settings
         </h2>
         <p className="text-muted-foreground m-0">
@@ -638,7 +638,7 @@ export function Settings() {
           <div className="space-y-4">
             <Button
               variant="outline"
-              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[#C8A227]/10 hover:!border-[#C8A227] hover:!text-[#222222] active:!bg-[#C8A227]/30 focus-visible:ring-2 focus-visible:ring-[#C8A227]/50 transition-all"
+              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[rgb(var(--brand-primary-dark-rgb)/0.1)] hover:!border-[var(--brand-primary-dark)] hover:!text-[#222222] active:!bg-[rgb(var(--brand-primary-dark-rgb)/0.3)] focus-visible:ring-2 focus-visible:ring-[rgb(var(--brand-primary-dark-rgb)/0.5)] transition-all"
               onClick={() => navigate("/dashboard/edit-profile")}
             >
               <User className="w-4 h-4 mr-3" />
@@ -647,7 +647,7 @@ export function Settings() {
 
             <Button
               variant="outline"
-              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[#C8A227]/10 hover:!border-[#C8A227] hover:!text-[#222222] active:!bg-[#C8A227]/30 focus-visible:ring-2 focus-visible:ring-[#C8A227]/50 transition-all"
+              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[rgb(var(--brand-primary-dark-rgb)/0.1)] hover:!border-[var(--brand-primary-dark)] hover:!text-[#222222] active:!bg-[rgb(var(--brand-primary-dark-rgb)/0.3)] focus-visible:ring-2 focus-visible:ring-[rgb(var(--brand-primary-dark-rgb)/0.5)] transition-all"
               onClick={() => setIsChangePasswordModalOpen(true)}
             >
               <Lock className="w-4 h-4 mr-3" />
@@ -675,7 +675,7 @@ export function Settings() {
                     />
                     <Button
                       variant="outline"
-                      className="rounded-[12px] border-border-subtle whitespace-nowrap hover:!bg-[#C8A227]/10 hover:!border-[#C8A227] hover:!text-[#222222] active:!bg-[#C8A227]/30 focus-visible:ring-2 focus-visible:ring-[#C8A227]/50 transition-all sm:w-auto w-full"
+                      className="rounded-[12px] border-border-subtle whitespace-nowrap hover:!bg-[rgb(var(--brand-primary-dark-rgb)/0.1)] hover:!border-[var(--brand-primary-dark)] hover:!text-[#222222] active:!bg-[rgb(var(--brand-primary-dark-rgb)/0.3)] focus-visible:ring-2 focus-visible:ring-[rgb(var(--brand-primary-dark-rgb)/0.5)] transition-all sm:w-auto w-full"
                       onClick={() =>
                         setEditContactModal({
                           open: true,
@@ -706,7 +706,7 @@ export function Settings() {
                     />
                     {/* <Button
                       variant="outline"
-                      className="rounded-[12px] border-border-subtle whitespace-nowrap hover:!bg-[#C8A227]/10 hover:!border-[#C8A227] hover:!text-[#222222] active:!bg-[#C8A227]/30 focus-visible:ring-2 focus-visible:ring-[#C8A227]/50 transition-all sm:w-auto w-full"
+                      className="rounded-[12px] border-border-subtle whitespace-nowrap hover:!bg-[rgb(var(--brand-primary-dark-rgb)/0.1)] hover:!border-[var(--brand-primary-dark)] hover:!text-[#222222] active:!bg-[rgb(var(--brand-primary-dark-rgb)/0.3)] focus-visible:ring-2 focus-visible:ring-[rgb(var(--brand-primary-dark-rgb)/0.5)] transition-all sm:w-auto w-full"
                       onClick={() =>
                         setEditContactModal({
                           open: true,
@@ -931,7 +931,7 @@ export function Settings() {
             {}
             <Button
               variant="outline"
-              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[#C8A227]/10 hover:!border-[#C8A227] hover:!text-[#222222] active:!bg-[#C8A227]/30 focus-visible:ring-2 focus-visible:ring-[#C8A227]/50 transition-all"
+              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[rgb(var(--brand-primary-dark-rgb)/0.1)] hover:!border-[var(--brand-primary-dark)] hover:!text-[#222222] active:!bg-[rgb(var(--brand-primary-dark-rgb)/0.3)] focus-visible:ring-2 focus-visible:ring-[rgb(var(--brand-primary-dark-rgb)/0.5)] transition-all"
               onClick={() => setBlockedUsersModalOpen(true)}
             >
               <UserX className="w-4 h-4 mr-3" />
@@ -1052,7 +1052,7 @@ export function Settings() {
           <div className="space-y-3">
             <Button
               variant="outline"
-              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[#C8A227]/10 hover:!border-[#C8A227] hover:!text-[#222222] active:!bg-[#C8A227]/30 focus-visible:ring-2 focus-visible:ring-[#C8A227]/50 transition-all"
+              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[rgb(var(--brand-primary-dark-rgb)/0.1)] hover:!border-[var(--brand-primary-dark)] hover:!text-[#222222] active:!bg-[rgb(var(--brand-primary-dark-rgb)/0.3)] focus-visible:ring-2 focus-visible:ring-[rgb(var(--brand-primary-dark-rgb)/0.5)] transition-all"
               onClick={() => setYourTicketsDialogOpen(true)}
             >
               <Ticket className="w-4 h-4 mr-3" />
@@ -1067,7 +1067,7 @@ export function Settings() {
             {}
             <Button
               variant="outline"
-              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[#C8A227]/10 hover:!border-[#C8A227] hover:!text-[#222222] active:!bg-[#C8A227]/30 focus-visible:ring-2 focus-visible:ring-[#C8A227]/50 transition-all"
+              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[rgb(var(--brand-primary-dark-rgb)/0.1)] hover:!border-[var(--brand-primary-dark)] hover:!text-[#222222] active:!bg-[rgb(var(--brand-primary-dark-rgb)/0.3)] focus-visible:ring-2 focus-visible:ring-[rgb(var(--brand-primary-dark-rgb)/0.5)] transition-all"
               onClick={() => navigate("/dashboard/support")}
             >
               <MessageCircle className="w-4 h-4 mr-3" />
@@ -1082,7 +1082,7 @@ export function Settings() {
             {}
             <Button
               variant="outline"
-              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[#C8A227]/10 hover:!border-[#C8A227] hover:!text-[#222222] active:!bg-[#C8A227]/30 focus-visible:ring-2 focus-visible:ring-[#C8A227]/50 transition-all"
+              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[rgb(var(--brand-primary-dark-rgb)/0.1)] hover:!border-[var(--brand-primary-dark)] hover:!text-[#222222] active:!bg-[rgb(var(--brand-primary-dark-rgb)/0.3)] focus-visible:ring-2 focus-visible:ring-[rgb(var(--brand-primary-dark-rgb)/0.5)] transition-all"
               onClick={() => navigate("/faq")}
             >
               <HelpCircle className="w-4 h-4 mr-3" />
@@ -1092,7 +1092,7 @@ export function Settings() {
             {}
             <Button
               variant="outline"
-              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[#C8A227]/10 hover:!border-[#C8A227] hover:!text-[#222222] active:!bg-[#C8A227]/30 focus-visible:ring-2 focus-visible:ring-[#C8A227]/50 transition-all"
+              className="w-full justify-start border-border-subtle rounded-[12px] h-12 hover:!bg-[rgb(var(--brand-primary-dark-rgb)/0.1)] hover:!border-[var(--brand-primary-dark)] hover:!text-[#222222] active:!bg-[rgb(var(--brand-primary-dark-rgb)/0.3)] focus-visible:ring-2 focus-visible:ring-[rgb(var(--brand-primary-dark-rgb)/0.5)] transition-all"
               onClick={() => navigate("/privacy")}
             >
               <FileText className="w-4 h-4 mr-3" />
@@ -1172,7 +1172,7 @@ export function Settings() {
         onOpenChange={setStatusPromptOpen}
       >
         <DialogContent className="sm:max-w-md rounded-[20px] p-0 gap-0 bg-white overflow-hidden">
-          <DialogHeader className="bg-gradient-to-br from-[#C8A227] via-[#D4A052] to-[#E4C48A] px-5 py-4 text-white relative overflow-hidden rounded-t-[20px]">
+          <DialogHeader className="bg-gradient-to-br from-[var(--brand-primary-dark)] via-[var(--brand-primary)] to-[var(--brand-gold)] px-5 py-4 text-white relative overflow-hidden rounded-t-[20px]">
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-0 right-0 w-24 h-24 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
               <div className="absolute bottom-0 left-0 w-20 h-20 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
@@ -1214,7 +1214,7 @@ export function Settings() {
                 <Button
                   onClick={handleReactivateAccount}
                   disabled={isReactivating}
-                  className="w-full sm:w-1/2 bg-[#C8A227] hover:bg-[#B49520] text-white rounded-[12px] h-11"
+                  className="w-full sm:w-1/2 bg-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark-hover-4)] text-white rounded-[12px] h-11"
                 >
                   {isReactivating ? "Activating..." : "Activate account"}
                 </Button>
@@ -1222,7 +1222,7 @@ export function Settings() {
               <Button
                 variant="outline"
                 onClick={openUpgradeModal}
-                className="w-full sm:w-1/2 rounded-[12px] border-[#C8A227] text-[#3a2f00] hover:bg-[#C8A227]/10 h-11"
+                className="w-full sm:w-1/2 rounded-[12px] border-[var(--brand-primary-dark)] text-[var(--brand-text-dark)] hover:bg-[rgb(var(--brand-primary-dark-rgb)/0.1)] h-11"
               >
                 Upgrade to Premium
               </Button>
@@ -1234,7 +1234,7 @@ export function Settings() {
       {}
       <Dialog open={logoutConfirmOpen} onOpenChange={setLogoutConfirmOpen}>
         <DialogContent className="sm:max-w-md rounded-[22px] p-0 gap-0 bg-white" showClose={false}>
-          <DialogHeader className="bg-gradient-to-br from-[#C8A227] via-[#D4A052] to-[#E4C48A] px-6 py-5 text-center text-white relative overflow-hidden rounded-t-[22px]">
+          <DialogHeader className="bg-gradient-to-br from-[var(--brand-primary-dark)] via-[var(--brand-primary)] to-[var(--brand-gold)] px-6 py-5 text-center text-white relative overflow-hidden rounded-t-[22px]">
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
@@ -1271,7 +1271,7 @@ export function Settings() {
                     console.error("Logout error:", error);
                   }
                 }}
-                className="w-full sm:w-1/2 bg-[#C8A227] hover:bg-[#D4A052] text-white rounded-[12px]"
+                className="w-full sm:w-1/2 bg-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary)] text-white rounded-[12px]"
               >
                 Yes, Logout
               </Button>
@@ -1501,7 +1501,7 @@ export function Settings() {
           className={`${selectedTicket ? "sm:max-w-[480px]" : "sm:max-w-[850px]"} max-w-[90vw] ${selectedTicket ? "h-[80vh]" : "h-[85vh]"} rounded-[20px] p-0 gap-0 bg-white border-2 border-gold/30 shadow-2xl overflow-hidden flex flex-col`}
           showClose={false}
         >
-          <DialogHeader className="bg-gradient-to-br from-[#C8A227] via-[#D4A052] to-[#E4C48A] px-4 py-3 text-white relative overflow-hidden rounded-t-[18px] shrink-0 border-b-2 border-gold/40">
+          <DialogHeader className="bg-gradient-to-br from-[var(--brand-primary-dark)] via-[var(--brand-primary)] to-[var(--brand-gold)] px-4 py-3 text-white relative overflow-hidden rounded-t-[18px] shrink-0 border-b-2 border-gold/40">
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-0 right-0 w-24 h-24 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
               <div className="absolute bottom-0 left-0 w-20 h-20 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
@@ -1801,7 +1801,7 @@ export function Settings() {
           className={`${selectedTicket ? "sm:max-w-[480px]" : "sm:max-w-[650px]"} max-w-[90vw] h-[80vh] rounded-[20px] p-0 gap-0 bg-white border-2 border-gold/30 shadow-2xl overflow-hidden flex flex-col`}
           showClose={false}
         >
-          <DialogHeader className="bg-gradient-to-br from-[#C8A227] via-[#D4A052] to-[#E4C48A] px-4 py-3 text-white relative overflow-hidden rounded-t-[18px] shrink-0 border-b-2 border-gold/40">
+          <DialogHeader className="bg-gradient-to-br from-[var(--brand-primary-dark)] via-[var(--brand-primary)] to-[var(--brand-gold)] px-4 py-3 text-white relative overflow-hidden rounded-t-[18px] shrink-0 border-b-2 border-gold/40">
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-0 right-0 w-24 h-24 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
               <div className="absolute bottom-0 left-0 w-20 h-20 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>

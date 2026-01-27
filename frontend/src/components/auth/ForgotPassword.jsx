@@ -109,7 +109,7 @@ const ForgotPassword = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-4 py-3 mt-1 rounded-xl border border-gray-200 focus:border-[#D4A052] focus:ring-2 focus:ring-[#D4A052]/20 outline-none transition-all"
+                  className="w-full px-4 py-3 mt-1 rounded-xl border border-gray-200 focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[rgb(var(--brand-primary-rgb)/0.2)] outline-none transition-all"
                 />
               </div>
 
@@ -120,7 +120,7 @@ const ForgotPassword = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 rounded-xl bg-[#D4A052] text-white font-bold hover:bg-[#B3863F] transition-all disabled:opacity-50"
+                className="w-full py-3 rounded-xl bg-[var(--brand-primary)] text-white font-bold hover:bg-[var(--brand-primary-hover-2)] transition-all disabled:opacity-50"
               >
                 {loading ? "Sending..." : "Send Reset Code"}
               </button>
@@ -149,13 +149,13 @@ const ForgotPassword = () => {
                 onChange={(e) => setOtp(e.target.value)}
                 maxLength={6}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#D4A052] focus:ring-2 focus:ring-[#D4A052]/20 text-center text-xl tracking-widest outline-none transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[rgb(var(--brand-primary-rgb)/0.2)] text-center text-xl tracking-widest outline-none transition-all"
               />
 
               <button
                 type="submit"
                 disabled={loading || otpExpiry <= 0}
-                className="w-full py-3 rounded-xl bg-[#D4A052] text-white font-bold hover:bg-[#B3863F] transition-all disabled:opacity-50"
+                className="w-full py-3 rounded-xl bg-[var(--brand-primary)] text-white font-bold hover:bg-[var(--brand-primary-hover-2)] transition-all disabled:opacity-50"
               >
                 {loading ? "Verifying..." : "Verify OTP"}
               </button>
@@ -173,7 +173,7 @@ const ForgotPassword = () => {
               ) : (
                 <button
                   onClick={handleSendOtp}
-                  className="text-[#D4A052] text-sm font-bold hover:underline"
+                  className="text-[var(--brand-primary)] text-sm font-bold hover:underline"
                 >
                   Didn't get the code? Resend
                 </button>
@@ -209,7 +209,7 @@ const ForgotPassword = () => {
             </p>
             <button
               onClick={() => window.open(`mailto:${email}`)}
-              className="w-full py-3 rounded-xl bg-[#D4A052] text-white font-bold hover:bg-[#B3863F] transition-all"
+              className="w-full py-3 rounded-xl bg-[var(--brand-primary)] text-white font-bold hover:bg-[var(--brand-primary-hover-2)] transition-all"
             >
               Open Email App
             </button>
@@ -219,7 +219,7 @@ const ForgotPassword = () => {
         <div className="mt-8 text-center border-t border-gray-100 pt-6">
           <Link
             to="/login"
-            className="text-sm text-gray-500 hover:text-[#D4A052] font-semibold transition-colors"
+            className="text-sm text-gray-500 hover:text-[var(--brand-primary)] font-semibold transition-colors"
           >
             ← Back to Login
           </Link>

@@ -47,7 +47,7 @@ export function PremiumUpgradePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f9f5ed] via-white to-[#f9f5ed]">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--brand-bg-soft)] via-white to-[var(--brand-bg-soft)]">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="max-3xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
@@ -55,7 +55,7 @@ export function PremiumUpgradePage() {
             variant="ghost"
             size="sm"
             onClick={() => navigate(-1)}
-            className="rounded-full bg-[#C8A227] text-white hover:bg-[#B49520]"
+            className="rounded-full bg-[var(--brand-primary-dark)] text-white hover:bg-[var(--brand-primary-dark-hover-4)]"
           >
             <ArrowLeft className="w-5 h-5 text-white" />
           </Button>
@@ -66,12 +66,12 @@ export function PremiumUpgradePage() {
       {/* Main Content */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
         {notice && (
-          <div className="mb-4 rounded-[12px] border border-[#E4D6B8] bg-[#fdf8ef] px-4 py-3 text-sm text-gray-800">
+          <div className="mb-4 rounded-[12px] border border-[#E4D6B8] bg-[var(--brand-bg-warm)] px-4 py-3 text-sm text-gray-800">
             {notice}
           </div>
         )}
         {/* Hero Section */}
-        <div className="bg-gradient-to-br from-[#C8A227] via-[#D4A052] to-[#E4C48A] rounded-[20px] p-6 sm:p-8 text-center text-white relative overflow-hidden mb-6 shadow-lg">
+        <div className="bg-gradient-to-br from-[var(--brand-primary-dark)] via-[var(--brand-primary)] to-[var(--brand-gold)] rounded-[20px] p-6 sm:p-8 text-center text-white relative overflow-hidden mb-6 shadow-lg">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
@@ -98,8 +98,8 @@ export function PremiumUpgradePage() {
             <div className="space-y-3 sm:space-y-4">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-center gap-3 sm:gap-4">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#C8A227]/10 flex items-center justify-center flex-shrink-0">
-                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-[#C8A227]" />
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[rgb(var(--brand-primary-dark-rgb)/0.1)] flex items-center justify-center flex-shrink-0">
+                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--brand-primary-dark)]" />
                   </div>
                   <span className="text-sm sm:text-base text-gray-800">{feature}</span>
                 </div>
@@ -116,7 +116,7 @@ export function PremiumUpgradePage() {
 
               {plansLoading && (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="w-8 h-8 animate-spin text-[#C8A227]" />
+                  <Loader2 className="w-8 h-8 animate-spin text-[var(--brand-primary-dark)]" />
                 </div>
               )}
 
@@ -139,12 +139,12 @@ export function PremiumUpgradePage() {
                     key={plan._id || index}
                     className={`rounded-[16px] p-5 sm:p-6 mb-4 border-2 relative ${
                       isPopular
-                        ? 'bg-gradient-to-br from-[#C8A227]/10 to-[#C8A227]/5 border-[#C8A227]'
-                        : 'bg-[#f9f5ed] border-[#C8A227]/20'
+                        ? 'bg-gradient-to-br from-[rgb(var(--brand-primary-dark-rgb)/0.1)] to-[rgb(var(--brand-primary-dark-rgb)/0.05)] border-[var(--brand-primary-dark)]'
+                        : 'bg-[var(--brand-bg-soft)] border-[rgb(var(--brand-primary-dark-rgb)/0.2)]'
                     }`}
                   >
                     {isPopular && (
-                      <div className="absolute -top-3 right-4 bg-[#C8A227] text-white text-xs px-3 py-1 rounded-full font-semibold">
+                      <div className="absolute -top-3 right-4 bg-[var(--brand-primary-dark)] text-white text-xs px-3 py-1 rounded-full font-semibold">
                         {plan.badge || 'Best Value'}
                       </div>
                     )}
@@ -154,11 +154,11 @@ export function PremiumUpgradePage() {
                         <span className="text-xs text-gray-500">Most Flexible</span>
                       )}
                       {isPopular && (
-                        <span className="text-xs text-[#C8A227] font-semibold">Best Value</span>
+                        <span className="text-xs text-[var(--brand-primary-dark)] font-semibold">Best Value</span>
                       )}
                     </div>
                     <div className="mb-3">
-                      <span className="text-3xl sm:text-4xl font-bold text-[#C8A227]">
+                      <span className="text-3xl sm:text-4xl font-bold text-[var(--brand-primary-dark)]">
                         ₹{plan.price}
                       </span>
                       <span className="text-gray-600 text-sm">/{plan.duration === 12 ? 'year' : 'month'}</span>
@@ -168,7 +168,7 @@ export function PremiumUpgradePage() {
                         {plan.description}
                       </p>
                     )}
-                    <Button className="w-full bg-[#C8A227] hover:bg-[#B49520] text-white rounded-[12px] h-11 sm:h-12">
+                    <Button className="w-full bg-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark-hover-4)] text-white rounded-[12px] h-11 sm:h-12">
                       <Crown className="w-4 h-4 mr-2" />
                       Get {plan.name}
                     </Button>

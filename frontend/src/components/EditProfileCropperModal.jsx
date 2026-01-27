@@ -99,7 +99,7 @@ const EditProfileCropperModal = ({
           <button
             onClick={handleSave}
             disabled={isLoading}
-            className="px-4 py-2 font-medium text-white bg-[#C8A227] rounded-lg hover:bg-[#B49520] disabled:opacity-50 inline-flex items-center gap-2"
+            className="px-4 py-2 font-medium text-white bg-[var(--brand-primary-dark)] rounded-lg hover:bg-[var(--brand-primary-dark-hover-4)] disabled:opacity-50 inline-flex items-center gap-2"
             style={{ fontSize: '9px' }}
           >
             {isLoading ? (

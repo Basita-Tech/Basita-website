@@ -884,8 +884,8 @@ const VerifyOTP = () => {
           }\
           .otp-input:focus {\
             outline: none;\
-            border: 1px solid #E4C48A;\
-            box-shadow: 0 0 5px #E4C48A33;\
+            border: 1px solid var(--brand-gold);\
+            box-shadow: 0 0 5px rgb(var(--brand-gold-rgb) / 0.2);\
           }\
           .otp-input:disabled {
             background: #f2f2f2;
@@ -904,9 +904,9 @@ const VerifyOTP = () => {
         `}
       </style>
 
-      <div className="min-h-screen w-full bg-[#F9F7F5] flex items-center justify-center py-8 px-4">
-        <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-md p-6 sm:p-8">
-          <Link to={fromLogin ? "/login" : "/signup"} className="inline-flex items-center gap-2 mb-4 px-3 py-2 bg-[#D4A052] text-white rounded-md font-medium">
+      <div className="min-h-screen w-full bg-[var(--brand-bg)] flex items-center justify-center py-8 px-4">
+        <div className="bg-[var(--brand-card)] shadow-2xl rounded-3xl w-full max-w-md p-6 sm:p-8">
+          <Link to={fromLogin ? "/login" : "/signup"} className="inline-flex items-center gap-2 mb-4 px-3 py-2 bg-[var(--brand-primary)] text-white rounded-md font-medium">
             <ArrowLeft size={16} />
             Back
           </Link>
@@ -955,18 +955,18 @@ const VerifyOTP = () => {
                       <span className="text-red-600 block mb-2">
                         Email OTP expired
                       </span>
-                      {resendAttemptsEmail < MAX_RESEND && (resendCooldown > 0 ? <span className="text-xs text-[#8A6F2A]">
+                      {resendAttemptsEmail < MAX_RESEND && (resendCooldown > 0 ? <span className="text-xs text-[var(--brand-warning)]">
                             You can resend in {formatTime(resendCooldown)}
                           </span> : <div className="flex items-center justify-center gap-2">
-                            <button type="button" className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[#D4A052] text-white border-[#D4A052] hover:bg-[#E4C48A]" onClick={handleResend} disabled={isVerifying || isEmailVerified}>
+                            <button type="button" className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[var(--brand-primary)] text-white border-[var(--brand-primary)] hover:bg-[var(--brand-gold)]" onClick={handleResend} disabled={isVerifying || isEmailVerified}>
                               Resend Email OTP
                             </button>
                           </div>)}
                     </> : <>
-                      {resendAttemptsEmail < MAX_RESEND && (resendCooldown > 0 ? <span className="text-xs text-[#8A6F2A]">
+                      {resendAttemptsEmail < MAX_RESEND && (resendCooldown > 0 ? <span className="text-xs text-[var(--brand-warning)]">
                             You can resend in {formatTime(resendCooldown)}
                           </span> : <div className="flex items-center justify-center gap-2">
-                            <button type="button" className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[#D4A052] text-white border-[#D4A052] hover:bg-[#E4C48A]" onClick={handleResend} disabled={isVerifying || resendCooldown > 0 || isLocked || isEmailVerified}>
+                            <button type="button" className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[var(--brand-primary)] text-white border-[var(--brand-primary)] hover:bg-[var(--brand-gold)]" onClick={handleResend} disabled={isVerifying || resendCooldown > 0 || isLocked || isEmailVerified}>
                               Resend Email OTP
                             </button>
                           </div>)}
@@ -1018,14 +1018,14 @@ const VerifyOTP = () => {
                           <span className="text-red-600 block mb-2">Mobile OTP expired</span>
                           {resendAttemptsMobile < MAX_RESEND && (
                             resendCooldownMobile > 0 ? (
-                              <span className="text-xs text-[#8A6F2A]">
+                              <span className="text-xs text-[var(--brand-warning)]">
                                 You can resend in {formatTime(resendCooldownMobile)}
                               </span>
                             ) : (
                               <div className="flex items-center justify-center gap-2">
                                 <button
                                   type="button"
-                                  className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[#D4A052] text-white border-[#D4A052] hover:bg-[#E4C48A]"
+                                  className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[var(--brand-primary)] text-white border-[var(--brand-primary)] hover:bg-[var(--brand-gold)]"
                                   onClick={handleResendMobile}
                                   disabled={isVerifyingMobile || isMobileVerified}
                                 >
@@ -1039,14 +1039,14 @@ const VerifyOTP = () => {
                         <>
                           {resendAttemptsMobile < MAX_RESEND && (
                             resendCooldownMobile > 0 ? (
-                              <span className="text-xs text-[#8A6F2A]">
+                              <span className="text-xs text-[var(--brand-warning)]">
                                 You can resend in {formatTime(resendCooldownMobile)}
                               </span>
                             ) : (
                               <div className="flex items-center justify-center gap-2">
                                 <button
                                   type="button"
-                                  className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[#D4A052] text-white border-[#D4A052] hover:bg-[#E4C48A]"
+                                  className="inline-flex items-center justify-center px-4 py-2 rounded-full border text-sm font-semibold transition bg-[var(--brand-primary)] text-white border-[var(--brand-primary)] hover:bg-[var(--brand-gold)]"
                                   onClick={handleResendMobile}
                                   disabled={isVerifyingMobile || resendCooldownMobile > 0 || isMobileLocked || isMobileVerified}
                                 >
@@ -1068,7 +1068,7 @@ const VerifyOTP = () => {
 
             <button 
               type="submit" 
-              className="w-full py-3 mt-4 rounded-xl font-semibold text-white bg-[#D4A052] hover:bg-[#E4C48A] transition" 
+              className="w-full py-3 mt-4 rounded-xl font-semibold text-white bg-[var(--brand-primary)] hover:bg-[var(--brand-gold)] transition" 
               disabled={isLocked || isVerifying || (requiresMobileOtp && isMobileLocked)}
             >
               {isVerifying ? "Verifying..." : "Verify OTP"}

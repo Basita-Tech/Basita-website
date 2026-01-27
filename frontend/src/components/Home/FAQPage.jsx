@@ -13,12 +13,12 @@ import Footer from "../Footer/Footer";
 import SEO from "../SEO";
 
 const colors = {
-  maroon: "#800000",
-  gold: "#D4A052",
-  goldLight: "#E4C48A",
-  beige: "#F4EEE4",
-  planBg: "#F9F7F5",
-  white: "#FFFFFF",
+  maroon: "var(--brand-maroon)",
+  gold: "var(--brand-primary)",
+  goldLight: "var(--brand-gold)",
+  beige: "var(--brand-bg-beige)",
+  planBg: "var(--brand-bg)",
+  white: "var(--app-white)",
 };
 
 const faqData = [
@@ -384,7 +384,7 @@ export default function FAQPage() {
         }}
       />
 
-      <header className="sticky top-0 z-50 shadow bg-[#ebe9e6]">
+      <header className="sticky top-0 z-50 shadow bg-[var(--brand-nav-bg)]">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 flex justify-between items-center py-3 min-h-20">
           <div className="flex-shrink-0 flex items-center">
             <img
@@ -395,7 +395,7 @@ export default function FAQPage() {
               onClick={() => setLogoHighlighted((v) => !v)}
               className={`${
                 logoHighlighted
-                  ? "border-2 border-[#FFD700] shadow-[0_0_12px_#FFD700]"
+                    ? "border-2 border-[var(--brand-highlight)] shadow-[0_0_12px_var(--brand-highlight)]"
                   : ""
               } object-contain rounded-lg transition duration-200 cursor-pointer h-12 sm:h-14 md:h-16 w-auto sm:scale-100 md:scale-125 origin-left`}
             />
@@ -405,23 +405,23 @@ export default function FAQPage() {
             <nav className="hidden md:flex items-center gap-6 mx-6">
               <a
                 href="/"
-                className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline text-sm lg:text-base"
+                className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline text-sm lg:text-base"
               >
                 Home
               </a>
               <a
                 href="/about"
-                className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline text-sm lg:text-base"
+                className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline text-sm lg:text-base"
               >
                 About Us
               </a>
               <a
                 href="/#membership"
-                className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline text-sm lg:text-base"
+                className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline text-sm lg:text-base"
               >
                 Membership
               </a>
-              <span className="text-[#800000] font-semibold text-sm lg:text-base cursor-default">
+              <span className="text-[var(--brand-maroon)] font-semibold text-sm lg:text-base cursor-default">
                 Contact Us
               </span>
             </nav>
@@ -430,7 +430,7 @@ export default function FAQPage() {
               {isAuthenticated ? (
                 <button
                   onClick={handleMyAccount}
-                  className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-[#FFFFFF] bg-[#D4A052] hover:opacity-90 transition text-xs sm:text-sm lg:text-base whitespace-nowrap"
+                  className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-white bg-[var(--brand-primary)] hover:opacity-90 transition text-xs sm:text-sm lg:text-base whitespace-nowrap"
                   disabled={accountNavLoading}
                 >
                   {accountNavLoading ? "Loading..." : "My Account"}
@@ -439,13 +439,13 @@ export default function FAQPage() {
                 <>
                   <Link
                     to="/login"
-                    className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-[#D4A052] border border-[#D4A052] bg-transparent hover:bg-[#D4A052] hover:text-[#800000] transition no-underline inline-block text-xs sm:text-sm lg:text-base whitespace-nowrap"
+                    className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-[var(--brand-primary)] border border-[var(--brand-primary)] bg-transparent hover:bg-[var(--brand-primary)] hover:text-[var(--brand-maroon)] transition no-underline inline-block text-xs sm:text-sm lg:text-base whitespace-nowrap"
                   >
                     Login
                   </Link>
                   <Link
                     to="/signup"
-                    className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold bg-[#D4A052] text-white hover:opacity-90 transition no-underline inline-block text-xs sm:text-sm lg:text-base whitespace-nowrap"
+                    className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold bg-[var(--brand-primary)] text-white hover:opacity-90 transition no-underline inline-block text-xs sm:text-sm lg:text-base whitespace-nowrap"
                   >
                     Register
                   </Link>
@@ -454,7 +454,7 @@ export default function FAQPage() {
 
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-1.5 sm:p-2 rounded-md text-[#800000] bg-transparent hover:bg-[#E4C48A] transition flex-shrink-0 ml-1 sm:ml-2"
+                className="md:hidden p-1.5 sm:p-2 rounded-md text-[var(--brand-maroon)] bg-transparent hover:bg-[var(--brand-gold)] transition flex-shrink-0 ml-1 sm:ml-2"
                 aria-label="Toggle mobile menu"
               >
                 {mobileMenuOpen ? (
@@ -469,7 +469,7 @@ export default function FAQPage() {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden bg-[#ebe9e6] border-t border-[#D4A052] transition-all duration-300 ease-in-out overflow-hidden ${
+          className={`md:hidden bg-[var(--brand-nav-bg)] border-t border-[var(--brand-primary)] transition-all duration-300 ease-in-out overflow-hidden ${
             mobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
@@ -477,25 +477,25 @@ export default function FAQPage() {
             <a
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline py-2.5 px-2 border-b border-[#E4C48A] text-sm"
+              className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline py-2.5 px-2 border-b border-[var(--brand-gold)] text-sm"
             >
               Home
             </a>
             <a
               href="/about"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline py-2.5 px-2 border-b border-[#E4C48A] text-sm"
+              className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline py-2.5 px-2 border-b border-[var(--brand-gold)] text-sm"
             >
               About Us
             </a>
             <a
               href="/#membership"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline py-2.5 px-2 border-b border-[#E4C48A] text-sm"
+              className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline py-2.5 px-2 border-b border-[var(--brand-gold)] text-sm"
             >
               Membership
             </a>
-            <span className="text-[#800000] font-semibold py-2.5 px-2 text-sm cursor-default">
+            <span className="text-[var(--brand-maroon)] font-semibold py-2.5 px-2 text-sm cursor-default">
               Contact Us
             </span>
           </nav>

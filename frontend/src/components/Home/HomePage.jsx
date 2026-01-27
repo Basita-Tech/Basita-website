@@ -16,12 +16,12 @@ import Footer from "../Footer/Footer";
 import HomeNavbar from "../HomeNavbar";
 import SEO from "../SEO";
 const colors = {
-  maroon: "#800000",
-  gold: "#D4A052",
-  goldLight: "#E4C48A",
-  beige: "#F4EEE4",
-  planBg: "#F9F7F5",
-  white: "#FFFFFF",
+  maroon: "var(--brand-maroon)",
+  gold: "var(--brand-primary)",
+  goldLight: "var(--brand-gold)",
+  beige: "var(--brand-bg-beige)",
+  planBg: "var(--brand-bg)",
+  white: "var(--app-white)",
 };
 const featuredProfiles = [
   {
@@ -194,28 +194,28 @@ export default function HomePage() {
           </p>
 
           {}
-          <div className="bg-[#FFFFFF] rounded-xl sm:rounded-2xl shadow-2xl p-3 sm:p-6 max-w-3xl mx-auto border border-[#E4C48A]">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl p-3 sm:p-6 max-w-3xl mx-auto border border-[var(--brand-gold)]">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-2 sm:gap-4">
-              <select className="border-2 border-[#E4C48A] rounded-md p-2.5 sm:p-3 text-sm sm:text-base focus:outline-none focus:border-[#D4A052] bg-white">
+              <select className="border-2 border-[var(--brand-gold)] rounded-md p-2.5 sm:p-3 text-sm sm:text-base focus:outline-none focus:border-[var(--brand-primary)] bg-white">
                 <option>Gender</option>
                 <option>Male</option>
                 <option>Female</option>
               </select>
-              <select className="border-2 border-[#E4C48A] rounded-md p-2.5 sm:p-3 text-sm sm:text-base focus:outline-none focus:border-[#D4A052] bg-white">
+              <select className="border-2 border-[var(--brand-gold)] rounded-md p-2.5 sm:p-3 text-sm sm:text-base focus:outline-none focus:border-[var(--brand-primary)] bg-white">
                 <option>Age</option>
                 <option>20-25</option>
                 <option>26-30</option>
                 <option>31-35</option>
                 <option>36-40</option>
               </select>
-              <select className="border-2 border-[#E4C48A] rounded-md p-2.5 sm:p-3 text-sm sm:text-base focus:outline-none focus:border-[#D4A052] bg-white">
+              <select className="border-2 border-[var(--brand-gold)] rounded-md p-2.5 sm:p-3 text-sm sm:text-base focus:outline-none focus:border-[var(--brand-primary)] bg-white">
                 <option>Religion</option>
                 <option>Hindu</option>
                 <option>Jain</option>
               </select>
               <button
                 onClick={handleSearch}
-                className="bg-[#D4A052] text-white rounded-md font-semibold hover:opacity-90 transition py-2.5 sm:py-3 text-sm sm:text-base"
+                className="bg-[var(--brand-primary)] text-white rounded-md font-semibold hover:opacity-90 transition py-2.5 sm:py-3 text-sm sm:text-base"
               >
                 Search
               </button>
@@ -225,11 +225,11 @@ export default function HomePage() {
       </section>
 
       {}
-      <section id="featured-profiles" className="py-24 bg-[#F4EEE4]">
+      <section id="featured-profiles" className="py-24 bg-[var(--brand-bg-beige)]">
         {" "}
         {}
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold text-[#800000] mb-14">
+          <h2 className="text-4xl font-bold text-[var(--brand-maroon)] mb-14">
             Featured Profiles
           </h2>
 
@@ -238,7 +238,7 @@ export default function HomePage() {
             {featuredProfiles.map((p) => (
               <div
                 key={p.id}
-                className="rounded-3xl shadow-2xl bg-white border border-[#E4C48A] overflow-hidden hover:shadow-3xl hover:scale-[1.04] transition-transform duration-300"
+                className="rounded-3xl shadow-2xl bg-white border border-[var(--brand-gold)] overflow-hidden hover:shadow-3xl hover:scale-[1.04] transition-transform duration-300"
               >
                 {}
                 <div className="w-full h-96 overflow-hidden">
@@ -253,13 +253,13 @@ export default function HomePage() {
                 </div>
 
                 <div className="p-6">
-                  <h3 className="font-bold text-[#800000] text-xl">{p.name}</h3>
+                  <h3 className="font-bold text-[var(--brand-maroon)] text-xl">{p.name}</h3>
                   <p className="text-gray-600 text-base">
                     {p.age} | {p.location}
                   </p>
                   <button
                     onClick={handleSearch}
-                    className="mt-6 w-full bg-[#D4A052] text-white py-3 rounded-md font-semibold hover:opacity-90 transition"
+                    className="mt-6 w-full bg-[var(--brand-primary)] text-white py-3 rounded-md font-semibold hover:opacity-90 transition"
                   >
                     View Profile
                   </button>
@@ -275,7 +275,7 @@ export default function HomePage() {
         {" "}
         {}
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold text-[#800000] mb-4">
+          <h2 className="text-3xl font-bold text-[var(--brand-maroon)] mb-4">
             Membership Plans
           </h2>
           <p className="text-gray-700 mb-3">
@@ -283,7 +283,7 @@ export default function HomePage() {
             perfect match today.
           </p>
           
-          <p className="text-lg font-bold mb-12 text-[#D4A052]">
+          <p className="text-lg font-bold mb-12 text-[var(--brand-primary)]">
             🎉 Early Access Offer: Be among the first 500 users and enjoy 6 months of free access to our premium, paid features! 🎉
           </p>
 
@@ -305,12 +305,12 @@ export default function HomePage() {
               return (
                 <div
                   key={plan._id || i}
-                  className="bg-white rounded-2xl shadow-lg border border-[#E4C48A] p-8 hover:shadow-2xl hover:scale-[1.03] transition-transform duration-300"
+                  className="bg-white rounded-2xl shadow-lg border border-[var(--brand-gold)] p-8 hover:shadow-2xl hover:scale-[1.03] transition-transform duration-300"
                 >
-                  <h3 className="text-2xl font-bold mb-2 text-[#800000]">
+                  <h3 className="text-2xl font-bold mb-2 text-[var(--brand-maroon)]">
                     {isSkeleton ? "\u00A0" : title || "Plan"}
                   </h3>
-                  <p className="text-xl font-semibold text-[#D4A052] mb-3">
+                  <p className="text-xl font-semibold text-[var(--brand-primary)] mb-3">
                     {isSkeleton ? "" : price}
                   </p>
                   <div className="text-gray-600 mb-6 text-sm space-y-2 text-left">
@@ -326,7 +326,7 @@ export default function HomePage() {
                   </div>
                   <button
                     onClick={handleSearch}
-                    className="bg-[#D4A052] text-white w-full py-3 rounded-md font-semibold hover:opacity-90 transition"
+                    className="bg-[var(--brand-primary)] text-white w-full py-3 rounded-md font-semibold hover:opacity-90 transition"
                     disabled={isSkeleton}
                   >
                     Select
@@ -339,13 +339,13 @@ export default function HomePage() {
       </section>
 
       {}
-      <section className="py-16 bg-[#F4EEE4] text-center">
-        <h2 className="text-3xl font-bold text-[#800000] mb-6">
+      <section className="py-16 bg-[var(--brand-bg-beige)] text-center">
+        <h2 className="text-3xl font-bold text-[var(--brand-maroon)] mb-6">
           Your Perfect Match Awaits
         </h2>
         <button
           onClick={handleSearch}
-          className="bg-[#D4A052] px-8 py-3 rounded-lg font-semibold text-white hover:opacity-90 transition no-underline inline-block"
+          className="bg-[var(--brand-primary)] px-8 py-3 rounded-lg font-semibold text-white hover:opacity-90 transition no-underline inline-block"
         >
           Register Free Now
         </button>

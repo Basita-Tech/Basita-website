@@ -36,11 +36,11 @@ const ReviewPage = () => {
     fetchReviewStatus();
   };
   const colors = {
-    gold: "#D4A052",
-    goldLight: "#E4C48A",
-    beige: "#F4EEE4",
-    planBg: "#F9F7F5",
-    white: "#FFFFFF",
+    gold: "var(--brand-primary)",
+    goldLight: "var(--brand-gold)",
+    beige: "var(--brand-bg-beige)",
+    planBg: "var(--brand-bg)",
+    white: "var(--app-white)",
     green: "#27ae60",
     lightGreen: "#eafaf1",
     orange: "#e74c3c"

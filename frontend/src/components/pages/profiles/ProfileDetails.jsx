@@ -319,28 +319,28 @@ export function ProfileDetails({
     }
   }, [isBlocked, isBlockingInProgress, profile?.customId, profile?.personal?.firstName]);
   if (loading) {
-    return <div className="min-h-screen bg-[#f6f1e6] flex items-center justify-center">
+    return <div className="min-h-screen bg-[var(--brand-badge-bg)] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C8A227] mx-auto" />
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--brand-primary-dark)] mx-auto" />
           <p className="mt-4 text-gray-600">Loading profile...</p>
         </div>
       </div>;
   }
   if (!profile) {
-    return <div className="min-h-screen bg-[#f6f1e6] flex items-center justify-center">
+    return <div className="min-h-screen bg-[var(--brand-badge-bg)] flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-600">Profile not found</p>
           <p className="text-sm text-gray-500 mt-2">Profile ID: {id}</p>
-          <button onClick={handleBack} className="mt-4 text-[#C8A227] hover:underline">
+          <button onClick={handleBack} className="mt-4 text-[var(--brand-primary-dark)] hover:underline">
             Go Back
           </button>
         </div>
       </div>;
   }
-  return <div className="min-h-screen bg-[#f6f1e6] flex justify-center container">
+  return <div className="min-h-screen bg-[var(--brand-badge-bg)] flex justify-center container">
       <div className="w-full px-6 py-4 space-y-4 relative">
-        <button onClick={handleBack} className="w-24 flex items-center gap-2 text-[#C8A227] font-medium transition bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-md shadow-sm hover:opacity-80">
-          <ChevronLeft size={20} className="text-[#C8A227]" />
+        <button onClick={handleBack} className="w-24 flex items-center gap-2 text-[var(--brand-primary-dark)] font-medium transition bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-md shadow-sm hover:opacity-80">
+          <ChevronLeft size={20} className="text-[var(--brand-primary-dark)]" />
           Back
         </button>
 
@@ -442,11 +442,11 @@ function PhotoSection({
   return <div className="lg:col-span-1 space-y-4">
       <div className="rounded-[20px] sticky top-24">
         <div className="w-full items-center md:w-[280px] lg:w-[300px] max-w-[300px] mx-auto relative lg:pr-4">
-          <span className="absolute top-4 left-4 z-30 bg-[#DDB84E] text-white text-sm font-semibold px-3 py-1 rounded-full shadow-sm">
+          <span className="absolute top-4 left-4 z-30 bg-[var(--brand-gold-strong)] text-white text-sm font-semibold px-3 py-1 rounded-full shadow-sm">
             {matchText}
           </span>
           <button onClick={onToggleShortlist} className="absolute top-4 w-12 right-4 z-30 rounded-full flex items-center justify-center bg-transparent hover:scale-110 transition-transform active:scale-95 p-2 md:p-2 sm:p-3" aria-label={isShortlisted ? "Remove from shortlist" : "Add to shortlist"} title={isShortlisted ? "Remove from shortlist" : "Add to shortlist"}>
-            {isShortlisted ? <Star size={24} className="text-[#DDB84E] fill-[#DDB84E] sm:size-[20px]" /> : <Star size={24} className="text-[#C8A227] sm:size-[20px]" />}
+            {isShortlisted ? <Star size={24} className="text-[var(--brand-gold-strong)] fill-[var(--brand-gold-strong)] sm:size-[20px]" /> : <Star size={24} className="text-[var(--brand-primary-dark)] sm:size-[20px]" />}
           </button>
           <div
             className="relative cursor-pointer hover:opacity-90 transition-opacity md:h-[420px] lg:h-[430px]"
@@ -469,9 +469,9 @@ function PhotoSection({
         {photos.length > 1 && <div className="mt-3 flex items-center gap-3 overflow-x-auto pb-1 px-1">
             {photos.map((p, idx) => {
           const isActive = idx === activeIndex;
-          return <button key={`${p.url}-${idx}`} onClick={() => setActiveIndex(idx)} className={`relative shrink-0 size-20 rounded-xl overflow-hidden border transition-all duration-150 flex items-center justify-center bg-white ${isActive ? "border-[#DDB84E] ring-2 ring-[#DDB84E]/40 shadow-md" : "border-gray-200 hover:border-[#DDB84E]/60"}`} aria-label={`Thumbnail ${idx + 1}`}>
+            return <button key={`${p.url}-${idx}`} onClick={() => setActiveIndex(idx)} className={`relative shrink-0 size-20 rounded-xl overflow-hidden border transition-all duration-150 flex items-center justify-center bg-white ${isActive ? "border-[var(--brand-gold-strong)] ring-2 ring-[rgb(var(--brand-gold-strong-rgb)/0.4)] shadow-md" : "border-gray-200 hover:border-[rgb(var(--brand-gold-strong-rgb)/0.6)]"}`} aria-label={`Thumbnail ${idx + 1}`}>
                   <img src={p.url} alt={p.label || `Photo ${idx + 1}`} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-                  {isActive && <span className="absolute -top-1 -right-1 bg-[#DDB84E] text-white text-[10px] px-1.5 py-0.5 rounded-full shadow">
+              {isActive && <span className="absolute -top-1 -right-1 bg-[var(--brand-gold-strong)] text-white text-[10px] px-1.5 py-0.5 rounded-full shadow">
                       Active
                     </span>}
                 </button>;
@@ -502,11 +502,11 @@ function HeaderSection({
         </p>
         {(profile?.email || profile?.phoneNumber) && <div className="flex flex-wrap gap-4 text-sm text-gray-600 mt-1">
             {profile?.email && <div className="flex items-center gap-1">
-                <Mail size={14} className="text-[#C8A227]" />
+                <Mail size={14} className="text-[var(--brand-primary-dark)]" />
                 {profile.email}
               </div>}
             {profile?.phoneNumber && <div className="flex items-center gap-1">
-                <Phone size={14} className="text-[#C8A227]" />
+                <Phone size={14} className="text-[var(--brand-primary-dark)]" />
                 {profile.phoneNumber}
               </div>}
           </div>}
@@ -568,26 +568,26 @@ function PersonalDetailsSection({
   }, [address]);
   return <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
       <h3 className="text-lg font-semibold text-[#222] mb-4 flex items-center gap-2">
-        <User className="text-[#C8A227]" size={20} />
+        <User className="text-[var(--brand-primary-dark)]" size={20} />
         Personal Details
       </h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8 text-sm">
-        {(profile?.gender || profile?.personal?.gender) && <DetailRow icon={<User className="text-[#C8A227]" size={18} />} label="Gender" value={capitalize(profile?.gender || profile?.personal?.gender)} />}
+        {(profile?.gender || profile?.personal?.gender) && <DetailRow icon={<User className="text-[var(--brand-primary-dark)]" size={18} />} label="Gender" value={capitalize(profile?.gender || profile?.personal?.gender)} />}
         {(profile?.dateOfBirth || profile?.personal?.dateOfBirth) && <>
-            <DetailRow icon={<Calendar className="text-[#C8A227]" size={18} />} label="Date of Birth" value={new Date(profile?.dateOfBirth || profile?.personal?.dateOfBirth).toLocaleDateString()} />
-            <DetailRow icon={<Clock className="text-[#C8A227]" size={18} />} label="Age" value={formatAgeFromDob(profile?.dateOfBirth || profile?.personal?.dateOfBirth)} />
+            <DetailRow icon={<Calendar className="text-[var(--brand-primary-dark)]" size={18} />} label="Date of Birth" value={new Date(profile?.dateOfBirth || profile?.personal?.dateOfBirth).toLocaleDateString()} />
+            <DetailRow icon={<Clock className="text-[var(--brand-primary-dark)]" size={18} />} label="Age" value={formatAgeFromDob(profile?.dateOfBirth || profile?.personal?.dateOfBirth)} />
           </>}
-        {profile?.personal?.birthPlace && profile?.personal?.birthState && <DetailRow icon={<MapPin className="text-[#C8A227]" size={18} />} label="Birthplace" value={`${profile.personal.birthPlace}, ${profile.personal.birthState}`} />}
-        {profile?.personal?.height && <DetailRow icon={<Ruler className="text-[#C8A227]" size={18} />} label="Height" value={profile.personal.height} />}
-        {profile?.personal?.weight && <DetailRow icon={<Weight className="text-[#C8A227]" size={18} />} label="Weight" value={profile.personal.weight} />}
-        {profile?.personal?.religion && <DetailRow icon={<Heart className="text-[#C8A227]" size={18} />} label="Religion" value={capitalize(profile.personal.religion)} />}
-        {profile?.personal?.subCaste && <DetailRow icon={<User className="text-[#C8A227]" size={18} />} label="Subcaste" value={profile.personal.subCaste} />}
-        {profile?.personal?.country && <DetailRow icon={<MapPin className="text-[#C8A227]" size={18} />} label="Country" value={profile.personal.country} />}
-        {profile?.personal?.city && profile?.personal?.state && <DetailRow icon={<MapPin className="text-[#C8A227]" size={18} />} label="Current Location" value={`${capitalize(profile.personal.city)}, ${profile.personal.state}`} />}
+        {profile?.personal?.birthPlace && profile?.personal?.birthState && <DetailRow icon={<MapPin className="text-[var(--brand-primary-dark)]" size={18} />} label="Birthplace" value={`${profile.personal.birthPlace}, ${profile.personal.birthState}`} />}
+        {profile?.personal?.height && <DetailRow icon={<Ruler className="text-[var(--brand-primary-dark)]" size={18} />} label="Height" value={profile.personal.height} />}
+        {profile?.personal?.weight && <DetailRow icon={<Weight className="text-[var(--brand-primary-dark)]" size={18} />} label="Weight" value={profile.personal.weight} />}
+        {profile?.personal?.religion && <DetailRow icon={<Heart className="text-[var(--brand-primary-dark)]" size={18} />} label="Religion" value={capitalize(profile.personal.religion)} />}
+        {profile?.personal?.subCaste && <DetailRow icon={<User className="text-[var(--brand-primary-dark)]" size={18} />} label="Subcaste" value={profile.personal.subCaste} />}
+        {profile?.personal?.country && <DetailRow icon={<MapPin className="text-[var(--brand-primary-dark)]" size={18} />} label="Country" value={profile.personal.country} />}
+        {profile?.personal?.city && profile?.personal?.state && <DetailRow icon={<MapPin className="text-[var(--brand-primary-dark)]" size={18} />} label="Current Location" value={`${capitalize(profile.personal.city)}, ${profile.personal.state}`} />}
         {canShowFullAddress && formattedFullAddress && (
           <DetailRow
-            icon={<MapPin className="text-[#C8A227]" size={18} />}
+            icon={<MapPin className="text-[var(--brand-primary-dark)]" size={18} />}
             label="Full Address"
             value={
               address?.isYourHome
@@ -596,11 +596,11 @@ function PersonalDetailsSection({
             }
           />
         )}
-        {profile?.personal?.nationality && <DetailRow icon={<User className="text-[#C8A227]" size={18} />} label="Nationality" value={profile.personal.nationality} />}
-        {profile?.personal?.astrologicalSign && <DetailRow icon={<Star className="text-[#C8A227]" size={18} />} label="Zodiac Sign" value={profile.personal.astrologicalSign} />}
-        {profile?.personal?.dosh && <DetailRow icon={<Heart className="text-[#C8A227]" size={18} />} label="Dosh" value={profile.personal.dosh} />}
+        {profile?.personal?.nationality && <DetailRow icon={<User className="text-[var(--brand-primary-dark)]" size={18} />} label="Nationality" value={profile.personal.nationality} />}
+        {profile?.personal?.astrologicalSign && <DetailRow icon={<Star className="text-[var(--brand-primary-dark)]" size={18} />} label="Zodiac Sign" value={profile.personal.astrologicalSign} />}
+        {profile?.personal?.dosh && <DetailRow icon={<Heart className="text-[var(--brand-primary-dark)]" size={18} />} label="Dosh" value={profile.personal.dosh} />}
         {profile?.personal?.marriedStatus && <div className="col-span-full">
-            <DetailRow icon={<User className="text-[#C8A227]" size={18} />} label="Marital Status" value={profile.personal.marriedStatus} />
+            <DetailRow icon={<User className="text-[var(--brand-primary-dark)]" size={18} />} label="Marital Status" value={profile.personal.marriedStatus} />
             
             {}
             <div className="mt-3 space-y-2">
@@ -646,7 +646,7 @@ function FamilyDetailsSection({
   const family = profile.family;
   return <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
       <h3 className="text-lg font-semibold text-[#222] mb-4 flex items-center gap-2">
-        <User className="text-[#C8A227]" size={20} />
+        <User className="text-[var(--brand-primary-dark)]" size={20} />
         Family Details
       </h3>
 
@@ -727,7 +727,7 @@ function EducationDetailsSection({
   if (!education) return null;
   return <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
       <h3 className="text-lg font-semibold text-[#222] mb-4 flex items-center gap-2">
-        <GraduationCap className="text-[#C8A227]" size={20} />
+        <GraduationCap className="text-[var(--brand-primary-dark)]" size={20} />
         Education
       </h3>
 
@@ -764,7 +764,7 @@ function ProfessionalDetailsSection({
   if (!profile?.professional) return null;
   return <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
       <h3 className="text-lg font-semibold text-[#222] mb-4 flex items-center gap-2">
-        <Briefcase className="text-[#C8A227]" size={20} />
+        <Briefcase className="text-[var(--brand-primary-dark)]" size={20} />
         Professional
       </h3>
 
@@ -803,7 +803,7 @@ function HealthLifestyleSection({
   if (!profile?.healthAndLifestyle) return null;
   return <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
       <h3 className="text-lg font-semibold text-[#222] mb-4 flex items-center gap-2">
-        <Heart className="text-[#C8A227]" size={20} />
+        <Heart className="text-[var(--brand-primary-dark)]" size={20} />
         Health & Lifestyle
       </h3>
 
@@ -847,32 +847,32 @@ function ActionButtonsSection({
   onAddClick,
   onRemoveClick
 }) {
-  const CompareButton = isUiInCompare ? <Button onClick={onRemoveClick} className="flex-1 bg-[#DDB84E] hover:bg-[#C8A227] text-white rounded-[12px] h-12">
+  const CompareButton = isUiInCompare ? <Button onClick={onRemoveClick} className="flex-1 bg-[var(--brand-gold-strong)] hover:bg-[var(--brand-primary-dark)] text-white rounded-[12px] h-12">
       Remove From Compare
-    </Button> : <Button onClick={onAddClick} className="flex-1 bg-[#f6f1e7] hover:bg-[#C8A227] hover:text-white border-2 border-[#c8a227] text-[#c8a227] rounded-[12px] h-12">
+    </Button> : <Button onClick={onAddClick} className="flex-1 bg-[var(--brand-bg-neutral-2)] hover:bg-[var(--brand-primary-dark)] hover:text-white border-2 border-[var(--brand-primary-dark)] text-[var(--brand-primary-dark)] rounded-[12px] h-12">
       Add to Compare
     </Button>;
   return <div className="bg-white rounded-[20px] p-6 sticky bottom-4 border border-gold-light shadow-md">
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
         {(status === "none" || status === "withdrawn" || status === "cancelled") && <>
-            {onSendRequest && <Button onClick={() => onSendRequest(profileId)} className="flex-1 bg-[#DDB84E] hover:bg-[#C8A227] text-white rounded-[12px] h-12">
+            {onSendRequest && <Button onClick={() => onSendRequest(profileId)} className="flex-1 bg-[var(--brand-gold-strong)] hover:bg-[var(--brand-primary-dark)] text-white rounded-[12px] h-12">
                 Send Request
               </Button>}
             {CompareButton}
           </>}
 
         {status === "pending" && isSentRequest && onWithdraw && <>
-            <Button onClick={() => onWithdraw(profileId)} className="flex-1 bg-[#f6f1e7] hover:text-white hover:bg-[#d95655] border-2 border-[#d64545] text-[#d95655] rounded-[8px] h-12">
+            <Button onClick={() => onWithdraw(profileId)} className="flex-1 bg-[var(--brand-bg-neutral-2)] hover:text-white hover:bg-[#d95655] border-2 border-[#d64545] text-[#d95655] rounded-[8px] h-12">
               Withdraw Request
             </Button>
             {CompareButton}
           </>}
 
         {status === "pending" && !isSentRequest && onAccept && onReject && <>
-            <Button onClick={() => onAccept(profileId)} className="flex-1 bg-[#DDB84E] hover:bg-[#C8A227] text-white rounded-[12px] h-12">
+            <Button onClick={() => onAccept(profileId)} className="flex-1 bg-[var(--brand-gold-strong)] hover:bg-[var(--brand-primary-dark)] text-white rounded-[12px] h-12">
               Accept
             </Button>
-            <Button onClick={() => onReject(profileId)} className="flex-1 bg-[#f6f1e7] hover:text-white hover:bg-[#d95655] border-2 border-[#d64545] text-[#d95655] rounded-[8px] h-12">
+            <Button onClick={() => onReject(profileId)} className="flex-1 bg-[var(--brand-bg-neutral-2)] hover:text-white hover:bg-[#d95655] border-2 border-[#d64545] text-[#d95655] rounded-[8px] h-12">
               Reject
             </Button>
             {CompareButton}
@@ -883,7 +883,7 @@ function ActionButtonsSection({
           </>}
 
         {(status === "rejected") && <>
-            {onSendRequest && <Button onClick={() => onSendRequest(profileId)} className="flex-1 bg-[#DDB84E] hover:bg-[#C8A227] text-white rounded-[12px] h-12">
+            {onSendRequest && <Button onClick={() => onSendRequest(profileId)} className="flex-1 bg-[var(--brand-gold-strong)] hover:bg-[var(--brand-primary-dark)] text-white rounded-[12px] h-12">
                 Send Request Again
               </Button>}
             {CompareButton}

@@ -181,8 +181,8 @@ const ProfessionDetails = ({
   }, []);
   const isDisabled = formData.employmentStatus === "Not Working" || formData.employmentStatus === "Student";
   const RequiredMark = () => <span className="text-red-500 ml-1">*</span>;
-  return <div className="min-h-screen w-full bg-[#F9F7F5] flex justify-center items-start py-2 px-2">
-      <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[#F9F7F5] hover:scale-[1.02] transition-transform duration-300">
+    return <div className="min-h-screen w-full bg-[var(--brand-bg)] flex justify-center items-start py-2 px-2">
+      <div className="bg-[var(--brand-card)] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[var(--brand-bg)] hover:scale-[1.02] transition-transform duration-300">
         {}
         <h2 className="text-2xl font-bold text-[#1f1e1d] text-center mb-8">
           Professional Details
@@ -194,7 +194,7 @@ const ProfessionDetails = ({
             <label className="text-sm font-medium mb-1">
               Employment Status <RequiredMark />
             </label>
-            <CustomSelect name="employmentStatus" value={formData.employmentStatus} onChange={handleChange} options={EMPLOYMENT_OPTIONS} placeholder="Select Employment Status" className={`w-full border rounded-md p-3 text-sm focus:outline-none focus:ring-1 transition ${errors.employmentStatus ? "border-red-500 focus:ring-red-400 focus:border-red-400" : "border-[#D4A052] focus:ring-[#E4C48A] focus:border-[#E4C48A]"}`} />
+            <CustomSelect name="employmentStatus" value={formData.employmentStatus} onChange={handleChange} options={EMPLOYMENT_OPTIONS} placeholder="Select Employment Status" className={`w-full border rounded-md p-3 text-sm focus:outline-none focus:ring-1 transition ${errors.employmentStatus ? "border-red-500 focus:ring-red-400 focus:border-red-400" : "border-[var(--brand-primary)] focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)]"}`} />
 
             {}
             {errors.employmentStatus && <p className="text-red-500 text-sm mt-1">
@@ -223,7 +223,7 @@ const ProfessionDetails = ({
                   ? "bg-gray-100 cursor-not-allowed border-gray-300"
                   : errors.occupation
                   ? "border-red-500 focus:ring-red-400 focus:border-red-400"
-                  : "border-[#D4A052] focus:ring-[#E4C48A] focus:border-[#E4C48A]"
+                  : "border-[var(--brand-primary)] focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)]"
               }`}
             />
             {errors.occupation && <p className="text-red-500 text-sm mt-1">{errors.occupation}</p>}
@@ -234,24 +234,24 @@ const ProfessionDetails = ({
             <label className="text-sm font-medium mb-1">
               Company / Organization Name <RequiredMark />
             </label>
-            <input type="text" name="companyName" value={formData.companyName} onChange={handleChange} disabled={isDisabled} placeholder="Enter company or organization name" className={`w-full border rounded-md p-3 text-sm focus:outline-none focus:ring-1 transition ${isDisabled ? "bg-gray-100 cursor-not-allowed border-gray-300" : errors.companyName ? "border-red-500 focus:ring-red-400 focus:border-red-400" : "border-[#D4A052] focus:ring-[#E4C48A] focus:border-[#E4C48A]"}`} />
+            <input type="text" name="companyName" value={formData.companyName} onChange={handleChange} disabled={isDisabled} placeholder="Enter company or organization name" className={`w-full border rounded-md p-3 text-sm focus:outline-none focus:ring-1 transition ${isDisabled ? "bg-gray-100 cursor-not-allowed border-gray-300" : errors.companyName ? "border-red-500 focus:ring-red-400 focus:border-red-400" : "border-[var(--brand-primary)] focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)]"}`} />
             {errors.companyName && <p className="text-red-500 text-sm mt-1">{errors.companyName}</p>}
           </div>
 
           {}
           <div className="flex flex-col">
             <label className="text-sm font-medium mb-1">Annual Income <RequiredMark /></label>
-            <CustomSelect name="annualIncome" value={isDisabled ? formData.employmentStatus === "Not Working" ? "Not Working" : "Student" : formData.annualIncome} onChange={handleChange} disabled={isDisabled} options={INCOME_OPTIONS} placeholder="Select Annual Income" className={`w-full border rounded-md p-3 text-sm focus:outline-none focus:ring-1 transition ${isDisabled ? "bg-gray-100 cursor-not-allowed border-gray-300" : errors.annualIncome ? "border-red-500 focus:ring-red-400 focus:border-red-400" : "border-[#D4A052] focus:ring-[#E4C48A] focus:border-[#E4C48A]"}`} />
+            <CustomSelect name="annualIncome" value={isDisabled ? formData.employmentStatus === "Not Working" ? "Not Working" : "Student" : formData.annualIncome} onChange={handleChange} disabled={isDisabled} options={INCOME_OPTIONS} placeholder="Select Annual Income" className={`w-full border rounded-md p-3 text-sm focus:outline-none focus:ring-1 transition ${isDisabled ? "bg-gray-100 cursor-not-allowed border-gray-300" : errors.annualIncome ? "border-red-500 focus:ring-red-400 focus:border-red-400" : "border-[var(--brand-primary)] focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)]"}`} />
             {errors.annualIncome && <p className="text-red-500 text-sm mt-1">{errors.annualIncome}</p>}
           </div>
 
           {}
           <div className="pt-6 flex  justify-between items-center gap-4">
-            <button type="button" onClick={handlePrevious} className="w-full sm:w-1/2 bg-white text-[#D4A052] border border-[#D4A052] py-3 rounded-xl font-semibold hover:bg-[#FDF8EF] transition">
+            <button type="button" onClick={handlePrevious} className="w-full sm:w-1/2 bg-white text-[var(--brand-primary)] border border-[var(--brand-primary)] py-3 rounded-xl font-semibold hover:bg-[var(--brand-bg-warm)] transition">
               Previous
             </button>
 
-            <button type="submit" className="w-full sm:w-1/2 bg-[#D4A052] text-white py-3 rounded-xl font-semibold hover:bg-[#E4C48A] transition">
+            <button type="submit" className="w-full sm:w-1/2 bg-[var(--brand-primary)] text-white py-3 rounded-xl font-semibold hover:bg-[var(--brand-gold)] transition">
               Save & Next
             </button>
           </div>

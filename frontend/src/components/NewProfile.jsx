@@ -208,7 +208,7 @@ const NewProfile = () => {
     navigate(`/dashboard/profile/${userId}`);
   };
   const totalPages = Math.ceil(pagination.total / pagination.limit) || 1;
-  return <div className="min-h-screen bg-gradient-to-br from-[#fefdfb] via-[#fef9f0] to-[#fef5e7] p-4 md:p-8">
+  return <div className="min-h-screen bg-gradient-to-br from-[var(--brand-bg-softest)] via-[var(--brand-bg-softer)] to-[var(--brand-bg-light)] p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         {}
         <div className="mb-8">
@@ -222,11 +222,11 @@ const NewProfile = () => {
             <div className="flex flex-wrap gap-3">
               <div className="flex items-center gap-2 flex-1 min-w-[200px]">
                 <span className="text-sm text-gray-600 whitespace-nowrap">Name:</span>
-                <input type="text" value={filters.name} onChange={e => handleFilterChange('name', e.target.value)} placeholder="Search by name..." className="flex-1 border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a227]" />
+                <input type="text" value={filters.name} onChange={e => handleFilterChange('name', e.target.value)} placeholder="Search by name..." className="flex-1 border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary-dark)]" />
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Duration:</span>
-                <select value={filters.newProfile} onChange={e => handleFilterChange('newProfile', e.target.value)} className="border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a227]">
+                <select value={filters.newProfile} onChange={e => handleFilterChange('newProfile', e.target.value)} className="border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary-dark)]">
                   {NEW_PROFILE_DURATIONS.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
                 </select>
               </div>
@@ -236,21 +236,21 @@ const NewProfile = () => {
             <div className="flex flex-wrap gap-3">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Age:</span>
-                <input type="number" value={filters.ageFrom} onChange={e => handleFilterChange('ageFrom', e.target.value)} placeholder="From" min="18" max="100" className="w-20 border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a227]" />
+                <input type="number" value={filters.ageFrom} onChange={e => handleFilterChange('ageFrom', e.target.value)} placeholder="From" min="18" max="100" className="w-20 border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary-dark)]" />
                 <span className="text-sm text-gray-400">to</span>
-                <input type="number" value={filters.ageTo} onChange={e => handleFilterChange('ageTo', e.target.value)} placeholder="To" min="18" max="100" className="w-20 border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a227]" />
+                <input type="number" value={filters.ageTo} onChange={e => handleFilterChange('ageTo', e.target.value)} placeholder="To" min="18" max="100" className="w-20 border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary-dark)]" />
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Height (cm):</span>
-                <input type="number" value={filters.heightFrom} onChange={e => handleFilterChange('heightFrom', e.target.value)} placeholder="From" min="120" max="250" className="w-20 border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a227]" />
+                <input type="number" value={filters.heightFrom} onChange={e => handleFilterChange('heightFrom', e.target.value)} placeholder="From" min="120" max="250" className="w-20 border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary-dark)]" />
                 <span className="text-sm text-gray-400">to</span>
-                <input type="number" value={filters.heightTo} onChange={e => handleFilterChange('heightTo', e.target.value)} placeholder="To" min="120" max="250" className="w-20 border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a227]" />
+                <input type="number" value={filters.heightTo} onChange={e => handleFilterChange('heightTo', e.target.value)} placeholder="To" min="120" max="250" className="w-20 border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary-dark)]" />
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Weight (kg):</span>
-                <input type="number" value={filters.weightFrom} onChange={e => handleFilterChange('weightFrom', e.target.value)} placeholder="From" min="30" max="200" className="w-20 border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a227]" />
+                <input type="number" value={filters.weightFrom} onChange={e => handleFilterChange('weightFrom', e.target.value)} placeholder="From" min="30" max="200" className="w-20 border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary-dark)]" />
                 <span className="text-sm text-gray-400">to</span>
-                <input type="number" value={filters.weightTo} onChange={e => handleFilterChange('weightTo', e.target.value)} placeholder="To" min="30" max="200" className="w-20 border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a227]" />
+                <input type="number" value={filters.weightTo} onChange={e => handleFilterChange('weightTo', e.target.value)} placeholder="To" min="30" max="200" className="w-20 border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary-dark)]" />
               </div>
             </div>
 
@@ -258,14 +258,14 @@ const NewProfile = () => {
             <div className="flex flex-wrap gap-3">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Religion:</span>
-                <select value={filters.religion} onChange={e => handleFilterChange('religion', e.target.value)} className="border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a227]">
+                <select value={filters.religion} onChange={e => handleFilterChange('religion', e.target.value)} className="border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary-dark)]">
                   <option value="">All</option>
                   {RELIGIONS.map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Caste:</span>
-                <select value={filters.caste} onChange={e => handleFilterChange('caste', e.target.value)} className="border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a227]">
+                <select value={filters.caste} onChange={e => handleFilterChange('caste', e.target.value)} className="border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary-dark)]">
                   <option value="">All</option>
                   {CASTES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
@@ -280,14 +280,14 @@ const NewProfile = () => {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Profession:</span>
-                <select value={filters.profession} onChange={e => handleFilterChange('profession', e.target.value)} className="min-w-[180px] border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a227]">
+                <select value={filters.profession} onChange={e => handleFilterChange('profession', e.target.value)} className="min-w-[180px] border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary-dark)]">
                   <option value="">All</option>
                   {JOB_TITLES.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Education:</span>
-                <input type="text" value={filters.education} onChange={e => handleFilterChange('education', e.target.value)} placeholder="e.g., HighSchool, Engineering" className="min-w-[180px] border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a227]" />
+                <input type="text" value={filters.education} onChange={e => handleFilterChange('education', e.target.value)} placeholder="e.g., HighSchool, Engineering" className="min-w-[180px] border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary-dark)]" />
               </div>
             </div>
 
@@ -296,7 +296,7 @@ const NewProfile = () => {
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-gray-600">Per Page:</span>
-                  <select value={pagination.limit} onChange={handleLimitChange} className="border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a227]">
+                  <select value={pagination.limit} onChange={handleLimitChange} className="border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary-dark)]">
                     {[10, 20, 30, 50].map(l => <option key={l} value={l}>{l}</option>)}
                   </select>
                 </div>
@@ -319,7 +319,7 @@ const NewProfile = () => {
 
         {}
         {loading && <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#c8a227]"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--brand-primary-dark)]"></div>
           </div>}
 
         {}
@@ -366,7 +366,7 @@ const NewProfile = () => {
                 {[...Array(totalPages)].map((_, idx) => {
               const pageNum = idx + 1;
               if (pageNum === 1 || pageNum === totalPages || pageNum >= pagination.page - 1 && pageNum <= pagination.page + 1) {
-                return <Button key={pageNum} onClick={() => handlePageChange(pageNum)} variant={pagination.page === pageNum ? "default" : "outline"} size="sm" className={`w-10 h-10 rounded-full ${pagination.page === pageNum ? "bg-[#c8a227] hover:bg-[#b39120]" : ""}`}>
+                return <Button key={pageNum} onClick={() => handlePageChange(pageNum)} variant={pagination.page === pageNum ? "default" : "outline"} size="sm" className={`w-10 h-10 rounded-full ${pagination.page === pageNum ? "bg-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark-hover)]" : ""}`}>
                         {pageNum}
                       </Button>;
               } else if (pageNum === pagination.page - 2 || pageNum === pagination.page + 2) {
@@ -432,7 +432,7 @@ const ProfileCard = ({
         </button>
 
         {}
-        {scoreDetail.score > 0 && <div className="absolute top-3 left-3 bg-[#c8a227] text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+        {scoreDetail.score > 0 && <div className="absolute top-3 left-3 bg-[var(--brand-primary-dark)] text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
             {scoreDetail.score}% Match
           </div>}
 
@@ -460,7 +460,7 @@ const ProfileCard = ({
 
         {}
         {profession && <div className="mb-3">
-            <span className="bg-[#fef9f0] text-[#c8a227] text-xs font-medium px-3 py-1 rounded-full border border-[#c8a227]/20">
+            <span className="bg-[var(--brand-bg-softer)] text-[var(--brand-primary-dark)] text-xs font-medium px-3 py-1 rounded-full border border-[rgb(var(--brand-primary-dark-rgb)/0.2)]">
               {profession}
             </span>
           </div>}
@@ -477,7 +477,7 @@ const ProfileCard = ({
 
         {}
         {(user.religion || user.subCaste) && <div className="flex flex-wrap gap-2 mb-4">
-            {user.religion && <span className="bg-[#fef9f0] text-[#c8a227] text-xs font-medium px-3 py-1 rounded-full border border-[#c8a227]/20">
+          {user.religion && <span className="bg-[var(--brand-bg-softer)] text-[var(--brand-primary-dark)] text-xs font-medium px-3 py-1 rounded-full border border-[rgb(var(--brand-primary-dark-rgb)/0.2)]">
                 {user.religion}
               </span>}
             {user.subCaste && <span className="bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1 rounded-full border border-blue-200">
@@ -496,7 +496,7 @@ const ProfileCard = ({
           </div>}
 
         {}
-        <Button onClick={() => onViewProfile(user.userId)} className="w-full bg-[#c8a227] hover:bg-[#b39120] text-white rounded-full font-medium 
+        <Button onClick={() => onViewProfile(user.userId)} className="w-full bg-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark-hover)] text-white rounded-full font-medium 
           transition-all duration-200 shadow-md hover:shadow-lg">
           View Profile
         </Button>

@@ -1459,7 +1459,7 @@ export function EditProfile({
       [field]: ""
     }));
   };
-  const inputClass = "w-full border border-[#D4A052] rounded-md p-2.5 sm:p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition";
+  const inputClass = "w-full border border-[var(--brand-primary)] rounded-md p-2.5 sm:p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition";
   const isBlank = v => v === undefined || v === null || typeof v === "string" && String(v).trim() === "";
   const getDobParts = React.useCallback(isoDate => {
     if (!isoDate) return {
@@ -1672,7 +1672,7 @@ export function EditProfile({
               hasChildren: ""
             }));
           }} className="peer hidden" />
-              <span className="w-4 h-4 rounded-full border border-[#E4C48A] peer-checked:bg-[#E4C48A] peer-checked:border-[#E4C48A] transition-all"></span>
+              <span className="w-4 h-4 rounded-full border border-[var(--brand-gold)] peer-checked:bg-[var(--brand-gold)] peer-checked:border-[var(--brand-gold)] transition-all"></span>
               <span className="text-sm">Yes</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
@@ -1686,7 +1686,7 @@ export function EditProfile({
               hasChildren: ""
             }));
           }} className="peer hidden" />
-              <span className="w-4 h-4 rounded-full border border-[#E4C48A] peer-checked:bg-[#E4C48A] peer-checked:border-[#E4C48A] transition-all"></span>
+              <span className="w-4 h-4 rounded-full border border-[var(--brand-gold)] peer-checked:bg-[var(--brand-gold)] peer-checked:border-[var(--brand-gold)] transition-all"></span>
               <span className="text-sm">No</span>
             </label>
           </div>
@@ -1952,7 +1952,7 @@ export function EditProfile({
                 ...prev,
                 ownHouse: ""
               }));
-            }} className={`appearance-none w-4 h-4 rounded-full border transition duration-200 cursor-pointer ${personal.ownHouse === "Yes" ? "bg-[#D4A052] border-[#D4A052]" : "border-gray-300"} focus:ring-1 focus:ring-[#E4C48A]`} />
+            }} className={`appearance-none w-4 h-4 rounded-full border transition duration-200 cursor-pointer ${personal.ownHouse === "Yes" ? "bg-[var(--brand-primary)] border-[var(--brand-primary)]" : "border-gray-300"} focus:ring-1 focus:ring-[var(--brand-gold)]`} />
               <span className="text-gray-700 text-sm">Yes</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
@@ -1965,7 +1965,7 @@ export function EditProfile({
                 ...prev,
                 ownHouse: ""
               }));
-            }} className={`appearance-none w-4 h-4 rounded-full border transition duration-200 cursor-pointer ${personal.ownHouse === "No" ? "bg-[#D4A052] border-[#D4A052]" : "border-gray-300"} focus:ring-1 focus:ring-[#E4C48A]`} />
+            }} className={`appearance-none w-4 h-4 rounded-full border transition duration-200 cursor-pointer ${personal.ownHouse === "No" ? "bg-[var(--brand-primary)] border-[var(--brand-primary)]" : "border-gray-300"} focus:ring-1 focus:ring-[var(--brand-gold)]`} />
               <span className="text-gray-700 text-sm">No</span>
             </label>
           </div>
@@ -1998,7 +1998,7 @@ export function EditProfile({
                 ...prev,
                 residingInIndia: ""
               }));
-            }} disabled={isBlank(personal.residingInIndia)} className={`appearance-none w-4 h-4 rounded-full border transition duration-200 ${personal.residingInIndia === "yes" ? "bg-[#E4C48A] border-[#E4C48A]" : "border-gray-300"} focus:ring-1 focus:ring-[#E4C48A]`} />
+            }} disabled={isBlank(personal.residingInIndia)} className={`appearance-none w-4 h-4 rounded-full border transition duration-200 ${personal.residingInIndia === "yes" ? "bg-[var(--brand-gold)] border-[var(--brand-gold)]" : "border-gray-300"} focus:ring-1 focus:ring-[var(--brand-gold)]`} />
               <span className="text-gray-700 text-sm">Yes</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
@@ -2012,7 +2012,7 @@ export function EditProfile({
                 ...prev,
                 residingInIndia: ""
               }));
-            }} disabled={isBlank(personal.residingInIndia)} className={`appearance-none w-4 h-4 rounded-full border transition duration-200 ${personal.residingInIndia === "no" ? "bg-[#E4C48A] border-[#E4C48A]" : "border-gray-300"} focus:ring-1 focus:ring-[#E4C48A]`} />
+            }} disabled={isBlank(personal.residingInIndia)} className={`appearance-none w-4 h-4 rounded-full border transition duration-200 ${personal.residingInIndia === "no" ? "bg-[var(--brand-gold)] border-[var(--brand-gold)]" : "border-gray-300"} focus:ring-1 focus:ring-[var(--brand-gold)]`} />
               <span className="text-gray-700 text-sm">No</span>
             </label>
           </div>
@@ -2062,7 +2062,7 @@ export function EditProfile({
     const multiStyles = {
       control: (base, state) => ({
         ...base,
-        borderColor: state.isFocused ? "#D4A052" : "#d1d5db",
+        borderColor: state.isFocused ? "var(--brand-primary)" : "#d1d5db",
         boxShadow: "none",
         borderRadius: "0.5rem",
         backgroundColor: "#fff",
@@ -2072,7 +2072,7 @@ export function EditProfile({
         fontSize: "0.875rem",
         transition: "all 0.2s ease",
         "&:hover": {
-          borderColor: "#D4A052"
+          borderColor: "var(--brand-primary)"
         }
       }),
       valueContainer: base => ({
@@ -2085,7 +2085,7 @@ export function EditProfile({
       }),
       multiValue: base => ({
         ...base,
-        backgroundColor: "#F9F7F5",
+        backgroundColor: "var(--brand-bg)",
         borderRadius: "0.5rem",
         padding: "0 6px"
       }),
@@ -2098,7 +2098,7 @@ export function EditProfile({
         ...base,
         color: "#6b7280",
         ":hover": {
-          backgroundColor: "#D4A052",
+          backgroundColor: "var(--brand-primary)",
           color: "white"
         }
       }),
@@ -2141,11 +2141,11 @@ export function EditProfile({
           borderRadius: "10px"
         },
         "&::-webkit-scrollbar-thumb": {
-          background: "#c8a227",
+          background: "var(--brand-primary-dark)",
           borderRadius: "10px"
         },
         "&::-webkit-scrollbar-thumb:hover": {
-          background: "#b39120"
+          background: "var(--brand-primary-dark-hover)"
         }
       }),
       option: (base, state) => ({
@@ -2467,7 +2467,7 @@ export function EditProfile({
         placeholder
       }) => <div className="flex flex-col" key={key}>
             <label className="text-sm font-medium mb-1">{label}</label>
-            <input type="text" name={key} placeholder={placeholder || label} value={family[key] || ""} onChange={e => handleFamilyChange(key)(e)} autoCapitalize="words" className="w-full rounded-md p-2.5 sm:p-3 text-sm transition-all border border-[#D4A052] focus:border-[#D4A052] focus:ring-2 focus:ring-[#E4C48A]/30 focus:outline-none" />
+            <input type="text" name={key} placeholder={placeholder || label} value={family[key] || ""} onChange={e => handleFamilyChange(key)(e)} autoCapitalize="words" className="w-full rounded-md p-2.5 sm:p-3 text-sm transition-all border border-[var(--brand-primary)] focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[rgb(var(--brand-gold-rgb)/0.3)] focus:outline-none" />
           </div>)}
       </div>
 
@@ -2480,7 +2480,7 @@ export function EditProfile({
                 <input type="radio" name="familyType" value={type} checked={family.familyType === type} onChange={() => setFamily(prev => ({
               ...prev,
               familyType: type
-            }))} className={`appearance-none w-4 h-4 rounded-full border transition duration-200 cursor-pointer ${family.familyType === type ? "bg-[#D4A052] border-[#D4A052]" : "border-gray-300"} focus:ring-1 focus:ring-[#E4C48A]`} />
+            }))} className={`appearance-none w-4 h-4 rounded-full border transition duration-200 cursor-pointer ${family.familyType === type ? "bg-[var(--brand-primary)] border-[var(--brand-primary)]" : "border-gray-300"} focus:ring-1 focus:ring-[var(--brand-gold)]`} />
                 <span className="text-gray-700 text-sm">{type}</span>
               </label>)}
           </div>
@@ -2501,8 +2501,8 @@ export function EditProfile({
             siblingCount: 0,
             siblings: []
           }))} className={`appearance-none w-4 h-4 rounded-full border transition duration-200 cursor-pointer
-            ${family.hasSiblings === (option === "Yes") ? "bg-[#D4A052] border-[#D4A052]" : "border-[#E4C48A]"}
-            focus:outline-none focus:ring-1 focus:ring-[#E4C48A]`} />
+            ${family.hasSiblings === (option === "Yes") ? "bg-[var(--brand-primary)] border-[var(--brand-primary)]" : "border-[var(--brand-gold)]"}
+            focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)]`} />
               <span className="text-gray-700">{option}</span>
             </label>)}
         </div>
@@ -2518,7 +2518,7 @@ export function EditProfile({
                   <label className="text-sm font-medium">
                     Sibling {index + 1} Name
                   </label>
-                  <input type="text" placeholder={`Sibling ${index + 1} Name`} value={sibling.name} onChange={e => handleSiblingChange(index, "name", e.target.value)} autoCapitalize="words" className="w-full border border-[#D4A052] rounded-md p-2.5 sm:p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition" />
+                  <input type="text" placeholder={`Sibling ${index + 1} Name`} value={sibling.name} onChange={e => handleSiblingChange(index, "name", e.target.value)} autoCapitalize="words" className="w-full border border-[var(--brand-primary)] rounded-md p-2.5 sm:p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition" />
                 </div>
 
                 <div className="flex flex-col">
@@ -2805,7 +2805,7 @@ export function EditProfile({
                 <img src={src} alt={`photo-${slot.index}`} className="w-full h-full object-cover" />
               </a>
             ) : (
-              <div className="w-full h-32 overflow-hidden rounded-md bg-gray-100 mb-2 border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-[#D4A052] transition-colors" onClick={() => handleReplacePhoto(slot.index)}>
+              <div className="w-full h-32 overflow-hidden rounded-md bg-gray-100 mb-2 border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-[var(--brand-primary)] transition-colors" onClick={() => handleReplacePhoto(slot.index)}>
                 <div className="text-center">
                   <svg className="w-8 h-8 text-gray-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -2816,7 +2816,7 @@ export function EditProfile({
             )}
             <div className="w-full flex flex-col gap-1">
               <div className="text-xs font-medium text-gray-700">{slot.label}</div>
-              <button type="button" onClick={() => handleReplacePhoto(slot.index)} className="mt-1 w-full px-3 py-1.5 rounded-md bg-[#D4A052] text-white text-xs hover:bg-[#c8a227] transition-colors">
+              <button type="button" onClick={() => handleReplacePhoto(slot.index)} className="mt-1 w-full px-3 py-1.5 rounded-md bg-[var(--brand-primary)] text-white text-xs hover:bg-[var(--brand-primary-dark)] transition-colors">
                 {uploadingPhotoIdx === slot.index ? "Uploading..." : (src ? "Edit" : "Upload")}
               </button>
             </div>
@@ -2961,7 +2961,7 @@ export function EditProfile({
       <div className="bg-white rounded-[16px] sm:rounded-[20px] md:rounded-[24px] shadow-md border border-[#e5e5e5] p-4 sm:p-5 md:p-6 lg:p-8">
         {}
         <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-5 md:mb-6">
-          <button onClick={onNavigateBack} className="flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-full hover:bg-[#E4C48A] transition-colors bg-[#D4A052] shadow-lg">
+          <button onClick={onNavigateBack} className="flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-full hover:bg-[var(--brand-gold)] transition-colors bg-[var(--brand-primary)] shadow-lg">
             <ArrowLeft className="w-8 h-8 text-white" strokeWidth={3} />
           </button>
           <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
@@ -2987,10 +2987,10 @@ export function EditProfile({
 
         {}
         <div className="mt-6 sm:mt-8 md:mt-10 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-          <Button variant="outline" onClick={onNavigateBack} className="rounded-[12px] px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 text-sm sm:text-base border-[#C8A227] text-[#C8A227] hover:bg-[#C8A227] hover:text-white transition-colors w-full sm:w-auto order-2 sm:order-1">
+          <Button variant="outline" onClick={onNavigateBack} className="rounded-[12px] px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 text-sm sm:text-base border-[var(--brand-primary-dark)] text-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark)] hover:text-white transition-colors w-full sm:w-auto order-2 sm:order-1">
             Cancel
           </Button>
-          <Button onClick={handleSave} className="rounded-[12px] px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 text-sm sm:text-base flex items-center justify-center gap-2 bg-[#C8A227] hover:bg-[#B49520] text-white w-full sm:w-auto order-1 sm:order-2">
+          <Button onClick={handleSave} className="rounded-[12px] px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 text-sm sm:text-base flex items-center justify-center gap-2 bg-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark-hover-4)] text-white w-full sm:w-auto order-1 sm:order-2">
             <Save size={16} className="sm:w-[18px] sm:h-[18px]" />
             Save Changes
           </Button>

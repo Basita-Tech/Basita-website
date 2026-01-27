@@ -140,9 +140,9 @@ export function Support() {
       <div className="flex items-center justify-between mb-4">
         <div>
           <p className="text-sm text-gray-600 mb-1">Support Center</p>
-          <h1 className="text-2xl font-semibold text-[#3a2f00] m-0">Help & Support</h1>
+          <h1 className="text-2xl font-semibold text-[var(--brand-text-dark)] m-0">Help & Support</h1>
         </div>
-        <Button variant="outline" className="rounded-[10px] border-[#c8a227] text-[#3a2f00]" onClick={() => navigate('/dashboard/settings')}>
+        <Button variant="outline" className="rounded-[10px] border-[var(--brand-primary-dark)] text-[var(--brand-text-dark)]" onClick={() => navigate('/dashboard/settings')}>
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Settings
         </Button>

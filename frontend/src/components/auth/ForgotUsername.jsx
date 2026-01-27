@@ -130,18 +130,18 @@ const ForgotUsername = () => {
     date.setFullYear(date.getFullYear() - 18);
     return date.toISOString().split("T")[0];
   };
-  return <div className="min-h-screen bg-gradient-to-br from-[#F4EEE4] via-white to-[#F4EEE4] flex items-center justify-center p-4">
+  return <div className="min-h-screen bg-gradient-to-br from-[var(--brand-bg-beige)] via-white to-[var(--brand-bg-beige)] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
           {}
           <div className="text-center mb-6">
-            <Link to="/login" className="inline-flex items-center text-gray-600 hover:text-[#D4A052] transition-colors mb-4 text-sm font-medium" aria-label="Back to login page">
+            <Link to="/login" className="inline-flex items-center text-gray-600 hover:text-[var(--brand-primary)] transition-colors mb-4 text-sm font-medium" aria-label="Back to login page">
               <ArrowLeft size={16} className="mr-1" />
               Back to Login
             </Link>
 
             <div className="flex justify-center items-center mb-2">
-              <Heart size={28} className="text-[#D4A052] mr-2" fill="#D4A052" aria-hidden="true" />
+              <Heart size={28} className="text-[var(--brand-primary)] mr-2" fill="var(--brand-primary)" aria-hidden="true" />
               <h1 className="text-2xl font-bold text-gray-800">
                 Forgot Username
               </h1>
@@ -159,7 +159,7 @@ const ForgotUsername = () => {
               <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
                 Full Name <span className="text-red-500">*</span>
               </label>
-              <input id="fullName" type="text" name="fullName" autoComplete="name" required aria-required="true" aria-invalid={error && !formData.fullName ? "true" : "false"} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4A052] focus:border-transparent outline-none transition-all text-sm" placeholder="Enter your full name" value={formData.fullName} onChange={handleChange} disabled={loading} maxLength={100} autoFocus />
+              <input id="fullName" type="text" name="fullName" autoComplete="name" required aria-required="true" aria-invalid={error && !formData.fullName ? "true" : "false"} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent outline-none transition-all text-sm" placeholder="Enter your full name" value={formData.fullName} onChange={handleChange} disabled={loading} maxLength={100} autoFocus />
             </div>
 
             {}
@@ -167,7 +167,7 @@ const ForgotUsername = () => {
               <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700 mb-1">
                 Date of Birth <span className="text-red-500">*</span>
               </label>
-              <input id="dateOfBirth" type="date" name="dateOfBirth" autoComplete="bday" required aria-required="true" aria-invalid={error && !formData.dateOfBirth ? "true" : "false"} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4A052] focus:border-transparent outline-none transition-all text-sm" value={formData.dateOfBirth} onChange={handleChange} max={getMaxDate()} disabled={loading} />
+              <input id="dateOfBirth" type="date" name="dateOfBirth" autoComplete="bday" required aria-required="true" aria-invalid={error && !formData.dateOfBirth ? "true" : "false"} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent outline-none transition-all text-sm" value={formData.dateOfBirth} onChange={handleChange} max={getMaxDate()} disabled={loading} />
               <p className="text-xs text-gray-500 mt-1">
                 You must be at least 18 years old
               </p>
@@ -179,7 +179,7 @@ const ForgotUsername = () => {
               </div>}
 
             {}
-            <button type="submit" disabled={loading} className="w-full bg-[#D4A052] hover:bg-[#c8a227] text-white font-semibold py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center" aria-label={loading ? "Retrieving username" : "Retrieve username"}>
+            <button type="submit" disabled={loading} className="w-full bg-[var(--brand-primary)] hover:bg-[var(--brand-primary-dark)] text-white font-semibold py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center" aria-label={loading ? "Retrieving username" : "Retrieve username"}>
               {loading ? <>
                   <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
@@ -203,7 +203,7 @@ const ForgotUsername = () => {
                 <div className="text-xs text-gray-600">
                   ({usernameType === "mobile" ? "Mobile" : "Email"} based login)
                 </div>
-                <button onClick={() => navigate("/login")} className="mt-4 w-full bg-[#D4A052] hover:bg-[#c8a227] text-white font-medium py-2 rounded-lg transition-colors">
+                <button onClick={() => navigate("/login")} className="mt-4 w-full bg-[var(--brand-primary)] hover:bg-[var(--brand-primary-dark)] text-white font-medium py-2 rounded-lg transition-colors">
                   Proceed to Login
                 </button>
               </div>
@@ -213,13 +213,13 @@ const ForgotUsername = () => {
           <div className="mt-6 text-center space-y-2">
             <p className="text-sm text-gray-600">
               Remembered your username?{" "}
-              <Link to="/login" className="text-[#D4A052] hover:text-[#c8a227] font-semibold transition-colors">
+              <Link to="/login" className="text-[var(--brand-primary)] hover:text-[var(--brand-primary-dark)] font-semibold transition-colors">
                 Log In
               </Link>
             </p>
             <p className="text-sm text-gray-600">
               Forgot your password?{" "}
-              <Link to="/forgot-password" className="text-[#D4A052] hover:text-[#c8a227] font-semibold transition-colors">
+              <Link to="/forgot-password" className="text-[var(--brand-primary)] hover:text-[var(--brand-primary-dark)] font-semibold transition-colors">
                 Reset Password
               </Link>
             </p>
@@ -230,7 +230,7 @@ const ForgotUsername = () => {
         <div className="mt-4 text-center">
           <p className="text-xs text-gray-500">
             Need help?{" "}
-            <a href="mailto:support@satfera.com" className="text-[#D4A052] hover:text-[#c8a227] underline">
+            <a href="mailto:support@satfera.com" className="text-[var(--brand-primary)] hover:text-[var(--brand-primary-dark)] underline">
               Contact Support
             </a>
           </p>

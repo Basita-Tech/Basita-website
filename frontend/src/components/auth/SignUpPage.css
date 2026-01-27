@@ -1,17 +1,17 @@
 /* Root Variables */
 :root {
-  --color-primary: #800000;
-  --color-primary-dark: #5a0000;
-  --color-secondary: #D4AF37;
-  --color-secondary-dark: #b79700;
-  --color-accent-light: #FFFFF0;
-  --color-background: #F5F5DC;
-  --color-cta: #C41E3A;
-  --color-cta-dark: #9e192f;
+  --color-primary: var(--brand-maroon);
+  --color-primary-dark: var(--brand-maroon-dark);
+  --color-secondary: var(--brand-accent);
+  --color-secondary-dark: var(--brand-accent-dark);
+  --color-accent-light: var(--brand-accent-light);
+  --color-background: var(--brand-bg-cream-3);
+  --color-cta: var(--brand-cta);
+  --color-cta-dark: var(--brand-cta-dark);
 
   --shadow-light: rgba(0, 0, 0, 0.1);
   --shadow-medium: rgba(0, 0, 0, 0.15);
-  --shadow-gold: rgba(212, 175, 55, 0.4);
+  --shadow-gold: rgba(var(--brand-accent-rgb) / 0.4);
 }
 
 /* Global Resets */

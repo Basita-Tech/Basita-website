@@ -10,6 +10,82 @@
   --card: #FBFAF7;       /* Card background */
   --foreground: 0 0% 10%;
   --gold: #E4C48A;       /* Gold accent */
+  --app-white: #ffffff;
+  --app-input-text: #333;
+  --app-accent: #d4a052;
+  --app-button-text: #1a1a1a;
+  --app-shadow-strong: 0 6px 25px rgba(0, 0, 0, 0.08);
+  --app-shadow-soft: 0 3px 12px rgba(0, 0, 0, 0.04);
+  --brand-primary: #D4A052;
+  --brand-primary-hover: #b38b40;
+  --brand-primary-hover-2: #B3863F;
+  --brand-primary-hover-light: #c49248;
+  --brand-primary-hover-deep: #C18E47;
+  --brand-primary-focus: #D4A857;
+  --brand-primary-dark: #C8A227;
+  --brand-primary-dark-hover: #b39120;
+  --brand-primary-dark-hover-2: #b9941c;
+  --brand-primary-dark-hover-3: #b8941e;
+  --brand-primary-dark-hover-4: #b49520;
+  --brand-gold: #E4C48A;
+  --brand-accent: #d4af37;
+  --brand-accent-focus: #e1b833;
+  --brand-primary-warm: #C8A167;
+  --brand-bg-page: #faf8f3;
+  --brand-maroon: #800000;
+  --brand-maroon-dark: #5a0000;
+  --brand-accent-dark: #b79700;
+  --brand-accent-light: #FFFFF0;
+  --brand-bg-cream-3: #F5F5DC;
+  --brand-cta: #C41E3A;
+  --brand-cta-dark: #9e192f;
+  --brand-primary-rgb: 212 160 82;
+  --brand-accent-rgb: 212 175 55;
+  --brand-gold-rgb: 228 196 138;
+  --brand-maroon-rgb: 128 0 0;
+  --brand-primary-dark-rgb: 200 162 39;
+  --brand-nav-bg: #ebe9e6;
+  --brand-bg: #F9F7F5;
+  --brand-card: #FBFAF7;
+  --brand-bg-soft: #f9f5ed;
+  --brand-bg-soft-alt: #f0ead8;
+  --brand-bg-softer: #fef9f0;
+  --brand-bg-softest: #fefdfb;
+  --brand-bg-alt: #f5f0e3;
+  --brand-bg-beige: #F4EEE4;
+  --brand-bg-warm: #FDF8EF;
+  --brand-bg-light: #fef5e7;
+  --brand-bg-welcome: #FFF3D6;
+  --brand-bg-welcome-2: #FFF6E5;
+  --brand-bg-cream: #FFF8DC;
+  --brand-bg-cream-2: #f6f3ec;
+  --brand-bg-cream-4: #FFF7E6;
+  --brand-bg-neutral-2: #f6f1e7;
+  --brand-border-neutral: #c7c4bd;
+  --brand-border-soft: #e6dec5;
+  --brand-border-muted: #e0d3af;
+  --brand-border-gold: #e0c36a;
+  --brand-border-gold-soft: #e9d8a6;
+  --brand-border-gold-rgb: 224 195 106;
+  --brand-border-gold-soft-rgb: 233 216 166;
+  --brand-border-gold-light: #e9d7af;
+  --brand-primary-dark-hover-5: #a88a1e;
+  --brand-track: #f1e6c7;
+  --brand-track-bg: #f5f0e8;
+  --brand-text-dark: #3a2f00;
+  --brand-warning: #8A6F2A;
+  --brand-accent-soft: #E0C97A;
+  --brand-highlight: #FFD700;
+  --brand-like-bg: #fff8e1;
+  --brand-badge-bg: #f6f1e6;
+  --brand-like-bg-rgb: 255 248 225;
+  --brand-badge-bg-rgb: 246 241 230;
+  --brand-badge-bg-2: #f1e8d3;
+  --brand-badge-text: #b48b00;
+  --brand-badge-border: #e6d48f;
+  --brand-step-done: #E8C27D;
+  --brand-gold-strong: #DDB84E;
+  --brand-gold-strong-rgb: 221 184 78;
 }
 
 /* -------------------------------------------------
@@ -32,7 +108,7 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--app-white) inset !important;
   -webkit-text-fill-color: hsl(var(--foreground)) !important;
   transition: background-color 5000s ease-in-out 0s;
 }
@@ -43,7 +119,7 @@ input:-webkit-autofill:active {
 .card-container {
   background-color: var(--card);
   border-radius: 1.25rem;
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--app-shadow-strong);
   overflow: hidden;
   border: none;
   width: 100%;
@@ -83,7 +159,7 @@ input:-webkit-autofill:active {
     margin: 0.25rem auto;         /* 🔹 reduced margin */
     padding: 0.9rem 0.5rem;       /* 🔹 minimal side padding */
     border-radius: 0.75rem;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--app-shadow-soft);
   }
 }
 
@@ -94,10 +170,10 @@ input,
 select,
 textarea {
   width: 100%;
-  background-color: #ffffff;
-  border: 1px solid #E4C48A;
+  background-color: var(--app-white);
+  border: 1px solid var(--gold);
   border-radius: 0.5rem;
-  color: #333;
+  color: var(--app-input-text);
   padding: 0.75rem 1rem;
   font-size: 1rem;
   transition: border-color 0.2s ease-in-out, box-shadow 0.2s;
@@ -106,7 +182,7 @@ textarea {
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: #E4C48A;
+  border-color: var(--gold);
   outline: none;
 }
 
@@ -125,8 +201,8 @@ textarea:focus {
    Radio buttons (Yes/No)
 ------------------------------------------------- */
 .ccc:checked { 
-  background-color: #d4a052;
-  border-color: #d4a052;
+  background-color: var(--app-accent);
+  border-color: var(--app-accent);
 }
 
 /* -------------------------------------------------
@@ -154,8 +230,8 @@ h1 {
    Buttons
 ------------------------------------------------- */
 button {
-  background-color: #d4a052;
-  color: #1a1a1a;
+  background-color: var(--app-accent);
+  color: var(--app-button-text);
   border-radius: 0.75rem;
   padding: 0.75rem 1.25rem;
   font-weight: 500;

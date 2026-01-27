@@ -51,7 +51,7 @@ export default function Navbar({ activePage = "" }) {
   const isActive = (page) => activePage === page;
 
   return (
-    <header className="sticky top-0 z-50 bg-[#ebe9e6]">
+    <header className="sticky top-0 z-50 bg-[var(--brand-nav-bg)]">
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 flex justify-between items-center py-3 min-h-20">
         {/* Logo */}
         <div className="flex-shrink-0 flex items-center">
@@ -61,7 +61,7 @@ export default function Navbar({ activePage = "" }) {
             width={220}
             height={220}
             onClick={() => setLogoHighlighted((v) => !v)}
-            className={`${logoHighlighted ? "border-2 border-[#FFD700] shadow-[0_0_12px_#FFD700]" : ""} object-contain rounded-lg transition duration-200 cursor-pointer h-12 sm:h-14 md:h-16 w-auto sm:scale-100 md:scale-125 origin-left`}
+            className={`${logoHighlighted ? "border-2 border-[var(--brand-highlight)] shadow-[0_0_12px_var(--brand-highlight)]" : ""} object-contain rounded-lg transition duration-200 cursor-pointer h-12 sm:h-14 md:h-16 w-auto sm:scale-100 md:scale-125 origin-left`}
           />
         </div>
 
@@ -71,7 +71,7 @@ export default function Navbar({ activePage = "" }) {
             <Link
               to="/"
               className={`font-semibold transition no-underline text-sm lg:text-base ${
-                isActive("home") ? "text-[#D4A052] border-b-2 border-[#D4A052]" : "text-[#800000] hover:text-[#D4A052]"
+                isActive("home") ? "text-[var(--brand-primary)] border-b-2 border-[var(--brand-primary)]" : "text-[var(--brand-maroon)] hover:text-[var(--brand-primary)]"
               }`}
             >
               Home
@@ -79,21 +79,21 @@ export default function Navbar({ activePage = "" }) {
             <Link
               to="/about"
               className={`font-semibold transition no-underline text-sm lg:text-base ${
-                isActive("about") ? "text-[#D4A052] border-b-2 border-[#D4A052]" : "text-[#800000] hover:text-[#D4A052]"
+                isActive("about") ? "text-[var(--brand-primary)] border-b-2 border-[var(--brand-primary)]" : "text-[var(--brand-maroon)] hover:text-[var(--brand-primary)]"
               }`}
             >
               About Us
             </Link>
             <a
               href="/#membership"
-              className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline text-sm lg:text-base"
+              className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline text-sm lg:text-base"
             >
               Membership
             </a>
             <Link
               to="/contact"
               className={`font-semibold transition no-underline text-sm lg:text-base ${
-                isActive("contact") ? "text-[#D4A052] border-b-2 border-[#D4A052]" : "text-[#800000] hover:text-[#D4A052]"
+                isActive("contact") ? "text-[var(--brand-primary)] border-b-2 border-[var(--brand-primary)]" : "text-[var(--brand-maroon)] hover:text-[var(--brand-primary)]"
               }`}
             >
               Contact Us
@@ -105,7 +105,7 @@ export default function Navbar({ activePage = "" }) {
             {isAuthenticated ? (
               <button
                 onClick={handleMyAccount}
-                className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-[#FFFFFF] bg-[#D4A052] hover:opacity-90 transition text-xs sm:text-sm lg:text-base whitespace-nowrap"
+                className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-white bg-[var(--brand-primary)] hover:opacity-90 transition text-xs sm:text-sm lg:text-base whitespace-nowrap"
                 disabled={accountNavLoading}
               >
                 {accountNavLoading ? "Loading..." : "My Account"}
@@ -114,13 +114,13 @@ export default function Navbar({ activePage = "" }) {
               <>
                 <Link
                   to="/login"
-                  className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-[#D4A052] border border-[#D4A052] bg-transparent hover:bg-[#D4A052] hover:text-[#800000] transition no-underline inline-block text-xs sm:text-sm lg:text-base whitespace-nowrap"
+                  className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-[var(--brand-primary)] border border-[var(--brand-primary)] bg-transparent hover:bg-[var(--brand-primary)] hover:text-[var(--brand-maroon)] transition no-underline inline-block text-xs sm:text-sm lg:text-base whitespace-nowrap"
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold bg-[#D4A052] text-white hover:opacity-90 transition no-underline inline-block text-xs sm:text-sm lg:text-base whitespace-nowrap"
+                  className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold bg-[var(--brand-primary)] text-white hover:opacity-90 transition no-underline inline-block text-xs sm:text-sm lg:text-base whitespace-nowrap"
                 >
                   Register
                 </Link>
@@ -130,7 +130,7 @@ export default function Navbar({ activePage = "" }) {
             {/* Mobile menu toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-1.5 sm:p-2 rounded-md text-[#800000] bg-transparent hover:bg-[#E4C48A] transition flex-shrink-0 ml-1 sm:ml-2"
+              className="md:hidden p-1.5 sm:p-2 rounded-md text-[var(--brand-maroon)] bg-transparent hover:bg-[var(--brand-gold)] transition flex-shrink-0 ml-1 sm:ml-2"
               aria-label="Toggle mobile menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
@@ -141,14 +141,14 @@ export default function Navbar({ activePage = "" }) {
 
       {/* Mobile nav */}
       <div
-        className={`md:hidden bg-[#ebe9e6] border-t border-[#D4A052] transition-all duration-300 ease-in-out overflow-hidden ${mobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}
+        className={`md:hidden bg-[var(--brand-nav-bg)] border-t border-[var(--brand-primary)] transition-all duration-300 ease-in-out overflow-hidden ${mobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}
       >
         <nav className="flex flex-col gap-0 px-4 py-2 w-full">
           <Link
             to="/"
             onClick={() => setMobileMenuOpen(false)}
-            className={`font-semibold transition no-underline py-2.5 px-2 border-b border-[#E4C48A] text-sm ${
-              isActive("home") ? "text-[#D4A052]" : "text-[#800000] hover:text-[#D4A052]"
+            className={`font-semibold transition no-underline py-2.5 px-2 border-b border-[var(--brand-gold)] text-sm ${
+              isActive("home") ? "text-[var(--brand-primary)]" : "text-[var(--brand-maroon)] hover:text-[var(--brand-primary)]"
             }`}
           >
             Home
@@ -156,8 +156,8 @@ export default function Navbar({ activePage = "" }) {
           <Link
             to="/about"
             onClick={() => setMobileMenuOpen(false)}
-            className={`font-semibold transition no-underline py-2.5 px-2 border-b border-[#E4C48A] text-sm ${
-              isActive("about") ? "text-[#D4A052]" : "text-[#800000] hover:text-[#D4A052]"
+            className={`font-semibold transition no-underline py-2.5 px-2 border-b border-[var(--brand-gold)] text-sm ${
+              isActive("about") ? "text-[var(--brand-primary)]" : "text-[var(--brand-maroon)] hover:text-[var(--brand-primary)]"
             }`}
           >
             About Us
@@ -165,7 +165,7 @@ export default function Navbar({ activePage = "" }) {
           <a
             href="/#membership"
             onClick={() => setMobileMenuOpen(false)}
-            className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline py-2.5 px-2 border-b border-[#E4C48A] text-sm"
+            className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline py-2.5 px-2 border-b border-[var(--brand-gold)] text-sm"
           >
             Membership
           </a>
@@ -173,7 +173,7 @@ export default function Navbar({ activePage = "" }) {
             to="/contact"
             onClick={() => setMobileMenuOpen(false)}
             className={`font-semibold transition no-underline py-2.5 px-2 text-sm ${
-              isActive("contact") ? "text-[#D4A052]" : "text-[#800000] hover:text-[#D4A052]"
+              isActive("contact") ? "text-[var(--brand-primary)]" : "text-[var(--brand-maroon)] hover:text-[var(--brand-primary)]"
             }`}
           >
             Contact Us

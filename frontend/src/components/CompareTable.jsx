@@ -37,7 +37,7 @@ export function CompareTable({
           No profiles selected for comparison. Add profiles to get started.
         </p>
 
-        {onAddProfile && <Button onClick={onAddProfile} className="bg-[#c8a227] hover:bg-[#c8a227]/90 text-white rounded-[12px] flex items-center gap-2 mx-auto">
+        {onAddProfile && <Button onClick={onAddProfile} className="bg-[var(--brand-primary-dark)] hover:bg-[rgb(var(--brand-primary-dark-rgb)/0.9)] text-white rounded-[12px] flex items-center gap-2 mx-auto">
             <Plus className="w-4 h-4" />
             Add Profile
           </Button>}
@@ -134,7 +134,7 @@ export function CompareTable({
                   <Star onClick={e => {
               e.stopPropagation();
               onToggleShortlist(getProfileId(profile));
-            }} className={`absolute top-2 left-2 w-6 h-6 cursor-pointer z-10 transition-all ${Array.isArray(shortlistedIds) && shortlistedIds.some(sid => String(sid) === String(getProfileId(profile))) ? "text-[#c8a227] fill-[#c8a227]" : "text-[#c8a227] hover:text-[#a88a1e]"}`} fill={Array.isArray(shortlistedIds) && shortlistedIds.some(sid => String(sid) === String(getProfileId(profile))) ? "currentColor" : "none"} />
+            }} className={`absolute top-2 left-2 w-6 h-6 cursor-pointer z-10 transition-all ${Array.isArray(shortlistedIds) && shortlistedIds.some(sid => String(sid) === String(getProfileId(profile))) ? "text-[var(--brand-primary-dark)] fill-[var(--brand-primary-dark)]" : "text-[var(--brand-primary-dark)] hover:text-[var(--brand-primary-dark-hover-5)]"}`} fill={Array.isArray(shortlistedIds) && shortlistedIds.some(sid => String(sid) === String(getProfileId(profile))) ? "currentColor" : "none"} />
 
                   {}
                   <X onClick={e => {
@@ -164,7 +164,7 @@ export function CompareTable({
                     <div className="mt-2 space-y-1">
                       <button onClick={() => onViewProfile(getProfileId(profile))} style={{
                   backgroundColor: "#ffffff"
-                }} className="w-full px-2 py-1 text-xs border border-[#c8a227] text-[#c8a227] rounded-lg transition-all flex items-center justify-center gap-1">
+                  }} className="w-full px-2 py-1 text-xs border border-[var(--brand-primary-dark)] text-[var(--brand-primary-dark)] rounded-lg transition-all flex items-center justify-center gap-1">
                         <Eye className="w-3 h-3" />
                         View
                       </button>
@@ -172,9 +172,9 @@ export function CompareTable({
                   </div>
                 </> : onAddProfile && profiles.length < 5 && <button onClick={onAddProfile} style={{
             backgroundColor: "#ffffff"
-          }} className="w-24 h-24 border-2 border-dashed border-[#e9d7af] rounded-[12px] flex flex-col items-center justify-center gap-2 hover:border-[#c8a227] hover:bg-[#c8a227]/5 transition-all">
-                    <Plus className="w-6 h-6 text-[#c8a227]" />
-                    <span className="text-xs text-[#c8a227]">Add Profile</span>
+          }} className="w-24 h-24 border-2 border-dashed border-[var(--brand-border-gold-light)] rounded-[12px] flex flex-col items-center justify-center gap-2 hover:border-[var(--brand-primary-dark)] hover:bg-[rgb(var(--brand-primary-dark-rgb)/0.05)] transition-all">
+                    <Plus className="w-6 h-6 text-[var(--brand-primary-dark)]" />
+                    <span className="text-xs text-[var(--brand-primary-dark)]">Add Profile</span>
                   </button>}
             </div>)}
         </div>
@@ -238,7 +238,7 @@ export function CompareTable({
 
               {slots.map((profile, index) => <div key={profile?.id || `empty-action-${index}`} className="flex-1 p-4 flex flex-col gap-2 min-w-[200px]">
                   {profile ? <>
-                      <Button variant="outline" size="sm" onClick={() => onViewProfile(getProfileId(profile))} className="border-[#c8a227] text-[#c8a227] hover:bg-[#c8a227] hover:text-white rounded-[12px]">
+                      <Button variant="outline" size="sm" onClick={() => onViewProfile(getProfileId(profile))} className="border-[var(--brand-primary-dark)] text-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark)] hover:text-white rounded-[12px]">
                         View Profile
                       </Button>
 
@@ -246,7 +246,7 @@ export function CompareTable({
                   const profileId = getProfileId(profile);
                   if (isSent(profileId)) return;
                   handleSendRequest(profileId);
-                }} disabled={isSent(getProfileId(profile))} className={isSent(getProfileId(profile)) ? "bg-[#c8a227] hover:bg-[#c8a227] text-white rounded-[12px] cursor-default pointer-events-none" : "bg-[#c8a227] hover:bg-[#c8a227]/90 text-white rounded-[12px]"}>
+                }} disabled={isSent(getProfileId(profile))} className={isSent(getProfileId(profile)) ? "bg-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark)] text-white rounded-[12px] cursor-default pointer-events-none" : "bg-[var(--brand-primary-dark)] hover:bg-[rgb(var(--brand-primary-dark-rgb)/0.9)] text-white rounded-[12px]"}>
                         {isSent(getProfileId(profile)) ? "Sent" : "Send Request"}
                       </Button>
                     </> : <div className="text-muted-foreground text-sm text-center">

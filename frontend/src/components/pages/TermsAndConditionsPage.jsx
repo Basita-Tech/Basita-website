@@ -45,7 +45,7 @@ export default function TermsAndConditionsPage() {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-beige">
       {/* Home Navbar */}
-      <header className="sticky top-0 z-50 bg-[#ebe9e6]">
+      <header className="sticky top-0 z-50 bg-[var(--brand-nav-bg)]">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 flex justify-between items-center py-3 min-h-20">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
@@ -55,23 +55,23 @@ export default function TermsAndConditionsPage() {
               width={220}
               height={220}
               onClick={() => setLogoHighlighted((v) => !v)}
-              className={`${logoHighlighted ? "border-2 border-[#FFD700] shadow-[0_0_12px_#FFD700]" : ""} object-contain rounded-lg transition duration-200 cursor-pointer h-12 sm:h-14 md:h-16 w-auto sm:scale-100 md:scale-125 origin-left`}
+              className={`${logoHighlighted ? "border-2 border-[var(--brand-highlight)] shadow-[0_0_12px_var(--brand-highlight)]" : ""} object-contain rounded-lg transition duration-200 cursor-pointer h-12 sm:h-14 md:h-16 w-auto sm:scale-100 md:scale-125 origin-left`}
             />
           </div>
 
           <div className="flex">
             {/* Desktop nav */}
             <nav className="hidden md:flex items-center gap-6 mx-6">
-              <a href="/" className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline text-sm lg:text-base">
+              <a href="/" className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline text-sm lg:text-base">
                 Home
               </a>
-              <a href="/#membership" className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline text-sm lg:text-base">
+              <a href="/#membership" className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline text-sm lg:text-base">
                 Membership
               </a>
-              <a href="/#success-stories" className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline text-sm lg:text-base">
+              <a href="/#success-stories" className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline text-sm lg:text-base">
                 Success Stories
               </a>
-              <Link to="/contact" className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline text-sm lg:text-base">
+              <Link to="/contact" className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline text-sm lg:text-base">
                 Contact Us
               </Link>
             </nav>
@@ -81,7 +81,7 @@ export default function TermsAndConditionsPage() {
               {isAuthenticated ? (
                 <button
                   onClick={handleMyAccount}
-                  className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-[#FFFFFF] bg-[#D4A052] hover:opacity-90 transition text-xs sm:text-sm lg:text-base whitespace-nowrap"
+                  className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-[var(--app-white)] bg-[var(--brand-primary)] hover:opacity-90 transition text-xs sm:text-sm lg:text-base whitespace-nowrap"
                   disabled={accountNavLoading}
                 >
                   {accountNavLoading ? "Loading..." : "My Account"}
@@ -90,13 +90,13 @@ export default function TermsAndConditionsPage() {
                 <>
                   <Link
                     to="/login"
-                    className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-[#D4A052] border border-[#D4A052] bg-transparent hover:bg-[#D4A052] hover:text-[#800000] transition no-underline inline-block text-xs sm:text-sm lg:text-base whitespace-nowrap"
+                    className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-[var(--brand-primary)] border border-[var(--brand-primary)] bg-transparent hover:bg-[var(--brand-primary)] hover:text-[var(--brand-maroon)] transition no-underline inline-block text-xs sm:text-sm lg:text-base whitespace-nowrap"
                   >
                     Login
                   </Link>
                   <Link
                     to="/signup"
-                    className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold bg-[#D4A052] text-white hover:opacity-90 transition no-underline inline-block text-xs sm:text-sm lg:text-base whitespace-nowrap"
+                    className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold bg-[var(--brand-primary)] text-white hover:opacity-90 transition no-underline inline-block text-xs sm:text-sm lg:text-base whitespace-nowrap"
                   >
                     Register
                   </Link>
@@ -106,7 +106,7 @@ export default function TermsAndConditionsPage() {
               {/* Mobile menu toggle */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-1.5 sm:p-2 rounded-md text-[#800000] bg-transparent hover:bg-[#E4C48A] transition flex-shrink-0 ml-1 sm:ml-2"
+                className="md:hidden p-1.5 sm:p-2 rounded-md text-[var(--brand-maroon)] bg-transparent hover:bg-[var(--brand-gold)] transition flex-shrink-0 ml-1 sm:ml-2"
                 aria-label="Toggle mobile menu"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
@@ -117,19 +117,19 @@ export default function TermsAndConditionsPage() {
 
         {/* Mobile nav */}
         <div
-          className={`md:hidden bg-[#ebe9e6] border-t border-[#D4A052] transition-all duration-300 ease-in-out overflow-hidden ${mobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}
+          className={`md:hidden bg-[var(--brand-nav-bg)] border-t border-[var(--brand-primary)] transition-all duration-300 ease-in-out overflow-hidden ${mobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}
         >
           <nav className="flex flex-col gap-0 px-4 py-2 w-full">
-            <a href="/" onClick={() => setMobileMenuOpen(false)} className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline py-2.5 px-2 border-b border-[#E4C48A] text-sm">
+            <a href="/" onClick={() => setMobileMenuOpen(false)} className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline py-2.5 px-2 border-b border-[var(--brand-gold)] text-sm">
               Home
             </a>
-            <a href="/#membership" onClick={() => setMobileMenuOpen(false)} className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline py-2.5 px-2 border-b border-[#E4C48A] text-sm">
+            <a href="/#membership" onClick={() => setMobileMenuOpen(false)} className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline py-2.5 px-2 border-b border-[var(--brand-gold)] text-sm">
               Membership
             </a>
-            <a href="/#success-stories" onClick={() => setMobileMenuOpen(false)} className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline py-2.5 px-2 border-b border-[#E4C48A] text-sm">
+            <a href="/#success-stories" onClick={() => setMobileMenuOpen(false)} className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline py-2.5 px-2 border-b border-[var(--brand-gold)] text-sm">
               Success Stories
             </a>
-            <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="text-[#800000] hover:text-[#D4A052] font-semibold transition no-underline py-2.5 px-2 text-sm">
+            <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] font-semibold transition no-underline py-2.5 px-2 text-sm">
               Contact Us
             </Link>
           </nav>
@@ -138,13 +138,13 @@ export default function TermsAndConditionsPage() {
 
       {/* Terms of Service Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#800000] mb-3">Terms of Service</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-[var(--brand-maroon)] mb-3">Terms of Service</h1>
         <p className="text-sm text-gray-600 mb-10">Last updated: {new Date().toLocaleDateString()}</p>
 
         <div className="space-y-8 text-gray-700 text-base leading-relaxed">
           {/* Introduction */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">Introduction</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">Introduction</h2>
             <ul className="list-disc list-inside space-y-2">
               <li>Satfera is a matrimonial platform operated by Jisal &amp; Parul Patel</li>
               <li>Designed exclusively for Gujarati families seeking meaningful, lifelong relationships</li>
@@ -156,7 +156,7 @@ export default function TermsAndConditionsPage() {
 
           {/* Introduction */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">1. Agreement to Terms</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">1. Agreement to Terms</h2>
             <p>
               By accessing and using the SATFERA matrimony platform (the "Service"), you accept and agree to be bound by and comply with these Terms and Conditions, our Privacy Policy, and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site.
             </p>
@@ -164,7 +164,7 @@ export default function TermsAndConditionsPage() {
 
           {/* Eligibility */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">2. Eligibility</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">2. Eligibility</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>Women must be at least 20 years of age</li>
               <li>Men must be at least 21 years of age</li>
@@ -184,7 +184,7 @@ export default function TermsAndConditionsPage() {
 
           {/* Registration & Verification */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">3. Registration & Verification</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">3. Registration & Verification</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>Register by visiting satfera.com and creating an account</li>
               <li>Complete profile forms covering:
@@ -207,7 +207,7 @@ export default function TermsAndConditionsPage() {
 
           {/* Membership */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">4. Membership</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">4. Membership</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>Currently, Satfera is completely FREE to use</li>
               <li>Future plans: 1 Month, 3 Months, 6 Months, and 12 Months membership options</li>
@@ -219,7 +219,7 @@ export default function TermsAndConditionsPage() {
 
           {/* User Responsibilities */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">5. User Responsibilities</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">5. User Responsibilities</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>Provide accurate and truthful information in your profile</li>
               <li>Use the platform with genuine intent to find a life partner</li>
@@ -233,7 +233,7 @@ export default function TermsAndConditionsPage() {
 
           {/* Prohibited Activities */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">6. Prohibited Activities</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">6. Prohibited Activities</h2>
             <p className="mb-3">The following activities are strictly prohibited and may result in permanent ban:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Providing fake or false information — user will be reported and permanently banned</li>
@@ -250,7 +250,7 @@ export default function TermsAndConditionsPage() {
 
           {/* Profile Visibility & Contact */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">7. Profile Visibility & Contact</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">7. Profile Visibility & Contact</h2>
             <p className="mb-3"><strong>Visible to all members:</strong></p>
             <ul className="list-disc pl-6 space-y-1 mb-3">
               <li>Profile photos (except ID proof photo), name, age, height, weight, city</li>
@@ -269,7 +269,7 @@ export default function TermsAndConditionsPage() {
 
           {/* Blocking & Reporting */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">8. Blocking & Reporting</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">8. Blocking & Reporting</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>Block any user from Settings &gt; Privacy &amp; Safety &gt; Block a User</li>
               <li>Blocked users cannot view your profile or send you requests</li>
@@ -281,7 +281,7 @@ export default function TermsAndConditionsPage() {
 
           {/* Marriage Finalization */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">9. Marriage Finalization</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">9. Marriage Finalization</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>If your marriage is finalized, you must inform Satfera</li>
               <li>Delete or deactivate your account after marriage finalization</li>
@@ -291,7 +291,7 @@ export default function TermsAndConditionsPage() {
 
           {/* Account Deactivation & Deletion */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">10. Account Deactivation & Deletion</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">10. Account Deactivation & Deletion</h2>
             <p className="mb-3"><strong>Deactivation (Temporary):</strong></p>
             <ul className="list-disc pl-6 space-y-1 mb-3">
               <li>Go to Settings &gt; Deactivate Account</li>
@@ -308,7 +308,7 @@ export default function TermsAndConditionsPage() {
 
           {/* Termination by Satfera */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">11. Termination by Satfera</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">11. Termination by Satfera</h2>
             <p className="mb-3">Satfera reserves the right to suspend or terminate your account without prior notice for:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Violation of these Terms of Service</li>
@@ -321,7 +321,7 @@ export default function TermsAndConditionsPage() {
 
           {/* Disclaimer & Liability */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">12. Disclaimer & Liability</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">12. Disclaimer & Liability</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>Satfera does not guarantee that you will find a suitable match</li>
               <li>Verify all information independently before proceeding with any match</li>
@@ -334,7 +334,7 @@ export default function TermsAndConditionsPage() {
 
           {/* Intellectual Property */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">13. Intellectual Property</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">13. Intellectual Property</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>All content on Satfera (text, graphics, logos, design) is owned by Satfera</li>
               <li>You may not reproduce, distribute, or create derivative works without permission</li>
@@ -344,7 +344,7 @@ export default function TermsAndConditionsPage() {
 
           {/* Changes to Terms */}
           <section>
-            <h2 className="text-2xl font-bold text-[#800000] mb-4">14. Changes to Terms</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">14. Changes to Terms</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>Satfera may update these Terms at any time</li>
               <li>Users will be notified of significant changes via email or platform notification</li>

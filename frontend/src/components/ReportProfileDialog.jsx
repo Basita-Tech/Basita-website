@@ -69,7 +69,7 @@ export function ReportProfileDialog({ open, onOpenChange, onReportSuccess }) {
         showClose={false}
         className="sm:max-w-[420px] max-w-[90vw] h-[80vh] rounded-[20px] p-0 gap-0 bg-white border-2 border-gold/30 shadow-2xl overflow-hidden flex flex-col mx-auto mt-9 sm:mt-12 "
       >
-        <div className="bg-gradient-to-br from-[#C8A227] via-[#D4A052] to-[#E4C48A] px-4 py-2 text-white relative overflow-hidden rounded-t-[18px] shrink-0 border-b-2 border-gold/40">
+        <div className="bg-gradient-to-br from-[var(--brand-primary-dark)] via-[var(--brand-primary)] to-[var(--brand-gold)] px-4 py-2 text-white relative overflow-hidden rounded-t-[18px] shrink-0 border-b-2 border-gold/40">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-white text-lg font-semibold m-0">Report a Profile</h2>

@@ -83,7 +83,7 @@ export default function NotificationDropdown({
       case "shortlisted":
         return <Heart className="w-4 h-4 text-red-500" />;
       case "match":
-        return <CheckCheck className="w-4 h-4 text-[#D4A052]" />;
+        return <CheckCheck className="w-4 h-4 text-[var(--brand-primary)]" />;
       default:
         return <Bell className="w-4 h-4 text-gray-500" />;
     }
@@ -106,20 +106,20 @@ export default function NotificationDropdown({
   };
   return <div className="relative" ref={dropdownRef}>
       {}
-      <button onClick={() => setIsOpen(!isOpen)} className="relative p-2 hover:bg-[#D4A052]/10 rounded-full transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Notifications" type="button">
-        <Bell className="w-6 h-6 text-[#800000]" />
+      <button onClick={() => setIsOpen(!isOpen)} className="relative p-2 hover:bg-[rgb(var(--brand-primary-rgb)/0.1)] rounded-full transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Notifications" type="button">
+        <Bell className="w-6 h-6 text-[var(--brand-maroon)]" />
         {unreadCount > 0 && <span className="absolute top-0 right-0 flex items-center justify-center min-w-[20px] h-[18px] px-1.5 text-[10px] font-bold text-white bg-red-500 rounded-full ring-2 ring-white">
           {unreadCount}
           </span>}
       </button>
 
       {}
-      {isOpen && <div className="fixed sm:absolute left-2 right-2 sm:left-auto sm:right-0 top-20 sm:top-auto sm:mt-2 w-[95vw] sm:w-80 md:w-96 max-w-[360px] bg-white rounded-lg shadow-xl border border-[#D4A052]/20 z-[9999] max-h-[calc(100vh-60px)] sm:max-h-[500px] overflow-hidden" style={{
+      {isOpen && <div className="fixed sm:absolute left-2 right-2 sm:left-auto sm:right-0 top-20 sm:top-auto sm:mt-2 w-[95vw] sm:w-80 md:w-96 max-w-[360px] bg-white rounded-lg shadow-xl border border-[rgb(var(--brand-primary-rgb)/0.2)] z-[9999] max-h-[calc(100vh-60px)] sm:max-h-[500px] overflow-hidden" style={{
       minWidth: '220px'
     }}>
           {}
-          <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 border-b border-[#D4A052]/20 bg-gradient-to-r from-[#800000]/5 to-[#D4A052]/5">
-            <h3 className="font-semibold text-sm sm:text-base text-[#800000] flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 border-b border-[rgb(var(--brand-primary-rgb)/0.2)] bg-gradient-to-r from-[rgb(var(--brand-maroon-rgb)/0.05)] to-[rgb(var(--brand-primary-rgb)/0.05)]">
+            <h3 className="font-semibold text-sm sm:text-base text-[var(--brand-maroon)] flex items-center gap-1.5 sm:gap-2">
               <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
               Notifications
               {unreadCount > 0 && <span className="text-[10px] sm:text-xs bg-red-500 text-white px-1.5 sm:px-2 py-0.5 rounded-full">
@@ -127,7 +127,7 @@ export default function NotificationDropdown({
                 </span>}
             </h3>
             <div className="flex items-center gap-2">
-              {notifications.some(n => !n.isRead) && <button onClick={handleMarkAllAsRead} className="text-xs text-[#D4A052] hover:text-[#800000] transition-colors" title="Mark all as read">
+              {notifications.some(n => !n.isRead) && <button onClick={handleMarkAllAsRead} className="text-xs text-[var(--brand-primary)] hover:text-[var(--brand-maroon)] transition-colors" title="Mark all as read">
                   <CheckCheck className="w-4 h-4" />
                 </button>}
               <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
@@ -139,13 +139,13 @@ export default function NotificationDropdown({
           {}
           <div className="overflow-y-auto max-h-[calc(100vh-200px)] sm:max-h-[350px]">
             {loading ? <div className="flex items-center justify-center py-6 sm:py-8">
-                <div className="animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 border-b-2 border-[#D4A052]"></div>
+                <div className="animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 border-b-2 border-[var(--brand-primary)]"></div>
               </div> : notifications.length === 0 ? <div className="text-center py-6 sm:py-8 px-4">
                 <Bell className="w-10 h-10 sm:w-12 sm:h-12 text-gray-300 mx-auto mb-2 sm:mb-3" />
                 <p className="text-gray-500 text-xs sm:text-sm">
                   No notifications yet
                 </p>
-              </div> : notifications.map(notification => <div key={notification._id} className={`px-3 sm:px-4 py-2.5 sm:py-3 hover:bg-[#D4A052]/5 active:bg-[#D4A052]/10 transition-colors cursor-pointer border-b border-gray-100 last:border-b-0 ${!notification.isRead ? "bg-blue-50/30" : ""}`} onClick={e => !notification.isRead && handleMarkAsRead(notification._id, e)}>
+              </div> : notifications.map(notification => <div key={notification._id} className={`px-3 sm:px-4 py-2.5 sm:py-3 hover:bg-[rgb(var(--brand-primary-rgb)/0.05)] active:bg-[rgb(var(--brand-primary-rgb)/0.1)] transition-colors cursor-pointer border-b border-gray-100 last:border-b-0 ${!notification.isRead ? "bg-blue-50/30" : ""}`} onClick={e => !notification.isRead && handleMarkAsRead(notification._id, e)}>
                   <div className="flex gap-2 sm:gap-3">
                     {}
                     <div className="flex-shrink-0 mt-0.5">
@@ -156,7 +156,7 @@ export default function NotificationDropdown({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1">
-                          <h4 className="font-medium text-xs sm:text-sm text-[#800000] line-clamp-1">
+                          <h4 className="font-medium text-xs sm:text-sm text-[var(--brand-maroon)] line-clamp-1">
                             {notification.title}
                           </h4>
                           <p className="text-[11px] sm:text-xs text-gray-600 mt-0.5 line-clamp-2">
@@ -177,11 +177,11 @@ export default function NotificationDropdown({
           </div>
 
           {}
-          {notifications.length > 0 && <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-t border-[#D4A052]/20 bg-gray-50">
+          {notifications.length > 0 && <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-t border-[rgb(var(--brand-primary-rgb)/0.2)] bg-gray-50">
               <button onClick={() => {
           setIsOpen(false);
           onViewAll?.();
-        }} className="w-full text-center text-xs sm:text-sm text-[#D4A052] hover:text-[#800000] active:text-[#600000] font-medium transition-colors py-1">
+        }} className="w-full text-center text-xs sm:text-sm text-[var(--brand-primary)] hover:text-[var(--brand-maroon)] active:text-[#600000] font-medium transition-colors py-1">
                 View All Notifications
               </button>
             </div>}

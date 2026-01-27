@@ -43,7 +43,7 @@ export function Shortlisted({
   if (loading) {
     return <div className="max-w-[1440px] mx-auto px-4 md:px-6 lg:px-8 py-4 md:py-6 lg:py-8">
         <div className="text-center py-16">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C8A227] mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--brand-primary-dark)] mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading favorites...</p>
         </div>
       </div>;
@@ -52,7 +52,7 @@ export function Shortlisted({
       {}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="m-0 mb-2 text-2xl font-semibold text-[#3a2f00]">Shortlisted Profiles</h2>
+          <h2 className="m-0 mb-2 text-2xl font-semibold text-[var(--brand-text-dark)]">Shortlisted Profiles</h2>
           <p className="text-muted-foreground m-0">Your saved profiles for easy access and comparison</p>
         </div>
       </div>

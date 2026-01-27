@@ -32,7 +32,7 @@ export function AccountReactivatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f9f5ed] via-white to-[#f9f5ed]">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--brand-bg-soft)] via-white to-[var(--brand-bg-soft)]">
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-3">
           <Button
@@ -52,7 +52,7 @@ export function AccountReactivatePage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
         <div className="bg-white rounded-[20px] shadow-lg p-6 sm:p-8 border border-[#EDE7D9]">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-full bg-[#FDF4EA] flex items-center justify-center text-[#C8A227]">
+            <div className="w-12 h-12 rounded-full bg-[#FDF4EA] flex items-center justify-center text-[var(--brand-primary-dark)]">
               <AlertTriangle className="w-6 h-6" />
             </div>
             <div>
@@ -66,9 +66,9 @@ export function AccountReactivatePage() {
           </div>
 
           <div className="mt-6 grid sm:grid-cols-2 gap-4">
-            <div className="bg-[#f9f5ed] rounded-[16px] p-4 border border-[#E4D6B8]">
+            <div className="bg-[var(--brand-bg-soft)] rounded-[16px] p-4 border border-[#E4D6B8]">
               <div className="flex items-center gap-2 text-sm text-gray-800 font-medium mb-2">
-                <CheckCircle className="w-4 h-4 text-[#C8A227]" />
+                <CheckCircle className="w-4 h-4 text-[var(--brand-primary-dark)]" />
                 What happens when you reactivate?
               </div>
               <ul className="text-sm text-gray-600 space-y-2 list-disc list-inside">
@@ -78,9 +78,9 @@ export function AccountReactivatePage() {
               </ul>
             </div>
 
-            <div className="bg-[#f9f5ed] rounded-[16px] p-4 border border-[#E4D6B8]">
+            <div className="bg-[var(--brand-bg-soft)] rounded-[16px] p-4 border border-[#E4D6B8]">
               <div className="flex items-center gap-2 text-sm text-gray-800 font-medium mb-2">
-                <CheckCircle className="w-4 h-4 text-[#C8A227]" />
+                <CheckCircle className="w-4 h-4 text-[var(--brand-primary-dark)]" />
                 Need a break instead?
               </div>
               <p className="text-sm text-gray-600">
@@ -94,14 +94,14 @@ export function AccountReactivatePage() {
             <Button
               onClick={handleActivate}
               disabled={loading}
-              className="bg-[#C8A227] hover:bg-[#B49520] text-white rounded-[12px] h-11 sm:h-12 px-6"
+              className="bg-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary-dark-hover-4)] text-white rounded-[12px] h-11 sm:h-12 px-6"
             >
               {loading ? "Activating..." : "Activate Account"}
             </Button>
             <Button
               variant="outline"
               onClick={() => navigate("/contact")}
-              className="rounded-[12px] h-11 sm:h-12 px-6 border-[#C8A227] text-[#3a2f00] hover:bg-[#C8A227]/10"
+              className="rounded-[12px] h-11 sm:h-12 px-6 border-[var(--brand-primary-dark)] text-[#3a2f00] hover:bg-[rgb(var(--brand-primary-dark-rgb)/0.1)]"
             >
               Need help? Contact support
             </Button>

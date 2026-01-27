@@ -63,7 +63,7 @@ export default function CookieConsentBanner() {
     >
       <div className="bg-neutral-900/95 backdrop-blur-md border border-white/10 text-neutral-200 p-6 rounded-2xl shadow-2xl flex flex-col gap-4">
         <div className="flex gap-4">
-          <div className="bg-neutral-800 p-2 rounded-full h-fit shrink-0 text-[#D4A052]">
+          <div className="bg-neutral-800 p-2 rounded-full h-fit shrink-0 text-[var(--brand-primary)]">
             <CookieIcon className="w-6 h-6" />
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function CookieConsentBanner() {
               personalized content, and analyze our traffic.{" "}
               <a
                 href="/privacy"
-                className="underline hover:text-[#D4A052] transition-colors"
+                className="underline hover:text-[var(--brand-primary)] transition-colors"
               >
                 Read our Policy
               </a>
@@ -87,13 +87,13 @@ export default function CookieConsentBanner() {
         <div className="flex flex-col sm:flex-row gap-3 pt-2">
           <button
             onClick={() => handleAction("rejected")}
-            className="flex-1 px-4 py-2.5 rounded-lg text-black text-sm font-medium  transition-colors focus:outline-none focus:ring-2 hover:bg-[#c49248] hover:scale-[1.02]"
+            className="flex-1 px-4 py-2.5 rounded-lg text-black text-sm font-medium  transition-colors focus:outline-none focus:ring-2 hover:bg-[var(--brand-primary-hover-light)] hover:scale-[1.02]"
           >
             Decline
           </button>
           <button
             onClick={() => handleAction("accepted")}
-            className="flex-1 px-4 py-2.5 rounded-lg bg-[#D4A052] text-black text-sm font-bold shadow-lg shadow-orange-900/20 hover:bg-[#c49248] hover:scale-[1.02] transition-all focus:outline-none focus:ring-2 focus:ring-[#D4A052] focus:ring-offset-2 focus:ring-offset-neutral-900"
+            className="flex-1 px-4 py-2.5 rounded-lg bg-[var(--brand-primary)] text-black text-sm font-bold shadow-lg shadow-orange-900/20 hover:bg-[var(--brand-primary-hover-light)] hover:scale-[1.02] transition-all focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:ring-offset-2 focus:ring-offset-neutral-900"
           >
             Accept Cookies
           </button>

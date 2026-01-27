@@ -357,7 +357,7 @@ const PersonalDetails = ({
   const customSelectStyles = (error, value) => ({
     control: (base, state) => {
       let borderColor = "#d1d5db";
-      if (error) borderColor = "red";else if (value && value.value) borderColor = "#D4A052";else if (state.isFocused) borderColor = "#D4A052";
+      if (error) borderColor = "red";else if (value && value.value) borderColor = "var(--brand-primary)";else if (state.isFocused) borderColor = "var(--brand-primary)";
       return {
         ...base,
         minHeight: "3rem",
@@ -464,7 +464,7 @@ const PersonalDetails = ({
     }
   }, []);
   const inputClass = "w-full border rounded-md p-3 text-sm focus:outline-none focus:ring-1 transition";
-  const getInputClass = field => `${inputClass} ${errors[field] ? "border-red-500 focus:ring-red-300 focus:border-red-500" : "border-[#D4A052] focus:ring-[#D4A052] focus:border-[#D4A052]"}`;
+  const getInputClass = field => `${inputClass} ${errors[field] ? "border-red-500 focus:ring-red-300 focus:border-red-500" : "border-[var(--brand-primary)] focus:ring-[var(--brand-primary)] focus:border-[var(--brand-primary)]"}`;
   const validate = () => {
     const newErrors = {};
     if (!formData.birthCity) newErrors.birthCity = "Birth city is required";
@@ -635,8 +635,8 @@ const PersonalDetails = ({
   
   // Auth check is now combined in data fetch effect to reduce API calls
   if (initialLoading) return null; // Show loading state while fetching data
-  return <div className="min-h-screen w-full bg-[#F9F7F5] flex justify-center items-start py-2 px-2" style={{ minHeight: '100vh' }}>
-        <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[#F9F7F5] transition-transform duration-300 hover:scale-[1.02]" style={{ minHeight: '90vh' }}>
+    return <div className="min-h-screen w-full bg-[var(--brand-bg)] flex justify-center items-start py-2 px-2" style={{ minHeight: '100vh' }}>
+      <div className="bg-[var(--brand-card)] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[var(--brand-bg)] transition-transform duration-300 hover:scale-[1.02]" style={{ minHeight: '90vh' }}>
         {}
         <h2 className="text-2xl font-bold text-[#1f1e1d] text-center mb-8">
           Personal Details
@@ -646,19 +646,19 @@ const PersonalDetails = ({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="text-sm font-medium">First Name <RequiredMark /></label>
-              <input readOnly value={formData.firstName} className="capitalize w-full p-3 rounded-md border border-[#D4A052] text-sm focus:outline-none focus:ring-1 focus:ring-[#D4A052] focus:border-[#D4A052] transition" style={{
+              <input readOnly value={formData.firstName} className="capitalize w-full p-3 rounded-md border border-[var(--brand-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-primary)] focus:border-[var(--brand-primary)] transition" style={{
               backgroundColor: '#EEEAE6'
             }} />
             </div>
             <div>
               <label className="text-sm font-medium">Middle Name</label>
-              <input readOnly value={formData.middleName} className="capitalize w-full p-3 rounded-md border border-[#D4A052] text-sm focus:outline-none focus:ring-1 focus:ring-[#D4A052] focus:border-[#D4A052] transition" style={{
+              <input readOnly value={formData.middleName} className="capitalize w-full p-3 rounded-md border border-[var(--brand-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-primary)] focus:border-[var(--brand-primary)] transition" style={{
               backgroundColor: '#EEEAE6'
             }} />
             </div>
             <div>
               <label className="text-sm font-medium">Last Name <RequiredMark /></label>
-              <input readOnly value={formData.lastName} className="capitalize w-full p-3 rounded-md border border-[#D4A052] text-sm focus:outline-none focus:ring-1 focus:ring-[#D4A052] focus:border-[#D4A052] transition" style={{
+              <input readOnly value={formData.lastName} className="capitalize w-full p-3 rounded-md border border-[var(--brand-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-primary)] focus:border-[var(--brand-primary)] transition" style={{
               backgroundColor: '#EEEAE6'
             }} />
             </div>
@@ -670,13 +670,13 @@ const PersonalDetails = ({
               Date of Birth (DD / MM / YYYY) <RequiredMark />
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-1">
-              <input readOnly value={formData.dobDay} className="capitalize w-full p-3 rounded-md border border-[#D4A052] text-sm focus:outline-none focus:ring-1 focus:ring-[#D4A052] focus:border-[#D4A052] transition" style={{
+              <input readOnly value={formData.dobDay} className="capitalize w-full p-3 rounded-md border border-[var(--brand-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-primary)] focus:border-[var(--brand-primary)] transition" style={{
               backgroundColor: '#EEEAE6'
             }} />
-              <input readOnly value={formData.dobMonth} className="capitalize w-full p-3 rounded-md border border-[#D4A052] text-sm focus:outline-none focus:ring-1 focus:ring-[#D4A052] focus:border-[#D4A052] transition" style={{
+              <input readOnly value={formData.dobMonth} className="capitalize w-full p-3 rounded-md border border-[var(--brand-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-primary)] focus:border-[var(--brand-primary)] transition" style={{
               backgroundColor: '#EEEAE6'
             }} />
-              <input readOnly value={formData.dobYear} className="capitalize w-full p-3 rounded-md border border-[#D4A052] text-sm focus:outline-none focus:ring-1 focus:ring-[#D4A052] focus:border-[#D4A052] transition" style={{
+              <input readOnly value={formData.dobYear} className="capitalize w-full p-3 rounded-md border border-[var(--brand-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-primary)] focus:border-[var(--brand-primary)] transition" style={{
               backgroundColor: '#EEEAE6'
             }} />
             </div>
@@ -864,9 +864,9 @@ const PersonalDetails = ({
                     ...prev,
                     interCommunity: ""
                   }));
-                }} className={`appearance-none w-4 h-4 rounded-full border transition duration-200
-          ${formData.interCommunity === "Yes" ? "bg-[#D4A052] border-[#D4A052]" : "border-gray-300"}
-          focus:ring-1 focus:ring-[#D4A052]`} />
+                    }} className={`appearance-none w-4 h-4 rounded-full border transition duration-200
+                  ${formData.interCommunity === "Yes" ? "bg-[var(--brand-primary)] border-[var(--brand-primary)]" : "border-gray-300"}
+                  focus:ring-1 focus:ring-[var(--brand-primary)]`} />
                   <span className="text-gray-700 text-sm">Yes</span>
                 </label>
                 {}
@@ -880,9 +880,9 @@ const PersonalDetails = ({
                     ...prev,
                     interCommunity: ""
                   }));
-                }} className={`appearance-none w-4 h-4 rounded-full border transition duration-200
-          ${formData.interCommunity === "No" ? "bg-[#D4A052] border-[#D4A052]" : "border-gray-300"}
-          focus:ring-1 focus:ring-[#D4A052]`} />
+                    }} className={`appearance-none w-4 h-4 rounded-full border transition duration-200
+                  ${formData.interCommunity === "No" ? "bg-[var(--brand-primary)] border-[var(--brand-primary)]" : "border-gray-300"}
+                  focus:ring-1 focus:ring-[var(--brand-primary)]`} />
                   <span className="text-gray-700 text-sm">No</span>
                 </label>
               </div>
@@ -998,18 +998,18 @@ const PersonalDetails = ({
                   <input type="radio" name="ownHouse" value="Yes" checked={formData.ownHouse === "Yes"} onChange={() => setFormData(prev => ({
                   ...prev,
                   ownHouse: "Yes"
-                }))} className={`appearance-none w-4 h-4 rounded-full border transition duration-200
-          ${formData.ownHouse === "Yes" ? "bg-[#D4A052] border-[#D4A052]" : "border-gray-300"}
-          focus:ring-1 focus:ring-[#D4A052]`} />
+                    }))} className={`appearance-none w-4 h-4 rounded-full border transition duration-200
+                  ${formData.ownHouse === "Yes" ? "bg-[var(--brand-primary)] border-[var(--brand-primary)]" : "border-gray-300"}
+                  focus:ring-1 focus:ring-[var(--brand-primary)]`} />
                   <span className="text-gray-700 text-sm">Yes</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input type="radio" name="ownHouse" value="No" checked={formData.ownHouse === "No"} onChange={() => setFormData(prev => ({
                   ...prev,
                   ownHouse: "No"
-                }))} className={`appearance-none w-4 h-4 rounded-full border transition duration-200
-          ${formData.ownHouse === "No" ? "bg-[#D4A052] border-[#D4A052]" : "border-gray-300"}
-          focus:ring-1 focus:ring-[#D4A052]`} />
+                    }))} className={`appearance-none w-4 h-4 rounded-full border transition duration-200
+                  ${formData.ownHouse === "No" ? "bg-[var(--brand-primary)] border-[var(--brand-primary)]" : "border-gray-300"}
+                  focus:ring-1 focus:ring-[var(--brand-primary)]`} />
                   <span className="text-gray-700 text-sm">No</span>
                 </label>
               </div>
@@ -1029,7 +1029,7 @@ const PersonalDetails = ({
             </div>
 
             {}
-            {showDivorceFields && <div className="bg-[#FFF7E6] border border-[#D4A052] rounded-lg p-4">
+            {showDivorceFields && <div className="bg-[var(--brand-bg-cream-4)] border border-[var(--brand-primary)] rounded-lg p-4">
                 <label className="block text-sm font-medium mb-1 text-black">
                   Divorce Status
                 </label>
@@ -1037,14 +1037,14 @@ const PersonalDetails = ({
               </div>}
 
             {}
-            {showChildrenFields && <div className="bg-[#FFF7E6] border border-[#D4A052] rounded-lg p-4">
+            {showChildrenFields && <div className="bg-[var(--brand-bg-cream-4)] border border-[var(--brand-primary)] rounded-lg p-4">
                 <label className="block text-sm font-medium mb-2 text-black">
                   Do you have children?
                 </label>
                 <div className="flex gap-4">
                   {["Yes", "No"].map(option => <label key={option} className="flex items-center gap-2">
                       <input type="radio" name="hasChildren" value={option} checked={formData.hasChildren === option} onChange={handleChange} className="peer hidden" />
-                      <span className="w-4 h-4 rounded-full border border-[#D4A052] peer-checked:bg-[#D4A052] peer-checked:border-[#D4A052] transition-all"></span>
+                      <span className="w-4 h-4 rounded-full border border-[var(--brand-primary)] peer-checked:bg-[var(--brand-primary)] peer-checked:border-[var(--brand-primary)] transition-all"></span>
                       <span className="text-sm">{option}</span>
                     </label>)}
                 </div>
@@ -1057,7 +1057,7 @@ const PersonalDetails = ({
               </div>}
 
             {}
-            {formData.legalStatus === "Separated" && <div className="bg-[#FFF7E6] border border-[#D4A052] rounded-lg p-4 space-y-3">
+            {formData.legalStatus === "Separated" && <div className="bg-[var(--brand-bg-cream-4)] border border-[var(--brand-primary)] rounded-lg p-4 space-y-3">
                 <label className="block text-sm font-medium text-black">
                   Are you legally separated?
                 </label>
@@ -1067,7 +1067,7 @@ const PersonalDetails = ({
                   setIsLegallySeparated(option);
                   if (option === "No") setSeparationYear("");
                 }} className="peer hidden" />
-                      <span className="w-4 h-4 rounded-full border border-[#D4A052] peer-checked:bg-[#D4A052] peer-checked:border-[#D4A052] transition-all"></span>
+                      <span className="w-4 h-4 rounded-full border border-[var(--brand-primary)] peer-checked:bg-[var(--brand-primary)] peer-checked:border-[var(--brand-primary)] transition-all"></span>
                       <span className="text-sm">{option}</span>
                     </label>)}
                 </div>
@@ -1080,7 +1080,7 @@ const PersonalDetails = ({
                     <div className="flex gap-4 overflow-x-auto py-2">
                       {YEAR_OPTIONS.map(year => <label key={year} className="flex items-center gap-1 flex-shrink-0">
                             <input type="radio" name="separatedSince" value={year} checked={separatedSince === year.toString()} onChange={e => setSeparationYear(e.target.value)} className="peer hidden" />
-                            <span className="w-4 h-4 rounded-full border border-[#D4A052] peer-checked:bg-[#D4A052] peer-checked:border-[#D4A052] transition-all"></span>
+                            <span className="w-4 h-4 rounded-full border border-[var(--brand-primary)] peer-checked:bg-[var(--brand-primary)] peer-checked:border-[var(--brand-primary)] transition-all"></span>
                             <span className="text-sm">{year}</span>
                           </label>)}
                     </div>
@@ -1124,8 +1124,8 @@ const PersonalDetails = ({
                   return updated;
                 });
               }} className={`appearance-none w-4 h-4 rounded-full border transition duration-200
-          ${formData.residingInIndia === "yes" ? "bg-[#D4A052] border-[#D4A052]" : "border-gray-300"}
-          focus:ring-1 focus:ring-[#D4A052]`} />
+              ${formData.residingInIndia === "yes" ? "bg-[var(--brand-primary)] border-[var(--brand-primary)]" : "border-gray-300"}
+              focus:ring-1 focus:ring-[var(--brand-primary)]`} />
                 <span className="text-gray-700 text-sm">Yes</span>
               </label>
 
@@ -1146,8 +1146,8 @@ const PersonalDetails = ({
                   return updated;
                 });
               }} className={`appearance-none w-4 h-4 rounded-full border transition duration-200
-          ${formData.residingInIndia === "no" ? "bg-[#D4A052] border-[#D4A052]" : "border-gray-300"}
-          focus:outline-none focus:ring-2 focus:ring-[#D4A052] focus:ring-offset-1`} />
+              ${formData.residingInIndia === "no" ? "bg-[var(--brand-primary)] border-[var(--brand-primary)]" : "border-gray-300"}
+              focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:ring-offset-1`} />
                 <span className="text-gray-700 text-sm">No</span>
               </label>
             </div>
@@ -1204,11 +1204,11 @@ const PersonalDetails = ({
 
           {}
           <div className="pt-6 flex justify-between items-center gap-4">
-            <button type="button" onClick={handlePrevious} disabled className="w-full sm:w-1/2 bg-white text-[#D4A052] border border-[#D4A052] py-3 rounded-xl font-semibold hover:bg-[#FDF8EF] transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white">
+            <button type="button" onClick={handlePrevious} disabled className="w-full sm:w-1/2 bg-white text-[var(--brand-primary)] border border-[var(--brand-primary)] py-3 rounded-xl font-semibold hover:bg-[var(--brand-bg-warm)] transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white">
               Previous
             </button>
 
-            <button type="submit" className="w-full sm:w-1/2 bg-[#D4A052] text-white py-3 rounded-xl font-semibold hover:bg-[#D4A052] transition">
+            <button type="submit" className="w-full sm:w-1/2 bg-[var(--brand-primary)] text-white py-3 rounded-xl font-semibold hover:bg-[var(--brand-primary)] transition">
               Save & Next
             </button>
           </div>

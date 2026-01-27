@@ -36,7 +36,7 @@ const UserDashboard = lazy(() => import("./components/pages/UserDashboard").then
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-screen">
     <div className="text-center">
-      <Loader2 className="w-12 h-12 animate-spin text-[#C8A227] mx-auto mb-4" />
+      <Loader2 className="w-12 h-12 animate-spin text-[var(--brand-primary-dark)] mx-auto mb-4" />
       <p className="text-gray-600">Loading...</p>
     </div>
   </div>

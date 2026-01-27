@@ -117,7 +117,7 @@ export function Browse({
         {}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 className="m-0 mb-2 text-2xl font-semibold text-[#3a2f00]">Recommendations</h2>
+            <h2 className="m-0 mb-2 text-2xl font-semibold text-[var(--brand-text-dark)]">Recommendations</h2>
           </div>
 
           {}
@@ -126,14 +126,14 @@ export function Browse({
             <div className="relative flex-1 md:w-64">
   <button onClick={() => setOpenFilter(!openFilter)} className="
       w-full h-11 px-4 flex items-center justify-between
-      rounded-[12px] border-[1.5px] border-[#c8a227]
+      rounded-[12px] border-[1.5px] border-[var(--brand-primary-dark)]
       bg-white text-gray-800 font-medium text-sm
-      hover:bg-[#f9f5ed] transition-all duration-200
+      hover:bg-[var(--brand-bg-soft)] transition-all duration-200
       shadow-sm
     ">
     <span>{selectedFilter}</span>
 
-    <svg className={`w-5 h-5 text-[#c8a227] transition-transform duration-200 ${openFilter ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <svg className={`w-5 h-5 text-[var(--brand-primary-dark)] transition-transform duration-200 ${openFilter ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
     </svg>
   </button>
@@ -154,12 +154,12 @@ export function Browse({
                 setFilterRange(item.value);
               }} className={`
             px-4 py-3 cursor-pointer flex justify-between items-center
-            hover:bg-[#f9f5ed] text-gray-700 transition-colors
+            hover:bg-[var(--brand-bg-soft)] text-gray-700 transition-colors
             ${idx !== 0 ? "border-t border-gray-100" : ""}
           `}>
           <span className="text-sm font-medium">{item.label}</span>
 
-          {selectedFilter === item.label && <svg className="w-5 h-5 text-[#c8a227]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+            {selectedFilter === item.label && <svg className="w-5 h-5 text-[var(--brand-primary-dark)]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>}
         </div>)}
@@ -170,7 +170,7 @@ export function Browse({
       </div>
         {}
         {loadingMatches && <div className="py-16 text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C8A227] mx-auto" />
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--brand-primary-dark)] mx-auto" />
             <p className="mt-4 text-gray-600">Loading recommendations...</p>
           </div>}
         {!loadingMatches && errorMatches && <div className="py-12 text-center text-red-600 font-medium">
@@ -197,9 +197,9 @@ export function Browse({
             color: '#374151'
           }} onMouseEnter={e => {
             if (currentPage !== 1) {
-              e.currentTarget.style.backgroundColor = '#C8A227';
+              e.currentTarget.style.backgroundColor = 'var(--brand-primary-dark)';
               e.currentTarget.style.color = 'white';
-              e.currentTarget.style.borderColor = '#C8A227';
+              e.currentTarget.style.borderColor = 'var(--brand-primary-dark)';
             }
           }} onMouseLeave={e => {
             if (currentPage !== 1) {
@@ -220,22 +220,22 @@ export function Browse({
               if (pageNum === 1 || pageNum === totalPages || pageNum >= currentPage - 1 && pageNum <= currentPage + 1) {
                 const isActive = pageNum === currentPage;
                 return <button key={pageNum} onClick={() => handlePageChange(pageNum)} style={{
-                  backgroundColor: isActive ? '#C8A227' : 'white',
+                  backgroundColor: isActive ? 'var(--brand-primary-dark)' : 'white',
                   color: isActive ? 'white' : '#374151',
-                  borderColor: isActive ? '#C8A227' : '#d1d5db'
+                  borderColor: isActive ? 'var(--brand-primary-dark)' : '#d1d5db'
                 }} onMouseEnter={e => {
                   if (!isActive) {
-                    e.currentTarget.style.backgroundColor = '#f9f5ed';
-                    e.currentTarget.style.borderColor = '#C8A227';
+                    e.currentTarget.style.backgroundColor = 'var(--brand-bg-soft)';
+                    e.currentTarget.style.borderColor = 'var(--brand-primary-dark)';
                   } else {
-                    e.currentTarget.style.backgroundColor = '#B49520';
+                    e.currentTarget.style.backgroundColor = 'var(--brand-primary-dark-hover-4)';
                   }
                 }} onMouseLeave={e => {
                   if (!isActive) {
                     e.currentTarget.style.backgroundColor = 'white';
                     e.currentTarget.style.borderColor = '#d1d5db';
                   } else {
-                    e.currentTarget.style.backgroundColor = '#C8A227';
+                    e.currentTarget.style.backgroundColor = 'var(--brand-primary-dark)';
                   }
                 }} className="inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border shadow-sm w-10 h-10">
                         {pageNum}
@@ -253,9 +253,9 @@ export function Browse({
             color: '#374151'
           }} onMouseEnter={e => {
             if (currentPage < totalPages) {
-              e.currentTarget.style.backgroundColor = '#C8A227';
+              e.currentTarget.style.backgroundColor = 'var(--brand-primary-dark)';
               e.currentTarget.style.color = 'white';
-              e.currentTarget.style.borderColor = '#C8A227';
+              e.currentTarget.style.borderColor = 'var(--brand-primary-dark)';
             }
           }} onMouseLeave={e => {
             if (currentPage < totalPages) {

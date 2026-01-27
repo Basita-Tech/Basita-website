@@ -199,10 +199,10 @@ const EducationDetails = ({
     }
   };
   const inputClass = "w-full border rounded-md p-3 text-sm focus:outline-none focus:ring-1 transition";
-  const getInputClass = field => `${inputClass} ${errors[field] ? "border-red-500 focus:ring-red-300 focus:border-red-500" : "border-[#D4A052] focus:ring-[#E4C48A] focus:border-[#E4C48A]"}`;
+  const getInputClass = field => `${inputClass} ${errors[field] ? "border-red-500 focus:ring-red-300 focus:border-red-500" : "border-[var(--brand-primary)] focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)]"}`;
   const RequiredMark = () => <span className="text-red-500 ml-1">*</span>;
-  return <div className="min-h-screen w-91 w-full bg-[#F9F7F5] flex justify-center items-start py-2 px-2">
-      <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[#F9F7F5] transition-transform duration-300">
+    return <div className="min-h-screen w-91 w-full bg-[var(--brand-bg)] flex justify-center items-start py-2 px-2">
+      <div className="bg-[var(--brand-card)] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[var(--brand-bg)] transition-transform duration-300">
         <h2 className="text-2xl font-bold text-[#131313] text-center mb-6">
           Education Details
         </h2>
@@ -268,11 +268,11 @@ const EducationDetails = ({
 
           {}
           <div className="pt-6 flex justify-between items-center gap-4">
-            <button type="button" onClick={handlePrevious} className="w-full sm:w-1/2 bg-white text-[#D4A052] border border-[#D4A052] py-3 rounded-xl font-semibold hover:bg-[#FDF8EF] transition">
+            <button type="button" onClick={handlePrevious} className="w-full sm:w-1/2 bg-white text-[var(--brand-primary)] border border-[var(--brand-primary)] py-3 rounded-xl font-semibold hover:bg-[var(--brand-bg-warm)] transition">
               Previous
             </button>
 
-            <button type="submit" className="w-full sm:w-1/2 bg-[#D4A052] text-white py-3 rounded-xl font-semibold hover:bg-[#E4C48A] transition">
+            <button type="submit" className="w-full sm:w-1/2 bg-[var(--brand-primary)] text-white py-3 rounded-xl font-semibold hover:bg-[var(--brand-gold)] transition">
               Save & Next
             </button>
           </div>

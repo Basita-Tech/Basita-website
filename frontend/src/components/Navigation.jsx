@@ -174,7 +174,7 @@ export function Navigation({ activePage, onNavigate }) {
     setMobileMenuOpen(false);
   };
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-[#D4A052]/30 ">
+    <nav className="sticky top-0 z-50 bg-white border-b border-[rgb(var(--brand-primary-rgb)/0.3)] ">
       <div className="w-full mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-2 md:py-4">
         <div className="flex items-center justify-between w-full">
           {}
@@ -184,7 +184,7 @@ export function Navigation({ activePage, onNavigate }) {
                 src="/logo.png"
                 alt="Logo"
                 onClick={() => setLogoHighlighted((v) => !v)}
-                className={`${logoHighlighted ? "border-2 border-[#FFD700] shadow-[0_0_10px_#FFD700]" : ""} h-[65px] sm:h-[58px] w-auto object-contain md:h-[65px] lg:h-[75px] rounded-lg transition`}
+                className={`${logoHighlighted ? "border-2 border-[var(--brand-highlight)] shadow-[0_0_10px_var(--brand-highlight)]" : ""} h-[65px] sm:h-[58px] w-auto object-contain md:h-[65px] lg:h-[75px] rounded-lg transition`}
               />
             </a>
           </div>
@@ -196,7 +196,7 @@ export function Navigation({ activePage, onNavigate }) {
                 key={item.key}
                 onClick={() => handleNavigation(item.key)}
                 className={`flex-1 max-w-[160px] px-2 py-2 transition-all whitespace-nowrap
-                  ${activePage === item.key ? "text-[#D4A052] font-bold border-b-2 border-[#D4A052] -mb-[2px]" : "text-[#800000] hover:text-[#D4A052] hover:underline hover:decoration-[#D4A052]"}
+                  ${activePage === item.key ? "text-[var(--brand-primary)] font-bold border-b-2 border-[var(--brand-primary)] -mb-[2px]" : "text-[var(--brand-maroon)] hover:text-[var(--brand-primary)] hover:underline hover:decoration-[var(--brand-primary)]"}
                 `}
               >
                 {item.label}
@@ -231,16 +231,16 @@ export function Navigation({ activePage, onNavigate }) {
                     paddingLeft: "44px",
                     paddingRight: "16px",
                   }}
-                  className="w-full h-10 bg-white border border-[#D4A052]/30 rounded-[12px]
-                     text-sm text-[#222] placeholder:text-[#7b3b3b]/60 shadow-sm
-                     caret-[#D4A052]
-                     focus:border-[#D4A052] focus:ring-2 focus:ring-[#D4A052]/20 focus:outline-none
-                     transition-all"
+                  className="w-full h-10 bg-white border border-[rgb(var(--brand-primary-rgb)/0.3)] rounded-[12px]
+                    text-sm text-[#222] placeholder:text-[#7b3b3b]/60 shadow-sm
+                    caret-[var(--brand-primary)]
+                    focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[rgb(var(--brand-primary-rgb)/0.2)] focus:outline-none
+                    transition-all"
                 />
 
                 {}
                 {showResults && (
-                  <div className="absolute top-full mt-2 w-full bg-white rounded-[12px] shadow-lg border border-[#D4A052]/20 max-h-[400px] overflow-y-auto z-50">
+                  <div className="absolute top-full mt-2 w-full bg-white rounded-[12px] shadow-lg border border-[rgb(var(--brand-primary-rgb)/0.2)] max-h-[400px] overflow-y-auto z-50">
                     {isSearching ? (
                       <div className="p-4 text-center text-sm text-gray-500">
                         Searching...
@@ -263,7 +263,7 @@ export function Navigation({ activePage, onNavigate }) {
                                 setShowResults(false);
                                 setSearchQuery("");
                               }}
-                              className="w-full px-4 py-3 hover:bg-[#D4A052]/10 transition-colors text-left flex items-center gap-3"
+                              className="w-full px-4 py-3 hover:bg-[rgb(var(--brand-primary-rgb)/0.1)] transition-colors text-left flex items-center gap-3"
                             >
                               {image ? (
                                 <img
@@ -326,7 +326,7 @@ export function Navigation({ activePage, onNavigate }) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="flex items-center justify-center rounded-full border-2 border-[#e5e7eb] bg-white p-0.5 hover:border-[#C8A227] hover:shadow-md transition-all duration-200"
+                    className="flex items-center justify-center rounded-full border-2 border-[#e5e7eb] bg-white p-0.5 hover:border-[var(--brand-primary-dark)] hover:shadow-md transition-all duration-200"
                     aria-label="Open user menu"
                     type="button"
                   >
@@ -342,7 +342,7 @@ export function Navigation({ activePage, onNavigate }) {
                         alt={`${profileUser?.firstName || user?.firstName || "User"}`}
                         className="object-cover w-full h-full rounded-full"
                       />
-                      <AvatarFallback className="bg-gradient-to-br from-[#C8A227] to-[#D4A052] text-white font-bold text-base">
+                      <AvatarFallback className="bg-gradient-to-br from-[var(--brand-primary-dark)] to-[var(--brand-primary)] text-white font-bold text-base">
                         {(
                           profileUser?.firstName?.charAt(0) ||
                           user?.firstName?.charAt(0) ||
@@ -370,7 +370,7 @@ export function Navigation({ activePage, onNavigate }) {
                   <div className="py-1">
                     <DropdownMenuItem
                       onClick={() => navigate("/dashboard/settings")}
-                      className="rounded-lg px-3 py-2 text-sm font-medium text-[#4b3f33] hover:bg-[#f9f5ed] cursor-pointer"
+                      className="rounded-lg px-3 py-2 text-sm font-medium text-[#4b3f33] hover:bg-[var(--brand-bg-soft)] cursor-pointer"
                     >
                       Settings
                     </DropdownMenuItem>
@@ -390,18 +390,18 @@ export function Navigation({ activePage, onNavigate }) {
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                 <SheetTrigger asChild>
                   <button
-                    className="p-2 hover:bg-[#D4A052]/10 rounded-lg transition-colors flex items-center justify-center min-w-[44px] min-h-[44px]"
+                    className="p-2 hover:bg-[rgb(var(--brand-primary-rgb)/0.1)] rounded-lg transition-colors flex items-center justify-center min-w-[44px] min-h-[44px]"
                     aria-label="Open Menu"
                     type="button"
                   >
-                    <Menu className="w-6 h-6 text-[#800000]" />
+                    <Menu className="w-6 h-6 text-[var(--brand-maroon)]" />
                   </button>
                 </SheetTrigger>
                 <SheetContent
                   side="right"
                   className="w-[280px] sm:w-[320px] !p-0"
                 >
-                  <div className="h-14 bg-gradient-to-r from-[#C8A167] to-[#D4A052] relative z-[1] flex items-center justify-between px-4">
+                  <div className="h-14 bg-gradient-to-r from-[var(--brand-primary-warm)] to-[var(--brand-primary)] relative z-[1] flex items-center justify-between px-4">
                     <div className="flex items-center gap-2 flex-1 min-w-0">
                       <Avatar className="size-10 ring-1 ring-white/50 flex-shrink-0">
                         <AvatarImage
@@ -472,11 +472,11 @@ export function Navigation({ activePage, onNavigate }) {
                         key={item.key}
                         onClick={() => handleNavigation(item.key)}
                         className={`px-4 py-3 rounded-lg font-medium transition-all text-left flex items-center justify-between
-                        ${activePage === item.key ? "bg-[#f9f5ed] text-[#C8A227] border-l-4 border-[#C8A227]" : "bg-transparent text-[#4b3f33] hover:bg-gray-50"}`}
+                        ${activePage === item.key ? "bg-[var(--brand-bg-soft)] text-[var(--brand-primary-dark)] border-l-4 border-[var(--brand-primary-dark)]" : "bg-transparent text-[#4b3f33] hover:bg-gray-50"}`}
                       >
                         <span>{item.label}</span>
                         {activePage === item.key && (
-                          <span className="text-[#C8A227]">●</span>
+                          <span className="text-[var(--brand-primary-dark)]">●</span>
                         )}
                       </button>
                     ))}
@@ -484,7 +484,7 @@ export function Navigation({ activePage, onNavigate }) {
                     <div className="border-t border-gray-200 my-3"></div>
                     <button
                       onClick={() => navigate("/dashboard/settings")}
-                      className="w-full text-left px-4 py-3 rounded-lg bg-[#f9f5ed] hover:bg-[#f0ead8] transition-all font-medium text-[#4b3f33] flex items-center gap-2"
+                      className="w-full text-left px-4 py-3 rounded-lg bg-[var(--brand-bg-soft)] hover:bg-[var(--brand-bg-soft-alt)] transition-all font-medium text-[#4b3f33] flex items-center gap-2"
                     >
                       <span>⚙️</span> Settings
                     </button>
@@ -505,7 +505,7 @@ export function Navigation({ activePage, onNavigate }) {
       {}
       <Dialog open={logoutConfirmOpen} onOpenChange={setLogoutConfirmOpen}>
         <DialogContent className="sm:max-w-md rounded-[22px] p-0 gap-0 bg-white">
-          <DialogHeader className="bg-gradient-to-br from-[#C8A227] via-[#D4A052] to-[#E4C48A] px-6 py-5 text-center text-white relative overflow-hidden rounded-t-[22px]">
+          <DialogHeader className="bg-gradient-to-br from-[var(--brand-primary-dark)] via-[var(--brand-primary)] to-[var(--brand-gold)] px-6 py-5 text-center text-white relative overflow-hidden rounded-t-[22px]">
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
@@ -542,7 +542,7 @@ export function Navigation({ activePage, onNavigate }) {
                     console.error("Logout error:", error);
                   }
                 }}
-                className="w-full sm:w-1/2 bg-[#C8A227] hover:bg-[#D4A052] text-white rounded-[12px]"
+                className="w-full sm:w-1/2 bg-[var(--brand-primary-dark)] hover:bg-[var(--brand-primary)] text-white rounded-[12px]"
               >
                 Yes, Logout
               </Button>

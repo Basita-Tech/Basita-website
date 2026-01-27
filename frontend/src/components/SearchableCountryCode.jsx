@@ -57,20 +57,20 @@ const SearchableCountryCode = ({
   }, [sortedCountries, search]);
   const displayValue = value || "Select Code";
   return <div className={`relative ${className || "w-full sm:w-40"} flex-shrink-0`} ref={dropdownRef}>
-      <div className={`w-full p-3 md:p-2.5 rounded-md border ${error ? "border-red-500" : "border-[#E4C48A]"} bg-white text-sm md:text-xs cursor-pointer flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition`} onClick={() => setOpen(prev => !prev)} ref={triggerRef}>
+      <div className={`w-full p-3 md:p-2.5 rounded-md border ${error ? "border-red-500" : "border-[var(--brand-gold)]"} bg-white text-sm md:text-xs cursor-pointer flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`} onClick={() => setOpen(prev => !prev)} ref={triggerRef}>
         <span className="truncate text-gray-800 text-base md:text-sm">{displayValue}</span>
         <svg className={`w-4 h-4 text-gray-600 transition-transform ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </div>
 
-      {open && <div ref={menuRef} className={`absolute z-50 left-0 right-0 md:right-auto w-full md:w-72 bg-white border border-[#c7c4bd] rounded-md shadow-xl overflow-hidden ${placement === "down" ? "top-full mt-2" : "bottom-full mb-2"}`}>
-          <div className="px-4 py-3 md:px-3 md:py-2 border-b bg-[#f6f3ec] text-xs font-semibold text-gray-700 uppercase tracking-wide">
+      {open && <div ref={menuRef} className={`absolute z-50 left-0 right-0 md:right-auto w-full md:w-72 bg-white border border-[var(--brand-border-neutral)] rounded-md shadow-xl overflow-hidden ${placement === "down" ? "top-full mt-2" : "bottom-full mb-2"}`}>
+          <div className="px-4 py-3 md:px-3 md:py-2 border-b bg-[var(--brand-bg-cream-2)] text-xs font-semibold text-gray-700 uppercase tracking-wide">
             Select Code
           </div>
 
           <div className="px-4 py-3 md:px-3 md:py-2 border-b">
-            <input type="text" className="w-full border-2 border-[#E4C48A] rounded-md px-3 md:px-2 py-2.5 md:py-1 text-base md:text-sm outline-none focus:border-[#D4A857] focus:ring-2 focus:ring-[#FFF8DC] transition" placeholder="Search country or code" value={search} onChange={e => setSearch(e.target.value)} ref={input => {
+            <input type="text" className="w-full border-2 border-[var(--brand-gold)] rounded-md px-3 md:px-2 py-2.5 md:py-1 text-base md:text-sm outline-none focus:border-[var(--brand-primary-focus)] focus:ring-2 focus:ring-[var(--brand-bg-cream)] transition" placeholder="Search country or code" value={search} onChange={e => setSearch(e.target.value)} ref={input => {
           if (input) {}
         }} onFocus={() => {}} />
           </div>

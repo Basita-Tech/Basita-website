@@ -71,7 +71,7 @@ const ExpectationDetails = ({
   const castOptions = useMemo(() => allCastes, []);
   const partnerEducationOptions = useMemo(() => ["Any", ...QUALIFICATION_LEVELS], []);
   const partnerDietOptions = useMemo(() => ["Any", ...DIET_OPTIONS.map(d => d.charAt(0).toUpperCase() + d.slice(1))], []);
-  const inputClass = "w-full border border-[#D4A052] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E4C48A] focus:border-[#E4C48A] transition";
+  const inputClass = "w-full border border-[var(--brand-primary)] rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition";
   const ageOptions = useMemo(() => Array.from({
     length: 21
   }, (_, i) => 20 + i), []);
@@ -341,8 +341,8 @@ const ExpectationDetails = ({
       mounted = false;
     };
   }, []);
-  return <div className="min-h-screen w-full bg-[#F9F7F5] flex justify-center items-start py-2 px-2">
-      <div className="bg-[#FBFAF7] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[#F9F7F5] transition-transform duration-300">
+    return <div className="min-h-screen w-full bg-[var(--brand-bg)] flex justify-center items-start py-2 px-2">
+      <div className="bg-[var(--brand-card)] shadow-2xl rounded-3xl w-full max-w-xl p-4 sm:p-8 border-t-4 border-[var(--brand-bg)] transition-transform duration-300">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-black">Expectations</h2>
         </div>
@@ -380,17 +380,17 @@ const ExpectationDetails = ({
             }} styles={{
               control: (base, state) => ({
                 ...base,
-                borderColor: state.isFocused ? "#D4A052" : "#d1d5db",
+                borderColor: state.isFocused ? "var(--brand-primary)" : "#d1d5db",
                 boxShadow: "none",
                 borderRadius: "0.5rem",
-                backgroundColor: "#fff",
+                backgroundColor: "var(--app-white)",
                 minHeight: "50px",
                 display: "flex",
                 alignItems: "center",
                 fontSize: "0.875rem",
                 transition: "all 0.2s ease",
                 "&:hover": {
-                  borderColor: "#D4A052"
+                  borderColor: "var(--brand-primary)"
                 }
               }),
               valueContainer: base => ({
@@ -408,7 +408,7 @@ const ExpectationDetails = ({
               }),
               multiValue: base => ({
                 ...base,
-                backgroundColor: "#F9F7F5",
+                backgroundColor: "var(--brand-bg)",
                 borderRadius: "0.5rem",
                 padding: "0 6px"
               }),
@@ -421,7 +421,7 @@ const ExpectationDetails = ({
                 ...base,
                 color: "#6b7280",
                 ":hover": {
-                  backgroundColor: "#D4A052",
+                  backgroundColor: "var(--brand-primary)",
                   color: "white"
                 }
               }),
@@ -458,17 +458,17 @@ const ExpectationDetails = ({
             }} styles={{
               control: (base, state) => ({
                 ...base,
-                borderColor: state.isFocused ? "#D4A052" : "#d1d5db",
+                borderColor: state.isFocused ? "var(--brand-primary)" : "#d1d5db",
                 boxShadow: "none",
                 borderRadius: "0.5rem",
-                backgroundColor: "#fff",
+                backgroundColor: "var(--app-white)",
                 minHeight: "50px",
                 display: "flex",
                 alignItems: "center",
                 fontSize: "0.875rem",
                 transition: "all 0.2s ease",
                 "&:hover": {
-                  borderColor: "#D4A052"
+                  borderColor: "var(--brand-primary)"
                 }
               }),
               valueContainer: base => ({
@@ -486,7 +486,7 @@ const ExpectationDetails = ({
               }),
               multiValue: base => ({
                 ...base,
-                backgroundColor: "#F9F7F5",
+                backgroundColor: "var(--brand-bg)",
                 borderRadius: "0.5rem",
                 padding: "0 6px"
               }),
@@ -499,7 +499,7 @@ const ExpectationDetails = ({
                 ...base,
                 color: "#6b7280",
                 ":hover": {
-                  backgroundColor: "#D4A052",
+                  backgroundColor: "var(--brand-primary)",
                   color: "white"
                 }
               }),
@@ -553,17 +553,17 @@ const ExpectationDetails = ({
             }} styles={{
               control: (base, state) => ({
                 ...base,
-                borderColor: state.isFocused ? "#D4A052" : "#d1d5db",
+                borderColor: state.isFocused ? "var(--brand-primary)" : "#d1d5db",
                 boxShadow: "none",
                 borderRadius: "0.5rem",
-                backgroundColor: "#fff",
+                backgroundColor: "var(--app-white)",
                 minHeight: "50px",
                 display: "flex",
                 alignItems: "center",
                 fontSize: "0.875rem",
                 transition: "all 0.2s ease",
                 "&:hover": {
-                  borderColor: "#D4A052"
+                  borderColor: "var(--brand-primary)"
                 }
               }),
               valueContainer: base => ({
@@ -576,7 +576,7 @@ const ExpectationDetails = ({
               }),
               multiValue: base => ({
                 ...base,
-                backgroundColor: "#F9F7F5",
+                backgroundColor: "var(--brand-bg)",
                 borderRadius: "0.5rem",
                 padding: "0 6px"
               }),
@@ -589,7 +589,7 @@ const ExpectationDetails = ({
                 ...base,
                 color: "#6b7280",
                 ":hover": {
-                  backgroundColor: "#D4A052",
+                  backgroundColor: "var(--brand-primary)",
                   color: "white"
                 }
               }),
@@ -634,17 +634,17 @@ const ExpectationDetails = ({
             }} styles={{
               control: (base, state) => ({
                 ...base,
-                borderColor: state.isFocused ? "#D4A052" : "#d1d5db",
+                borderColor: state.isFocused ? "var(--brand-primary)" : "#d1d5db",
                 boxShadow: "none",
                 borderRadius: "0.5rem",
-                backgroundColor: "#fff",
+                backgroundColor: "var(--app-white)",
                 minHeight: "50px",
                 display: "flex",
                 alignItems: "center",
                 fontSize: "0.875rem",
                 transition: "all 0.2s ease",
                 "&:hover": {
-                  borderColor: "#D4A052"
+                  borderColor: "var(--brand-primary)"
                 }
               }),
               valueContainer: base => ({
@@ -662,7 +662,7 @@ const ExpectationDetails = ({
               }),
               multiValue: base => ({
                 ...base,
-                backgroundColor: "#F9F7F5",
+                backgroundColor: "var(--brand-bg)",
                 borderRadius: "0.5rem",
                 padding: "0 6px"
               }),
@@ -675,7 +675,7 @@ const ExpectationDetails = ({
                 ...base,
                 color: "#6b7280",
                 ":hover": {
-                  backgroundColor: "#D4A052",
+                  backgroundColor: "var(--brand-primary)",
                   color: "white"
                 }
               }),
@@ -718,7 +718,7 @@ const ExpectationDetails = ({
             }} styles={{
               control: (base, state) => ({
                 ...base,
-                borderColor: state.isFocused ? "#D4A052" : "#d1d5db",
+                borderColor: state.isFocused ? "var(--brand-primary)" : "#d1d5db",
                 boxShadow: "none",
                 borderRadius: "0.5rem",
                 backgroundColor: "#fff",
@@ -728,7 +728,7 @@ const ExpectationDetails = ({
                 fontSize: "0.875rem",
                 transition: "all 0.2s ease",
                 "&:hover": {
-                  borderColor: "#D4A052"
+                  borderColor: "var(--brand-primary)"
                 }
               }),
               valueContainer: base => ({
@@ -759,7 +759,7 @@ const ExpectationDetails = ({
                 ...base,
                 color: "#6b7280",
                 ":hover": {
-                  backgroundColor: "#D4A052",
+                  backgroundColor: "var(--brand-primary)",
                   color: "white"
                 }
               }),
@@ -799,7 +799,7 @@ const ExpectationDetails = ({
             }} styles={{
               control: (base, state) => ({
                 ...base,
-                borderColor: state.isFocused ? "#D4A052" : "#d1d5db",
+                borderColor: state.isFocused ? "var(--brand-primary)" : "#d1d5db",
                 boxShadow: "none",
                 borderRadius: "0.5rem",
                 backgroundColor: "#fff",
@@ -809,7 +809,7 @@ const ExpectationDetails = ({
                 fontSize: "0.875rem",
                 transition: "all 0.2s ease",
                 "&:hover": {
-                  borderColor: "#D4A052"
+                  borderColor: "var(--brand-primary)"
                 }
               }),
               valueContainer: base => ({
@@ -840,7 +840,7 @@ const ExpectationDetails = ({
                 ...base,
                 color: "#6b7280",
                 ":hover": {
-                  backgroundColor: "#D4A052",
+                  backgroundColor: "var(--brand-primary)",
                   color: "white"
                 }
               }),
@@ -880,7 +880,7 @@ const ExpectationDetails = ({
             }} styles={{
               control: (base, state) => ({
                 ...base,
-                borderColor: state.isFocused ? "#D4A052" : "#d1d5db",
+                borderColor: state.isFocused ? "var(--brand-primary)" : "#d1d5db",
                 boxShadow: "none",
                 borderRadius: "0.5rem",
                 backgroundColor: "#fff",
@@ -890,7 +890,7 @@ const ExpectationDetails = ({
                 fontSize: "0.875rem",
                 transition: "all 0.2s ease",
                 "&:hover": {
-                  borderColor: "#D4A052"
+                  borderColor: "var(--brand-primary)"
                 }
               }),
               valueContainer: base => ({
@@ -921,7 +921,7 @@ const ExpectationDetails = ({
                 ...base,
                 color: "#6b7280",
                 ":hover": {
-                  backgroundColor: "#D4A052",
+                  backgroundColor: "var(--brand-primary)",
                   color: "white"
                 }
               }),
@@ -965,11 +965,11 @@ const ExpectationDetails = ({
 
           {}
           <div className="pt-6 flex justify-between items-center gap-4  ">
-            <button type="button" onClick={() => onPrevious && onPrevious()} className="w-full sm:w-1/2 bg-white text-[#D4A052] border border-[#D4A052] py-3 rounded-xl font-semibold hover:bg-[#FDF8EF] transition">
+            <button type="button" onClick={() => onPrevious && onPrevious()} className="w-full sm:w-1/2 bg-white text-[var(--brand-primary)] border border-[var(--brand-primary)] py-3 rounded-xl font-semibold hover:bg-[var(--brand-bg-warm)] transition">
               Previous
             </button>
 
-            <button type="submit" className="w-full sm:w-1/2 bg-[#D4A052] text-white py-3 rounded-xl font-semibold hover:bg-[#E4C48A] transition">
+            <button type="submit" className="w-full sm:w-1/2 bg-[var(--brand-primary)] text-white py-3 rounded-xl font-semibold hover:bg-[var(--brand-gold)] transition">
               Save & Next
             </button>
           </div>

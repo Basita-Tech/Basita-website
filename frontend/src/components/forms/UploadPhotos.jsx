@@ -692,7 +692,7 @@ const UploadPhotos = ({
                 ← Previous
               </button>}
             <button type="submit" disabled={uploading || !hasNewFiles} className=" rounded-lg font-semibold transition text-white hover:brightness-90 disabled:opacity-60" style={{
-            backgroundColor: hasNewFiles ? "#D4AF37" : "#E0C97A",
+            backgroundColor: hasNewFiles ? "var(--brand-accent)" : "var(--brand-accent-soft)",
             cursor: uploading || !hasNewFiles ? "not-allowed" : "pointer"
           }} title={!hasNewFiles ? "Select or update at least one photo to enable submission" : uploading ? "Uploading..." : "Submit"} aria-disabled={uploading || !hasNewFiles}>
               {uploading ? "Uploading..." : "Submit"}
@@ -708,10 +708,10 @@ const UploadPhotos = ({
           <div className="bg-white rounded-3xl w-full max-w-md p-8 shadow-2xl">
             {}
             <div className="text-center mb-6">
-              <div className="w-16 h-16 mx-auto bg-gradient-to-br from-[#D4A052] to-[#800000] rounded-full flex items-center justify-center mb-4">
+              <div className="w-16 h-16 mx-auto bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-maroon)] rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">📋</span>
               </div>
-              <h2 className="text-2xl font-bold text-[#800000] mb-2">
+              <h2 className="text-2xl font-bold text-[var(--brand-maroon)] mb-2">
                 Ready to Review?
               </h2>
               <p className="text-gray-600 text-sm">
@@ -720,7 +720,7 @@ const UploadPhotos = ({
             </div>
 
             {}
-            <div className="bg-[#F9F7F5] border-l-4 border-[#D4A052] p-4 mb-6 rounded">
+            <div className="bg-[var(--brand-bg)] border-l-4 border-[var(--brand-primary)] p-4 mb-6 rounded">
               <p className="text-gray-700 text-sm">
                 <strong>What happens next?</strong>
                 <br />
@@ -734,7 +734,7 @@ const UploadPhotos = ({
               <button onClick={handleSubmitForReview} disabled={uploading} className="w-full py-3 rounded-lg font-semibold text-white bg-primary hover:shadow-lg transition disabled:opacity-50">
                 {uploading ? "Submitting..." : "Yes, Submit for Review"}
               </button>
-              <button onClick={handleNotNow} disabled={uploading} className="w-full py-3 rounded-lg font-semibold text-[#800000] border-2 border-[#D4A052] bg-white hover:bg-[#F9F7F5] transition disabled:opacity-50">
+              <button onClick={handleNotNow} disabled={uploading} className="w-full py-3 rounded-lg font-semibold text-[var(--brand-maroon)] border-2 border-[var(--brand-primary)] bg-white hover:bg-[var(--brand-bg)] transition disabled:opacity-50">
                 Not Now
               </button>
             </div>

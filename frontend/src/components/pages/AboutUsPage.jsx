@@ -6,12 +6,12 @@ import HomeNavbar from "../HomeNavbar";
 import SEO from "../SEO";
 
 const colors = {
-  maroon: "#800000",
-  gold: "#D4A052",
-  goldLight: "#E4C48A",
-  beige: "#F4EEE4",
-  planBg: "#F9F7F5",
-  white: "#FFFFFF"
+  maroon: "var(--brand-maroon)",
+  gold: "var(--brand-primary)",
+  goldLight: "var(--brand-gold)",
+  beige: "var(--brand-bg-beige)",
+  planBg: "var(--brand-bg)",
+  white: "var(--app-white)"
 };
 
 const AboutUsPage = () => {
@@ -25,9 +25,9 @@ const AboutUsPage = () => {
       <HomeNavbar />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-[#F4EEE4] to-white text-gray-800 py-[16px] px-4">
+      <section className="bg-gradient-to-b from-[var(--brand-bg-beige)] to-white text-gray-800 py-[16px] px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-5xl font-bold mb-4 text-[#800000]">About Satfera</h1>
+          <h1 className="text-5xl font-bold mb-4 text-[var(--brand-maroon)]">About Satfera</h1>
           <p className="text-xl text-gray-700 max-w-3xl mx-auto">
             Bringing together hearts with values, respect, and the promise of meaningful connections
           </p>
@@ -39,7 +39,7 @@ const AboutUsPage = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-4xl font-bold text-[#800000] mb-6">Our Story</h2>
+              <h2 className="text-4xl font-bold text-[var(--brand-maroon)] mb-6">Our Story</h2>
               <p className="text-gray-600 text-lg mb-4">
                 Satfera was founded with a simple yet profound mission: to revolutionize the way people find meaningful relationships in our modern world. We believe that finding the right partner isn't just about chance—it's about connecting with someone who shares your values, dreams, and vision for life.
               </p>
@@ -58,9 +58,9 @@ const AboutUsPage = () => {
       </section>
 
       {/* Our Values */}
-      <section className="py-20 px-4 bg-[#F9F7F5]">
+      <section className="py-20 px-4 bg-[var(--brand-bg)]">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-[#800000] mb-16 text-center">Our Core Values</h2>
+          <h2 className="text-4xl font-bold text-[var(--brand-maroon)] mb-16 text-center">Our Core Values</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
@@ -81,9 +81,9 @@ const AboutUsPage = () => {
             ].map((value, index) => {
               const Icon = value.icon;
               return (
-                <div key={index} className="bg-white rounded-2xl p-8 text-center shadow-sm border border-[#E4C48A]">
-                  <Icon className="w-16 h-16 text-[#D4A052] mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold text-[#800000] mb-4">{value.title}</h3>
+                <div key={index} className="bg-white rounded-2xl p-8 text-center shadow-sm border border-[var(--brand-gold)]">
+                  <Icon className="w-16 h-16 text-[var(--brand-primary)] mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold text-[var(--brand-maroon)] mb-4">{value.title}</h3>
                   <p className="text-gray-600">{value.description}</p>
                 </div>
               );
@@ -95,7 +95,7 @@ const AboutUsPage = () => {
       {/* Our Team */}
       <section className="py-20 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-[#800000] mb-16 text-center">Meet Our Founders</h2>
+          <h2 className="text-4xl font-bold text-[var(--brand-maroon)] mb-16 text-center">Meet Our Founders</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {[
               {
@@ -109,12 +109,12 @@ const AboutUsPage = () => {
                 description: "Parul's dedication to creating meaningful user experiences has shaped Satfera into the compassionate platform it is today."
               }
             ].map((founder, index) => (
-              <div key={index} className="bg-[#F9F7F5] rounded-2xl p-8 text-center">
-                <div className="w-32 h-32 bg-[#E4C48A] rounded-full mx-auto mb-6 flex items-center justify-center">
-                  <Users className="w-16 h-16 text-[#800000]" />
+              <div key={index} className="bg-[var(--brand-bg)] rounded-2xl p-8 text-center">
+                <div className="w-32 h-32 bg-[var(--brand-gold)] rounded-full mx-auto mb-6 flex items-center justify-center">
+                  <Users className="w-16 h-16 text-[var(--brand-maroon)]" />
                 </div>
-                <h3 className="text-2xl font-bold text-[#800000] mb-2">{founder.name}</h3>
-                <p className="text-[#D4A052] font-semibold mb-4">{founder.role}</p>
+                <h3 className="text-2xl font-bold text-[var(--brand-maroon)] mb-2">{founder.name}</h3>
+                <p className="text-[var(--brand-primary)] font-semibold mb-4">{founder.role}</p>
                 <p className="text-gray-600">{founder.description}</p>
               </div>
             ))}
@@ -123,9 +123,9 @@ const AboutUsPage = () => {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-20 px-4 bg-[#F9F7F5]">
+      <section className="py-20 px-4 bg-[var(--brand-bg)]">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-[#800000] mb-16 text-center">Why Choose Satfera?</h2>
+          <h2 className="text-4xl font-bold text-[var(--brand-maroon)] mb-16 text-center">Why Choose Satfera?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               "Verified profiles with genuine users",
@@ -139,12 +139,12 @@ const AboutUsPage = () => {
             ].map((reason, index) => (
               <div key={index} className="flex items-start gap-4">
                 <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-[#D4A052] text-white">
+                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-[var(--brand-primary)] text-white">
                     <Heart className="h-6 w-6" />
                   </div>
                 </div>
                 <div>
-                  <p className="text-lg font-semibold text-[#800000]">{reason}</p>
+                  <p className="text-lg font-semibold text-[var(--brand-maroon)]">{reason}</p>
                 </div>
               </div>
             ))}
@@ -153,13 +153,13 @@ const AboutUsPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-[#F4EEE4] text-center">
+      <section className="py-20 px-4 bg-[var(--brand-bg-beige)] text-center">
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-4xl font-bold text-[#800000] mb-6">Ready to Find Your Perfect Match?</h2>
+          <h2 className="text-4xl font-bold text-[var(--brand-maroon)] mb-6">Ready to Find Your Perfect Match?</h2>
           <p className="text-lg text-gray-600 mb-8">
             Join thousands of individuals who have found meaningful relationships through Satfera.
           </p>
-          <Link to="/signup" className="bg-[#D4A052] px-8 py-3 rounded-lg font-semibold text-white hover:opacity-90 transition no-underline inline-block">
+          <Link to="/signup" className="bg-[var(--brand-primary)] px-8 py-3 rounded-lg font-semibold text-white hover:opacity-90 transition no-underline inline-block">
             Get Started Today
           </Link>
         </div>
@@ -168,7 +168,7 @@ const AboutUsPage = () => {
       {/* Contact Section */}
       <section className="py-20 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-[#800000] mb-16 text-center">Get In Touch</h2>
+          <h2 className="text-4xl font-bold text-[var(--brand-maroon)] mb-16 text-center">Get In Touch</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
@@ -192,10 +192,10 @@ const AboutUsPage = () => {
             ].map((contact, index) => {
               const Icon = contact.icon;
               return (
-                <a key={index} href={contact.href} target={contact.title === "Address" ? "_blank" : undefined} rel={contact.title === "Address" ? "noopener noreferrer" : undefined} className="bg-[#F9F7F5] rounded-2xl p-8 text-center hover:shadow-lg transition-shadow duration-300">
-                  <Icon className="w-12 h-12 text-[#D4A052] mx-auto mb-4" />
-                  <h3 className="text-xl font-bold text-[#800000] mb-2">{contact.title}</h3>
-                  <p className="text-gray-600 hover:text-[#D4A052] transition">{contact.value}</p>
+                <a key={index} href={contact.href} target={contact.title === "Address" ? "_blank" : undefined} rel={contact.title === "Address" ? "noopener noreferrer" : undefined} className="bg-[var(--brand-bg)] rounded-2xl p-8 text-center hover:shadow-lg transition-shadow duration-300">
+                  <Icon className="w-12 h-12 text-[var(--brand-primary)] mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-[var(--brand-maroon)] mb-2">{contact.title}</h3>
+                  <p className="text-gray-600 hover:text-[var(--brand-primary)] transition">{contact.value}</p>
                 </a>
               );
             })}

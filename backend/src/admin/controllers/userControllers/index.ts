@@ -334,9 +334,11 @@ export async function getPendingBoardingsProfiles(req: Request, res: Response) {
     const result = await User.find({
       role: "user",
       isOnboardingCompleted: false
-    }).select(
-      "firstName lastName gender phoneNumber email isOnboardingCompleted completedSteps customId"
-    );
+    })
+      .select(
+        "firstName lastName gender phoneNumber email isOnboardingCompleted completedSteps customId createdAt"
+      )
+      .sort({ createdAt: -1 });
 
     return res.status(200).json(result);
   } catch (error: any) {

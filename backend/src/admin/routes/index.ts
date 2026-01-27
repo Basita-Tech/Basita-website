@@ -139,6 +139,12 @@ adminRouter.get(
   authorizeRoles("admin"),
   asyncHandler(adminController.getAllProfilesController)
 );
+adminRouter.get(
+  "/pending/onboarding",
+  authenticate,
+  authorizeRoles("admin"),
+  asyncHandler(adminController.getPendingBoardingsProfiles)
+);
 
 adminRouter.get(
   "/profile/:userId",

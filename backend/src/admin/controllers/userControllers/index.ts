@@ -329,6 +329,28 @@ export async function getAllProfilesController(req: Request, res: Response) {
   }
 }
 
+export async function getPendingBoardingsProfiles(req: Request, res: Response) {
+  try {
+    const result = await User.find({
+      role: "user",
+      isOnboardingCompleted: false
+    }).select(
+      "firstName lastName gender phoneNumber email isOnboardingCompleted completedSteps customId"
+    );
+
+    return res.status(200).json(result);
+  } catch (error: any) {
+    logger.error("Error fetching all profiles:", {
+      error: error.message,
+      stack: error.stack
+    });
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch all profiles"
+    });
+  }
+}
+
 export async function getReportsAndAnalyticsController(
   req: Request,
   res: Response

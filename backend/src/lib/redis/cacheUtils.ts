@@ -244,3 +244,47 @@ export async function getCacheStats(): Promise<{
 
   return stats;
 }
+
+function getEmailKey(email: string) {
+  return `verified::email::${email.toLowerCase()}`;
+}
+
+function getPhoneKey(phoneNumber: string) {
+  return `verified::phone::${phoneNumber}`;
+}
+
+export async function getEmailFromCache(email: string) {
+  return safeRedisOperation(
+    () => redisClient.get(getEmailKey(email)),
+    "Get Email Verification"
+  );
+}
+
+export async function getPhoneFromCache(phoneNumber: string) {
+  return safeRedisOperation(
+    () => redisClient.get(getPhoneKey(phoneNumber)),
+    "Get Phone Verification"
+  );
+}
+
+export async function setEmailVerifyCache(email: string): Promise<void> {
+  const key = getEmailKey(email);
+  await safeRedisOperation(
+    () =>
+      redisClient.set(key, JSON.stringify({ verified: true }), {
+        EX: CACHE_TTL.USER_PROFILE
+      }),
+    "Set Email Verification"
+  );
+}
+
+export async function setPhoneVerifyCache(phoneNumber: string): Promise<void> {
+  const key = getPhoneKey(phoneNumber);
+  await safeRedisOperation(
+    () =>
+      redisClient.set(key, JSON.stringify({ verified: true }), {
+        EX: CACHE_TTL.USER_PROFILE
+      }),
+    "Set Phone Verification"
+  );
+}

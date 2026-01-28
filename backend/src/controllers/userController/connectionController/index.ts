@@ -17,6 +17,7 @@ import { formatListingProfile } from "../../../lib/common/formatting";
 import { sendConnectionAcceptedEmail } from "../../../lib/emails";
 import { APP_CONFIG } from "../../../utils/constants";
 import { sendNotificationToUser } from "../../../expo/NotificationService";
+import { assertFreeAccount } from "../../../utils/utils";
 
 async function createNotificationBatch(
   notifications: Array<{
@@ -319,23 +320,34 @@ export async function sendConnectionRequest(
   req: AuthenticatedRequest,
   res: Response
 ) {
+  const senderId = req.user!.id;
+  const { receiverId } = req.body;
+
   const session = await mongoose.startSession();
   session.startTransaction();
 
-  try {
-    const senderId = req.user!.id;
-    const { receiverId } = req.body;
+  const [sender, receiver] = await Promise.all([
+    User.findById(senderId).lean(),
+    User.findById(receiverId).lean()
+  ]);
 
+  try {
+    assertFreeAccount(receiver.accountType);
+  } catch (err) {
+    await session.abortTransaction();
+    return res.status(402).json({
+      success: false,
+      code: "PLAN_UPGRADE",
+      message: "Upgrade to Premium to unlock this feature."
+    });
+  }
+
+  try {
     if (senderId === receiverId) {
       return res
         .status(400)
         .json({ success: false, message: "Cannot send request to yourself." });
     }
-
-    const [sender, receiver] = await Promise.all([
-      User.findById(senderId).lean(),
-      User.findById(receiverId).lean()
-    ]);
 
     if (!receiver) {
       return res
@@ -478,6 +490,19 @@ export async function acceptConnectionRequest(
     const userId = req.user!.id;
     const { requestId } = req.body;
 
+    const receiver = await User.findById(userId).session(session).lean();
+
+    try {
+      assertFreeAccount(receiver.accountType);
+    } catch {
+      await session.abortTransaction();
+      return res.status(402).json({
+        success: false,
+        code: "PLAN_UPGRADE",
+        message: "Upgrade to Premium to unlock this feature."
+      });
+    }
+
     try {
       const existingRequest = await ConnectionRequest.findOne({
         _id: requestId,
@@ -526,8 +551,6 @@ export async function acceptConnectionRequest(
         message: "Connection request not found or already handled."
       });
     }
-
-    const receiver = await User.findById(userId).session(session).lean();
 
     await createNotificationBatch([
       {
@@ -591,49 +614,62 @@ export async function rejectConnectionRequest(
   req: AuthenticatedRequest,
   res: Response
 ) {
+  const userId = req.user!.id;
+  const { requestId } = req.body;
+
+  const receiver = await User.findById(userId).lean();
+  if (!receiver) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found."
+    });
+  }
+
+  try {
+    assertFreeAccount(receiver.accountType);
+  } catch {
+    return res.status(402).json({
+      success: false,
+      code: "PLAN_UPGRADE",
+      message: "Upgrade to Premium to unlock this feature."
+    });
+  }
+
   const session = await mongoose.startSession();
   session.startTransaction();
 
+  let request;
+
   try {
-    const userId = req.user!.id;
-    const { requestId } = req.body;
+    const existingRequest = await ConnectionRequest.findOne({
+      _id: requestId,
+      receiver: userId,
+      status: "pending"
+    })
+      .session(session)
+      .lean();
 
-    try {
-      const existingRequest = await ConnectionRequest.findOne({
-        _id: requestId,
-        receiver: userId,
-        status: "pending"
-      })
-        .session(session)
-        .lean();
-
-      if (!existingRequest) {
-        await session.abortTransaction();
-        return res.status(404).json({
-          success: false,
-          message: "Connection request not found or already processed."
-        });
-      }
-
-      const blocked = await isEitherBlocked(
-        String(existingRequest.sender),
-        userId
-      );
-      if (blocked) {
-        await session.abortTransaction();
-        return res.status(403).json({
-          success: false,
-          message: "Action not allowed: one of the users has blocked the other."
-        });
-      }
-    } catch (e) {
+    if (!existingRequest) {
       await session.abortTransaction();
-      return res
-        .status(403)
-        .json({ success: false, message: "Action not allowed." });
+      return res.status(404).json({
+        success: false,
+        message: "Connection request not found or already processed."
+      });
     }
 
-    const request = await ConnectionRequest.findOneAndUpdate(
+    const blocked = await isEitherBlocked(
+      String(existingRequest.sender),
+      userId
+    );
+    if (blocked) {
+      await session.abortTransaction();
+      return res.status(403).json({
+        success: false,
+        message: "Action not allowed: one of the users has blocked the other."
+      });
+    }
+
+    request = await ConnectionRequest.findOneAndUpdate(
       { _id: requestId, receiver: userId, status: "pending" },
       { status: "rejected", actionedBy: userId },
       { new: true, session }
@@ -646,8 +682,6 @@ export async function rejectConnectionRequest(
         message: "Connection request not found or already processed."
       });
     }
-
-    const receiver = await User.findById(userId).session(session).lean();
 
     await sendNotificationToUser(
       userId as string,
@@ -1009,6 +1043,20 @@ export async function addToFavorites(req: AuthenticatedRequest, res: Response) {
       return res
         .status(401)
         .json({ success: false, message: "Authentication required" });
+    }
+
+    const receiver = await User.findById({ _id: authUser.id })
+      .select("accountType ")
+      .lean();
+
+    try {
+      assertFreeAccount(receiver.accountType);
+    } catch {
+      return res.status(402).json({
+        success: false,
+        code: "PLAN_UPGRADE",
+        message: "Upgrade to Premium to unlock this feature."
+      });
     }
 
     const { profileId } = req.body || {};

@@ -11,7 +11,8 @@ import {
   ConnectionRequest,
   Match,
   UserEducation,
-  UserProfession
+  UserProfession,
+  UserSession
 } from "../../../models";
 import { logger } from "../../../lib/common/logger";
 
@@ -160,6 +161,11 @@ export async function hardDeleteAccount(
         user: userObjectId
       });
       deletedRecords.notifications = notificationsResult.deletedCount || 0;
+
+      const sessionResult = await UserSession.deleteMany({
+        userId: userObjectId
+      });
+      deletedRecords.sessions = sessionResult.deletedCount || 0;
 
       const unblockResult = await User.updateMany(
         { blockedUsers: userObjectId },

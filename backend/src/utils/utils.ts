@@ -139,6 +139,17 @@ export function hasRole(
   return allowedRoles.includes(userRole);
 }
 
+export function hasFree(account: string | undefined): boolean {
+  if (!account) return false;
+  return account === "free";
+}
+
+export function assertFreeAccount(account?: string) {
+  if (account === "free") {
+    throw new Error("PLAN_UPGRADE");
+  }
+}
+
 export function authorizeRoles(...allowedRoles: Role[]) {
   return (req: Request, res: Response, next: NextFunction) => {
     const userRole = req.user?.role as Role | undefined;

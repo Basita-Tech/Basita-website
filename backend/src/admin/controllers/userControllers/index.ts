@@ -11,6 +11,7 @@ import { sendMail } from "../../../lib/emails";
 import { EmailTemplateType } from "../../../models";
 import { enqueueBulkEmailCampaign } from "../../../lib/queue/enqueue";
 import mongoose from "mongoose";
+import { addMonths } from "date-fns";
 
 export async function approveUserProfileController(
   req: AuthenticatedRequest,
@@ -28,34 +29,53 @@ export async function approveUserProfileController(
 
     const result = await adminService.approveUserProfileService(userId);
 
-    if (result.success) {
-      try {
-        const target = await User.findById(userId)
-          .select("firstName lastName")
-          .lean();
-        const targetDisplayName = target
-          ? `${target.firstName || ""} ${target.lastName || ""}`.trim()
-          : undefined;
-        void recordAudit({
-          adminId: req.user!.id,
-          adminName: req.user!.fullName || req.user!.email || "Admin",
-          action: "ApproveProfile",
-          targetType: "User",
-          targetId: userId,
-          targetDisplayName,
-          details: { message: result.message },
-          req: req as any
-        });
-      } catch (e) {}
+    if (!result.success) {
+      return res.status(400).json(result);
     }
 
-    return res.status(result.success ? 200 : 400).json(result);
+    const user = await User.findById(userId).select(
+      "firstName lastName accountType planDurationMonths planExpiry isActive"
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    void recordAudit({
+      adminId: req.user!.id,
+      adminName: req.user!.fullName || req.user!.email || "Admin",
+      action: "ApproveProfile",
+      targetType: "User",
+      targetId: userId,
+      targetDisplayName:
+        `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
+      details: { message: result.message },
+      req: req as any
+    });
+
+    const freeMonths =
+      Number(process.env.DEFAULT_FREE_VALIDITY_MONTHS) > 0
+        ? Number(process.env.DEFAULT_FREE_VALIDITY_MONTHS)
+        : 6;
+
+    user.accountType = "premium";
+    user.planDurationMonths = freeMonths;
+    user.planExpiry = addMonths(new Date(), freeMonths);
+    user.isActive = true;
+
+    await user.save();
+
+    return res.status(200).json(result);
   } catch (error: any) {
-    logger.error("Error approving user profile:", {
+    logger.error("Error approving user profile", {
       error: error.message,
       stack: error.stack
     });
-    return res.status(400).json({
+
+    return res.status(500).json({
       success: false,
       message: error.message || "Failed to approve profile"
     });

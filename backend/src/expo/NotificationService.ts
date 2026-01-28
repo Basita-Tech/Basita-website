@@ -38,7 +38,6 @@ export const sendNotificationToUser = async (
     const user = await User.findById(userId).select("pushToken");
 
     if (!user || !user.pushToken || user.pushToken.length === 0) {
-      console.log(`User ${userId} has no push tokens.`);
       return;
     }
 

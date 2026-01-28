@@ -336,7 +336,7 @@ export async function getPendingBoardingsProfiles(req: Request, res: Response) {
       isOnboardingCompleted: false
     })
       .select(
-        "firstName lastName gender phoneNumber email isOnboardingCompleted completedSteps customId createdAt"
+        "firstName lastName gender phoneNumber email isOnboardingCompleted completedSteps customId createdAt isEmailLoginEnabled isMobileLoginEnabled isEmailVerified isPhoneVerified"
       )
       .sort({ createdAt: -1 });
 

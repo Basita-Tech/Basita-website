@@ -35,7 +35,8 @@ class commonService {
                     {
                       $or: [
                         { $eq: ["$isActive", false] },
-                        { $eq: ["$isVisible", false] }
+                        { $eq: ["$isVisible", false] },
+                        { $eq: ["$profileReviewStatus", "rejected"] }
                       ]
                     },
                     1,

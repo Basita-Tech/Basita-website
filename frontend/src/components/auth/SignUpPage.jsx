@@ -793,6 +793,10 @@ const SignUpPage = () => {
               <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
 
+            <p className="text-xs text-amber-700 font-medium mt-2 opacity-80">
+                Note: This email address will be used for OTP verification and cannot be changed until onboarding is complete.
+            </p>
+
             <div className="mt-1">
               <input
                 type="checkbox"
@@ -851,6 +855,9 @@ const SignUpPage = () => {
                 className={`w-full p-3 rounded-md border text-sm ${errors.mobile ? "border-red-500" : "border-[var(--brand-gold)]"} focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
               />
             </div>
+            <p className="text-xs text-amber-700 font-medium mt-2 opacity-80">
+               Note: This mobile number will be used for OTP verification and cannot be changed until onboarding is complete.
+            </p>
 
             {}
             <label className="flex items-center mt-2 cursor-pointer text-xs sm:text-sm select-none">
@@ -1020,7 +1027,7 @@ const SignUpPage = () => {
             className={`w-full bg-[var(--brand-primary)] hover:bg-[var(--brand-gold)] text-white p-3 rounded-full font-semibold text-sm shadow-lg transition-colors duration-300 
     ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
           >
-            {loading ? "Creating..." : "Create Profile"}
+            {loading ? "Creating..." : "Send Otp & Continue"}
           </button>
         </form>
 

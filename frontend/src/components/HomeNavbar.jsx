@@ -6,10 +6,19 @@ import { getOnboardingStatus } from "../api/auth";
 
 export default function HomeNavbar() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useContext(AuthContextr);
+  const { isAuthenticated, logout } = useContext(AuthContextr);
   const [logoHighlighted, setLogoHighlighted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [accountNavLoading, setAccountNavLoading] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   const handleMyAccount = async (e) => {
     e.preventDefault();
@@ -83,13 +92,21 @@ export default function HomeNavbar() {
           {/* Auth / CTA */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             {isAuthenticated ? (
-              <button
-                onClick={handleMyAccount}
-                className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-white bg-[var(--brand-primary)] hover:opacity-90 transition text-xs sm:text-sm lg:text-base whitespace-nowrap"
-                disabled={accountNavLoading}
-              >
-                {accountNavLoading ? "Loading..." : "My Account"}
-              </button>
+              <>
+                <button
+                  onClick={handleMyAccount}
+                  className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-white bg-[var(--brand-primary)] hover:opacity-90 transition text-xs sm:text-sm lg:text-base whitespace-nowrap"
+                  disabled={accountNavLoading}
+                >
+                  {accountNavLoading ? "Loading..." : "My Account"}
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-md font-semibold text-white bg-red-600 hover:bg-red-700 transition text-xs sm:text-sm lg:text-base whitespace-nowrap"
+                >
+                  Logout
+                </button>
+              </>
             ) : (
               <>
                 <Link

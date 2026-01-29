@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import { Request } from "express";
 import {
   clearAllMatchScoreCache,
+  getEmailFromCache,
+  getPhoneFromCache,
   logger,
   parseDDMMYYYYToDate,
   redisClient,
@@ -382,6 +384,18 @@ export class AuthService {
     const session = await User.startSession();
     session.startTransaction();
 
+    const [emailCache, phoneCache] = await Promise.all([
+      email ? getEmailFromCache(email) : Promise.resolve(null),
+      phoneNumber ? getPhoneFromCache(phoneNumber) : Promise.resolve(null)
+    ]);
+
+    const alreadyEmailVerified = emailCache?.verified === true;
+    const alreadyPhoneVerified = phoneCache?.verified === true;
+
+    if (!alreadyEmailVerified || !alreadyPhoneVerified) {
+      throw new Error("Email or mobile number is not verified");
+    }
+
     try {
       const newUser = await User.create(
         [
@@ -391,32 +405,55 @@ export class AuthService {
             phoneNumber,
             dateOfBirth,
             password: hashedPassword,
-            customId
+            customId,
+            isEmailVerified: true,
+            isPhoneVerified: true
           }
         ],
         { session }
       );
 
-      await Profile.create(
-        [
-          {
-            userId: newUser[0]._id
-          }
-        ],
-        { session }
-      );
+      await Profile.create([{ userId: newUser[0]._id }], { session });
 
       await session.commitTransaction();
-      session.endSession();
 
       void clearAllMatchScoreCache();
-      // void sendWelcomeEmailOnce(newUser[0]);
+      const user = newUser[0];
 
-      return newUser[0].toObject();
+      if (user.isEmailVerified && user.isPhoneVerified) {
+        try {
+          const username = user.email || user.phoneNumber || "";
+          const loginLink = `${process.env.FRONTEND_URL || ""}/login`;
+
+          const enqueued = await enqueueWelcomeEmail(
+            user.id as any,
+            {
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              username
+            },
+            loginLink
+          );
+
+          if (enqueued) {
+            user.welcomeSent = true;
+            await user.save();
+            logger.info(`Welcome email queued for ${user.email}`);
+          } else {
+            logger.error(`Failed to queue welcome email for ${user.email}`);
+          }
+        } catch (e) {
+          logger.error(`Failed to queue welcome email for ${user.email}: ${e}`);
+        }
+      }
+
+      return { user: user.toObject() };
     } catch (error) {
       await session.abortTransaction();
-      session.endSession();
       throw error;
+    } finally {
+      session.endSession();
     }
   }
 

@@ -20,6 +20,7 @@ import {
   verifyOTPConstantTime
 } from "../../utils/timingSafe";
 import { issueLoginSession } from "../../utils/utils";
+import { getPhoneFromCache, setPhoneVerifyCache } from "../../lib";
 
 const SMS_API_KEY = process.env.SMS_API_KEY || "";
 const SMS_SENDER_ID = process.env.SMS_SENDER_ID || "";
@@ -27,7 +28,7 @@ const SMS_ENTITY_ID = process.env.SMS_ENTITY_ID || "";
 const SMS_TEMPLATE_ID = process.env.SMS_TEMPLATE_ID || "";
 
 async function sendOtp(req: AuthenticatedRequest, res: Response) {
-  const { countryCode, phoneNumber, hash } = req.body;
+  const { countryCode, phoneNumber, hash, type = "signup" } = req.body;
   try {
     if (!phoneNumber) {
       return res
@@ -40,20 +41,26 @@ async function sendOtp(req: AuthenticatedRequest, res: Response) {
         .json({ success: false, message: "country Code is required" });
     }
 
-    if (countryCode !== "+91") {
-      const mobileNumber = `${countryCode}${phoneNumber}`;
+    const mobileNumber = `${countryCode}${phoneNumber}`;
 
-      const user = await User.findOne({
-        phoneNumber: mobileNumber,
-        isDeleted: false
-      });
-      user.isPhoneVerified = true;
-      await user.save();
+    if (type === "signup") {
+      const cached = await getPhoneFromCache(mobileNumber);
 
-      return res.status(201).json({
-        success: true,
-        message: "Phone verified successfully"
-      });
+      if (cached?.verified === true) {
+        return res.status(409).json({
+          success: true,
+          message: "Phone number already verified"
+        });
+      }
+
+      if (countryCode !== "+91") {
+        await setPhoneVerifyCache(mobileNumber);
+
+        return res.status(409).json({
+          success: true,
+          message: "Phone verified successfully"
+        });
+      }
     }
 
     const resendCount = await getResendCount(phoneNumber, "signup");

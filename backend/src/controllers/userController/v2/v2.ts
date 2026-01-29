@@ -8,6 +8,7 @@ import { verifyOTPConstantTime } from "../../../utils/timingSafe";
 import {
   getEmailFromCache,
   getPhoneFromCache,
+  logger,
   setEmailVerifyCache,
   setPhoneVerifyCache
 } from "../../../lib";
@@ -16,7 +17,7 @@ type IdentifierType = "email" | "phone";
 
 export async function verifySignupOtp(req: Request, res: Response) {
   try {
-    const { email, mobileNumber, countryCode, otp } = req.body;
+    let { email, mobileNumber, countryCode, otp } = req.body;
 
     if (!email && !mobileNumber) {
       return res.status(400).json({
@@ -25,19 +26,10 @@ export async function verifySignupOtp(req: Request, res: Response) {
       });
     }
 
-    const identifier: string = email ?? mobileNumber;
-    const type: IdentifierType = email ? "email" : "phone";
-
-    const alreadyVerified =
-      type === "email"
-        ? await getEmailFromCache(identifier)
-        : await getPhoneFromCache(identifier);
-
-    if (alreadyVerified && countryCode !== "+91") {
-      await setPhoneVerifyCache(identifier);
-      return res.status(200).json({
-        success: true,
-        message: `${type === "email" ? "Email" : "Phone number"} already verified`
+    if (mobileNumber && !countryCode) {
+      return res.status(400).json({
+        success: false,
+        message: "Country code is required for mobile verification"
       });
     }
 
@@ -45,6 +37,28 @@ export async function verifySignupOtp(req: Request, res: Response) {
       return res.status(400).json({
         success: false,
         message: "OTP is required"
+      });
+    }
+
+    const type: IdentifierType = email ? "email" : "phone";
+    const identifier =
+      type === "email"
+        ? email.toLowerCase().trim()
+        : mobileNumber.toString().trim();
+
+    const cached =
+      type === "email"
+        ? await getEmailFromCache(identifier)
+        : await getPhoneFromCache(`${countryCode}${identifier}`);
+
+    const isAlreadyVerified = cached?.verified === true;
+
+    logger.info("verifySignupOtp:", { identifier, isAlreadyVerified });
+
+    if (isAlreadyVerified) {
+      return res.status(409).json({
+        success: true,
+        message: `${type === "email" ? "Email" : "Phone number"} already verified`
       });
     }
 
@@ -75,7 +89,7 @@ export async function verifySignupOtp(req: Request, res: Response) {
     if (type === "email") {
       await setEmailVerifyCache(identifier);
     } else {
-      await setPhoneVerifyCache(identifier);
+      await setPhoneVerifyCache(`${countryCode}${identifier}`);
     }
 
     return res.status(200).json({

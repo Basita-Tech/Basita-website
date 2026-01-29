@@ -253,18 +253,26 @@ function getPhoneKey(phoneNumber: string) {
   return `verified::phone::${phoneNumber}`;
 }
 
-export async function getEmailFromCache(email: string) {
-  return safeRedisOperation(
+export async function getEmailFromCache(
+  email: string
+): Promise<{ verified: boolean } | null> {
+  const value = await safeRedisOperation(
     () => redisClient.get(getEmailKey(email)),
     "Get Email Verification"
   );
+
+  return value ? JSON.parse(value) : null;
 }
 
-export async function getPhoneFromCache(phoneNumber: string) {
-  return safeRedisOperation(
+export async function getPhoneFromCache(
+  phoneNumber: string
+): Promise<{ verified: boolean } | null> {
+  const value = await safeRedisOperation(
     () => redisClient.get(getPhoneKey(phoneNumber)),
     "Get Phone Verification"
   );
+
+  return value ? JSON.parse(value) : null;
 }
 
 export async function setEmailVerifyCache(email: string): Promise<void> {

@@ -555,7 +555,7 @@ export class AuthController {
         if (isAlreadyVerified) {
           return res.status(409).json({
             success: true,
-            message: `${type === "email" ? "Email" : "Phone number"} already verified`
+            message: `Email already verified`
           });
         }
       }

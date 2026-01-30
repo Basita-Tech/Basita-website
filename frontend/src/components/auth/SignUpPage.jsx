@@ -1161,7 +1161,7 @@ const SignUpPage = () => {
             {emailOtpSent && !emailOtpVerified && (
               <div className="mt-4 flex flex-col items-start w-full">
                 <div className="flex flex-wrap sm:flex-nowrap gap-2 justify-start items-center w-full">
-                  <div className="flex gap-2 flex-nowrap">
+                  <div className="flex gap-1 sm:gap-2 flex-nowrap">
                     {emailOtpValues.map((value, index) => (
                       <input
                         key={index}
@@ -1174,7 +1174,7 @@ const SignUpPage = () => {
                         onKeyDown={(e) => handleEmailOtpKeyDown(index, e)}
                         onPaste={index === 0 ? handleEmailOtpPaste : undefined}
                         disabled={emailCountdown === 0}
-                        className={`w-12 h-12 sm:w-12 sm:h-12 text-center text-lg font-semibold border border-[var(--brand-gold)] rounded-lg focus:outline-none transition ${
+                        className={`w-11 h-11 sm:w-12 sm:h-12 text-center text-base sm:text-lg font-semibold border border-[var(--brand-gold)] rounded-lg focus:outline-none transition ${
                           emailCountdown === 0 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""
                         }`}
                       />
@@ -1370,7 +1370,7 @@ const SignUpPage = () => {
                   Enter OTP sent to your mobile
                 </label>
                 <div className="flex flex-wrap sm:flex-nowrap gap-2 justify-start items-center w-full">
-                  <div className="flex gap-2 flex-nowrap">
+                  <div className="flex gap-1 sm:gap-2 flex-nowrap">
                     {mobileOtpValues.map((value, index) => (
                       <input
                         key={index}
@@ -1383,7 +1383,7 @@ const SignUpPage = () => {
                         onKeyDown={(e) => handleMobileOtpKeyDown(index, e)}
                         onPaste={index === 0 ? handleMobileOtpPaste : undefined}
                         disabled={mobileCountdown === 0}
-                        className={`w-12 h-12 sm:w-12 sm:h-12 text-center text-lg font-semibold border border-[var(--brand-gold)] rounded-lg focus:outline-none transition ${
+                        className={`w-11 h-11 sm:w-12 sm:h-12 text-center text-base sm:text-lg font-semibold border border-[var(--brand-gold)] rounded-lg focus:outline-none transition ${
                           mobileCountdown === 0 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""
                         }`}
                       />

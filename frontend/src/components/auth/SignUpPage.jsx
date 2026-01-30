@@ -538,6 +538,7 @@ const SignUpPage = () => {
       if (verifyRes?.success) {
         setEmailOtpVerified(true);
         toast.success("Email verified successfully!");
+        setErrors((prev) => ({ ...prev, email: "" }));
       } else {
         toast.error(verifyRes?.message || "Invalid OTP. Please try again.");
       }
@@ -711,6 +712,7 @@ const SignUpPage = () => {
       if (verifyRes?.success) {
         setMobileOtpVerified(true);
         toast.success("Mobile verified successfully!");
+        setErrors((prev) => ({ ...prev, mobile: "" }));
       } else {
         toast.error(verifyRes?.message || "Invalid OTP. Please try again.");
       }
@@ -1158,29 +1160,31 @@ const SignUpPage = () => {
             {/* OTP Input Boxes */}
             {emailOtpSent && !emailOtpVerified && (
               <div className="mt-4 flex flex-col items-start w-full">
-                <div className="flex gap-2 justify-start items-center">
-                  {emailOtpValues.map((value, index) => (
-                    <input
-                      key={index}
-                      ref={(el) => (emailOtpRefs.current[index] = el)}
-                      type="text"
-                      inputMode="numeric"
-                      maxLength="1"
-                      value={value}
-                      onChange={(e) => handleEmailOtpChange(index, e.target.value)}
-                      onKeyDown={(e) => handleEmailOtpKeyDown(index, e)}
-                      onPaste={index === 0 ? handleEmailOtpPaste : undefined}
-                      disabled={emailCountdown === 0}
-                      className={`w-10 h-10 sm:w-12 sm:h-12 text-center text-lg font-semibold border border-[var(--brand-gold)] rounded-lg focus:outline-none transition ${
-                        emailCountdown === 0 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""
-                      }`}
-                    />
-                  ))}
+                <div className="flex flex-wrap sm:flex-nowrap gap-2 justify-start items-center w-full">
+                  <div className="flex gap-2 flex-nowrap">
+                    {emailOtpValues.map((value, index) => (
+                      <input
+                        key={index}
+                        ref={(el) => (emailOtpRefs.current[index] = el)}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength="1"
+                        value={value}
+                        onChange={(e) => handleEmailOtpChange(index, e.target.value)}
+                        onKeyDown={(e) => handleEmailOtpKeyDown(index, e)}
+                        onPaste={index === 0 ? handleEmailOtpPaste : undefined}
+                        disabled={emailCountdown === 0}
+                        className={`w-12 h-12 sm:w-12 sm:h-12 text-center text-lg font-semibold border border-[var(--brand-gold)] rounded-lg focus:outline-none transition ${
+                          emailCountdown === 0 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""
+                        }`}
+                      />
+                    ))}
+                  </div>
                   <button
                     type="button"
                     onClick={handleVerifyEmailOtp}
                     disabled={emailOtpVerifying || emailOtpValues.join("").length !== 6 || emailCountdown === 0}
-                    className={`px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 whitespace-nowrap ${
+                    className={`w-auto ml-auto sm:ml-0 px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 whitespace-nowrap ${
                       emailOtpVerifying || emailOtpValues.join("").length !== 6 || emailCountdown === 0
                         ? "bg-[#f5ecd8] text-[#a89165] cursor-not-allowed border border-[#e6d8b8] opacity-70"
                         : "bg-[var(--brand-primary)] hover:bg-[var(--brand-gold)] text-white"
@@ -1365,29 +1369,31 @@ const SignUpPage = () => {
                 <label className="block text-sm font-medium mb-2 text-gray-700">
                   Enter OTP sent to your mobile
                 </label>
-                <div className="flex gap-2 justify-start items-center">
-                  {mobileOtpValues.map((value, index) => (
-                    <input
-                      key={index}
-                      ref={(el) => (mobileOtpRefs.current[index] = el)}
-                      type="text"
-                      inputMode="numeric"
-                      maxLength="1"
-                      value={value}
-                      onChange={(e) => handleMobileOtpChange(index, e.target.value)}
-                      onKeyDown={(e) => handleMobileOtpKeyDown(index, e)}
-                      onPaste={index === 0 ? handleMobileOtpPaste : undefined}
-                      disabled={mobileCountdown === 0}
-                      className={`w-10 h-10 sm:w-12 sm:h-12 text-center text-lg font-semibold border border-[var(--brand-gold)] rounded-lg focus:outline-none transition ${
-                        mobileCountdown === 0 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""
-                      }`}
-                    />
-                  ))}
+                <div className="flex flex-wrap sm:flex-nowrap gap-2 justify-start items-center w-full">
+                  <div className="flex gap-2 flex-nowrap">
+                    {mobileOtpValues.map((value, index) => (
+                      <input
+                        key={index}
+                        ref={(el) => (mobileOtpRefs.current[index] = el)}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength="1"
+                        value={value}
+                        onChange={(e) => handleMobileOtpChange(index, e.target.value)}
+                        onKeyDown={(e) => handleMobileOtpKeyDown(index, e)}
+                        onPaste={index === 0 ? handleMobileOtpPaste : undefined}
+                        disabled={mobileCountdown === 0}
+                        className={`w-12 h-12 sm:w-12 sm:h-12 text-center text-lg font-semibold border border-[var(--brand-gold)] rounded-lg focus:outline-none transition ${
+                          mobileCountdown === 0 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""
+                        }`}
+                      />
+                    ))}
+                  </div>
                   <button
                     type="button"
                     onClick={handleVerifyMobileOtp}
                     disabled={mobileOtpVerifying || mobileOtpValues.join("").length !== 6 || mobileCountdown === 0}
-                    className={`px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 whitespace-nowrap ${
+                    className={`w-auto ml-auto sm:ml-0 px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 whitespace-nowrap ${
                       mobileOtpVerifying || mobileOtpValues.join("").length !== 6 || mobileCountdown === 0
                         ? "bg-[#f5ecd8] text-[#a89165] cursor-not-allowed border border-[#e6d8b8] opacity-70"
                         : "bg-[var(--brand-primary)] hover:bg-[var(--brand-gold)] text-white"

@@ -205,7 +205,7 @@ export async function issueLoginSession(
   req: Request,
   res: Response
 ) {
-  const userId = String(user._id);
+  const userId = String(user.id || user._id);
   const ipAddress = getClientIp(req);
 
   let token: string;

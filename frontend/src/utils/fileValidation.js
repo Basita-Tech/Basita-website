@@ -11,11 +11,11 @@ export const ALLOWED_MIME_TYPES = {
   DOCUMENT: ["application/pdf", "image/jpeg", "image/png"]
 };
 export const MAX_FILE_SIZES = {
-  IMAGE: 2 * 1024 * 1024,
+  IMAGE: 10 * 1024 * 1024,              // Increased to 10MB (will be compressed to 2MB)
   DOCUMENT: 5 * 1024 * 1024,
-  PROFILE_PHOTO: 2 * 1024 * 1024,
+  PROFILE_PHOTO: 10 * 1024 * 1024,      // Increased to 10MB (will be compressed to 2MB)
   GOVERNMENT_ID_PDF: 5 * 1024 * 1024,
-  GOVERNMENT_ID_IMAGE: 2 * 1024 * 1024
+  GOVERNMENT_ID_IMAGE: 10 * 1024 * 1024 // Increased to 10MB (will be compressed to 2MB)
 };
 const readFileHeader = (file, numBytes = 8) => {
   return new Promise((resolve, reject) => {
@@ -184,8 +184,8 @@ export const validateProfilePhoto = async file => {
     dimensionConstraints: {
       minWidth: 200,
       minHeight: 200,
-      maxWidth: 4000,
-      maxHeight: 4000
+      maxWidth: 6000,  // Increased to accommodate high-res photos (will be compressed)
+      maxHeight: 6000  // Increased to accommodate high-res photos (will be compressed)
     },
     allowedExtensions: [".jpg", ".jpeg", ".png", ".webp"]
   });

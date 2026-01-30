@@ -155,7 +155,7 @@ const UploadPhotos = ({
     const file = e.target.files[0];
     if (!file) return;
 
-    // Clear previous filename immediately when new file is selected
+   
     setSelectedFileNames(prev => {
       const updated = { ...prev };
       delete updated[type];
@@ -173,7 +173,7 @@ const UploadPhotos = ({
         ...prev,
         [type]: file
       }));
-      // Set filename only after successful validation
+     
       setSelectedFileNames(prev => ({
         ...prev,
         [type]: file.name
@@ -206,11 +206,11 @@ const UploadPhotos = ({
     if (!currentCropPhotoType) return;
 
     try {
-      // Convert base64 to File
+     
       const response = await fetch(croppedBase64);
       const blob = await response.blob();
       
-      // Get photo dimensions
+  
       const dims = PHOTO_DIMENSIONS[currentCropPhotoType];
       const ext = 'jpg';
       const filename = `photo_${currentCropPhotoType}.${ext}`;
@@ -225,7 +225,7 @@ const UploadPhotos = ({
         [currentCropPhotoType]: croppedFile
       }));
 
-      // Clear the filename from UI after successful crop and save
+     
       setSelectedFileNames(prev => {
         const updated = { ...prev };
         delete updated[currentCropPhotoType];
@@ -462,7 +462,7 @@ const UploadPhotos = ({
                 <input id={key} type="file" accept="image/*" onChange={e => handlePhotoChange(e, key)} className="w-full p-2 border rounded-lg" />
                 <p className="text-xs text-gray-500 mt-1">
                   Supported formats: JPG, PNG — Max size:{" "}
-                  <span className="font-semibold">2 MB</span>
+                  <span className="font-semibold">10 MB</span>
                 </p>
                 {selectedFileName && (
                   <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center gap-2">
@@ -506,7 +506,7 @@ const UploadPhotos = ({
             <p className="text-xs text-gray-500 mt-1">
               Supported: JPG, PNG, PDF — Max size:{" "}
               <span className="font-semibold">5 MB (PDF)</span> or{" "}
-              <span className="font-semibold">2 MB (Image)</span>
+              <span className="font-semibold">10 MB (Image)</span>
             </p>
 
             {/* Show selected file name (before upload) */}
@@ -582,34 +582,34 @@ const UploadPhotos = ({
                 <input id={key} type="file" accept="image/*" onChange={e => handlePhotoChange(e, key)} className="w-full p-2 border rounded-lg" />
                 <p className="text-xs text-gray-500 mt-1">
                   Supported: JPG, PNG — Max size:{" "}
-                                  {selectedFileName && (
-                                    <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center gap-2">
-                                      <svg className="w-5 h-5 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M8 16.5a2 2 0 01-2-2V9a2 2 0 012-2h4a2 2 0 012 2v3.5a2 2 0 01-2 2H8zm6-9a1 1 0 00-1-1H7a1 1 0 00-1 1v3a1 1 0 001 1h6a1 1 0 001-1V7.5zm-6 7a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                                      </svg>
-                                      <span className="text-sm font-medium text-blue-700 flex-1">{selectedFileName}</span>
-                                      <button
-                                        type="button"
-                                        onClick={() => {
-                                          setSelectedFileNames(prev => {
-                                            const updated = { ...prev };
-                                            delete updated[key];
-                                            return updated;
-                                          });
-                                          setPhotos(prev => ({
-                                            ...prev,
-                                            [key]: null
-                                          }));
-                                          document.getElementById(key).value = '';
-                                        }}
-                                        className="text-white bg-orange-400 hover:bg-orange-500 rounded-full w-6 h-6 flex items-center justify-center font-bold transition flex-shrink-0"
-                                      >
-                                        ✕
-                                      </button>
-                                    </div>
-                                  )}
-                  <span className="font-semibold">2 MB</span>
+                  <span className="font-semibold">10 MB</span>
                 </p>
+                {selectedFileName && (
+                  <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center gap-2">
+                    <svg className="w-5 h-5 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8 16.5a2 2 0 01-2-2V9a2 2 0 012-2h4a2 2 0 012 2v3.5a2 2 0 01-2 2H8zm6-9a1 1 0 00-1-1H7a1 1 0 00-1 1v3a1 1 0 001 1h6a1 1 0 001-1V7.5zm-6 7a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-sm font-medium text-blue-700 flex-1">{selectedFileName}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedFileNames(prev => {
+                          const updated = { ...prev };
+                          delete updated[key];
+                          return updated;
+                        });
+                        setPhotos(prev => ({
+                          ...prev,
+                          [key]: null
+                        }));
+                        document.getElementById(key).value = '';
+                      }}
+                      className="text-white bg-orange-400 hover:bg-orange-500 rounded-full w-6 h-6 flex items-center justify-center font-bold transition flex-shrink-0"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
                 {previewSrc && <img src={previewSrc} alt={`Optional ${idx + 1}`} className="mt-2 h-24 w-24 object-cover rounded-lg border" />}
               </div>;
         })}
@@ -686,7 +686,7 @@ const UploadPhotos = ({
             </button>}
 
           <div className="flex justify-between mt-6">
-            {onBoardingStatus ? <button type="button" onClick={() => setShowReviewModal(true)} className="px-4 py-2 rounded-lg border border-gray-400 hover:bg-gray-100">
+            {onBoardingStatus ? <button type="button" onClick={() => setShowReviewModal(true)} className="px-4 py-2 rounded-lg font-semibold text-white bg-[var(--brand-primary)] hover:bg-[var(--brand-accent)] transition">
                 Submit For review
               </button> : <button type="button" onClick={onPrevious} className="px-4 py-2 rounded-lg border border-gray-400 hover:bg-gray-100">
                 ← Previous
@@ -731,7 +731,7 @@ const UploadPhotos = ({
 
             {}
             <div className="space-y-3">
-              <button onClick={handleSubmitForReview} disabled={uploading} className="w-full py-3 rounded-lg font-semibold text-white bg-primary hover:shadow-lg transition disabled:opacity-50">
+              <button onClick={handleSubmitForReview} disabled={uploading} className="w-full py-3 rounded-lg font-semibold text-white bg-[var(--brand-gold)] hover:shadow-lg transition disabled:opacity-50">
                 {uploading ? "Submitting..." : "Yes, Submit for Review"}
               </button>
               <button onClick={handleNotNow} disabled={uploading} className="w-full py-3 rounded-lg font-semibold text-[var(--brand-maroon)] border-2 border-[var(--brand-primary)] bg-white hover:bg-[var(--brand-bg)] transition disabled:opacity-50">

@@ -10,7 +10,7 @@ import {
   OTP_RESEND_LIMIT
 } from "../../lib/redis/otpRedis";
 import { User, Profile } from "../../models";
-import { redisClient } from "../../lib/redis";
+import { getEmailFromCache, redisClient } from "../../lib/redis";
 import { env } from "../../config";
 import { APP_CONFIG } from "../../utils/constants";
 import { sanitizeError } from "../../middleware/securityMiddleware";
@@ -20,13 +20,13 @@ import {
   generateCSRFToken,
   setCSRFTokenCookie,
   clearAuthCookies,
-  verifyDeviceFingerprint,
   generateDeviceFingerprint
 } from "../../utils/secureToken";
 import { SessionService } from "../../services/sessionService";
 import { getClientIp, normalizeIp } from "../../utils/ipUtils";
 import { generateJTI } from "../../utils/timingSafe";
 import { issueLoginSession } from "../../utils/utils";
+import { notifyAdminsOfNewUserRegistration } from "../../admin/utils/notification";
 
 const authService = new AuthService();
 
@@ -512,12 +512,18 @@ export class AuthController {
       }
 
       const data = req.body;
-      await authService.signup(data);
+      const result = await authService.signup(data);
+
+      const token = await issueLoginSession(result.user, req, res);
+
+      void notifyAdminsOfNewUserRegistration(result.user).catch((e) =>
+        logger.error(`Failed to notify admins for user ${result.user._id}`, e)
+      );
 
       return res.status(201).json({
         success: true,
-        message:
-          "Signup successful. Please verify your email and phone number to login."
+        message: "Signup successful.",
+        token
       });
     } catch (err: any) {
       const message = (err as any)?.message || "Signup failed";
@@ -528,15 +534,30 @@ export class AuthController {
   static async sendEmailOtp(req: Request, res: Response) {
     try {
       const { email, type } = req.body;
+
       if (!email)
         return res
           .status(400)
           .json({ success: false, message: "Email is required" });
+
       if (type !== "signup" && type !== "forgot-password") {
         return res.status(400).json({
           success: false,
           message: "Type must be either 'signup' or 'forgot-password'"
         });
+      }
+
+      if (type === "signup") {
+        const cached = await getEmailFromCache(email);
+
+        const isAlreadyVerified = cached?.verified === true;
+
+        if (isAlreadyVerified) {
+          return res.status(409).json({
+            success: true,
+            message: `Email already verified`
+          });
+        }
       }
 
       const resendCount = await getResendCount(email, type);

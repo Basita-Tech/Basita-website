@@ -4,6 +4,7 @@ import { cachedFetch, dataCache } from "../utils/cache";
 import { dedupeRequest } from "../utils/optimize";
 import { getCSRFToken } from "../utils/csrfProtection";
 import { trackEvent } from "@/components/analytics/ga4";
+import { compressImage } from "../utils/compression";
 const API = import.meta.env.VITE_API_URL;
 // Some envs point to /api/v1; normalize to base and derive v2
 const API_ROOT = API?.replace(/\/v1\/?$/i, "").replace(/\/$/, "");
@@ -232,39 +233,60 @@ export const logoutUser = async () => {
 };
 export const sendEmailOtp = async (data) => {
   try {
-    const response = await axios.post(`${API}/auth/send-email-otp`, data);
-    if (!response.data) {
-      throw new Error("Empty response from server");
-    }
-    return response.data;
+    const response = await axios.post(`${API}/auth/send-email-otp`, data, {
+      validateStatus: (status) => status < 500
+    });
+    return {
+      ...response.data,
+      statusCode: response.status
+    };
   } catch (error) {
     console.error("❌ Send Email OTP Error:", {
       message: error.message,
       response: error.response?.data,
       status: error.response?.status,
     });
-    throw error;
+    return {
+      ...(error.response?.data || {
+        success: false,
+        message: "Error sending OTP. Please try again."
+      }),
+      statusCode: error.response?.status
+    };
   }
 };
 export const sendSmsOtp = async (data) => {
   try {
-    const response = await axios.post(`${API}/auth/send-sms-otp`, data);
-    if (!response.data) {
-      throw new Error("Empty response from server");
-    }
-    return response.data;
+    const response = await axios.post(`${API}/auth/send-sms-otp`, data, {
+      validateStatus: (status) => status < 500
+    });
+    return {
+      ...response.data,
+      statusCode: response.status
+    };
   } catch (error) {
     console.error("❌ Send SMS OTP Error:", {
       message: error.message,
       response: error.response?.data,
       status: error.response?.status,
     });
-    throw error;
+    return {
+      ...(error.response?.data || {
+        success: false,
+        message: "Error sending OTP. Please try again."
+      }),
+      statusCode: error.response?.status
+    };
   }
 };
 export const verifyEmailOtp = async (data) => {
   try {
-    const response = await axios.post(`${API}/auth/verify-email-otp`, data);
+    const payload = {
+      email: data.email,
+      otp: data.code || data.otp,
+      type: data.type || "signup"
+    };
+    const response = await axios.post(`${API}/auth/verify-email-otp`, payload);
     return response.data;
   } catch (error) {
     console.error(
@@ -281,14 +303,55 @@ export const verifyEmailOtp = async (data) => {
 };
 export const verifySmsOtp = async (data) => {
   try {
-    const response = await axios.post(`${API}/auth/verify-sms-otp`, data);
+    const payload = {
+      countryCode: data.countryCode || '+91',
+      mobileNumber: data.phoneNumber || data.mobileNumber,
+      otp: data.code || data.otp,
+    };
+    
+    const response = await axios.post(`${API_V2}/verify-otp`, payload);
     return response.data;
   } catch (error) {
+    const status = error?.response?.status;
+    const responseData = error?.response?.data;
+    
+    // Handle 409 - Already verified
+    if (status === 409) {
+      return {
+        success: true,
+        alreadyVerified: true,
+        message: responseData?.message || "Phone number already verified"
+      };
+    }
+    
+    // Handle other specific error codes
+    if (status === 401) {
+      return {
+        success: false,
+        message: responseData?.message || "Invalid OTP"
+      };
+    }
+    
+    if (status === 410) {
+      return {
+        success: false,
+        message: responseData?.message || "OTP expired"
+      };
+    }
+    
+    if (status === 429) {
+      return {
+        success: false,
+        message: responseData?.message || "Maximum OTP attempts exceeded"
+      };
+    }
+    
     console.error("❌ Verify SMS OTP Error:", {
       message: error.message,
       response: error.response?.data,
       status: error.response?.status,
     });
+    
     return (
       error.response?.data || {
         success: false,
@@ -297,6 +360,7 @@ export const verifySmsOtp = async (data) => {
     );
   }
 };
+
 export const resendOtp = async (data) => {
   try {
     const response = await axios.post(`${API}/auth/resend-otp`, data);
@@ -787,13 +851,20 @@ export const uploadPhotoViaS3 = async (file, userId, photoType, onProgress) => {
 
     const { url, key } = presign.data;
 
-    // 2. Upload file directly to S3
-    await uploadToS3(url, file, onProgress);
+    // 2. Compress image before upload
+    const compressedFile = await compressImage(file, {
+      maxSizeMB: 2,
+      maxWidthOrHeight: 4000,
+      fileType: 'image/webp'
+    });
 
-    // 3. Save metadata (this triggers updatePhotoController)
+    // 3. Upload file directly to S3
+    await uploadToS3(url, compressedFile, onProgress);
+
+    // 4. Save metadata (this triggers updatePhotoController)
     await savePhotoMetadata(userId, photoType, key);
 
-    // 4. Return canonical CDN URL (same as backend)
+    // 5. Return canonical CDN URL (same as backend)
     return {
       success: true,
       key,
@@ -2395,5 +2466,71 @@ export const reportProfile = async (
       success: false,
       message: error.response?.data?.message || "Failed to submit report.",
     };
+  }
+};
+
+export const verifyOtp = async (data) => {
+  try {
+    // Transform payload to match backend v2 expectations
+    const payload = {
+      email: data.email,
+      mobileNumber: data.phoneNumber || data.mobileNumber,
+      countryCode: data.countryCode,
+      otp: data.otp || data.code,
+      type: data.type
+    };
+    
+    // Remove undefined values
+    Object.keys(payload).forEach(key => payload[key] === undefined && delete payload[key]);
+    
+    const response = await axios.post(`${API_V2}/verify-otp`, payload, {
+      headers: getAuthHeaders(),
+    });
+    return response.data;
+  } catch (error) {
+    const status = error?.response?.status;
+    const data = error?.response?.data;
+    
+    // Handle 409 - Already verified
+    if (status === 409) {
+      return {
+        success: true,
+        alreadyVerified: true,
+        message: data?.message || "Already verified"
+      };
+    }
+    
+    // Handle other specific error codes
+    if (status === 401) {
+      return {
+        success: false,
+        message: data?.message || "Invalid OTP"
+      };
+    }
+    
+    if (status === 410) {
+      return {
+        success: false,
+        message: data?.message || "OTP expired"
+      };
+    }
+    
+    if (status === 429) {
+      return {
+        success: false,
+        message: data?.message || "Too many attempts"
+      };
+    }
+    
+    console.error(
+      "❌ Verify OTP Error:",
+      error.response?.data || error.message,
+    );
+    return (
+      error.response?.data || {
+        success: false,
+        message: "Failed to verify OTP. Please try again.",
+      }
+    );
   }
 };

@@ -7,7 +7,6 @@ import { getClientIp } from "../utils/ipUtils";
 import { SessionService } from "../services/sessionService";
 import { redisClient, safeRedisOperation } from "../lib/redis";
 import { Types } from "mongoose";
-import { clearAuthCookies } from "../utils/secureToken";
 
 const AUTH_CACHE_TTL = 300;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -122,7 +121,7 @@ export const authenticate = async (
           : Promise.resolve(true),
         User.findById(userId)
           .select(
-            "email role phoneNumber isDeleted isActive firstName lastName planExpiry accountType isVisible"
+            "email role phoneNumber isDeleted isActive firstName lastName planExpiry accountType isVisible lastLoginAt"
           )
           .lean<UserData>()
       ]);
@@ -202,9 +201,11 @@ export const authenticate = async (
       return res.status(200).json({
         success: false,
         code: "DEACTIVATED_ACCOUNT",
-        message: "Your account is decatived. Please aciveted to continue."
+        message: "Your account is deactivated. Please activate it to continue."
       });
     }
+
+    User.findByIdAndUpdate(userId, { lastLoginAt: new Date() }).catch(() => {});
 
     req.user = {
       id: String(user._id),

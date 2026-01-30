@@ -22,7 +22,7 @@ const isAnyOrNoPreference = val => {
     return lower === "any" || lower === "no preference";
   });
 };
-const REQUIRED_FIELDS = new Set(["preferredAgeFrom", "preferredAgeTo", "maritalStatus", "partnerLocation", "partnerCommunity", "partnerDiet", "partnerEducation", "profession", "partnerStateOrCountry"]);
+const REQUIRED_FIELDS = new Set(["preferredAgeFrom", "preferredAgeTo", "maritalStatus", "partnerLocation", "partnerCommunity", "partnerDiet", "partnerEducation", "profession", "partnerStateOrCountry", "openToPartnerHabits"]);
 const Label = ({ children, field, className = "block text-sm font-medium mb-1" }) => <label className={className}>
     {children}
     {REQUIRED_FIELDS.has(field) && <span className="text-red-500 ml-1">*</span>}
@@ -116,7 +116,7 @@ const ExpectationDetails = ({
   }, []);
   const validateForm = () => {
     const newErrors = {};
-    const requiredFields = ["preferredAgeFrom", "preferredAgeTo", "maritalStatus", "partnerLocation", "partnerCommunity", "partnerDiet", "partnerEducation", "profession"];
+    const requiredFields = ["preferredAgeFrom", "preferredAgeTo", "maritalStatus", "partnerLocation", "partnerCommunity", "partnerDiet", "partnerEducation", "profession", "openToPartnerHabits"];
     requiredFields.forEach(key => {
       const value = formData[key];
       if (Array.isArray(value) ? value.length === 0 : !value) newErrors[key] = "This field is required";
@@ -518,10 +518,9 @@ const ExpectationDetails = ({
 
           {}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Would you be open to a partner who consumes alcohol, tobacco, or
-              has other habits?
-            </label>
+            <Label field="openToPartnerHabits">
+              Would you be open to a partner who consumes alcohol, tobacco, or has other habits?
+            </Label>
             <CustomSelect name="openToPartnerHabits" value={formData.openToPartnerHabits} onChange={e => handleChange("openToPartnerHabits", e.target.value)} options={["Yes", "No", "Occasional"]} placeholder="Select" className={inputClass} />
             {errors.openToPartnerHabits && <p className="text-red-500 text-sm mt-1">
                 {errors.openToPartnerHabits}

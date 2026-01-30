@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getProfileReviewStatus } from "../../api/auth";
+import { getProfileReviewStatus, deleteUserAccount } from "../../api/auth";
 import toast from "react-hot-toast";
 import { CheckCircle, Clock, AlertCircle, ArrowRight } from "lucide-react";
 const ReviewPage = () => {
@@ -118,12 +118,12 @@ const ReviewPage = () => {
 
         {}
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden" style={{
-        borderTop: `6px solid ${colors.gold}`
+        borderTop: `6px solid ${isRejected ? "#e74c3c" : colors.gold}`
       }}>
           {}
-          <div className="p-8 text-center text-black" style={{
-          background: isPending ? `linear-gradient(135deg, ${colors.gold}, ${colors.gold},` : isApproved ? `linear-gradient(135deg, ${colors.green}, #2ecc71)` : isRectification ? `linear-gradient(135deg, #f39c12, #e67e22)` : `linear-gradient(135deg, ${colors.orange}, #c0392b)`
-        }}>
+          <div className="p-8 text-center text-white" style={{
+            backgroundColor: isPending ? colors.gold : isApproved ? colors.green : isRejected ? colors.orange : colors.gold
+          }}>
             <div className="flex justify-center mb-4">
               {isPending ? <Clock size={64} className="animate-pulse" /> : isApproved ? <CheckCircle size={64} /> : isRectification ? <AlertCircle size={64} className="animate-pulse" /> : <AlertCircle size={64} />}
             </div>
@@ -226,11 +226,11 @@ const ReviewPage = () => {
                     Our admin team has reviewed your profile and identified some areas that need updates.
                     Please review the feedback below and make the necessary changes.
                   </p>
-                  <div className="p-4 rounded-lg mt-4 bg-orange-50 border-l-4" style={{
-                borderColor: "#f39c12"
+                  <div className="p-4 rounded-lg mt-4 bg-red-200 border-l-4" style={{
+                borderColor: colors.gold
               }}>
                     <p className="font-semibold mb-2" style={{
-                  color: "#f39c12"
+                  color: colors.gold
                 }}>
                       Admin Feedback
                     </p>
@@ -240,10 +240,10 @@ const ReviewPage = () => {
                   </div>
                   <div className="p-4 rounded-lg mt-4" style={{
                 backgroundColor: "#fffbf0",
-                border: `1px solid #f39c12`
+                border: `1px solid ${colors.gold}`
               }}>
                     <p className="font-semibold mb-2" style={{
-                  color: "#f39c12"
+                  color: colors.gold
                 }}>
                       What to do next?
                     </p>
@@ -323,19 +323,56 @@ const ReviewPage = () => {
 
             {isRejected && <>
                 <button onClick={() => navigate("/")} className="flex-1 py-3 rounded-lg font-semibold border-2 bg-white transition hover:bg-gray-50" style={{
-              border: `2px solid ${colors.goldLight}`
+              borderColor: "#999"
             }}>
                   Return Home
                 </button>
-                <button onClick={handleRetryClick} className="flex-1 py-3 rounded-lg font-semibold text-white hover:brightness-90 transition" style={{
-              backgroundColor: colors.gold
-            }}>
-                  Refresh Status
+                <button onClick={() => {
+                  toast((t) => (
+                    <div className="flex flex-col gap-3">
+                      <p className="font-semibold">Are you sure you want to delete your account?</p>
+                      <p className="text-sm text-gray-600">This action cannot be undone.</p>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={async () => {
+                            toast.dismiss(t.id);
+                            const loadingToast = toast.loading("Deleting account...");
+                            
+                            const result = await deleteUserAccount("Profile rejected");
+                            
+                            toast.dismiss(loadingToast);
+                            
+                            if (result.success) {
+                              toast.success("Account deleted successfully");
+                              setTimeout(() => {
+                                navigate("/");
+                              }, 1500);
+                            } else {
+                              toast.error(result.message || "Failed to delete account");
+                            }
+                          }}
+                          className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700"
+                        >
+                          Delete
+                        </button>
+                        <button
+                          onClick={() => toast.dismiss(t.id)}
+                          className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ), {
+                    duration: 10000,
+                  });
+                }} className="flex-1 py-3 rounded-lg font-semibold text-white hover:brightness-90 transition bg-red-600">
+                  Delete Account
                 </button>
               </>}
 
             {isRectification && <button onClick={() => navigate("/onboarding/user?step=personal")} className="w-full py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2 hover:brightness-90 transition" style={{
-            backgroundColor: "#f39c12"
+            backgroundColor: colors.gold
           }}>
                 Edit Profile <ArrowRight size={20} />
               </button>}

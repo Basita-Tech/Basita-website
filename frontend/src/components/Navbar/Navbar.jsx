@@ -23,7 +23,8 @@ export default function Navbar({ activePage = "" }) {
       const isOnboardingCompleted = typeof data.isOnboardingCompleted !== "undefined" ? data.isOnboardingCompleted : completedSteps.length >= 7;
       const steps = ["personal", "family", "education", "profession", "health", "expectation", "photos"];
 
-      if (data.profileReviewStatus === "pending" || data.profileReviewStatus === "rejected") {
+      // If profile is pending, rejected, or needs rectification, go to review page
+      if (data.profileReviewStatus === "pending" || data.profileReviewStatus === "rejected" || data.profileReviewStatus === "rectification") {
         navigate("/onboarding/review", { replace: true });
         return;
       }

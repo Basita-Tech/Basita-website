@@ -462,20 +462,19 @@ const SignUpPage = () => {
         email: sanitizedEmail,
         type: "signup",
       });
-      if (emailOtpRes?.success) {
-        // Check if already verified (backend returns this for 409)
-        if (emailOtpRes?.message?.toLowerCase().includes("already verified")) {
-          setEmailOtpVerified(true);
-          toast.success(emailOtpRes.message);
-        } else {
-          setEmailOtpSent(true);
-          setEmailOtpValues(["", "", "", "", "", ""]);
-          setEmailOtpVerified(false);
-          setEmailCountdown(OTP_VALID_TIME);
-          setResendCooldown(RESEND_AFTER);
-          toast.success(emailOtpRes?.message || "OTP sent to your email successfully!");
-          setTimeout(() => emailOtpRefs.current[0]?.focus(), 100);
-        }
+      
+     
+      if (emailOtpRes?.statusCode === 409) {
+        setEmailOtpVerified(true);
+        toast.success(emailOtpRes.message || "Email already verified");
+      } else if (emailOtpRes?.success) {
+        setEmailOtpSent(true);
+        setEmailOtpValues(["", "", "", "", "", ""]);
+        setEmailOtpVerified(false);
+        setEmailCountdown(OTP_VALID_TIME);
+        setResendCooldown(RESEND_AFTER);
+        toast.success(emailOtpRes?.message || "OTP sent to your email successfully!");
+        setTimeout(() => emailOtpRefs.current[0]?.focus(), 100);
       } else {
         toast.error(emailOtpRes?.message || "Failed to send Email OTP");
       }
@@ -572,23 +571,21 @@ const SignUpPage = () => {
         resendAttempt: resendAttemptsEmail + 1
       });
       
-      if (emailOtpRes?.success) {
-        // Check if already verified (backend returns this for 409)
-        if (emailOtpRes?.message?.toLowerCase().includes("already verified")) {
-          setEmailOtpVerified(true);
-          toast.success(emailOtpRes.message);
-        } else {
-          const newAttempts = resendAttemptsEmail + 1;
-          setEmailCountdown(OTP_VALID_TIME);
-          setResendCooldown(RESEND_AFTER);
-          setResendAttemptsEmail(newAttempts);
-          setEmailOtpValues(["", "", "", "", "", ""]);
-          toast.success(emailOtpRes?.message || "OTP resent successfully!");
-          setTimeout(() => emailOtpRefs.current[0]?.focus(), 100);
-          
-          if (newAttempts >= MAX_RESEND) {
-            toast.error(`Warning: This was your ${newAttempts}/${MAX_RESEND} resend. You have no more resends available.`);
-          }
+      
+      if (emailOtpRes?.statusCode === 409) {
+        setEmailOtpVerified(true);
+        toast.success(emailOtpRes.message || "Email already verified");
+      } else if (emailOtpRes?.success) {
+        const newAttempts = resendAttemptsEmail + 1;
+        setEmailCountdown(OTP_VALID_TIME);
+        setResendCooldown(RESEND_AFTER);
+        setResendAttemptsEmail(newAttempts);
+        setEmailOtpValues(["", "", "", "", "", ""]);
+        toast.success(emailOtpRes?.message || "OTP resent successfully!");
+        setTimeout(() => emailOtpRefs.current[0]?.focus(), 100);
+        
+        if (newAttempts >= MAX_RESEND) {
+          toast.error(`Warning: This was your ${newAttempts}/${MAX_RESEND} resend. You have no more resends available.`);
         }
       } else {
         toast.error(emailOtpRes?.message || "Failed to resend OTP");
@@ -630,19 +627,18 @@ const SignUpPage = () => {
         type: "signup",
       });
       
-      if (mobileOtpRes?.success) {
-        // Check if already verified (backend returns this for 409)
-        if (mobileOtpRes?.message?.toLowerCase().includes("already verified")) {
-          setMobileOtpVerified(true);
-          toast.success(mobileOtpRes.message);
-        } else {
-          setMobileOtpSent(true);
-          setMobileOtpValues(["", "", "", "", "", ""]);
-          setMobileOtpVerified(false);
-          setMobileCountdown(OTP_VALID_TIME);
-          setMobileResendCooldown(RESEND_AFTER);
-          toast.success(mobileOtpRes?.message || "OTP sent to your mobile successfully!");
-        }
+      // Check if already verified (backend returns 409 for already verified or auto-verified)
+      if (mobileOtpRes?.statusCode === 409) {
+        setMobileOtpVerified(true);
+        toast.success(mobileOtpRes.message || "Phone number verified");
+      } else if (mobileOtpRes?.success) {
+        setMobileOtpSent(true);
+        setMobileOtpValues(["", "", "", "", "", ""]);
+        setMobileOtpVerified(false);
+        setMobileCountdown(OTP_VALID_TIME);
+        setMobileResendCooldown(RESEND_AFTER);
+        toast.success(mobileOtpRes?.message || "OTP sent to your mobile successfully!");
+        setTimeout(() => mobileOtpRefs.current[0]?.focus(), 100);
       } else {
         toast.error(mobileOtpRes?.message || "Failed to send Mobile OTP");
       }
@@ -758,7 +754,11 @@ const SignUpPage = () => {
         resendAttempt: mobileResendAttempts + 1
       });
       
-      if (mobileOtpRes?.success) {
+    
+      if (mobileOtpRes?.statusCode === 409) {
+        setMobileOtpVerified(true);
+        toast.success(mobileOtpRes.message || "Phone number verified");
+      } else if (mobileOtpRes?.success) {
         const newAttempts = mobileResendAttempts + 1;
         setMobileCountdown(OTP_VALID_TIME);
         setMobileResendCooldown(RESEND_AFTER);
@@ -1199,7 +1199,6 @@ const SignUpPage = () => {
                   </button>
                 </div>
 
-                {/* Timer and Status */}
                 <div className="w-full mt-2 flex flex-col items-center">
                   {emailCountdown > 0 ? (
                     <div className="flex items-center justify-center gap-3 text-sm">
@@ -1238,9 +1237,7 @@ const SignUpPage = () => {
               </div>
             )}
 
-            {/* <p className="text-xs text-amber-700 font-medium mt-2 opacity-80">
-                Note: This email address will be used for OTP verification and cannot be changed until onboarding is complete.
-            </p> */}
+           
 
             <div className="mt-1">
               <input

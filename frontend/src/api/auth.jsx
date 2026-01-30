@@ -236,16 +236,22 @@ export const sendEmailOtp = async (data) => {
     const response = await axios.post(`${API}/auth/send-email-otp`, data, {
       validateStatus: (status) => status < 500
     });
-    return response.data;
+    return {
+      ...response.data,
+      statusCode: response.status
+    };
   } catch (error) {
     console.error("❌ Send Email OTP Error:", {
       message: error.message,
       response: error.response?.data,
       status: error.response?.status,
     });
-    return error.response?.data || {
-      success: false,
-      message: "Error sending OTP. Please try again."
+    return {
+      ...(error.response?.data || {
+        success: false,
+        message: "Error sending OTP. Please try again."
+      }),
+      statusCode: error.response?.status
     };
   }
 };
@@ -254,16 +260,22 @@ export const sendSmsOtp = async (data) => {
     const response = await axios.post(`${API}/auth/send-sms-otp`, data, {
       validateStatus: (status) => status < 500
     });
-    return response.data;
+    return {
+      ...response.data,
+      statusCode: response.status
+    };
   } catch (error) {
     console.error("❌ Send SMS OTP Error:", {
       message: error.message,
       response: error.response?.data,
       status: error.response?.status,
     });
-    return error.response?.data || {
-      success: false,
-      message: "Error sending OTP. Please try again."
+    return {
+      ...(error.response?.data || {
+        success: false,
+        message: "Error sending OTP. Please try again."
+      }),
+      statusCode: error.response?.status
     };
   }
 };

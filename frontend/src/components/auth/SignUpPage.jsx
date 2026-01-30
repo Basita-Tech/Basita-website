@@ -1366,9 +1366,7 @@ const SignUpPage = () => {
             {/* Mobile OTP Input Boxes */}
             {mobileOtpSent && !mobileOtpVerified && (
               <div className="mt-4 flex flex-col items-start w-full">
-                <label className="block text-sm font-medium mb-2 text-gray-700">
-                  Enter OTP sent to your mobile
-                </label>
+                
                 <div className="flex flex-wrap sm:flex-nowrap gap-2 justify-start items-center w-full">
                   <div className="flex gap-1 sm:gap-2 flex-nowrap">
                     {mobileOtpValues.map((value, index) => (

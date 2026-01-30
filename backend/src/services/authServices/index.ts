@@ -392,8 +392,11 @@ export class AuthService {
     const alreadyEmailVerified = emailCache?.verified === true;
     const alreadyPhoneVerified = phoneCache?.verified === true;
 
-    if (!alreadyEmailVerified || !alreadyPhoneVerified) {
-      throw new Error("Email or mobile number is not verified");
+    if (!alreadyEmailVerified) {
+      throw new Error("Email is not verified");
+    }
+    if (!alreadyPhoneVerified) {
+      throw new Error("Phone Number is not verified");
     }
 
     try {

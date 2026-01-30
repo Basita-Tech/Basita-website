@@ -51,7 +51,7 @@ const MultiStepForm = () => {
         const savedSteps = res?.data?.data?.completedSteps || [];
         const profileStatus = res?.data?.data?.profileReviewStatus;
         
-        // Check profile status once at load
+        
         if (profileStatus === "pending") {
           toast.error("Your profile is under review. You cannot edit your details at this time.");
           navigate("/onboarding/review", {
@@ -91,7 +91,7 @@ const MultiStepForm = () => {
         if (urlStep) {
           const urlStepIndex = steps.findIndex(s => s.id === urlStep);
           if (urlStepIndex > maxAllowedIndex) {
-            // User trying to access a step they haven't unlocked
+           
             toast.error("Please complete the previous steps first.");
             setCurrentStep(nextStep);
             navigate(`/onboarding/user?step=${nextStep}`, { replace: true });

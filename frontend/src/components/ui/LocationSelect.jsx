@@ -173,7 +173,11 @@ export default function LocationSelect({
   const borderBase = 'border border-[var(--brand-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)]';
   const triggerClasses = `${themeBase} ${borderBase} ${className} pr-10 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-text'}`;
   const handleInputChange = e => {
-    const newSearchTerm = e.target.value;
+    let newSearchTerm = e.target.value;
+    // Auto-capitalize first letter if allowCustom is enabled
+    if (allowCustom && newSearchTerm && newSearchTerm.length === 1) {
+      newSearchTerm = newSearchTerm.charAt(0).toUpperCase() + newSearchTerm.slice(1);
+    }
     if (newSearchTerm === '' && value) {
       onChange && onChange({
         target: {

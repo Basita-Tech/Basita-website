@@ -19,34 +19,17 @@ const SuccessPage = () => {
           withCredentials: true,
         });
 
-        // If user is authenticated, check their profile status
         if (me?.data?.success) {
           const user = me.data.data;
-
-          // Check if onboarding is completed
-          if (user?.isOnboardingCompleted) {
-            // Check if profile is approved (handle both isApproved and profileReviewStatus)
-            const isApproved =
-              user?.isApproved === true ||
-              user?.profileReviewStatus === "approved";
-
-            if (isApproved) {
-              // Profile is approved, redirect to dashboard
-              navigate("/userdashboard", { replace: true });
-            } else {
-              // Profile is pending approval, redirect to review page
-              navigate("/onboarding/review", { replace: true });
-            }
-          } else {
-            // Onboarding not completed, go to onboarding
-            navigate("/onboarding/user", { replace: true });
-          }
+          setUserData((prev) => ({
+            name: prev.name || `${user?.firstName || ""} ${user?.lastName || ""}`.trim(),
+            email: prev.email || user?.email || "",
+            mobile: prev.mobile || user?.phoneNumber || "",
+          }));
           return;
         }
       } catch (err) {
-        // User not authenticated or error occurred
         if (err?.response?.status === 401) {
-          // Not authenticated, check if we have state data
           if (!userData.name && !userData.email && !userData.mobile) {
             navigate("/signup");
           }
@@ -157,7 +140,7 @@ const SuccessPage = () => {
             </li>
             <li>
               <strong>Mobile:</strong>{" "}
-              {userData.mobile ? `+${userData.mobile}` : "Not Provided"}
+              {userData.mobile || "Not Provided"}
             </li>
             <li>Login to your SATFERA account using these details.</li>
             <li>

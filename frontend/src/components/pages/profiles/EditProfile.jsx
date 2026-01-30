@@ -1844,7 +1844,7 @@ export function EditProfile({
                 setBirthStateCode(code || "");
               });
             }
-          }} countryCode="IN" placeholder="Select state" className={`rounded-md ${personalErrors.birthState ? "border-red-500" : "border-gray-300"}`} />
+          }} countryCode="IN" placeholder="Select state" className={`rounded-md ${personalErrors.birthState ? "border-red-500" : "border-gray-300"}`} allowCustom={true} />
             </Suspense>
             {personalErrors.birthState && <p className="text-red-500 text-sm mt-1">
                 {personalErrors.birthState}
@@ -1854,7 +1854,7 @@ export function EditProfile({
           <div>
             <Label className="mb-2">Birth City <span className="text-black">*</span></Label>
             <Suspense fallback={<input type="text" placeholder="Loading..." disabled className="w-full p-3 rounded-md border border-gray-300" />}>
-              <LocationSelect type="city" name="birthCity" value={personal.birthCity || ""} onChange={handleInputChange} countryCode="IN" stateCode={birthStateCode} placeholder="Select city" className={`rounded-md ${personalErrors.birthCity ? "border-red-500" : "border-gray-300"}`} disabled={!birthStateCode} />
+              <LocationSelect type="city" name="birthCity" value={personal.birthCity || ""} onChange={handleInputChange} countryCode="IN" stateCode={birthStateCode} placeholder="Select city" className={`rounded-md ${personalErrors.birthCity ? "border-red-500" : "border-gray-300"}`} allowCustom={true} />
             </Suspense>
             {personalErrors.birthCity && <p className="text-red-500 text-sm mt-1">
                 {personalErrors.birthCity}
@@ -1906,7 +1906,7 @@ export function EditProfile({
                   });
                   setPersonal(p => ({ ...p, city: "" }));
                 }
-              }} countryCode="IN" placeholder="Select state" className={personalErrors.state ? "border-red-500" : ""} />
+              }} countryCode="IN" placeholder="Select state" className={personalErrors.state ? "border-red-500" : ""} allowCustom={true} />
               </Suspense>
               {personalErrors.state && <p className="text-red-500 text-sm">{personalErrors.state}</p>}
             </div>
@@ -1924,7 +1924,7 @@ export function EditProfile({
                 ...prev,
                 city: ""
               }));
-            }} countryCode="IN" stateCode={stateCode || ""} placeholder="Select city" className={personalErrors.city ? "border-red-500" : ""} disabled={!personal.state} />
+            }} countryCode="IN" stateCode={stateCode || ""} placeholder="Select city" className={personalErrors.city ? "border-red-500" : ""} allowCustom={true} />
               </Suspense>
               {personalErrors.city && <p className="text-red-500 text-sm">{personalErrors.city}</p>}
             </div>

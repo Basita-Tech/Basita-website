@@ -5,6 +5,7 @@ import {
   getUserId,
   savePhotoMetadata,
 } from "../api/auth";
+import { compressImage } from "../utils/compression";
 const usePhotoUpload = () => {
   const userIdRef = useRef(null);
 
@@ -14,7 +15,6 @@ const usePhotoUpload = () => {
     try {
       const mongoId = await getUserId();
       if (mongoId) {
-        console.log("MongoDB _id from /auth/me:", mongoId);
         userIdRef.current = mongoId;
         return mongoId;
       } else {
@@ -114,7 +114,14 @@ const usePhotoUpload = () => {
 
           const { key } = presign.data;
 
-          await uploadToS3(presign.data.url, file, (percentCompleted) => {
+          // Compress image before S3 upload
+          const compressedFile = await compressImage(file, {
+            maxSizeMB: 2,
+            maxWidthOrHeight: 4000,
+            fileType: 'image/webp'
+          });
+
+          await uploadToS3(presign.data.url, compressedFile, (percentCompleted) => {
             setUploadState((prev) => ({
               ...prev,
               progress: {

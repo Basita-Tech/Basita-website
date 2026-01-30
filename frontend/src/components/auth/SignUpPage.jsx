@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { sendEmailOtp, sendSmsOtp, signupUser } from "../../api/auth";
+import { sendEmailOtp, sendSmsOtp, signupUser, verifyOtp } from "../../api/auth";
 import { ArrowLeft, CheckCircleFill } from "react-bootstrap-icons";
 import { Eye, EyeOff } from "lucide-react";
 import { allCountries } from "country-telephone-data";
@@ -32,6 +32,10 @@ import { trackEvent } from "../analytics/ga4";
 import SEO from "../SEO";
 
 const SMS_HASH = "Satfera";
+const OTP_VALID_TIME = 180; 
+const RESEND_AFTER = 60; // 1 minute cooldown
+const MAX_RESEND = 5;
+
 const profileOptions = [
   {
     value: "myself",
@@ -93,6 +97,57 @@ const SignUpPage = () => {
   });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
+  const [emailOtpSending, setEmailOtpSending] = useState(false);
+  const [emailOtpSent, setEmailOtpSent] = useState(false);
+  const [emailOtpValues, setEmailOtpValues] = useState(["", "", "", "", "", ""]);
+  const [emailOtpVerifying, setEmailOtpVerifying] = useState(false);
+  const [emailOtpVerified, setEmailOtpVerified] = useState(false);
+  const [emailCountdown, setEmailCountdown] = useState(OTP_VALID_TIME);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [resendAttemptsEmail, setResendAttemptsEmail] = useState(0);
+  const emailOtpRefs = useRef([]);
+  const [mobileOtpSending, setMobileOtpSending] = useState(false);
+  const [mobileOtpSent, setMobileOtpSent] = useState(false);
+  const [mobileOtpValues, setMobileOtpValues] = useState(["", "", "", "", "", ""]);
+  const [mobileOtpVerifying, setMobileOtpVerifying] = useState(false);
+  const [mobileOtpVerified, setMobileOtpVerified] = useState(false);
+  const [mobileCountdown, setMobileCountdown] = useState(OTP_VALID_TIME);
+  const [mobileResendCooldown, setMobileResendCooldown] = useState(0);
+  const [mobileResendAttempts, setMobileResendAttempts] = useState(0);
+  const mobileOtpRefs = useRef([]);
+
+
+  useEffect(() => {
+    if (emailCountdown > 0 && emailOtpSent && !emailOtpVerified) {
+      const timer = setInterval(() => setEmailCountdown(prev => prev - 1), 1000);
+      return () => clearInterval(timer);
+    }
+  }, [emailCountdown, emailOtpSent, emailOtpVerified]);
+
+
+  useEffect(() => {
+    if (resendCooldown > 0 && emailOtpSent && !emailOtpVerified) {
+      const timer = setInterval(() => setResendCooldown(prev => Math.max(0, prev - 1)), 1000);
+      return () => clearInterval(timer);
+    }
+  }, [resendCooldown, emailOtpSent, emailOtpVerified]);
+
+ 
+  useEffect(() => {
+    if (mobileCountdown > 0 && mobileOtpSent && !mobileOtpVerified) {
+      const timer = setInterval(() => setMobileCountdown(prev => prev - 1), 1000);
+      return () => clearInterval(timer);
+    }
+  }, [mobileCountdown, mobileOtpSent, mobileOtpVerified]);
+
+
+  useEffect(() => {
+    if (mobileResendCooldown > 0 && mobileOtpSent && !mobileOtpVerified) {
+      const timer = setInterval(() => setMobileResendCooldown(prev => Math.max(0, prev - 1)), 1000);
+      return () => clearInterval(timer);
+    }
+  }, [mobileResendCooldown, mobileOtpSent, mobileOtpVerified]);
+
   const getCountryAliases = (name, iso2) => {
     const aliasMap = {
       "United States": ["USA", "US", "America"],
@@ -141,6 +196,13 @@ const SignUpPage = () => {
       nextField?.focus();
     }
   };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     let formattedValue = value;
@@ -386,6 +448,339 @@ const SignUpPage = () => {
       };
     });
   };
+  const handleSendEmailOtp = async () => {
+    const emailError = validateEmail(formData.email);
+    if (emailError) {
+      setErrors((prev) => ({ ...prev, email: emailError }));
+      toast.error(emailError);
+      return;
+    }
+    setEmailOtpSending(true);
+    try {
+      const sanitizedEmail = sanitizeEmail(formData.email.trim());
+      const emailOtpRes = await sendEmailOtp({
+        email: sanitizedEmail,
+        type: "signup",
+      });
+      if (emailOtpRes?.success) {
+        // Check if already verified (backend returns this for 409)
+        if (emailOtpRes?.message?.toLowerCase().includes("already verified")) {
+          setEmailOtpVerified(true);
+          toast.success(emailOtpRes.message);
+        } else {
+          setEmailOtpSent(true);
+          setEmailOtpValues(["", "", "", "", "", ""]);
+          setEmailOtpVerified(false);
+          setEmailCountdown(OTP_VALID_TIME);
+          setResendCooldown(RESEND_AFTER);
+          toast.success(emailOtpRes?.message || "OTP sent to your email successfully!");
+          setTimeout(() => emailOtpRefs.current[0]?.focus(), 100);
+        }
+      } else {
+        toast.error(emailOtpRes?.message || "Failed to send Email OTP");
+      }
+    } catch (error) {
+      console.error("Email OTP error:", error);
+      toast.error("Error sending OTP. Please try again.");
+    } finally {
+      setEmailOtpSending(false);
+    }
+  };
+
+  const handleEmailOtpChange = (index, value) => {
+    if (!/^\d*$/.test(value)) return;
+    
+    const newOtpValues = [...emailOtpValues];
+    newOtpValues[index] = value.slice(-1);
+    setEmailOtpValues(newOtpValues);
+
+    if (value && index < 5) {
+      emailOtpRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleEmailOtpKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !emailOtpValues[index] && index > 0) {
+      emailOtpRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleEmailOtpPaste = (e) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    const newOtpValues = [...emailOtpValues];
+    
+    for (let i = 0; i < 6; i++) {
+      newOtpValues[i] = pastedData[i] || "";
+    }
+    
+    setEmailOtpValues(newOtpValues);
+    const lastFilledIndex = Math.min(pastedData.length - 1, 5);
+    emailOtpRefs.current[lastFilledIndex]?.focus();
+  };
+
+  const handleVerifyEmailOtp = async () => {
+    const otpString = emailOtpValues.join("");
+    
+    if (otpString.length !== 6) {
+      toast.error("Please enter complete 6-digit OTP");
+      return;
+    }
+
+    setEmailOtpVerifying(true);
+    try {
+      const sanitizedEmail = sanitizeEmail(formData.email.trim());
+      const verifyRes = await verifyOtp({
+        email: sanitizedEmail,
+        otp: otpString,
+        type: "email",
+      });
+
+      if (verifyRes?.success) {
+        setEmailOtpVerified(true);
+        toast.success("Email verified successfully!");
+      } else {
+        toast.error(verifyRes?.message || "Invalid OTP. Please try again.");
+      }
+    } catch (error) {
+      console.error("Email OTP verification error:", error);
+      toast.error("Error verifying OTP. Please try again.");
+    } finally {
+      setEmailOtpVerifying(false);
+    }
+  };
+
+  const handleResendEmailOtp = async () => {
+    if (emailOtpVerified) return;
+    
+    if (resendAttemptsEmail >= MAX_RESEND) {
+      toast.error(`Too many resend attempts. You've used all ${MAX_RESEND} attempts.`);
+      return;
+    }
+
+    if (resendCooldown > 0) {
+      toast.error(`Please wait ${formatTime(resendCooldown)} before resending.`);
+      return;
+    }
+
+    setEmailOtpSending(true);
+    try {
+      const sanitizedEmail = sanitizeEmail(formData.email.trim());
+      const emailOtpRes = await sendEmailOtp({
+        email: sanitizedEmail,
+        type: "signup",
+        resendAttempt: resendAttemptsEmail + 1
+      });
+      
+      if (emailOtpRes?.success) {
+        // Check if already verified (backend returns this for 409)
+        if (emailOtpRes?.message?.toLowerCase().includes("already verified")) {
+          setEmailOtpVerified(true);
+          toast.success(emailOtpRes.message);
+        } else {
+          const newAttempts = resendAttemptsEmail + 1;
+          setEmailCountdown(OTP_VALID_TIME);
+          setResendCooldown(RESEND_AFTER);
+          setResendAttemptsEmail(newAttempts);
+          setEmailOtpValues(["", "", "", "", "", ""]);
+          toast.success(emailOtpRes?.message || "OTP resent successfully!");
+          setTimeout(() => emailOtpRefs.current[0]?.focus(), 100);
+          
+          if (newAttempts >= MAX_RESEND) {
+            toast.error(`Warning: This was your ${newAttempts}/${MAX_RESEND} resend. You have no more resends available.`);
+          }
+        }
+      } else {
+        toast.error(emailOtpRes?.message || "Failed to resend OTP");
+      }
+    } catch (error) {
+      console.error("Resend OTP error:", error);
+      toast.error("Error resending OTP. Please try again.");
+    } finally {
+      setEmailOtpSending(false);
+    }
+  };
+
+  const handleSendMobileOtp = async () => {
+    const phoneError = validatePhone(formData.mobile, formData.countryCode);
+    if (phoneError) {
+      setErrors((prev) => ({ ...prev, mobile: phoneError }));
+      toast.error(phoneError);
+      return;
+    }
+    if (!formData.countryCode) {
+      toast.error("Please select country code");
+      return;
+    }
+    setMobileOtpSending(true);
+    try {
+      let sanitizedMobile = sanitizePhone(formData.mobile).replace(/\D/g, "");
+      if (sanitizedMobile.startsWith("0")) {
+        sanitizedMobile = sanitizedMobile.slice(1);
+      }
+      const countryCodeMatch = formData.countryCode.match(/^\+\d+/);
+      const sanitizedCountryCode = countryCodeMatch
+        ? sanitizeCountryCode(countryCodeMatch[0])
+        : sanitizeCountryCode(formData.countryCode);
+      
+      const mobileOtpRes = await sendSmsOtp({
+        phoneNumber: sanitizedMobile,
+        countryCode: sanitizedCountryCode,
+        hash: SMS_HASH,
+        type: "signup",
+      });
+      
+      if (mobileOtpRes?.success) {
+        // Check if already verified (backend returns this for 409)
+        if (mobileOtpRes?.message?.toLowerCase().includes("already verified")) {
+          setMobileOtpVerified(true);
+          toast.success(mobileOtpRes.message);
+        } else {
+          setMobileOtpSent(true);
+          setMobileOtpValues(["", "", "", "", "", ""]);
+          setMobileOtpVerified(false);
+          setMobileCountdown(OTP_VALID_TIME);
+          setMobileResendCooldown(RESEND_AFTER);
+          toast.success(mobileOtpRes?.message || "OTP sent to your mobile successfully!");
+        }
+      } else {
+        toast.error(mobileOtpRes?.message || "Failed to send Mobile OTP");
+      }
+    } catch (error) {
+      console.error("Mobile OTP error:", error);
+      toast.error("Error sending OTP. Please try again.");
+    } finally {
+      setMobileOtpSending(false);
+    }
+  };
+
+  const handleMobileOtpChange = (index, value) => {
+    if (!/^\d*$/.test(value)) return;
+    
+    const newOtpValues = [...mobileOtpValues];
+    newOtpValues[index] = value.slice(-1);
+    setMobileOtpValues(newOtpValues);
+
+    if (value && index < 5) {
+      mobileOtpRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleMobileOtpKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !mobileOtpValues[index] && index > 0) {
+      mobileOtpRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleMobileOtpPaste = (e) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    const newOtpValues = [...mobileOtpValues];
+    
+    for (let i = 0; i < 6; i++) {
+      newOtpValues[i] = pastedData[i] || "";
+    }
+    
+    setMobileOtpValues(newOtpValues);
+    const lastFilledIndex = Math.min(pastedData.length - 1, 5);
+    mobileOtpRefs.current[lastFilledIndex]?.focus();
+  };
+
+  const handleVerifyMobileOtp = async () => {
+    const otpString = mobileOtpValues.join("");
+    
+    if (otpString.length !== 6) {
+      toast.error("Please enter complete 6-digit OTP");
+      return;
+    }
+
+    setMobileOtpVerifying(true);
+    try {
+      let sanitizedMobile = sanitizePhone(formData.mobile).replace(/\D/g, "");
+      if (sanitizedMobile.startsWith("0")) {
+        sanitizedMobile = sanitizedMobile.slice(1);
+      }
+      const countryCodeMatch = formData.countryCode.match(/^\+\d+/);
+      const sanitizedCountryCode = countryCodeMatch
+        ? sanitizeCountryCode(countryCodeMatch[0])
+        : sanitizeCountryCode(formData.countryCode);
+
+      const verifyRes = await verifyOtp({
+        phoneNumber: sanitizedMobile,
+        countryCode: sanitizedCountryCode,
+        otp: otpString,
+        type: "sms",
+      });
+
+      if (verifyRes?.success) {
+        setMobileOtpVerified(true);
+        toast.success("Mobile verified successfully!");
+      } else {
+        toast.error(verifyRes?.message || "Invalid OTP. Please try again.");
+      }
+    } catch (error) {
+      console.error("Mobile OTP verification error:", error);
+      toast.error("Error verifying OTP. Please try again.");
+    } finally {
+      setMobileOtpVerifying(false);
+    }
+  };
+
+  const handleResendMobileOtp = async () => {
+    if (mobileOtpVerified) return;
+    
+    if (mobileResendAttempts >= MAX_RESEND) {
+      toast.error(`Too many resend attempts. You've used all ${MAX_RESEND} attempts.`);
+      return;
+    }
+
+    if (mobileResendCooldown > 0) {
+      toast.error(`Please wait ${formatTime(mobileResendCooldown)} before resending.`);
+      return;
+    }
+
+    setMobileOtpSending(true);
+    try {
+      let sanitizedMobile = sanitizePhone(formData.mobile).replace(/\D/g, "");
+      if (sanitizedMobile.startsWith("0")) {
+        sanitizedMobile = sanitizedMobile.slice(1);
+      }
+      const countryCodeMatch = formData.countryCode.match(/^\+\d+/);
+      const sanitizedCountryCode = countryCodeMatch
+        ? sanitizeCountryCode(countryCodeMatch[0])
+        : sanitizeCountryCode(formData.countryCode);
+
+      const mobileOtpRes = await sendSmsOtp({
+        phoneNumber: sanitizedMobile,
+        countryCode: sanitizedCountryCode,
+        hash: SMS_HASH,
+        type: "signup",
+        resendAttempt: mobileResendAttempts + 1
+      });
+      
+      if (mobileOtpRes?.success) {
+        const newAttempts = mobileResendAttempts + 1;
+        setMobileCountdown(OTP_VALID_TIME);
+        setMobileResendCooldown(RESEND_AFTER);
+        setMobileResendAttempts(newAttempts);
+        setMobileOtpValues(["", "", "", "", "", ""]);
+        toast.success("Mobile OTP resent successfully!");
+        setTimeout(() => mobileOtpRefs.current[0]?.focus(), 100);
+        
+        if (newAttempts >= MAX_RESEND) {
+          toast.error(`Warning: This was your ${newAttempts}/${MAX_RESEND} resend. You have no more resends available.`);
+        }
+      } else {
+        toast.error(mobileOtpRes?.message || "Failed to resend mobile OTP");
+      }
+    } catch (error) {
+      console.error("Resend mobile OTP error:", error);
+      toast.error("Error resending mobile OTP. Please try again.");
+    } finally {
+      setMobileOtpSending(false);
+    }
+  };
+
   const validateForm = () => {
     const validation = validateSignupForm({
       profileFor: formData.profileFor,
@@ -450,84 +845,15 @@ const SignUpPage = () => {
       };
       const res = await signupUser(payload);
       if (res?.success) {
-        const backendOtpSent =
-          res?.otpSent || res?.otpDispatched || res?.otpAlreadySent;
-        try {
-          // If backend already dispatched OTPs, skip client resend to avoid duplicates
-          if (backendOtpSent) {
-            navigate("/verify-otp", {
-              state: {
-                email: payload.email,
-                countryCode: sanitizedCountryCode,
-                mobile: sanitizedMobile,
-                name: `${sanitizedFirstName} ${sanitizedLastName}`,
-              },
-            });
-            return;
+        toast.success("Account created successfully!");
+        navigate("/success", {
+          state: {
+            name: `${sanitizedFirstName} ${sanitizedMiddleName ? sanitizedMiddleName + ' ' : ''}${sanitizedLastName}`.trim(),
+            email: sanitizedEmail,
+            mobile: phoneNumber,
           }
-
-          // Send Email OTP
-          const emailOtpRes = await sendEmailOtp({
-            email: payload.email,
-            type: "signup",
-          });
-
-          // Send SMS OTP for Indian numbers (+91)
-          const requiresSmsOtp =
-            sanitizedCountryCode === "+91" || sanitizedCountryCode === "91";
-          let smsOtpRes = { success: true };
-
-          if (requiresSmsOtp) {
-            try {
-              smsOtpRes = await sendSmsOtp({
-                phoneNumber: sanitizedMobile,
-                countryCode: sanitizedCountryCode,
-                hash: SMS_HASH,
-                type: "signup",
-              });
-              if (!smsOtpRes?.success) {
-                console.warn("SMS OTP send failed:", smsOtpRes?.message);
-                // Continue even if SMS fails, user can resend later
-              }
-            } catch (smsError) {
-              console.error("SMS OTP error:", smsError);
-              // Continue even if SMS fails
-            }
-          }
-
-          if (emailOtpRes?.success) {
-            // Set sessionStorage flags to prevent VerifyOtp from auto-sending again
-            const emailAutoKey = `otpAutoSent_email_${payload.email}`;
-            sessionStorage.setItem(emailAutoKey, "1");
-            
-            if (requiresSmsOtp && smsOtpRes?.success) {
-              const mobileAutoKey = `otpAutoSent_mobile_${sanitizedCountryCode}${sanitizedMobile}`;
-              sessionStorage.setItem(mobileAutoKey, "1");
-              toast.success("OTPs sent to your email and mobile!");
-            } else {
-              toast.success("OTP sent successfully. Please check your email.");
-            }
-
-            navigate("/verify-otp", {
-              state: {
-                email: payload.email,
-                countryCode: sanitizedCountryCode,
-                mobile: sanitizedMobile,
-                name: `${sanitizedFirstName} ${sanitizedLastName}`,
-                otpAlreadySent: true,
-                fromLogin: false,  // Explicitly set to prevent sessionStorage clearing
-              },
-            });
-            return;
-          } else {
-            toast.error(emailOtpRes?.message || "Failed to send Email OTP");
-            return;
-          }
-        } catch (otpError) {
-          console.error("Email OTP error:", otpError);
-          toast.error("Error sending OTP. Please try again.");
-          return;
-        }
+        });
+        return;
       }
       if (!res?.success) {
         toast.error(res?.message || "Signup failed");
@@ -780,22 +1106,141 @@ const SignUpPage = () => {
             <label className="block font-semibold mb-2 text-sm sm:text-base text-gray-700">
               Email <span className="text-red-500">*</span>
             </label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter Email Address"
-              value={formData.email}
-              onChange={handleInputChange}
-              autoComplete="off"
-              className={`w-full p-3 rounded-md border text-sm ${errors.email ? "border-red-500" : "border-[var(--brand-gold)]"} focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
-            />
+            <div className="flex gap-2">
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={(e) => {
+                  handleInputChange(e);
+                  setEmailOtpSent(false);
+                  setEmailOtpVerified(false);
+                  setEmailOtpValues(["", "", "", "", "", ""]);
+                }}
+                autoComplete="off"
+                className={`flex-1 p-3 rounded-md border text-sm ${errors.email ? "border-red-500" : "border-[var(--brand-gold)]"} focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
+              />
+              <button
+                type="button"
+                onClick={handleSendEmailOtp}
+                disabled={emailOtpSending || !formData.email || emailOtpSent || emailOtpVerified}
+                className={`w-auto px-2.5 py-1.5 rounded font-medium text-[11px] whitespace-nowrap transition-all duration-200 ${
+                  emailOtpVerified
+                    ? "bg-[var(--brand-primary)] text-white cursor-not-allowed"
+                    : emailOtpSent
+                    ? "bg-[var(--brand-primary)] text-white cursor-not-allowed"
+                    : emailOtpSending || !formData.email
+                    ? "bg-[#f5ecd8] text-[#a89165] cursor-not-allowed border border-[#e6d8b8] opacity-70"
+                    : "bg-[var(--brand-primary)] hover:bg-[var(--brand-gold)] text-white"
+                }`}
+              >
+                {emailOtpSending ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </span>
+                ) : emailOtpVerified ? (
+                  "✓ Verified"
+                ) : emailOtpSent ? (
+                  "✓ Sent"
+                ) : (
+                  "Send OTP"
+                )}
+              </button>
+            </div>
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
 
-            <p className="text-xs text-amber-700 font-medium mt-2 opacity-80">
+            {/* OTP Input Boxes */}
+            {emailOtpSent && !emailOtpVerified && (
+              <div className="mt-4 flex flex-col items-start w-full">
+                <div className="flex gap-2 justify-start items-center">
+                  {emailOtpValues.map((value, index) => (
+                    <input
+                      key={index}
+                      ref={(el) => (emailOtpRefs.current[index] = el)}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength="1"
+                      value={value}
+                      onChange={(e) => handleEmailOtpChange(index, e.target.value)}
+                      onKeyDown={(e) => handleEmailOtpKeyDown(index, e)}
+                      onPaste={index === 0 ? handleEmailOtpPaste : undefined}
+                      disabled={emailCountdown === 0}
+                      className={`w-10 h-10 sm:w-12 sm:h-12 text-center text-lg font-semibold border border-[var(--brand-gold)] rounded-lg focus:outline-none transition ${
+                        emailCountdown === 0 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""
+                      }`}
+                    />
+                  ))}
+                  <button
+                    type="button"
+                    onClick={handleVerifyEmailOtp}
+                    disabled={emailOtpVerifying || emailOtpValues.join("").length !== 6 || emailCountdown === 0}
+                    className={`px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 whitespace-nowrap ${
+                      emailOtpVerifying || emailOtpValues.join("").length !== 6 || emailCountdown === 0
+                        ? "bg-[#f5ecd8] text-[#a89165] cursor-not-allowed border border-[#e6d8b8] opacity-70"
+                        : "bg-[var(--brand-primary)] hover:bg-[var(--brand-gold)] text-white"
+                    }`}
+                  >
+                    {emailOtpVerifying ? (
+                      <span className="flex items-center justify-center gap-1">
+                        <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      </span>
+                    ) : (
+                      "Verify"
+                    )}
+                  </button>
+                </div>
+
+                {/* Timer and Status */}
+                <div className="w-full mt-2 flex flex-col items-center">
+                  {emailCountdown > 0 ? (
+                    <div className="flex items-center justify-center gap-3 text-sm">
+                      <span className="text-gray-600">
+                        Valid for <span className="font-semibold text-[var(--brand-primary)]">{formatTime(emailCountdown)}</span>
+                      </span>
+                      {emailOtpSent && resendCooldown > 0 ? null : emailOtpSent && resendAttemptsEmail < MAX_RESEND ? (
+                        <button
+                          type="button"
+                          onClick={handleResendEmailOtp}
+                          disabled={emailOtpSending}
+                          className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold transition bg-[var(--brand-primary)] text-white hover:bg-[var(--brand-gold)] disabled:opacity-50"
+                        >
+                          Resend OTP
+                        </button>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2">
+                      <span className="text-red-600">OTP expired</span>
+                      {resendAttemptsEmail < MAX_RESEND && emailOtpSent && (
+                        resendCooldown > 0 ? null : (
+                          <button
+                            type="button"
+                            onClick={handleResendEmailOtp}
+                            disabled={emailOtpSending}
+                            className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold transition bg-[var(--brand-primary)] text-white hover:bg-[var(--brand-gold)] disabled:opacity-50"
+                          >
+                            Resend OTP
+                          </button>
+                        )
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* <p className="text-xs text-amber-700 font-medium mt-2 opacity-80">
                 Note: This email address will be used for OTP verification and cannot be changed until onboarding is complete.
-            </p>
+            </p> */}
 
             <div className="mt-1">
               <input
@@ -807,7 +1252,7 @@ const SignUpPage = () => {
               <span className="text-xs sm:text-sm">
                 Use as Username{" "}
                 {formData.useAsUsername.includes("email") && (
-                  <CheckCircleFill className="inline text-green-500 ml-1" />
+                  <CheckCircleFill className="inline text-[var(--brand-primary)] ml-1" />
                 )}
               </span>
             </div>
@@ -824,9 +1269,9 @@ const SignUpPage = () => {
               Mobile <span className="text-red-500">*</span>
             </label>
 
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-              {}
-              <div>
+            <div className="flex flex-col gap-2">
+              {/* Country Code on its own line on mobile, inline on desktop */}
+              <div className="sm:hidden">
                 <SearchableCountryCode
                   value={formData.countryCode}
                   onChange={(code) => {
@@ -838,26 +1283,172 @@ const SignUpPage = () => {
                       ...prev,
                       mobile: "",
                     }));
+                    setMobileOtpSent(false);
                   }}
                   error={errors.mobile}
                   countryCodes={countryCodes}
                 />
               </div>
 
-              <input
-                type="tel"
-                name="mobile"
-                placeholder="Enter Mobile Number"
-                value={formData.mobile}
-                maxLength={formData.countryCode === "+91" ? 10 : 15}
-                onChange={handleInputChange}
-                autoComplete="off"
-                className={`w-full p-3 rounded-md border text-sm ${errors.mobile ? "border-red-500" : "border-[var(--brand-gold)]"} focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
-              />
+              {/* Input and Button Row */}
+              <div className="flex gap-2">
+                {/* Country Code for desktop */}
+                <div className="hidden sm:block w-auto">
+                  <SearchableCountryCode
+                    value={formData.countryCode}
+                    onChange={(code) => {
+                      setFormData({
+                        ...formData,
+                        countryCode: code,
+                      });
+                      setErrors((prev) => ({
+                        ...prev,
+                        mobile: "",
+                      }));
+                      setMobileOtpSent(false);
+                    }}
+                    error={errors.mobile}
+                    countryCodes={countryCodes}
+                  />
+                </div>
+
+                <input
+                  type="tel"
+                  name="mobile"
+                  placeholder="Enter Mobile Number"
+                  value={formData.mobile}
+                  maxLength={formData.countryCode === "+91" ? 10 : 15}
+                  onChange={(e) => {
+                    handleInputChange(e);
+                    setMobileOtpSent(false);
+                    setMobileOtpVerified(false);
+                    setMobileOtpValues(["", "", "", "", "", ""]);
+                  }}
+                  autoComplete="off"
+                  className={`flex-1 p-3 rounded-md border text-sm ${errors.mobile ? "border-red-500" : "border-[var(--brand-gold)]"} focus:outline-none focus:ring-1 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)] transition`}
+                />
+                <button
+                  type="button"
+                  onClick={handleSendMobileOtp}
+                  disabled={mobileOtpSending || !formData.mobile || !formData.countryCode || mobileOtpSent || mobileOtpVerified}
+                  className={`w-auto px-2.5 py-1.5 rounded font-medium text-[11px] whitespace-nowrap transition-all duration-200 ${
+                    mobileOtpVerified
+                      ? "bg-[var(--brand-primary)] text-white cursor-not-allowed"
+                      : mobileOtpSent
+                      ? "bg-[var(--brand-primary)] text-white cursor-not-allowed"
+                      : mobileOtpSending || !formData.mobile || !formData.countryCode
+                      ? "bg-[#f5ecd8] text-[#a89165] cursor-not-allowed border border-[#e6d8b8] opacity-70"
+                      : "bg-[var(--brand-primary)] hover:bg-[var(--brand-gold)] text-white"
+                  }`}
+                >
+                  {mobileOtpSending ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    </span>
+                  ) : mobileOtpVerified ? (
+                    "✓ Verified"
+                  ) : mobileOtpSent ? (
+                    "✓ Sent"
+                  ) : (
+                    "Send OTP"
+                  )}
+                </button>
+              </div>
             </div>
-            <p className="text-xs text-amber-700 font-medium mt-2 opacity-80">
+            {/* <p className="text-xs text-amber-700 font-medium mt-2 opacity-80">
                Note: This mobile number will be used for OTP verification and cannot be changed until onboarding is complete.
-            </p>
+            </p> */}
+
+            {/* Mobile OTP Input Boxes */}
+            {mobileOtpSent && !mobileOtpVerified && (
+              <div className="mt-4 flex flex-col items-start w-full">
+                <label className="block text-sm font-medium mb-2 text-gray-700">
+                  Enter OTP sent to your mobile
+                </label>
+                <div className="flex gap-2 justify-start items-center">
+                  {mobileOtpValues.map((value, index) => (
+                    <input
+                      key={index}
+                      ref={(el) => (mobileOtpRefs.current[index] = el)}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength="1"
+                      value={value}
+                      onChange={(e) => handleMobileOtpChange(index, e.target.value)}
+                      onKeyDown={(e) => handleMobileOtpKeyDown(index, e)}
+                      onPaste={index === 0 ? handleMobileOtpPaste : undefined}
+                      disabled={mobileCountdown === 0}
+                      className={`w-10 h-10 sm:w-12 sm:h-12 text-center text-lg font-semibold border border-[var(--brand-gold)] rounded-lg focus:outline-none transition ${
+                        mobileCountdown === 0 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""
+                      }`}
+                    />
+                  ))}
+                  <button
+                    type="button"
+                    onClick={handleVerifyMobileOtp}
+                    disabled={mobileOtpVerifying || mobileOtpValues.join("").length !== 6 || mobileCountdown === 0}
+                    className={`px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 whitespace-nowrap ${
+                      mobileOtpVerifying || mobileOtpValues.join("").length !== 6 || mobileCountdown === 0
+                        ? "bg-[#f5ecd8] text-[#a89165] cursor-not-allowed border border-[#e6d8b8] opacity-70"
+                        : "bg-[var(--brand-primary)] hover:bg-[var(--brand-gold)] text-white"
+                    }`}
+                  >
+                    {mobileOtpVerifying ? (
+                      <span className="flex items-center justify-center gap-1">
+                        <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      </span>
+                    ) : (
+                      "Verify"
+                    )}
+                  </button>
+                </div>
+
+                {/* Timer and Status */}
+                <div className="w-full mt-2 flex flex-col items-center">
+                  {mobileCountdown > 0 ? (
+                    <div className="flex items-center justify-center gap-3 text-sm">
+                      <span className="text-gray-600">
+                        Valid for <span className="font-semibold text-[var(--brand-primary)]">{formatTime(mobileCountdown)}</span>
+                      </span>
+                      {mobileResendCooldown > 0 ? null : mobileResendAttempts < MAX_RESEND ? (
+                        <div className="flex justify-center">
+                          <button
+                            type="button"
+                            onClick={handleResendMobileOtp}
+                            disabled={mobileOtpSending}
+                            className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold transition bg-[var(--brand-primary)] text-white hover:bg-[var(--brand-gold)] disabled:opacity-50"
+                          >
+                            Resend OTP
+                          </button>
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2">
+                      <span className="text-red-600">OTP expired</span>
+                      {mobileResendAttempts < MAX_RESEND && (
+                        mobileResendCooldown > 0 ? null : (
+                          <button
+                            type="button"
+                            onClick={handleResendMobileOtp}
+                            disabled={mobileOtpSending}
+                            className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold transition bg-[var(--brand-primary)] text-white hover:bg-[var(--brand-gold)] disabled:opacity-50"
+                          >
+                            Resend OTP
+                          </button>
+                        )
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             {}
             <label className="flex items-center mt-2 cursor-pointer text-xs sm:text-sm select-none">
@@ -869,7 +1460,7 @@ const SignUpPage = () => {
               />
               Use as Username
               {formData.useAsUsername.includes("mobile") && (
-                <CheckCircleFill className="inline text-green-500 ml-1" />
+                <CheckCircleFill className="inline text-[var(--brand-primary)] ml-1" />
               )}
             </label>
 
@@ -926,27 +1517,27 @@ const SignUpPage = () => {
               ) && (
                 <div className="mt-2 text-xs sm:text-sm space-y-1">
                   <p
-                    className={`${formData.password.length >= 6 ? "text-green-500" : "text-gray-500"}`}
+                    className={`${formData.password.length >= 6 ? "text-[var(--brand-primary)]" : "text-gray-500"}`}
                   >
                     • Minimum 6 characters
                   </p>
                   <p
-                    className={`${/[A-Z]/.test(formData.password) ? "text-green-500" : "text-gray-500"}`}
+                    className={`${/[A-Z]/.test(formData.password) ? "text-[var(--brand-primary)]" : "text-gray-500"}`}
                   >
                     • At least one uppercase letter
                   </p>
                   <p
-                    className={`${/[a-z]/.test(formData.password) ? "text-green-500" : "text-gray-500"}`}
+                    className={`${/[a-z]/.test(formData.password) ? "text-[var(--brand-primary)]" : "text-gray-500"}`}
                   >
                     • At least one lowercase letter
                   </p>
                   <p
-                    className={`${/[0-9]/.test(formData.password) ? "text-green-500" : "text-gray-500"}`}
+                    className={`${/[0-9]/.test(formData.password) ? "text-[var(--brand-primary)]" : "text-gray-500"}`}
                   >
                     • At least one number
                   </p>
                   <p
-                    className={`${/[@$!%*?&#_]/.test(formData.password) ? "text-green-500" : "text-gray-500"}`}
+                    className={`${/[@$!%*?&#_]/.test(formData.password) ? "text-[var(--brand-primary)]" : "text-gray-500"}`}
                   >
                     • At least one special character (@$!%*?&#_)
                   </p>
@@ -1027,7 +1618,7 @@ const SignUpPage = () => {
             className={`w-full bg-[var(--brand-primary)] hover:bg-[var(--brand-gold)] text-white p-3 rounded-full font-semibold text-sm shadow-lg transition-colors duration-300 
     ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
           >
-            {loading ? "Creating..." : "Send Otp & Continue"}
+            {loading ? "Creating..." : "Create Account"}
           </button>
         </form>
 

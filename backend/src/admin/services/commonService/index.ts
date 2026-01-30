@@ -412,12 +412,11 @@ export async function adminSearchService(filters: any = {}) {
         ]
       },
       isOnline: {
-        $cond: [
-          { $ifNull: ["$lastLoginAt", false] },
+        $and: [
+          { $ne: ["$lastLoginAt", null] },
           {
-            $lte: [{ $subtract: ["$$NOW", "$lastLoginAt"] }, 3 * 60 * 1000]
-          },
-          false
+            $lte: [{ $subtract: ["$$NOW", "$lastLoginAt"] }, 5 * 60 * 1000]
+          }
         ]
       }
     }

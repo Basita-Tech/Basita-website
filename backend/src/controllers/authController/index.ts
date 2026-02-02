@@ -442,64 +442,37 @@ export class AuthController {
 
   static async me(req: AuthenticatedRequest, res: Response) {
     try {
-      const token = req.cookies?.token;
-      const csrfCookie = req.cookies?.csrf_token;
-      // const csrfHeader =
-      //   (req.headers["x-csrf-token"] as string) ||
-      //   (req.headers["csrf-token"] as string);
-
-      if (!token) {
+      if (!req.user?.id) {
         return res
           .status(401)
           .json({ success: false, message: "Not authenticated" });
       }
 
-      let decoded: any = null;
-      try {
-        decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any;
-      } catch (jwtErr) {
-        logger.warn("Invalid JWT on /auth/me", {
-          error: (jwtErr as any).message,
-          ip: req.ip
-        });
+      let user: any = req.user;
+
+      if (!user?.id) {
+        user = await User.findById(req.user?.id).select("-password -__v");
+      }
+
+      if (!user) {
         return res
           .status(401)
           .json({ success: false, message: "Not authenticated" });
       }
 
-      const userId = decoded?.id || decoded?.userId || decoded?.sub;
-      const jti = decoded?.jti;
-
-      if (!userId || !jti) {
-        return res
-          .status(401)
-          .json({ success: false, message: "Not authenticated" });
-      }
-
-      const session = await SessionService.validateSession(String(userId), jti);
-      if (!session) {
-        logger.warn(`Unauthorized access:  ${userId}, ${jti}, ip: ${req.ip}`);
-        return res
-          .status(401)
-          .json({ success: false, message: "Not authenticated" });
-      }
-
-      const userRecord =
-        req.user || (await User.findById(userId).select("-password -__v"));
-      if (!userRecord) {
-        return res
-          .status(401)
-          .json({ success: false, message: "Not authenticated" });
-      }
-
-      const userObj = (userRecord as any).toObject
-        ? (userRecord as any).toObject()
-        : userRecord;
+      const userObj = user.toObject ? user.toObject() : user;
       const publicUser = sanitizeUser(userObj);
 
-      return res.status(200).json({ success: true, user: publicUser });
+      return res.status(200).json({
+        success: true,
+        user: publicUser
+      });
     } catch (err: any) {
-      logger.error("Me endpoint error", { error: err?.message, ip: req.ip });
+      logger.error("Me endpoint error", {
+        error: err.message,
+        ip: req.ip
+      });
+
       return res.status(500).json({ success: false, message: "Server error" });
     }
   }
@@ -740,11 +713,11 @@ export class AuthController {
     try {
       const userId = req.user?.id;
 
-      logger.info("Logout attempt", {
-        userId,
-        hasUser: !!req.user,
-        hasCookie: !!req.cookies?.token
-      });
+      const pushToken = req.body.pushToken;
+
+      logger.info(
+        `Logout attempt ${userId}, hasUser: ${!!req.user}, hasCookie: ${!!req.cookies?.token}`
+      );
 
       if (userId) {
         const token = req.cookies?.token;
@@ -795,6 +768,10 @@ export class AuthController {
       }
 
       clearAuthCookies(res);
+
+      if (userId && pushToken) {
+        await User.updateOne({ _id: userId }, { $pull: { pushToken } });
+      }
 
       logger.info("User logged out", {
         userId,

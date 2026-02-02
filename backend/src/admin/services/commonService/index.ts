@@ -49,6 +49,7 @@ class commonService {
         ]),
 
         User.aggregate([
+          { $match: { role: "user" } },
           {
             $facet: {
               profileCounts: [

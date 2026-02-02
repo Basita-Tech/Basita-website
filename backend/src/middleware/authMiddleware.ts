@@ -172,29 +172,29 @@ export const authenticate = async (
 
     const bypassVisibilityCheck = VISIBILITY_BYPASS_ROUTES.has(requestPath);
 
-    if (user.planExpiry && user.role !== "admin") {
-      const expiryDate = new Date(user.planExpiry);
-      const now = new Date();
+    // if (user.planExpiry && user.role !== "admin") {
+    //   const expiryDate = new Date(user.planExpiry);
+    //   const now = new Date();
 
-      if (expiryDate < now) {
-        if (user.isVisible !== false) {
-          await User.findByIdAndUpdate(userId, {
-            isVisible: false,
-            deactivatedAt: now,
-            deactivationReason: "plan_expired"
-          });
+    //   if (expiryDate < now) {
+    //     if (user.isVisible !== false) {
+    //       await User.findByIdAndUpdate(userId, {
+    //         isVisible: false,
+    //         deactivatedAt: now,
+    //         deactivationReason: "plan_expired"
+    //       });
 
-          redisClient.del(cacheKey).catch(() => {});
-        }
+    //       redisClient.del(cacheKey).catch(() => {});
+    //     }
 
-        return res.status(402).json({
-          success: false,
-          code: "PLAN_UPGRADE",
-          message:
-            "Your account has been deactivated. Please activate your account to continue."
-        });
-      }
-    }
+    //     return res.status(402).json({
+    //       success: false,
+    //       code: "PLAN_UPGRADE",
+    //       message:
+    //         "Your plan has expired. Please upgrade to continue."
+    //     });
+    //   }
+    // }
 
     if (user.isVisible === false && !bypassVisibilityCheck) {
       redisClient.del(cacheKey).catch(() => {});

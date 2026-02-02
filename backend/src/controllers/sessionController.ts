@@ -2,6 +2,7 @@ import { Response } from "express";
 import { AuthenticatedRequest } from "../types";
 import { SessionService } from "../services/sessionService";
 import { logger } from "../lib/common/logger";
+import { User } from "../models";
 
 export class SessionController {
   static async getUserSessions(req: AuthenticatedRequest, res: Response) {
@@ -111,6 +112,10 @@ export class SessionController {
           session.sessionId
         );
         if (success) loggedOutCount++;
+      }
+
+      if (userId) {
+        await User.updateOne({ _id: userId }, { $set: { pushToken: [] } });
       }
 
       return res.status(200).json({

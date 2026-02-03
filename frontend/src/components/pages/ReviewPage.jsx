@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getProfileReviewStatus, deleteUserAccount } from "../../api/auth";
+import { getProfileReviewStatus, deleteUserAccount, logoutUser } from "../../api/auth";
 import toast from "react-hot-toast";
 import { CheckCircle, Clock, AlertCircle, ArrowRight } from "lucide-react";
 const ReviewPage = () => {
@@ -343,6 +343,7 @@ const ReviewPage = () => {
                             toast.dismiss(loadingToast);
                             
                             if (result.success) {
+                              await logoutUser();
                               toast.success("Account deleted successfully");
                               setTimeout(() => {
                                 navigate("/");

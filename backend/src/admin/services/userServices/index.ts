@@ -678,17 +678,12 @@ export async function getAllProfilesService(
   const isActiveFilter =
     isActive === "false" || isActive === false ? false : true;
 
+  const matchCondition = {
+    "user.role": "user",
+    "user.profileReviewStatus": isActiveFilter ? "approved" : "rejected"
+  };
+
   try {
-    const matchCondition: any = {
-      "user.role": "user",
-      "user.isActive": isActiveFilter,
-      "user.isVisible": isActiveFilter
-    };
-
-    if (isActiveFilter === true) {
-      matchCondition["user.profileReviewStatus"] = "approved";
-    }
-
     const result = await Profile.aggregate([
       {
         $lookup: {
@@ -1456,9 +1451,15 @@ export async function getAllPremiumsProfilesService(
   const skip = (page - 1) * limit;
 
   try {
-    const totalCount = await User.countDocuments({ accountType: "premium" });
+    const totalCount = await User.countDocuments({
+      accountType: "premium",
+      profileReviewStatus: "approved"
+    });
 
-    const usersPage = await User.find({ accountType: "premium" })
+    const usersPage = await User.find({
+      accountType: "premium",
+      profileReviewStatus: "approved"
+    })
       .sort({ createdAt: -1 })
       .select("_id")
       .skip(skip)

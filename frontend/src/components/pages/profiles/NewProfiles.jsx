@@ -184,6 +184,7 @@ export default function NewProfiles({
                   city: user.city,
                   state: user.state,
                   country: user.country,
+                  visaType: user.visaType,
                   profession:
                     user.profession ||
                     user.occupation ||
@@ -350,6 +351,7 @@ export default function NewProfiles({
               city: user.city,
               state: user.state,
               country: user.country,
+              visaType: user.visaType,
               profession:
                 user.profession ||
                 user.occupation ||
@@ -544,6 +546,7 @@ export default function NewProfiles({
               city: user.city,
               state: user.state,
               country: user.country,
+              visaType: user.visaType,
               profession:
                 user.profession ||
                 user.occupation ||

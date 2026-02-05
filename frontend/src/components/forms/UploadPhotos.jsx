@@ -93,7 +93,7 @@ const UploadPhotos = ({
     optional1: { w: 1080, h: 1350, ratio: 1, label: "Additional Photo 1 (1080x1350)" },  // 1:1
     optional2: { w: 1080, h: 1350, ratio: 1, label: "Additional Photo 2 (1080x1350)" }   // 1:1
   };
-  const requiredKeys = ["compulsory1", "compulsory2", "compulsory3", "governmentId"];
+  const requiredKeys = ["compulsory1", "compulsory3", "governmentId"];
   const photoLabels = {
     compulsory1: "Full Body Photo",
     compulsory2: "Family Photo",
@@ -437,27 +437,31 @@ const UploadPhotos = ({
         <form onSubmit={handleSubmit} className="space-y-6">
           {}
           {[{
-          label: "Candidate Full Photo(Required)",
+          label: "Candidate Full Photo",
           key: "compulsory1",
-          hint: "Upload a clear full-length photo"
+          hint: "Upload a clear full-length photo",
+          required: true
         }, {
-          label: "Candidate Family Photo (Required)",
+          label: "Candidate Family Photo (Optional)",
           key: "compulsory2",
-          hint: "Upload a photo with your family members"
+          hint: "Upload a photo with your family members",
+          required: false
         }, {
-          label: "Candidate Profile Photo (Required)",
+          label: "Candidate Profile Photo",
           key: "compulsory3",
-          hint: "Upload a clear close-up face photo"
+          hint: "Upload a clear close-up face photo",
+          required: true
         }].map(({
           label,
           key,
-          hint
+          hint,
+          required
         }) => {
           const previewSrc = photos[key] ? previews[key] : uploadedUrls[key] || null;
           const selectedFileName = selectedFileNames[key];
           return <div key={key}>
                 <label htmlFor={key} className="block font-semibold text-gray-800 mb-1">
-                  {label} <span className="text-red-500">*</span>
+                  {label} {required ? <span className="text-red-500">*</span> : null}
                 </label>
                 <input id={key} type="file" accept="image/*" onChange={e => handlePhotoChange(e, key)} className="w-full p-2 border rounded-lg" />
                 <p className="text-xs text-gray-500 mt-1">

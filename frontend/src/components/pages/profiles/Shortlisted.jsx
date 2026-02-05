@@ -24,7 +24,11 @@ export function Shortlisted({
       height: user.personal?.height,
       city: user.personal?.city || user.city,
       country: user.personal?.country || user.country,
-      profession: user.professional?.Occupation || user.occupation,
+      profession:
+        user.profession ||
+        user.professional?.Occupation ||
+        user.occupation ||
+        user.professional?.profession,
       religion: user.personal?.religion || user.religion,
       caste: user.personal?.subCaste || user.subCaste,
       education: user.education?.HighestEducation,

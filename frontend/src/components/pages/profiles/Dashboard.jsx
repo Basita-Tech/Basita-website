@@ -171,6 +171,8 @@ export function Dashboard({
             age: userData.age,
             city: userData.city,
             state: userData.state,
+            country: userData.country,
+            visaType: userData.visaType,
             religion: userData.religion,
             caste: userData.subCaste,
             profession:
@@ -475,7 +477,7 @@ export function Dashboard({
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
         <StatCard
-          label="Interests Sent"
+          label="Request Received"
           value={
             Array.isArray(sentProfileIds)
               ? sentProfileIds.length

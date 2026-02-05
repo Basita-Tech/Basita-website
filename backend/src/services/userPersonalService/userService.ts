@@ -75,7 +75,7 @@ export async function getUserDashboardService(userId: string) {
             $match: {
               $expr: {
                 $and: [
-                  { $eq: ["$sender", "$$userId"] },
+                  { $eq: ["$receiver", "$$userId"] },
                   { $eq: ["$status", "pending"] }
                 ]
               }

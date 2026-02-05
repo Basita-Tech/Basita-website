@@ -528,7 +528,7 @@ export async function findMatchingUsers(
     ] = await Promise.all([
       UserPersonal.find(
         { userId: { $in: candidateIds } },
-        "userId religion subCaste full_address.state marriedStatus residingCountry"
+        "userId religion subCaste full_address.state marriedStatus residingCountry visaType"
       ).lean(),
       UserEducation.find(
         { userId: { $in: candidateIds } },

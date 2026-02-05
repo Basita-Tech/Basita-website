@@ -60,7 +60,7 @@ export const getRecommendations = async (req: Request, res: Response) => {
         ).lean(),
         UserPersonal.find({ userId: { $in: candidateIds } })
           .select(
-            "userId full_address.city full_address.state residingCountry religion subCaste"
+            "userId full_address.city full_address.state residingCountry religion subCaste visaType"
           )
           .lean(),
         Profile.find({ userId: { $in: candidateIds } })

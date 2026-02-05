@@ -9,7 +9,7 @@ import {
 } from "../../../models";
 import { UserHealth } from "../../../models/User_health";
 import { validateUserId } from "../../../services";
-import { logger } from "../../../lib";
+import { invalidateUserMatchScores, logger } from "../../../lib";
 
 export async function updateUserProfileDetailsService(
   userId: string,
@@ -437,6 +437,18 @@ export async function updateUserProfileDetailsService(
           }
         );
       }
+    }
+
+    try {
+      await invalidateUserMatchScores(new mongoose.Types.ObjectId(userId));
+      logger.info(
+        `Cache invalidated for user ${userId} after personal details update`
+      );
+    } catch (cacheErr: any) {
+      logger.warn(
+        `Failed to invalidate cache for user ${userId}:`,
+        cacheErr.message
+      );
     }
 
     await session.commitTransaction();

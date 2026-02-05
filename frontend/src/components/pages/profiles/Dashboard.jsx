@@ -478,11 +478,7 @@ export function Dashboard({
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
         <StatCard
           label="Request Received"
-          value={
-            Array.isArray(sentProfileIds)
-              ? sentProfileIds.length
-              : (user?.interestSentCount ?? 0)
-          }
+          value={user?.interestSentCount ?? 0}
           onViewClick={() => onNavigate?.("requests")}
         />
         <StatCard

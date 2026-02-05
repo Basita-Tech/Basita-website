@@ -713,7 +713,7 @@ export class AuthController {
     try {
       const userId = req.user?.id;
 
-      const pushToken = req.body.pushToken;
+      const pushToken = req.body?.pushToken;
 
       logger.info(
         `Logout attempt ${userId}, hasUser: ${!!req.user}, hasCookie: ${!!req.cookies?.token}`
@@ -784,10 +784,9 @@ export class AuthController {
         message: "Logged out successfully"
       });
     } catch (err: any) {
-      logger.error("Logout error", {
-        error: err.message,
-        ip: req.ip
-      });
+      logger.error(`Logout error
+        error:${err.message},
+        ip: ${req.ip}`);
 
       return res.status(500).json({
         success: false,

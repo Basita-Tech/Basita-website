@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { getUserPhotos, getGovernmentId, submitProfileForReview, updateOnboardingStatus, getOnboardingStatus } from "../../api/auth";
+import { getUserPhotos, getGovernmentId, submitProfileForReview, updateOnboardingStatus, getOnboardingStatus, getUserProfileDetails } from "../../api/auth";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import usePhotoUpload from "../../hooks/usePhotoUpload";
@@ -84,16 +84,28 @@ const UploadPhotos = ({
   const [cropperOpen, setCropperOpen] = useState(false);
   const [imageToCrop, setImageToCrop] = useState("");
   const [currentCropPhotoType, setCurrentCropPhotoType] = useState(null);
+  const [userGender, setUserGender] = useState(null);
   
- 
-  const PHOTO_DIMENSIONS = {
+  // Dynamic requiredKeys based on gender
+  // Female: compulsory1, compulsory3 (governmentId optional)
+  // Male: compulsory1, compulsory3, governmentId (governmentId required)
+  const getRequiredKeys = () => {
+    if (userGender === "male") {
+      return ["compulsory1", "compulsory3", "governmentId"];
+    }
+    // Female or not determined yet - governmentId is optional
+    return ["compulsory1", "compulsory3"];
+  };
+  
+  const requiredKeys = getRequiredKeys();
+  
+  const photoRequirements = {
     compulsory3: { w: 600, h: 600, ratio: 1, label: "Profile Photo (600x600)" },      // 1:1
     compulsory2: { w: 1600, h: 1200, ratio: 4/3, label: "Family Photo (1600x1200)" },     // 4:3
     compulsory1: { w: 1080, h: 1350, ratio: 4/5, label: "Full Body Photo (1080x1350)" },   // 4:5
     optional1: { w: 1080, h: 1350, ratio: 1, label: "Additional Photo 1 (1080x1350)" },  // 1:1
     optional2: { w: 1080, h: 1350, ratio: 1, label: "Additional Photo 2 (1080x1350)" }   // 1:1
   };
-  const requiredKeys = ["compulsory1", "compulsory3", "governmentId"];
   const photoLabels = {
     compulsory1: "Full Body Photo",
     compulsory2: "Family Photo",
@@ -121,10 +133,13 @@ const UploadPhotos = ({
   useEffect(() => {
     const loadExistingPhotos = async () => {
       try {
-        const [photoRes, idRes, onboarding] = await Promise.all([getUserPhotos(), getGovernmentId(), getOnboardingStatus()]);
+        const [photoRes, idRes, onboarding, userProfile] = await Promise.all([getUserPhotos(), getGovernmentId(), getOnboardingStatus(), getUserProfileDetails()]);
         const photosData = photoRes?.data?.photos || {};
         const idData = idRes?.data || {};
         const onBoardingStep = onboarding.data.data.completedSteps.includes("photos");
+        const gender = userProfile?.data?.gender || null;
+        
+        setUserGender(gender);
         setOnBoardingStatus(onBoardingStep);
         const urls = {
           compulsory1: photosData?.personalPhotos?.[0]?.url || null,
@@ -211,7 +226,7 @@ const UploadPhotos = ({
       const blob = await response.blob();
       
   
-      const dims = PHOTO_DIMENSIONS[currentCropPhotoType];
+      const dims = photoRequirements[currentCropPhotoType];
       const ext = 'jpg';
       const filename = `photo_${currentCropPhotoType}.${ext}`;
       
@@ -759,10 +774,10 @@ const UploadPhotos = ({
             setCurrentCropPhotoType(null);
           }}
           aspectRatio={
-            currentCropPhotoType ? PHOTO_DIMENSIONS[currentCropPhotoType].ratio : undefined
+            currentCropPhotoType ? photoRequirements[currentCropPhotoType].ratio : undefined
           }
           title={
-            currentCropPhotoType ? PHOTO_DIMENSIONS[currentCropPhotoType].label : "Crop Photo"
+            currentCropPhotoType ? photoRequirements[currentCropPhotoType].label : "Crop Photo"
           }
           onSave={handleCropSave}
         />

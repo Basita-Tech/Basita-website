@@ -475,6 +475,9 @@ export const mainWorker = new Worker(
         case "bulk-email-campaign":
           return await handleBulkEmailCampaign(job.data);
 
+        case "onboarding-email-campaign":
+          return await handleOnBoardingEmailCampaign(job.data);
+
         case "send-bulk-email":
           return await handleSendBulkEmail(job.data);
 
@@ -624,4 +627,53 @@ async function handleSendBulkEmail(data: {
 
   await transporter.sendMail({ to: email, subject, html });
   return { success: true };
+}
+async function handleOnBoardingEmailCampaign(data: {
+  senderId: string;
+  subject: string;
+  html: string;
+  campaignId: string;
+}) {
+  const { senderId, subject, html, campaignId } = data;
+
+  if (!senderId || !subject || !html) {
+    throw new Error("Invalid email campaign data");
+  }
+
+  const user = await User.findById(senderId).select("_id email").lean();
+
+  if (!user || !user.email) {
+    return { success: false, reason: "User not found or email missing" };
+  }
+
+  const profile = await Profile.findOne({
+    userId: senderId,
+    "settings.emailNotifications": { $ne: false }
+  })
+    .select("userId")
+    .lean();
+
+  if (!profile) {
+    return { success: false, reason: "Email notifications disabled" };
+  }
+
+  await mainQueue.add(
+    "send-bulk-email",
+    {
+      campaignId,
+      userId: String(user._id),
+      email: user.email,
+      subject,
+      html
+    },
+    {
+      jobId: `email-${campaignId}-${user._id}`,
+      attempts: 3,
+      backoff: { type: "exponential", delay: 5000 }
+    }
+  );
+
+  logger.info(`Email campaign queued ${campaignId} for user ${user._id}`);
+
+  return { success: true, recipient: user.email };
 }

@@ -361,3 +361,23 @@ export async function enqueueBulkEmailCampaign(payload: {
     return false;
   }
 }
+
+export async function enqueueOnBoardingEmailCampaign(payload: {
+  senderId: string;
+  subject: string;
+  html: string;
+  campaignId: string;
+}): Promise<boolean> {
+  try {
+    await mainQueue.add("onboarding-email-campaign", payload, {
+      jobId: `bulk-email-${payload.campaignId}`,
+      attempts: 2
+    });
+
+    logger.info(`onboarding email campaign enqueued: ${payload.campaignId}`);
+    return true;
+  } catch (error: any) {
+    logger.error("Failed to enqueue bulk email campaign", error);
+    return false;
+  }
+}

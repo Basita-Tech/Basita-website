@@ -372,4 +372,11 @@ adminRouter.put(
   asyncHandler(adminController.restoreUserController)
 );
 
+adminRouter.post(
+  "/send/onboarding-email",
+  authenticate,
+  authorizeRoles("admin", "verification"),
+  asyncHandler(adminController.sendOnboardingEmail)
+);
+
 export default adminRouter;

@@ -4,14 +4,23 @@ import * as adminService from "../../services/userServices";
 import { AuthenticatedRequest } from "../../../types";
 import { updateUserProfileDetailsService } from "../../services/userServices/updateUserProfileService";
 import { recordAudit } from "../../../lib/common/auditLogger";
-import { User, ConnectionRequest, Profile } from "../../../models";
+import {
+  User,
+  ConnectionRequest,
+  Profile,
+  UserProfession
+} from "../../../models";
 import { APP_CONFIG } from "../../../utils/constants";
 import { buildEmailFromTemplate } from "../../../lib/emails/templateService";
 import { sendMail } from "../../../lib/emails";
 import { EmailTemplateType } from "../../../models";
-import { enqueueBulkEmailCampaign } from "../../../lib/queue/enqueue";
+import {
+  enqueueBulkEmailCampaign,
+  enqueueOnBoardingEmailCampaign
+} from "../../../lib/queue/enqueue";
 import mongoose from "mongoose";
 import { addMonths } from "date-fns";
+import { buildOnboardingEmail } from "../../../lib";
 
 export async function approveUserProfileController(
   req: AuthenticatedRequest,
@@ -181,9 +190,7 @@ export async function rectifyUserProfileController(
           details: { reason },
           req: req as any
         });
-      } catch (e) {
-        // swallow
-      }
+      } catch (e) {}
     }
 
     return res.status(result.success ? 200 : 400).json(result);
@@ -975,6 +982,125 @@ export async function getBulkEmailUsersController(req: Request, res: Response) {
     logger.error("Get bulk email users error", {
       error: error?.message
     });
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+}
+
+export async function sendOnboardingEmail(req: Request, res: Response) {
+  try {
+    const { userIds, senderId } = req.body;
+
+    const subject = "We Found Matches for You 👀 Complete Your Profile to View";
+    const receiver = await User.findById(senderId)
+      .select("firstName email")
+      .lean();
+
+    if (!receiver) {
+      return res.status(404).json({
+        success: false,
+        message: "Receiver not found"
+      });
+    }
+
+    const matchedUsers = await User.find({ _id: { $in: userIds } })
+      .select("firstName lastName")
+      .lean();
+
+    const matchedProfiles = await Profile.find({
+      userId: { $in: userIds }
+    })
+      .select("userId photos.closerPhoto.url")
+      .lean();
+
+    const matchedOccupations = await UserProfession.find({
+      userId: { $in: userIds }
+    })
+      .select("userId Occupation")
+      .lean();
+
+    const profileMap = new Map(
+      matchedProfiles.map((p) => [String(p.userId), p])
+    );
+    const occupationMap = new Map(
+      matchedOccupations.map((o) => [String(o.userId), o])
+    );
+
+    const profiles = matchedUsers.map((u) => {
+      const profile = profileMap.get(String(u._id));
+      const occupation = occupationMap.get(String(u._id));
+
+      return {
+        fullName: `${u.firstName} ${u.lastName}`,
+        photo: profile?.photos?.closerPhoto?.url,
+        profession: occupation?.Occupation
+      };
+    });
+
+    const html = buildOnboardingEmail({
+      receiverName: receiver.firstName,
+      brandName: "Satfera",
+      onboardingLink: "https://satfera.com/onboarding/user",
+      year: new Date().getFullYear(),
+      profiles
+    });
+
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "userIds must be a non-empty array"
+      });
+    }
+
+    if (!senderId) {
+      return res.status(400).json({
+        success: false,
+        message: "sender id is required"
+      });
+    }
+
+    const invalidIds = userIds.filter(
+      (id) => !mongoose.Types.ObjectId.isValid(id)
+    );
+
+    if (invalidIds.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid userIds detected",
+        invalidIds
+      });
+    }
+
+    const campaignId = `admin-${Date.now()}`;
+
+    const enqueued = await enqueueOnBoardingEmailCampaign({
+      senderId,
+      subject,
+      html: html,
+      campaignId
+    });
+
+    if (!enqueued) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to enqueue bulk email campaign"
+      });
+    }
+
+    logger.info(
+      `onboarding email campaign started ${campaignId}, totalUsers: ${userIds.length}`
+    );
+
+    return res.status(202).json({
+      success: true,
+      message: "Onboarding email campaign queued successfully",
+      recipients: userIds.length
+    });
+  } catch (error: any) {
+    logger.error("Bulk email controller error", error);
 
     return res.status(500).json({
       success: false,

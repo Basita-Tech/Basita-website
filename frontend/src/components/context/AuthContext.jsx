@@ -37,6 +37,17 @@ export const AuthProvider = ({
       setUser(userData.user);
     }
   };
+  const refreshUser = async () => {
+    try {
+      const API = import.meta.env.VITE_API_URL;
+      const res = await axios.get(`${API}/auth/me`);
+      if (res?.data?.success) {
+        setUser(res.data.user);
+      }
+    } catch (e) {
+      console.error("Failed to refresh user:", e);
+    }
+  };
   const logout = async (redirectPath = "/") => {
     try {
       await logoutUser();
@@ -56,6 +67,7 @@ export const AuthProvider = ({
     user,
     login,
     logout,
+    refreshUser,
     isLoading,
     isAuthenticated: !!user
   }}>

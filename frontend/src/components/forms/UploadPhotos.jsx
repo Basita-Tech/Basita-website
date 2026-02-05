@@ -6,6 +6,7 @@ import usePhotoUpload from "../../hooks/usePhotoUpload";
 import ImageCropperModal from "../ImageCropperModal";
 import { trackEvent } from "../analytics/ga4";
 import { validateProfilePhoto, validateGovernmentID } from "@/utils/fileValidation";
+import { AuthContextr } from "../context/AuthContext";
 
 // Helper function to detect file type from URL
 const detectFileTypeFromUrl = async (url) => {
@@ -50,6 +51,7 @@ const UploadPhotos = ({
   onPrevious
 }) => {
   const navigate = useNavigate();
+  const { user, refreshUser } = React.useContext(AuthContextr);
   const {
     uploadPhotos: uploadPhotosSequentially,
     uploadState,
@@ -84,7 +86,9 @@ const UploadPhotos = ({
   const [cropperOpen, setCropperOpen] = useState(false);
   const [imageToCrop, setImageToCrop] = useState("");
   const [currentCropPhotoType, setCurrentCropPhotoType] = useState(null);
-  const [userGender, setUserGender] = useState(null);
+  
+  // Get gender directly from AuthContext instead of setting separate state
+  const userGender = user?.gender || null;
   
   // Dynamic requiredKeys based on gender
   // Female: compulsory1, compulsory3 (governmentId optional)
@@ -130,16 +134,23 @@ const UploadPhotos = ({
       Object.values(previews).forEach(url => URL.revokeObjectURL(url));
     };
   }, [previews]);
+  
+  // Refresh user data to ensure we have the latest gender info
+  useEffect(() => {
+    if (refreshUser) {
+      refreshUser();
+    }
+  }, []);
+  
   useEffect(() => {
     const loadExistingPhotos = async () => {
       try {
-        const [photoRes, idRes, onboarding, userProfile] = await Promise.all([getUserPhotos(), getGovernmentId(), getOnboardingStatus(), getUserProfileDetails()]);
+        const [photoRes, idRes, onboarding] = await Promise.all([getUserPhotos(), getGovernmentId(), getOnboardingStatus()]);
         const photosData = photoRes?.data?.photos || {};
         const idData = idRes?.data || {};
         const onBoardingStep = onboarding.data.data.completedSteps.includes("photos");
-        const gender = userProfile?.data?.gender || null;
         
-        setUserGender(gender);
+        console.log('Gender from AuthContext:', userGender);
         setOnBoardingStatus(onBoardingStep);
         const urls = {
           compulsory1: photosData?.personalPhotos?.[0]?.url || null,

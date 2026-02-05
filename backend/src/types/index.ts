@@ -12,6 +12,7 @@ export interface JWTPayload {
   phoneNumber?: string;
   role: "user" | "admin";
   fullName?: string;
+  gender: string;
 }
 
 declare global {

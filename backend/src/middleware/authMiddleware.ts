@@ -28,6 +28,7 @@ interface UserData {
   accountType?: string;
   deactivatedAt?: Date;
   isVisible: boolean;
+  gender: string;
 }
 
 interface CachedAuthData {
@@ -121,7 +122,7 @@ export const authenticate = async (
           : Promise.resolve(true),
         User.findById(userId)
           .select(
-            "email role phoneNumber isDeleted isActive firstName lastName planExpiry accountType isVisible lastLoginAt"
+            "email role phoneNumber isDeleted isActive firstName lastName planExpiry accountType isVisible lastLoginAt gender"
           )
           .lean<UserData>()
       ]);
@@ -215,7 +216,8 @@ export const authenticate = async (
       fullName:
         user.firstName && user.lastName
           ? `${user.firstName} ${user.lastName}`
-          : "User"
+          : "User",
+      gender: user.gender
     };
 
     return next();

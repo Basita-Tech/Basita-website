@@ -212,7 +212,7 @@ export async function getPendingProfilesService(
     const totalCount = await User.countDocuments(userFilter);
 
     const usersPage = await User.find(userFilter)
-      .sort({ createdAt: -1 })
+      .sort({ updatedAt: -1 })
       .select("_id")
       .skip(skip)
       .limit(limit)
@@ -730,7 +730,7 @@ export async function getAllProfilesService(
       {
         $facet: {
           users: [
-            { $sort: { "user.createdAt": -1 } },
+            { $sort: { "user.updatedAt": -1 } },
             { $skip: skip },
             { $limit: limit },
 

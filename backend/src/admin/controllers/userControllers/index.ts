@@ -8,7 +8,8 @@ import {
   User,
   ConnectionRequest,
   Profile,
-  UserProfession
+  UserProfession,
+  UserPersonal
 } from "../../../models";
 import { APP_CONFIG } from "../../../utils/constants";
 import { buildEmailFromTemplate } from "../../../lib/emails/templateService";
@@ -21,6 +22,7 @@ import {
 import mongoose from "mongoose";
 import { addMonths } from "date-fns";
 import { buildOnboardingEmail } from "../../../lib";
+import { calculateAge } from "../../../utils/utils";
 
 export async function approveUserProfileController(
   req: AuthenticatedRequest,
@@ -1007,7 +1009,11 @@ export async function sendOnboardingEmail(req: Request, res: Response) {
     }
 
     const matchedUsers = await User.find({ _id: { $in: userIds } })
-      .select("firstName lastName")
+      .select("firstName lastName dateOfBirth")
+      .lean();
+
+    const matchPersonal = await UserPersonal.find({ userId: { $in: userIds } })
+      .select("userId full_address residingCountry visaType")
       .lean();
 
     const matchedProfiles = await Profile.find({
@@ -1025,18 +1031,41 @@ export async function sendOnboardingEmail(req: Request, res: Response) {
     const profileMap = new Map(
       matchedProfiles.map((p) => [String(p.userId), p])
     );
+
     const occupationMap = new Map(
       matchedOccupations.map((o) => [String(o.userId), o])
     );
 
+    const personalMap = new Map(
+      matchPersonal.map((p) => [String(p.userId), p])
+    );
+
     const profiles = matchedUsers.map((u) => {
-      const profile = profileMap.get(String(u._id));
-      const occupation = occupationMap.get(String(u._id));
+      const userId = String(u._id);
+
+      const profile = profileMap.get(userId);
+      const occupation = occupationMap.get(userId);
+      const personal = personalMap.get(userId);
+
+      const city = personal?.full_address?.city;
+      const state = personal?.full_address?.state;
+
+      const country = personal?.residingCountry;
+      const visaType =
+        country && country.toLowerCase() !== "india"
+          ? personal?.visaType || null
+          : null;
 
       return {
         fullName: `${u.firstName} ${u.lastName}`,
         photo: profile?.photos?.closerPhoto?.url,
-        profession: occupation?.Occupation
+        profession: occupation?.Occupation,
+        verified: true,
+        age: calculateAge(u.dateOfBirth),
+        location: [city, state].filter(Boolean).join(" • "),
+        country,
+        visaType,
+        profileLink: `https://satfera.com/onboarding/user`
       };
     });
 

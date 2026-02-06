@@ -35,6 +35,12 @@ export function buildOnboardingEmail(params: {
     fullName: string;
     photo?: string;
     profession?: string;
+    age?: number;
+    location?: string;
+    verified?: boolean;
+    country?: string;
+    visaType?: string;
+    profileLink?: string;
   }>;
 }) {
   const { receiverName, brandName, onboardingLink, year, profiles } = params;
@@ -42,32 +48,75 @@ export function buildOnboardingEmail(params: {
   const profilesHtml = profiles
     .map(
       (p) => `
+<tr>
+  <td style="padding:12px 0; border-bottom:1px solid #eee;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
       <tr>
-        <td style="padding:12px 0; border-bottom:1px solid #eee;">
-          <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-            <tr>
-              <!-- Profile Image -->
-              <td width="80" valign="top" style="padding-right:12px;">
-                <img src="${p.photo ?? 'https://your-cdn.com/default-avatar.png'}"
-                    width="64" height="64"
-                    style="border-radius:50%; display:block; object-fit:cover;"
-                    alt="${p.fullName} Profile">
-              </td>
 
-              <!-- Profile Info -->
-              <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color:#333;">
-                <p style="margin:0 0 4px 0; font-size:14px; font-weight:bold;">${p.fullName}</p>
-                ${p.profession ? `<p style="margin:0 0 8px 0; font-size:12px; color:#555;">${p.profession}</p>` : ''}
-                <a href="${onboardingLink}"
-                  style="background:#e4c48a; color:#fff; text-decoration:none; padding:8px 14px; border-radius:5px; font-size:12px; display:inline-block;">
-                  View Profile
-                </a>
-              </td>
-            </tr>
-          </table>
+        <!-- Image -->
+        <td width="56" valign="top" style="padding-right:12px;">
+          <img
+            src="${p.photo || "https://satfera.com/default-user.png"}"
+            alt="${p.fullName}"
+            width="48"
+            height="48"
+            style="border-radius:50%;object-fit:cover;display:block;"
+          />
+        </td>
+
+        <!-- Info -->
+        <td valign="top" style="padding:2px 0;">
+          <div style="font-size:16px;font-weight:600;color:#111;">
+            ${p.fullName}${p.age ? `, ${p.age}` : ""}
+            ${
+              p.verified
+                ? `<img src="https://satfera.com/badge.png"
+                     alt="Verified"
+                     style="width:14px;height:14px;margin-left:4px;vertical-align:middle;" />`
+                : ""
+            }
+          </div>
+
+          ${
+            p.location || p.profession
+              ? `<div style="font-size:13px;color:#666;margin-top:4px;">
+                  ${[p.location, p.profession].filter(Boolean).join(" • ")}
+                </div>`
+              : ""
+          }
+
+          ${
+            p.country
+              ? `<div style="font-size:12px;color:#888;margin-top:2px;">
+                  ${p.country}${p.visaType ? ` • ${p.visaType}` : ""}
+                </div>`
+              : ""
+          }
+
+          <!-- CTA -->
+          <div style="margin-top:8px;">
+            <a
+              href="${p.profileLink}"
+              style="
+                display:inline-block;
+                padding:6px 14px;
+                font-size:12px;
+                color:#d4a052;
+                border:1px solid #d4a052;
+                border-radius:20px;
+                text-decoration:none;
+              "
+            >
+              View Profile
+            </a>
+          </div>
+
         </td>
       </tr>
-    `
+    </table>
+  </td>
+</tr>
+`
     )
     .join("");
 

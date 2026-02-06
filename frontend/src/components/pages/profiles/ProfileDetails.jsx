@@ -584,6 +584,7 @@ function PersonalDetailsSection({
         {profile?.personal?.religion && <DetailRow icon={<Heart className="text-[var(--brand-primary-dark)]" size={18} />} label="Religion" value={capitalize(profile.personal.religion)} />}
         {profile?.personal?.subCaste && <DetailRow icon={<User className="text-[var(--brand-primary-dark)]" size={18} />} label="Subcaste" value={profile.personal.subCaste} />}
         {profile?.personal?.country && <DetailRow icon={<MapPin className="text-[var(--brand-primary-dark)]" size={18} />} label="Country" value={profile.personal.country} />}
+        {profile?.personal?.visaType && <DetailRow icon={<Mail className="text-[var(--brand-primary-dark)]" size={18} />} label="Visa Type" value={profile.personal.visaType} />}
         {profile?.personal?.city && profile?.personal?.state && <DetailRow icon={<MapPin className="text-[var(--brand-primary-dark)]" size={18} />} label="Current Location" value={`${capitalize(profile.personal.city)}, ${profile.personal.state}`} />}
         {canShowFullAddress && formattedFullAddress && (
           <DetailRow

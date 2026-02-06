@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PremiumUpgradeModal } from "../../PremiumUpgradeModal";
 import { ProfileCard } from "../../ProfileCard";
 import { Eye } from "lucide-react";
@@ -13,11 +13,15 @@ export function Requests({
   compareProfiles = [],
   shortlistedIds = [],
   onToggleShortlist,
-  onChat
+  onChat,
+  initialTab = "sent"
 }) {
-  const [activeTab, setActiveTab] = useState("sent");
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [statusFilter, setStatusFilter] = useState("all");
   const [premiumModal, setPremiumModal] = useState(false);
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
   const normalizedProfiles = profiles.map(p => {
     const type = p.type?.toLowerCase() === "received" ? "received" : p.type?.toLowerCase() === "sent" ? "sent" : "sent";
     let status = (p.status || "pending").toLowerCase();

@@ -479,7 +479,7 @@ export function Dashboard({
         <StatCard
           label="Request Received"
           value={user?.interestSentCount ?? 0}
-          onViewClick={() => onNavigate?.("requests")}
+          onViewClick={() => onNavigate?.("requests", "received")}
         />
         <StatCard
           label="Your Matches"

@@ -1021,9 +1021,13 @@ export function UserDashboard() {
       };
     }
   };
-  const handleNavigate = page => {
+  const handleNavigate = (page, tab) => {
     setActivePage(page);
-    navigate(`/dashboard/${page}`);
+    if (tab) {
+      navigate(`/dashboard/${page}?tab=${tab}`);
+    } else {
+      navigate(`/dashboard/${page}`);
+    }
   };
   const resolveToProfileId = p => {
     if (!p) return undefined;
@@ -1065,7 +1069,7 @@ export function UserDashboard() {
             <Route path="profile/:id" element={<ProfileDetails profiles={[...profiles.sent, ...profiles.received]} sentProfileIds={sentProfileIds} onNavigate={setActivePage} shortlistedIds={shortlistedIds} onToggleShortlist={handleToggleShortlist} compareProfiles={compareProfiles} onAddToCompare={handleAddToCompare} onRemoveCompare={handleRemoveCompare} onSendRequest={handleSendRequest} onWithdraw={handleWithdraw} onAccept={handleAccept} onReject={handleReject} />} />
           </Routes>
 
-          {!location.pathname.includes('/profile/') && !location.pathname.includes('/compare') && !location.pathname.includes('/edit-profile') && activePage === "requests" && <Requests profiles={[...profiles.sent, ...profiles.received]} onViewProfile={handleViewProfile} onWithdraw={handleWithdraw} onAccept={handleAccept} onReject={handleReject} onChat={handleViewProfile} onAddToCompare={handleAddToCompare} onRemoveCompare={handleRemoveCompare} compareProfiles={compareProfiles} shortlistedIds={shortlistedIds} onToggleShortlist={handleToggleShortlist} />}
+          {!location.pathname.includes('/profile/') && !location.pathname.includes('/compare') && !location.pathname.includes('/edit-profile') && activePage === "requests" && <Requests profiles={[...profiles.sent, ...profiles.received]} onViewProfile={handleViewProfile} onWithdraw={handleWithdraw} onAccept={handleAccept} onReject={handleReject} onChat={handleViewProfile} onAddToCompare={handleAddToCompare} onRemoveCompare={handleRemoveCompare} compareProfiles={compareProfiles} shortlistedIds={shortlistedIds} onToggleShortlist={handleToggleShortlist} initialTab={new URLSearchParams(location.search).get('tab') || 'sent'} />}
 
           {!location.pathname.includes('/profile/') && activePage === "approved" && <ApprovedProfiles profiles={[...profiles.sent, ...profiles.received]} onViewProfile={handleViewProfile} onAddToCompare={handleAddToCompare} onRemoveCompare={handleRemoveCompare} compareProfiles={compareProfiles} shortlistedIds={shortlistedIds} onToggleShortlist={handleToggleShortlist} />}
 

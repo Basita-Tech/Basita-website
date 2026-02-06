@@ -23,6 +23,7 @@ export function ProfileCard({
   age = null,
   state = "",
   country = "",
+  visaType = "",
   profession = "",
   religion = null,
   caste = null,
@@ -75,9 +76,29 @@ export function ProfileCard({
         : "") ||
     "";
 
-  const locationParts = [resolvedState, resolvedCountry].filter(Boolean);
+  // Resolve visa type and residing country (props first, then profile fallback)
+  const resolvedVisaType =
+    visaType || profile?.visaType || profile?.personal?.visaType || "";
+  const residingCountry =
+    country ||
+    resolvedCountry ||
+    profile?.personal?.country ||
+    profile?.residingCountry ||
+    "";
+
+  const locationParts = [resolvedState].filter(Boolean);
   const detailParts = [];
   if (locationParts.length) detailParts.push(locationParts.join(", "));
+
+  // Always show country; add visa type for non-Indian users when available
+  if (residingCountry) {
+    if (resolvedVisaType && residingCountry.toLowerCase() !== "india") {
+      detailParts.push(`${residingCountry} (${resolvedVisaType})`);
+    } else {
+      detailParts.push(residingCountry);
+    }
+  }
+
   if (profession) detailParts.push(profession);
   const detailLine = detailParts.join(" • ");
 
@@ -486,17 +507,9 @@ export function ProfileCard({
     }
   };
 
-  const handleMouseEnter = () => {
-    const profileId = String(id || profile?.id || "").trim();
-    if (!isValidProfileId(profileId)) return;
-    // best effort; ignore errors
-    getViewProfiles(profileId, { useCache: true }).catch(() => {});
-  };
-
   return (
     <div
       className="bg-white rounded-[20px] overflow-hidden shadow hover:shadow-lg transition-all duration-300 flex flex-col w-full max-w-[380px] mx-auto h-full"
-      onMouseEnter={handleMouseEnter}
     >
       <div
         className="relative w-full overflow-visible rounded-t-[20px]"

@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { getUserPhotos, getGovernmentId, submitProfileForReview, updateOnboardingStatus, getOnboardingStatus } from "../../api/auth";
+import { getUserPhotos, getGovernmentId, submitProfileForReview, updateOnboardingStatus, getOnboardingStatus, getUserProfileDetails } from "../../api/auth";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import usePhotoUpload from "../../hooks/usePhotoUpload";
 import ImageCropperModal from "../ImageCropperModal";
 import { trackEvent } from "../analytics/ga4";
 import { validateProfilePhoto, validateGovernmentID } from "@/utils/fileValidation";
+import { AuthContextr } from "../context/AuthContext";
 
 // Helper function to detect file type from URL
 const detectFileTypeFromUrl = async (url) => {
@@ -50,6 +51,7 @@ const UploadPhotos = ({
   onPrevious
 }) => {
   const navigate = useNavigate();
+  const { user, refreshUser } = React.useContext(AuthContextr);
   const {
     uploadPhotos: uploadPhotosSequentially,
     uploadState,
@@ -85,15 +87,29 @@ const UploadPhotos = ({
   const [imageToCrop, setImageToCrop] = useState("");
   const [currentCropPhotoType, setCurrentCropPhotoType] = useState(null);
   
- 
-  const PHOTO_DIMENSIONS = {
+  // Get gender directly from AuthContext instead of setting separate state
+  const userGender = user?.gender || null;
+  
+  // Dynamic requiredKeys based on gender
+  // Female: compulsory1, compulsory3 (governmentId optional)
+  // Male: compulsory1, compulsory3, governmentId (governmentId required)
+  const getRequiredKeys = () => {
+    if (userGender === "male") {
+      return ["compulsory1", "compulsory3", "governmentId"];
+    }
+    // Female or not determined yet - governmentId is optional
+    return ["compulsory1", "compulsory3"];
+  };
+  
+  const requiredKeys = getRequiredKeys();
+  
+  const photoRequirements = {
     compulsory3: { w: 600, h: 600, ratio: 1, label: "Profile Photo (600x600)" },      // 1:1
     compulsory2: { w: 1600, h: 1200, ratio: 4/3, label: "Family Photo (1600x1200)" },     // 4:3
     compulsory1: { w: 1080, h: 1350, ratio: 4/5, label: "Full Body Photo (1080x1350)" },   // 4:5
     optional1: { w: 1080, h: 1350, ratio: 1, label: "Additional Photo 1 (1080x1350)" },  // 1:1
     optional2: { w: 1080, h: 1350, ratio: 1, label: "Additional Photo 2 (1080x1350)" }   // 1:1
   };
-  const requiredKeys = ["compulsory1", "compulsory2", "compulsory3", "governmentId"];
   const photoLabels = {
     compulsory1: "Full Body Photo",
     compulsory2: "Family Photo",
@@ -118,6 +134,14 @@ const UploadPhotos = ({
       Object.values(previews).forEach(url => URL.revokeObjectURL(url));
     };
   }, [previews]);
+  
+  // Refresh user data to ensure we have the latest gender info
+  useEffect(() => {
+    if (refreshUser) {
+      refreshUser();
+    }
+  }, []);
+  
   useEffect(() => {
     const loadExistingPhotos = async () => {
       try {
@@ -125,6 +149,8 @@ const UploadPhotos = ({
         const photosData = photoRes?.data?.photos || {};
         const idData = idRes?.data || {};
         const onBoardingStep = onboarding.data.data.completedSteps.includes("photos");
+        
+        console.log('Gender from AuthContext:', userGender);
         setOnBoardingStatus(onBoardingStep);
         const urls = {
           compulsory1: photosData?.personalPhotos?.[0]?.url || null,
@@ -211,7 +237,7 @@ const UploadPhotos = ({
       const blob = await response.blob();
       
   
-      const dims = PHOTO_DIMENSIONS[currentCropPhotoType];
+      const dims = photoRequirements[currentCropPhotoType];
       const ext = 'jpg';
       const filename = `photo_${currentCropPhotoType}.${ext}`;
       
@@ -437,27 +463,31 @@ const UploadPhotos = ({
         <form onSubmit={handleSubmit} className="space-y-6">
           {}
           {[{
-          label: "Candidate Full Photo(Required)",
+          label: "Candidate Full Photo",
           key: "compulsory1",
-          hint: "Upload a clear full-length photo"
+          hint: "Upload a clear full-length photo",
+          required: true
         }, {
-          label: "Candidate Family Photo (Required)",
+          label: "Candidate Family Photo (Optional)",
           key: "compulsory2",
-          hint: "Upload a photo with your family members"
+          hint: "Upload a photo with your family members",
+          required: false
         }, {
-          label: "Candidate Profile Photo (Required)",
+          label: "Candidate Profile Photo",
           key: "compulsory3",
-          hint: "Upload a clear close-up face photo"
+          hint: "Upload a clear close-up face photo",
+          required: true
         }].map(({
           label,
           key,
-          hint
+          hint,
+          required
         }) => {
           const previewSrc = photos[key] ? previews[key] : uploadedUrls[key] || null;
           const selectedFileName = selectedFileNames[key];
           return <div key={key}>
                 <label htmlFor={key} className="block font-semibold text-gray-800 mb-1">
-                  {label} <span className="text-red-500">*</span>
+                  {label} {required ? <span className="text-red-500">*</span> : null}
                 </label>
                 <input id={key} type="file" accept="image/*" onChange={e => handlePhotoChange(e, key)} className="w-full p-2 border rounded-lg" />
                 <p className="text-xs text-gray-500 mt-1">
@@ -755,10 +785,10 @@ const UploadPhotos = ({
             setCurrentCropPhotoType(null);
           }}
           aspectRatio={
-            currentCropPhotoType ? PHOTO_DIMENSIONS[currentCropPhotoType].ratio : undefined
+            currentCropPhotoType ? photoRequirements[currentCropPhotoType].ratio : undefined
           }
           title={
-            currentCropPhotoType ? PHOTO_DIMENSIONS[currentCropPhotoType].label : "Crop Photo"
+            currentCropPhotoType ? photoRequirements[currentCropPhotoType].label : "Crop Photo"
           }
           onSave={handleCropSave}
         />

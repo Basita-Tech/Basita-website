@@ -17,16 +17,16 @@ export const Navigation = () => {
   };
 
   return (
-    <header className="w-full">
-      <nav className="bg-white shadow-sm py-3 px-3">
+    <header className="w-full sticky top-0 z-50">
+      <nav className="bg-white/95 backdrop-blur shadow-sm py-3 px-3">
         <div className="container mx-auto flex justify-between items-center">
    
           <Link href="/" className="flex items-center gap-2">
             <Image
               src="/logo.png"
               alt="Basita Technology Logo"
-              width={100}
-              height={100}
+              width={130}
+              height={130}
             /> 
           </Link>
 
@@ -170,7 +170,7 @@ export const Navigation = () => {
             
            
             <Link 
-              href="/quote" 
+              href="/contact" 
               className="px-6 py-2.5 rounded-md transition font-medium nav-cta-btn"
             >
               Get a Quote
@@ -290,7 +290,7 @@ export const Navigation = () => {
                 Contact
               </Link>
               <Link
-                href="/quote"
+                href="/contact"
                 className="mt-2 px-6 py-2.5 rounded-md transition font-medium nav-cta-btn text-center"
                 onClick={handleMobileLinkClick}
               >

@@ -277,6 +277,28 @@
     border-color: var(--hero-icon-badge-border);
   }
 
+  .hero-light {
+    --hero-glow: rgba(15, 118, 110, 0.08);
+    --hero-badge-bg: rgba(255, 255, 255, 0.8);
+    --hero-badge-border: rgba(15, 118, 110, 0.25);
+    --hero-badge-text: #0f172a;
+    --hero-title-from: #0f172a;
+    --hero-title-to: #0f766e;
+    --hero-heading: #0b1220;
+    --hero-text: #1f2937;
+    --hero-primary-shadow: rgba(15, 118, 110, 0.2);
+    --hero-primary-shadow-hover: rgba(15, 118, 110, 0.25);
+    --hero-secondary-border: rgba(15, 118, 110, 0.35);
+    --hero-secondary-border-hover: rgba(15, 118, 110, 0.6);
+    --hero-secondary-text: #0f766e;
+    --hero-secondary-bg-hover: rgba(15, 118, 110, 0.08);
+    --hero-card-bg: rgba(255, 255, 255, 0.85);
+    --hero-card-border: rgba(226, 232, 240, 1);
+    --hero-card-icon-bg: rgba(15, 118, 110, 0.1);
+    --hero-card-icon: #0f766e;
+    --hero-divider: rgba(15, 118, 110, 0.35);
+  }
+
   .nav-link {
     color: var(--nav-text);
   }

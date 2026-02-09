@@ -14,11 +14,52 @@ export default function ContactPage() {
     email: "",
     message: "",
   });
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    setFormData({ name: "", email: "", message: "" });
+    setIsSubmitted(false);
+    setSubmitError("");
+
+    const nextErrors = {
+      name: formData.name.trim() ? "" : "Please enter your full name.",
+      email: /\S+@\S+\.\S+/.test(formData.email) ? "" : "Please enter a valid email address.",
+      message: formData.message.trim() ? "" : "Please enter your message.",
+    };
+
+    const hasErrors = Object.values(nextErrors).some(Boolean);
+    if (hasErrors) {
+      setErrors(nextErrors);
+      return;
+    }
+
+    setErrors({ name: "", email: "", message: "" });
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+
+      setIsSubmitted(true);
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      setSubmitError("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const cardVariants = {
@@ -41,16 +82,24 @@ export default function ContactPage() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    if (errors[e.target.name as keyof typeof errors]) {
+      setErrors({ ...errors, [e.target.name]: "" });
+    }
+    if (isSubmitted) {
+      setIsSubmitted(false);
+    }
+    if (submitError) {
+      setSubmitError("");
+    }
   };
 
   return (
     <>
       <Navigation />
       <main className="min-h-screen">
-        {/* Hero Section */}
+    
         <section
-          className="relative w-full overflow-hidden hero-section py-12 md:py-16"
-          style={{ background: "var(--hero-bg-from)" }}
+          className="relative w-full overflow-hidden bg-green-50 hero-light py-16 md:py-24"
         >
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute -top-40 -right-40 w-80 h-80 hero-glow rounded-full mix-blend-multiply filter blur-3xl opacity-15"></div>
@@ -84,9 +133,7 @@ export default function ContactPage() {
                   Start a Conversation
                   <ArrowRight className="w-5 h-5" />
                 </button>
-                <button className="inline-flex items-center justify-center gap-2 border-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-secondary-btn">
-                  Schedule Consultation
-                </button>
+                
               </div>
             </div>
           </div>
@@ -94,11 +141,11 @@ export default function ContactPage() {
           <div className="absolute bottom-0 left-0 right-0 h-px opacity-50 hero-divider"></div>
         </section>
 
-        {/* Contact Info & Form Section */}
+     
         <section className="py-16">
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-              {/* Contact Information */}
+          
               <div className="space-y-8">
                 <div>
                   <h2 className="text-3xl font-bold text-gray-900 mb-6">Contact Information</h2>
@@ -114,8 +161,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-                      <a href="mailto:info@basitatechnology.com" className="text-gray-600 hover:text-teal-600 transition">
-                        info@basitatechnology.com
+                      <a href="mailto:contact@basita.in" className="text-gray-600 hover:text-teal-600 transition">
+                        contact@basita.in
                       </a>
                     </div>
                   </div>
@@ -126,8 +173,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
-                      <a href="tel:+1234567890" className="text-gray-600 hover:text-teal-600 transition">
-                       +91 98765 43210
+                      <a href="tel:+919879003929" className="text-gray-600 hover:text-teal-600 transition">
+                       +91 98790 03929
                       </a>
                     </div>
                   </div>
@@ -159,7 +206,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                {/* Social Links */}
+          
                 <div className="pt-6">
                   <h3 className="font-semibold text-gray-900 mb-4">Follow Us</h3>
                   <div className="flex gap-4">
@@ -182,7 +229,6 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              {/* Contact Form */}
               <Card className="p-8">
                 <h2 className="text-2xl font-bold mb-6 text-slate-900">Send us a Message</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -197,9 +243,15 @@ export default function ContactPage() {
                         required
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                        aria-invalid={!!errors.name}
+                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition ${
+                          errors.name ? "border-red-400" : "border-gray-300"
+                        }`}
                         placeholder="Your full name"
                       />
+                      {errors.name && (
+                        <p className="text-xs text-red-600 mt-1">{errors.name}</p>
+                      )}
                     </div>
 
                     <div>
@@ -213,9 +265,15 @@ export default function ContactPage() {
                         required
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                        aria-invalid={!!errors.email}
+                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition ${
+                          errors.email ? "border-red-400" : "border-gray-300"
+                        }`}
                         placeholder="your@email.com"
                       />
+                      {errors.email && (
+                        <p className="text-xs text-red-600 mt-1">{errors.email}</p>
+                      )}
                     </div>
 
                     <div>
@@ -229,17 +287,35 @@ export default function ContactPage() {
                         value={formData.message}
                         onChange={handleChange}
                         rows={4}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition resize-none"
+                        aria-invalid={!!errors.message}
+                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition resize-none ${
+                          errors.message ? "border-red-400" : "border-gray-300"
+                        }`}
                         placeholder="Tell us about your project..."
                       />
+                      {errors.message && (
+                        <p className="text-xs text-red-600 mt-1">{errors.message}</p>
+                      )}
                     </div>
+
+                    {isSubmitted && (
+                      <div className="rounded-lg bg-teal-50 border border-teal-200 px-4 py-3 text-sm text-teal-700">
+                        Thanks! Your message has been sent. We’ll get back to you soon.
+                      </div>
+                    )}
+                    {submitError && (
+                      <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+                        {submitError}
+                      </div>
+                    )}
 
                     <button
                       type="submit"
-                      className="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
+                      disabled={isSubmitting}
+                      className="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       <Send className="w-4 h-4" />
-                      Send Message
+                      {isSubmitting ? "Sending..." : "Send Message"}
                     </button>
                   </form>
               </Card>

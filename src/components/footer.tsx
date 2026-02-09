@@ -14,8 +14,8 @@ export default function Footer() {
             <Image
               src="/logo.png"
               alt="Basita Technology Logo"
-              width={90}
-              height={90}
+              width={130}
+              height={130}
             />
             
           </div>
@@ -38,11 +38,7 @@ export default function Footer() {
                 Portfolio
               </Link>
             </li>
-            <li>
-              <Link href="/blog" className="hover:text-teal-600">
-                Blog
-              </Link>
-            </li>
+           
             <li>
               <Link href="/contact" className="hover:text-teal-600">
                 Contact
@@ -55,22 +51,22 @@ export default function Footer() {
           <h3 className="mb-3 text-sm font-semibold text-gray-900">Services</h3>
           <ul className="space-y-2 text-sm text-gray-600">
             <li>
-              <Link href="/ai-services" className="hover:text-teal-600">
+              <Link href="/services/ai-integration" className="hover:text-teal-600">
                 AI Services
               </Link>
             </li>
             <li>
-              <Link href="/web-development" className="hover:text-teal-600">
+              <Link href="/services/web-development" className="hover:text-teal-600">
                 Web Development
               </Link>
             </li>
             <li>
-              <Link href="/mobile-app-development" className="hover:text-teal-600">
+              <Link href="/services/mobile-app-development" className="hover:text-teal-600">
                 Mobile Development
               </Link>
             </li>
             <li>
-              <Link href="/cloud-services" className="hover:text-teal-600">
+              <Link href="/services/cloud-services" className="hover:text-teal-600">
                 Cloud Services
               </Link>
             </li>
@@ -81,13 +77,13 @@ export default function Footer() {
           <h3 className="mb-3 text-sm font-semibold text-gray-900">Contact</h3>
           <ul className="space-y-2 text-sm text-gray-600">
             <li>
-              <a href="mailto:info@basitatechnology.com" className="hover:text-teal-600">
-                info@basitatechnology.com
+              <a href="mailto:contact@basita.in" className="hover:text-teal-600">
+                contact@basita.in
               </a>
             </li>
             <li>
-              <a href="tel:+1234567890" className="hover:text-teal-600">
-                +1 (234) 567-890
+              <a href="tel:+919879003929" className="hover:text-teal-600">
+                +91 98790 03929
               </a>
             </li>
             <li>Mon - Fri: 9:00 AM - 6:00 PM</li>

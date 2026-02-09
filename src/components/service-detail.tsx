@@ -49,8 +49,7 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
     <div className="w-full bg-white">
    
       <section
-        className="relative w-full overflow-hidden hero-section py-16 md:py-24"
-        style={{ background: "var(--hero-bg-from)" }}
+        className="relative w-full overflow-hidden bg-green-50 hero-light py-16 md:py-24"
       >
         <div className="container mx-auto px-4">
           <motion.div
@@ -65,7 +64,7 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
               </div>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight hero-heading">
+            <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold mb-4 leading-tight hero-heading">
               {service.title}
             </h1>
 
@@ -74,13 +73,13 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="inline-flex items-center justify-center gap-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-primary-btn">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-primary-btn"
+              >
                 Get Started
                 <ArrowRight className="w-5 h-5" />
-              </button>
-              <button className="inline-flex items-center justify-center gap-2 border-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-secondary-btn">
-                Schedule Consultation
-              </button>
+              </Link>
             </div>
           </motion.div>
         </div>
@@ -297,8 +296,7 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
 
      
       <section
-        className="relative w-full overflow-hidden cta-section hero-section py-16 md:py-20"
-        style={{ background: "var(--hero-bg-from)" }}
+       className="relative w-full overflow-hidden bg-green-50 hero-light py-16 md:py-20"
       >
         <div className="container mx-auto px-4">
           <motion.div
@@ -308,7 +306,7 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
             transition={{ duration: 0.6 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 hero-heading">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 hero-heading">
               Ready to Get Started?
             </h2>
             <p className="text-lg mb-8 hero-text">

@@ -2,11 +2,9 @@
 
 import Navigation from "@/homepage/navigation";
 import Footer from "@/components/footer";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Mail, Phone, MapPin, Clock, Send, MessageSquare, ArrowRight } from "lucide-react";
 import { useState } from "react";
-import { motion } from "framer-motion";
-import Link from "next/link";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -56,25 +54,11 @@ export default function ContactPage() {
       setIsSubmitted(true);
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {
+      console.error("Contact form request failed", error);
       setSubmitError("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.12,
-        duration: 0.7,
-        type: "spring" as const,
-        stiffness: 100,
-        damping: 12
-      }
-    })
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -111,7 +95,7 @@ export default function ContactPage() {
               <div className="inline-block mb-4">
                 <span className="px-4 py-2 border rounded-full text-sm font-medium inline-flex items-center gap-2 hero-badge">
                   <MessageSquare className="w-4 h-4" />
-                  Let's Connect
+                  Let&apos;s Connect
                 </span>
               </div>
 
@@ -124,7 +108,7 @@ export default function ContactPage() {
                 </h1>
 
                 <p className="text-base md:text-lg leading-relaxed max-w-2xl mx-auto hero-text">
-                  Let's discuss how we can help transform your business with cutting-edge solutions.
+                  Let&apos;s discuss how we can help transform your business with cutting-edge solutions.
                 </p>
               </div>
 
@@ -150,7 +134,7 @@ export default function ContactPage() {
                 <div>
                   <h2 className="text-3xl font-bold text-gray-900 mb-6">Contact Information</h2>
                   <p className="text-gray-600 mb-8">
-                    Have a question or want to work together? We'd love to hear from you.
+                    Have a question or want to work together? We&apos;d love to hear from you.
                   </p>
                 </div>
 

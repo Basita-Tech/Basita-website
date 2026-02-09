@@ -1,26 +1,3 @@
-import {
-  Code,
-  Smartphone,
-  Palette,
-  Package,
-  Brain,
-  Cloud,
-  ShoppingCart,
-  Cog,
-  Database,
-  Target,
-  FileText,
-  Zap,
-  Users,
-  Shield,
-  GitBranch,
-  BarChart3,
-  Workflow,
-  Sparkles,
-  MessageSquare,
-  BookOpen
-} from "lucide-react";
-
 export interface Service {
   id: string;
   slug: string;

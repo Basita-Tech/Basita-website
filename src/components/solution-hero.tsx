@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Sparkles, Rocket, Zap } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 export default function SolutionHero() {

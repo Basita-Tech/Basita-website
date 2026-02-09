@@ -6,7 +6,7 @@ export default function ShreedharCaseStudyPage() {
   return (
     <main className="w-full bg-white">
       <Navigation />
-      <section className="py-12 md:py-16 bg-gradient-to-b from-slate-50 via-white to-slate-50">
+      <section className="py-12 md:py-16 bg-linear-to-b from-slate-50 via-white to-slate-50">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto mb-10">
             <div className="relative h-14 w-56 md:h-16 md:w-64">

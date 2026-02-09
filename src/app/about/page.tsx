@@ -6,7 +6,7 @@ import { Award, Users, Target, Shield, Rocket, HeartHandshake, Briefcase, Globe 
 
 const highlights = [
   {
-    title: "25+ Years Experience",
+    title: "3+ Years Experience",
     description: "Decades of leadership in delivering reliable, enterprise-grade solutions.",
     icon: Award,
   },

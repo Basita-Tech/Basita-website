@@ -60,7 +60,7 @@ export default function AllServicesPage() {
               },
               {
                 title: "Proven Track Record",
-                description: "25+ years of experience delivering successful projects for diverse clients worldwide."
+                description: "3+ years of experience delivering successful projects for diverse clients worldwide."
               },
               {
                 title: "Agile Approach",

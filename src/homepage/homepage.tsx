@@ -31,7 +31,7 @@ export const HomePage = () => {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl accent-bg">
                 <Award className="h-6 w-6 accent-icon" />
               </div>
-              <p className="text-2xl font-bold section-heading">25+</p>
+              <p className="text-2xl font-bold section-heading">3+</p>
               <p className="text-xs font-medium section-text">Years Experience</p>
             </div>
 
@@ -430,7 +430,7 @@ export const HomePage = () => {
                 Trusted by Businesses Worldwide
               </h2>
               <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                At Basita Technology, we combine deep technical expertise with a genuine commitment to our clients' success. Our founder's 25+ years of experience drives our passion for excellence in every project we undertake.
+                At Basita Technology, we combine deep technical expertise with a genuine commitment to our clients' success. Our founder's 3+ years of experience drives our passion for excellence in every project we undertake.
               </p>
 
               <div className="flex flex-wrap gap-3">
@@ -459,7 +459,7 @@ export const HomePage = () => {
                   </div>
                   <h3 className="text-xl font-bold text-slate-900 mb-2">Experienced Team</h3>
                   <p className="text-slate-600 text-sm">
-                    Our team brings 25+ years of combined industry experience, delivering solutions that work.
+                    Our team brings 3+ years of combined industry experience, delivering solutions that work.
                   </p>
                 </div>
               </motion.div>

@@ -93,7 +93,7 @@ export default function AllServicesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative w-full overflow-hidden bg-gradient-to-br from-blue-900 via-teal-800 to-slate-900 py-16 md:py-20">
+      <section className="relative w-full overflow-hidden bg-linear-to-br from-blue-900 via-teal-800 to-slate-900 py-16 md:py-20">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-teal-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
@@ -111,7 +111,7 @@ export default function AllServicesPage() {
               Ready to Transform Your Business?
             </h2>
             <p className="text-lg text-blue-100 mb-8">
-              Let's discuss your project and find the perfect solution for your needs.
+              Let&apos;s discuss your project and find the perfect solution for your needs.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

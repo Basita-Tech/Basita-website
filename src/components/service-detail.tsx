@@ -4,13 +4,14 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check, Code2, Zap, Code, Smartphone, Palette, Package, Brain, Cloud, ShoppingCart, Cog, Database, Target, FileText, Users, Shield, GitBranch, BarChart3, Workflow } from "lucide-react";
 import Link from "next/link";
 import { Service } from "@/data/services";
+import type { ComponentType } from "react";
 
 interface ServiceDetailProps {
   service: Service;
 }
 
 
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, ComponentType<{ className?: string }>> = {
   Code,
   Smartphone,
   Palette,
@@ -112,7 +113,7 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
                 variants={fadeInUp}
                 className="flex gap-4 p-4 rounded-lg card transition-colors"
               >
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <div className="flex items-center justify-center h-10 w-10 rounded-md feature-icon">
                     <Check className="w-5 h-5" />
                   </div>
@@ -162,7 +163,7 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
                   </div>
 
                   {idx < service.process.length - 1 && (
-                    <div className="hidden md:block absolute top-6 -right-2 w-4 h-0.5 bg-gradient-to-r feature-icon to-transparent"></div>
+                    <div className="hidden md:block absolute top-6 -right-2 w-4 h-0.5 bg-linear-to-r feature-icon to-transparent"></div>
                   )}
                 </motion.div>
               </div>
@@ -236,7 +237,7 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
                 className="bg-white p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0">
+                  <div className="shrink-0">
                     <div className="flex items-center justify-center h-12 w-12 rounded-md benefit-icon">
                       <Zap className="w-6 h-6" />
                     </div>
@@ -277,7 +278,7 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
                   whileInView="visible"
                   viewport={{ once: true, margin: "-100px" }}
                   variants={fadeInUp}
-                  className="bg-gradient-to-br from-slate-50 to-slate-100 p-8 rounded-lg border border-slate-200"
+                  className="bg-linear-to-br from-slate-50 to-slate-100 p-8 rounded-lg border border-slate-200"
                 >
                   <h3 className="text-xl font-semibold mb-2 section-heading">{study.title}</h3>
                   <p className="mb-4 section-text">{study.description}</p>
@@ -310,7 +311,7 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
               Ready to Get Started?
             </h2>
             <p className="text-lg mb-8 hero-text">
-              Let's discuss how {service.title} can transform your business.
+              Let&apos;s discuss how {service.title} can transform your business.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

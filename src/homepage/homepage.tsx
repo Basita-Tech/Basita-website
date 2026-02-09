@@ -1,6 +1,6 @@
 "use client";
 
-  import { Award, Briefcase, ThumbsUp, Rocket, Code, Brain, Cloud, Smartphone, ShoppingCart, Cog, Palette, Package, Users, Target, Shield, Headphones, Database, GitBranch, Zap, Lock, BarChart3, Workflow } from "lucide-react";
+  import { Award, Briefcase, ThumbsUp, Rocket, Code, Brain, Cloud, Smartphone, ShoppingCart, Cog, Palette, Package, Users, Target, Shield, Headphones, Database, GitBranch, Zap, Lock, BarChart3 } from "lucide-react";
   import Image from "next/image";
   import Link from "next/link";
   import { motion } from "framer-motion";
@@ -348,9 +348,9 @@ export const HomePage = () => {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <a href="/projects/satfera" className="text-teal-600 font-semibold text-xs hover:text-teal-700 transition inline-flex items-center">
+                  <Link href="/projects/satfera" className="text-teal-600 font-semibold text-xs hover:text-teal-700 transition inline-flex items-center">
                     View Case Study →
-                  </a>
+                  </Link>
                 </CardFooter>
               </Card>
             </motion.div>
@@ -409,9 +409,9 @@ export const HomePage = () => {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <a href="/projects/shreedhara" className="text-emerald-600 font-semibold text-xs hover:text-emerald-700 transition inline-flex items-center">
+                  <Link href="/projects/shreedhara" className="text-emerald-600 font-semibold text-xs hover:text-emerald-700 transition inline-flex items-center">
                     View Case Study →
-                  </a>
+                  </Link>
                 </CardFooter>
               </Card>
             </motion.div>
@@ -430,7 +430,7 @@ export const HomePage = () => {
                 Trusted by Businesses Worldwide
               </h2>
               <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                At Basita Technology, we combine deep technical expertise with a genuine commitment to our clients' success. Our founder's 3+ years of experience drives our passion for excellence in every project we undertake.
+                At Basita Technology, we combine deep technical expertise with a genuine commitment to our clients&apos; success. Our founder&apos;s 3+ years of experience drives our passion for excellence in every project we undertake.
               </p>
 
               <div className="flex flex-wrap gap-3">
@@ -732,7 +732,7 @@ export const HomePage = () => {
               Get Ready to Start?
             </h2>
             <p className="text-lg mb-8 hero-text">
-              Let's discuss how our solutions can transform your business.
+              Let&apos;s discuss how our solutions can transform your business.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link 

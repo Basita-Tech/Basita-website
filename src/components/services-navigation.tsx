@@ -4,9 +4,10 @@ import Link from "next/link";
 import { getAllServices } from "@/data/services";
 import { motion } from "framer-motion";
 import { Code, Smartphone, Palette, Package, Brain, Cloud, ShoppingCart, Cog, Database, Target, FileText, Zap, Users, Shield, GitBranch, BarChart3, Workflow } from "lucide-react";
+import type { ComponentType } from "react";
 
 
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, ComponentType<{ className?: string }>> = {
   Code,
   Smartphone,
   Palette,
@@ -47,7 +48,7 @@ export default function ServicesNavigation() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {services.map((service, idx) => {
-        const Icon = iconMap[service.iconName];
+        const Icon = iconMap[service.iconName] ?? Code;
         return (
           <motion.div
             key={service.id}
@@ -60,8 +61,8 @@ export default function ServicesNavigation() {
             <Link href={`/services/${service.slug}`}>
               <div className="h-full bg-white border border-slate-200 rounded-lg p-6 hover:shadow-lg hover:border-teal-300 transition-all duration-300 cursor-pointer group">
                 <div className="flex items-start gap-4 mb-3">
-                  <div className="flex-shrink-0">
-                    <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-gradient-to-br from-teal-50 to-blue-50 group-hover:from-teal-100 group-hover:to-blue-100 transition-colors">
+                  <div className="shrink-0">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-linear-to-br from-teal-50 to-blue-50 group-hover:from-teal-100 group-hover:to-blue-100 transition-colors">
                       <Icon className={`w-6 h-6 ${service.color}`} />
                     </div>
                   </div>

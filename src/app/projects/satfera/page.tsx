@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Navigation } from "@/homepage/navigation";
 import Footer from "@/components/footer";
 
-export default function ShreedharCaseStudyPage() {
+export default function SatferaCaseStudyPage() {
   return (
     <main className="w-full bg-white">
       <Navigation />
@@ -11,8 +11,8 @@ export default function ShreedharCaseStudyPage() {
           <div className="max-w-5xl mx-auto mb-10">
             <div className="relative h-14 w-56 md:h-16 md:w-64">
               <Image
-                src="/logo%20(3).svg"
-                alt="Shreedhar International logo"
+                src="/satfera.svg"
+                alt="Satfera logo"
                 fill
                 className="object-contain object-left"
                 priority
@@ -20,18 +20,28 @@ export default function ShreedharCaseStudyPage() {
             </div>
             <p className="text-sm uppercase tracking-wide text-slate-500 mt-4">Project Title</p>
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900">
-              Shreedhar International
+              Satfera Matrimony Platform
             </h1>
-            <p className="text-slate-600 mt-2 text-base md:text-lg">Name of the project / feature</p>
+            <p className="text-slate-600 mt-2 text-base md:text-lg">Meaningful connections, built on trust and privacy.</p>
           </div>
 
           <div className="max-w-5xl mx-auto text-slate-700 leading-relaxed text-base md:text-lg">
             <p className="text-sm uppercase tracking-wide text-slate-500">Overview</p>
             <p className="mt-2">
-              Shreedhar International is one of the best abroad education consultants for New Zealand, Canada, Australia, UK, USA, Europe and Singapore catering since 2001. Shreedhar International has built up its foundations on trust, honesty, faith to walk an extra mile, providing unique expertise to aspirants seeking overseas student placement management and total hassle-free travel solutions, with post-landing services and perfect guidance in foreign immigration and visa consultancy.
+              Satfera was founded with a simple yet profound mission: to revolutionize the way
+              people find meaningful relationships in our modern world. We believe that finding
+              the right partner isn&apos;t just about chance—it&apos;s about connecting with someone who
+              shares your values, dreams, and vision for life.
             </p>
             <p className="mt-2">
-              Since its inception, Shreedhar International has become a gateway to well over 4000+ students willing to study abroad to acquire global education. With so many hot-spot study destinations and courses to choose from, Shreedhar International’s expert student-counseling team will help identifying the customized and the right University, College or Institution. We also provide work permit guidance to earn a living in the UK, USA, Canada, Australia, New Zealand or Singapore that has earned Shreedhar International its top ranking best student visa guidance provider position.
+              Our platform was created by Jisal and Parul Patel, two visionaries who understood
+              the challenges of traditional matrimony services and wanted to build something better.
+              With a deep commitment to privacy, security, and authentic connections, Satfera has
+              become a trusted platform for thousands of individuals seeking their perfect match.
+            </p>
+            <p className="mt-2">
+              We&apos;re not just a matrimony platform—we&apos;re your trusted companion in one of life&apos;s
+              most important journeys.
             </p>
           </div>
         </div>
@@ -43,13 +53,17 @@ export default function ShreedharCaseStudyPage() {
             <div className="bg-white rounded-xl p-6 border border-slate-200">
               <h2 className="text-lg md:text-xl font-semibold text-slate-900">Problem Statement</h2>
               <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Students needed a trusted, end‑to‑end advisory for course, university, and visa decisions across multiple countries. The lack of centralized guidance made the journey confusing and risky.
+                Traditional matrimony platforms often feel transactional and lack trust, privacy,
+                and meaningful discovery. Users needed a safe, modern space to connect based on
+                shared values and long-term compatibility.
               </p>
             </div>
             <div className="bg-white rounded-xl p-6 border border-slate-200">
               <h2 className="text-lg md:text-xl font-semibold text-slate-900">Objective</h2>
               <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Create a clear, professional experience that helps students identify the right destination and institution, and smoothly complete admissions and visa processes.
+                Build a secure, user-centric matrimony experience that prioritizes authenticity,
+                privacy, and thoughtful matchmaking—helping people find the right partner with
+                confidence.
               </p>
             </div>
           </div>
@@ -61,45 +75,38 @@ export default function ShreedharCaseStudyPage() {
           <div className="max-w-5xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Solution / Feature Description</h2>
             <p className="text-slate-600 mt-2 text-base md:text-lg">
-              We built a structured service flow that presents key offerings and guides students from discovery to admission and post‑landing support.
+              We delivered a modern matrimony platform with intelligent discovery, privacy-first
+              profiles, and secure communication—designed to foster authentic connections.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto mt-6">
             <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <h3 className="text-base md:text-lg font-semibold text-slate-900">Course Suggestion</h3>
+              <h3 className="text-base md:text-lg font-semibold text-slate-900">Value-Based Matching</h3>
               <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Selection of perfect & suitable course is very important aspect for Study Abroad, our experienced team will assist you for course selection.
+                Profiles and discovery flows are built around shared values, goals, and lifestyles
+                to help users find genuinely compatible partners.
               </p>
             </div>
             <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <h3 className="text-base md:text-lg font-semibold text-slate-900">University Selection</h3>
+              <h3 className="text-base md:text-lg font-semibold text-slate-900">Privacy & Trust Controls</h3>
               <p className="text-slate-600 mt-2 text-base md:text-lg">
-                One of the primary and main criterion is Selection of right University for your future education career. We will do it on behalf of you.
+                Granular privacy options ensure users share information only with the right people
+                at the right time, reinforcing trust and safety.
               </p>
             </div>
             <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <h3 className="text-base md:text-lg font-semibold text-slate-900">Perfect Coaching</h3>
+              <h3 className="text-base md:text-lg font-semibold text-slate-900">Secure Messaging</h3>
               <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Coaching is first step towards your career in Abroad. We are offering coaching for IELTS, TOEFL, GMAT, GRE, PTE by experienced coaches.
+                A secure communication layer enables respectful, meaningful conversations while
+                reducing spam and unwanted contact.
               </p>
             </div>
             <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <h3 className="text-base md:text-lg font-semibold text-slate-900">Assistance in Admission</h3>
+              <h3 className="text-base md:text-lg font-semibold text-slate-900">Smart Search & Filters</h3>
               <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Our experienced team will assist you from the start of your admission process till your admission is confirmed. We will help you in all possible ways.
-              </p>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <h3 className="text-base md:text-lg font-semibold text-slate-900">Visa Process</h3>
-              <p className="text-slate-600 mt-2 text-base md:text-lg">
-                We have a separate department for Visa Process, team of well‑trained & experienced persons for Visa Assistance.
-              </p>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <h3 className="text-base md:text-lg font-semibold text-slate-900">Pre‑Departure Awareness</h3>
-              <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Last but not least, our team will assist you and make you familiar with all required information for Departure.
+                Advanced filters make it easy to explore matches that align with personal
+                preferences, priorities, and cultural considerations.
               </p>
             </div>
           </div>
@@ -112,30 +119,32 @@ export default function ShreedharCaseStudyPage() {
             <div className="bg-white rounded-xl p-6 border border-slate-200">
               <h2 className="text-lg md:text-xl font-semibold text-slate-900">Technology / Tools Used</h2>
               <div className="flex flex-wrap gap-2 mt-3">
-                <span className="px-3 py-1 text-xs font-medium rounded-full bg-teal-50 text-teal-700">Next.js</span>
                 <span className="px-3 py-1 text-xs font-medium rounded-full bg-teal-50 text-teal-700">React</span>
+                <span className="px-3 py-1 text-xs font-medium rounded-full bg-teal-50 text-teal-700">Node.js</span>
+                <span className="px-3 py-1 text-xs font-medium rounded-full bg-teal-50 text-teal-700">MongoDB</span>
                 <span className="px-3 py-1 text-xs font-medium rounded-full bg-teal-50 text-teal-700">Tailwind CSS</span>
-                <span className="px-3 py-1 text-xs font-medium rounded-full bg-teal-50 text-teal-700">TypeScript</span>
               </div>
             </div>
             <div className="bg-white rounded-xl p-6 border border-slate-200">
               <h2 className="text-lg md:text-xl font-semibold text-slate-900">Implementation Approach</h2>
               <ul className="mt-2 text-base md:text-lg text-slate-600 space-y-2 list-disc list-inside">
-                <li>Structured the content to mirror the student journey.</li>
-                <li>Designed clear service blocks to highlight value.</li>
-                <li>Optimized for readability with consistent spacing and hierarchy.</li>
+                <li>Structured the experience around trust and long-term compatibility.</li>
+                <li>Designed privacy-first interaction flows and profile controls.</li>
+                <li>Optimized onboarding and discovery for clarity and confidence.</li>
               </ul>
             </div>
             <div className="bg-white rounded-xl p-6 border border-slate-200">
               <h2 className="text-lg md:text-xl font-semibold text-slate-900">Challenges Faced</h2>
               <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Consolidating a large service offering into a concise, user‑friendly narrative without losing clarity.
+                Balancing deep personalization with privacy safeguards while keeping the experience
+                simple and welcoming.
               </p>
             </div>
             <div className="bg-white rounded-xl p-6 border border-slate-200">
               <h2 className="text-lg md:text-xl font-semibold text-slate-900">Result / Outcome</h2>
               <p className="text-slate-600 mt-2 text-base md:text-lg">
-                A professional case study layout that communicates trust, services, and outcomes, helping prospective students understand the end‑to‑end support offered.
+                A trusted matrimony platform that supports meaningful connections through secure
+                communication, thoughtful discovery, and user-first privacy controls.
               </p>
             </div>
           </div>
@@ -143,7 +152,9 @@ export default function ShreedharCaseStudyPage() {
           <div className="max-w-5xl mx-auto mt-6 bg-white rounded-xl p-6 border border-slate-200">
             <h2 className="text-lg md:text-xl font-semibold text-slate-900">Learning / Conclusion</h2>
             <p className="text-slate-600 mt-2 text-base md:text-lg">
-              Clear information hierarchy and service‑based storytelling improve confidence and decision‑making for study‑abroad aspirants.
+              Building trust is essential in relationship-driven platforms. Clear privacy options,
+              respectful communication, and values-based matching create a safer space for meaningful
+              connections.
             </p>
           </div>
         </div>

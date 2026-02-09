@@ -55,11 +55,11 @@ export default function AboutPage() {
     <div className="min-h-screen bg-white">
       <Navigation />
 
-      <section className="w-full bg-slate-50 border-b border-slate-200">
+      <section className="w-full bg-green-50 border-slate-200">
         <div className="container mx-auto px-4 py-14 md:py-18">
           <div className="max-w-3xl">
             <p className="text-teal-600 font-semibold text-sm uppercase tracking-wide mb-3">About Us</p>
-            <h1 className="text-3xl md:text-5xl font-bold text-slate-900 mb-4">
+            <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold text-slate-900 mb-4">
               Building digital products that grow your business
             </h1>
             <p className="text-base md:text-lg text-slate-600 leading-relaxed">
@@ -153,7 +153,7 @@ export default function AboutPage() {
                   Contact Us
                 </a>
                 <a
-                  href="/quote"
+                  href="/contact"
                   className="inline-flex items-center justify-center rounded-lg border border-teal-600 text-teal-600 px-6 py-3 font-semibold hover:bg-teal-50 transition"
                 >
                   Get a Quote

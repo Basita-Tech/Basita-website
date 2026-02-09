@@ -10,7 +10,7 @@ export default function Home() {
     <div className="min-h-screen">
       <Navigation />
       <SolutionHero />
-      <main className="container mx-auto px-4 py-8">
+      <main className="w-full py-8">
         <HomePage />
       </main>
       <Footer />

@@ -1,12 +1,12 @@
 "use client";
 
 import { ArrowRight, Sparkles, Rocket, Zap } from "lucide-react";
+import Link from "next/link";
 
 export default function SolutionHero() {
   return (
     <section
-      className="relative w-full overflow-hidden hero-section"
-      style={{ background: "var(--hero-bg-from)" }}
+      className="relative w-full overflow-hidden bg-green-50 hero-light"
     >
     
       <div className="absolute inset-0 overflow-hidden">
@@ -27,7 +27,7 @@ export default function SolutionHero() {
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold leading-tight hero-heading">
                 Intelligent Solutions for
-                <span className="block text-transparent bg-clip-text hero-title-gradient">
+                <span className="block text-blue-600">
                   Modern Businesses
                 </span>
               </h1>
@@ -39,44 +39,18 @@ export default function SolutionHero() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-6">
-              <button className="inline-flex items-center justify-center gap-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-primary-btn">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-primary-btn"
+              >
                 Get Started
                 <ArrowRight className="w-5 h-5" />
-              </button>
-              <button className="inline-flex items-center justify-center gap-2 border-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-secondary-btn">
-                Learn More
-              </button>
+              </Link>
             </div>
 
           </div>
 
-    
-          <div className="relative h-72 md:h-[380px] hidden lg:block">
-            <div className="absolute inset-0 rounded-2xl border backdrop-blur-sm hero-card"></div>
-            
-            <div className="absolute top-7 right-7 backdrop-blur-md rounded-lg p-5 w-56 shadow-lg hero-card border">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center hero-card-icon">
-                  <Rocket className="w-5 h-5" />
-                </div>
-                <h3 className="font-semibold hero-heading">AI Powered</h3>
-              </div>
-              <p className="text-sm hero-text">Advanced machine learning algorithms optimized for your business needs</p>
-            </div>
-
-            <div className="absolute bottom-7 left-7 backdrop-blur-md rounded-lg p-5 w-56 shadow-lg hero-card border">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center hero-card-icon">
-                  <Zap className="w-5 h-5" />
-                </div>
-                <h3 className="font-semibold hero-heading">Lightning Fast</h3>
-              </div>
-              <p className="text-sm hero-text">Real-time processing and instant insights for immediate action</p>
-            </div>
-
-            <div className="absolute top-1/2 right-1/4 w-32 h-32 hero-glow rounded-full blur-3xl"></div>
-          </div>
-        </div>
+    </div>
       </div>
 
      

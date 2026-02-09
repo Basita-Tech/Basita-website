@@ -280,7 +280,7 @@ export const HomePage = () => {
       </section>
 
  
-      <section className="w-full bg-white py-12 md:py-16">
+      <section id="portfolio" className="w-full bg-white py-12 md:py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
             <p className="text-teal-600 font-semibold text-sm uppercase tracking-wide mb-3">OUR PORTFOLIO</p>
@@ -425,8 +425,8 @@ export const HomePage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Left Content */}
             <div>
-              <p className="text-teal-600 font-semibold text-sm uppercase tracking-wide mb-3">WHY CHOOSE US</p>
-              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+                <p className="text-teal-600 font-semibold text-1xl uppercase tracking-wide mb-3">WHY CHOOSE US</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
                 Trusted by Businesses Worldwide
               </h2>
               <p className="text-lg text-slate-600 mb-8 leading-relaxed">
@@ -720,7 +720,7 @@ export const HomePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="relative w-full overflow-hidden hero-section py-16 md:py-20" style={{ background: "var(--hero-bg-from)" }}>
+      <section className="relative w-full overflow-hidden bg-green-50 hero-light py-16 md:py-20">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 hero-glow rounded-full mix-blend-multiply filter blur-3xl opacity-15"></div>
           <div className="absolute -bottom-40 -left-40 w-80 h-80 hero-glow rounded-full mix-blend-multiply filter blur-3xl opacity-15"></div>
@@ -728,8 +728,8 @@ export const HomePage = () => {
 
         <div className="relative z-10 container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 hero-heading">
-              Ready to Get Started?
+            <h2 className="text-4xl md:text-4xl font-bold mb-4 hero-heading">
+              Get Ready to Start?
             </h2>
             <p className="text-lg mb-8 hero-text">
               Let's discuss how our solutions can transform your business.

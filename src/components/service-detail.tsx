@@ -315,10 +315,13 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="inline-flex items-center justify-center gap-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-primary-btn">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-primary-btn"
+              >
                 Schedule Free Consultation
                 <ArrowRight className="w-5 h-5" />
-              </button>
+              </Link>
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 border-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-secondary-btn"

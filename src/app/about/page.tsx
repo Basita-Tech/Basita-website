@@ -132,37 +132,35 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="w-full bg-white py-14 md:py-18">
+      <section className="relative w-full overflow-hidden bg-green-50 hero-light py-16 md:py-20">
         <div className="container mx-auto px-4">
-          <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-teal-50 to-blue-50 p-8 md:p-12">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3">
-                  Let’s build something great together
-                </h2>
-                <p className="text-slate-600">
-                  Share your goals and we’ll help you plan, design, and deliver a solution that
-                  accelerates your growth.
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-3 lg:justify-end">
-                <a
-                  href="/contact"
-                  className="inline-flex items-center justify-center rounded-lg bg-teal-600 text-white px-6 py-3 font-semibold hover:bg-teal-700 transition"
-                >
-                  Contact Us
-                </a>
-                <a
-                  href="/contact"
-                  className="inline-flex items-center justify-center rounded-lg border border-teal-600 text-teal-600 px-6 py-3 font-semibold hover:bg-teal-50 transition"
-                >
-                  Get a Quote
-                </a>
-              </div>
+          <div className="text-center max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-4xl font-bold mb-4 hero-heading">
+              Get Ready to Start?
+            </h2>
+            <p className="text-lg mb-8 hero-text">
+              Let&apos;s discuss how Basita Technology can transform your business.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-primary-btn"
+              >
+                Schedule Free Consultation
+              </a>
+              <a
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 border-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-secondary-btn"
+              >
+                Contact Us
+              </a>
             </div>
           </div>
         </div>
       </section>
+
+     
 
       <Footer />
     </div>

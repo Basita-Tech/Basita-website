@@ -99,6 +99,8 @@ export default function PortfolioPage() {
         </div>
       </section>
 
+      
+
       <Footer />
     </main>
   );

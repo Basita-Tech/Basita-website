@@ -21,11 +21,6 @@ export default function Home() {
         "@type": "WebSite",
         name: "Basita Technology",
         url: "https://basita.in",
-        potentialAction: {
-          "@type": "SearchAction",
-          target: "https://basita.in/search?q={search_term_string}",
-          "query-input": "required name=search_term_string",
-        },
       },
     ],
   };

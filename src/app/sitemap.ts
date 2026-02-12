@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllServices } from "@/data/services";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://basita.in";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.basita.in";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

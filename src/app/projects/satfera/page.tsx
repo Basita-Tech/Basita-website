@@ -1,6 +1,41 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { Navigation } from "@/homepage/navigation";
 import Footer from "@/components/footer";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.basita.in";
+
+export const metadata: Metadata = {
+  title: "Satfera Case Study | Basita Technology",
+  description:
+    "Case study for the Satfera matrimony platform built by Basita Technology.",
+  alternates: {
+    canonical: "/projects/satfera",
+  },
+  openGraph: {
+    type: "website",
+    url: `${siteUrl}/projects/satfera`,
+    siteName: "Basita Technology",
+    title: "Satfera Case Study | Basita Technology",
+    description:
+      "Case study for the Satfera matrimony platform built by Basita Technology.",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Basita Technology",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Satfera Case Study | Basita Technology",
+    description:
+      "Case study for the Satfera matrimony platform built by Basita Technology.",
+    images: ["/logo.png"],
+  },
+};
 
 export default function SatferaCaseStudyPage() {
   return (

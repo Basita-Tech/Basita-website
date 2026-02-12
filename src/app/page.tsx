@@ -13,14 +13,14 @@ export default function Home() {
       { 
         "@type": "Organization",
         name: "Basita Technology",
-        url: "https://basita.in",
-        logo: "https://basita.in/logo.png",
+        url: "https://www.basita.in",
+        logo: "https://www.basita.in/logo.png",
         sameAs: ["https://www.linkedin.com/company/basita-technology"],
       },
       {
         "@type": "WebSite",
         name: "Basita Technology",
-        url: "https://basita.in",
+        url: "https://www.basita.in",
       },
     ],
   };

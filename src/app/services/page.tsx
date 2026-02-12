@@ -117,11 +117,7 @@ export default function AllServicesPage() {
             </div>
           </div>
         </div>
-      </section>
-
-
-
-      
+      </section>  
     </div>
   );
 }

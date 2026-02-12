@@ -20,7 +20,7 @@ const rethinkSans = Rethink_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://basita.in";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.basita.in";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    url: "https://basita.in",
+    url: "https://www.basita.in",
     siteName: "Basita Technology",
     title: "Basita Technology | Software & AI Solutions",
     description:

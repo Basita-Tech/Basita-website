@@ -28,6 +28,9 @@ export const metadata: Metadata = {
     default: "Basita Technology | Software & AI Solutions",
     template: "%s | Basita Technology",
   },
+  alternates: {
+    canonical: "/",
+  },
   description:
     "Basita Technology builds modern digital products, AI solutions, and scalable platforms for growing businesses.",
   applicationName: "Basita Technology",

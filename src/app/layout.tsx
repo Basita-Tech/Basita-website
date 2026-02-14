@@ -22,6 +22,38 @@ const rethinkSans = Rethink_Sans({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.basita.in";
 
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}#organization`,
+      name: "Basita Technology",
+      url: siteUrl,
+      logo: `${siteUrl}/logo.png`,
+      sameAs: ["https://www.linkedin.com/company/basita-technology"],
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          url: `${siteUrl}/contact`,
+          availableLanguage: ["English"],
+        },
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}#website`,
+      name: "Basita Technology",
+      url: siteUrl,
+      publisher: {
+        "@id": `${siteUrl}#organization`,
+      },
+      inLanguage: "en",
+    },
+  ],
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -95,6 +127,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${jetbrainsMono.variable} ${rethinkSans.variable} antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
         {children}
       </body>
     </html>

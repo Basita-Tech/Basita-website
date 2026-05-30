@@ -3,7 +3,7 @@
 import Navigation from "@/homepage/navigation";
 import Footer from "@/components/footer";
 import { Card } from "@/components/ui/card";
-import { Mail, Phone, MapPin, Clock, Send, MessageSquare, ArrowRight } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Send, MessageSquare } from "lucide-react";
 import { useState } from "react";
 
 export default function ContactPage() {

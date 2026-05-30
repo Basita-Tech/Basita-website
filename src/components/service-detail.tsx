@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check, Code2, Zap, Code, Smartphone, Palette, Package, Brain, Cloud, ShoppingCart, Cog, Database, Target, FileText, Users, Shield, GitBranch, BarChart3, Workflow } from "lucide-react";
 import Link from "next/link";
 import { Service } from "@/data/services";
+import { GetStartedCTA } from "@/components/get-started-cta";
 import type { ComponentType } from "react";
 
 interface ServiceDetailProps {
@@ -295,43 +296,10 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
         </section>
       )}
 
-     
-      <section
-       className="relative w-full overflow-hidden bg-green-50 hero-light py-16 md:py-20"
-      >
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-3xl mx-auto"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 hero-heading">
-              Ready to Get Started?
-            </h2>
-            <p className="text-lg mb-8 hero-text">
-              Let&apos;s discuss how {service.title} can transform your business.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-primary-btn"
-              >
-                Schedule Free Consultation
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 border-2 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hero-secondary-btn"
-              >
-                Contact Us
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <GetStartedCTA
+        title="Ready to Get Started?"
+        description={`Let's discuss how ${service.title} can transform your business.`}
+      />
     </div>
   );
 }

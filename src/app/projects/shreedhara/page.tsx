@@ -2,13 +2,24 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Navigation } from "@/homepage/navigation";
 import Footer from "@/components/footer";
+import {
+  CaseStudyConclusion,
+  CaseStudyCTA,
+  CaseStudyDetails,
+  CaseStudyHero,
+  CaseStudyMetrics,
+  CaseStudyOverview,
+  CaseStudyProblemObjective,
+  CaseStudyProcess,
+  CaseStudySolution,
+} from "@/components/case-study/case-study-sections";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.basita.in";
 
 export const metadata: Metadata = {
   title: "Shreedhar International Case Study | Basita Technology",
   description:
-    "Case study for the Shreedhar International website and digital experience built by Basita Technology.",
+    "How Basita Technology built a professional corporate website for Shreedhar International—an abroad education consultancy serving 4000+ students since 2001.",
   alternates: {
     canonical: "/projects/shreedhara",
   },
@@ -18,7 +29,7 @@ export const metadata: Metadata = {
     siteName: "Basita Technology",
     title: "Shreedhar International Case Study | Basita Technology",
     description:
-      "Case study for the Shreedhar International website and digital experience built by Basita Technology.",
+      "How Basita Technology built a professional corporate website for Shreedhar International—an abroad education consultancy serving 4000+ students since 2001.",
     images: [
       {
         url: "/logo.png",
@@ -32,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Shreedhar International Case Study | Basita Technology",
     description:
-      "Case study for the Shreedhar International website and digital experience built by Basita Technology.",
+      "How Basita Technology built a professional corporate website for Shreedhar International—an abroad education consultancy serving 4000+ students since 2001.",
     images: ["/logo.png"],
   },
 };
@@ -41,148 +52,147 @@ export default function ShreedharCaseStudyPage() {
   return (
     <main className="w-full bg-white">
       <Navigation />
-      <section className="py-12 md:py-16 bg-linear-to-b from-slate-50 via-white to-slate-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto mb-10">
-            <div className="relative h-14 w-56 md:h-16 md:w-64">
-              <Image
-                src="/logo%20(3).svg"
-                alt="Shreedhar International logo"
-                fill
-                className="object-contain object-left"
-                priority
-              />
-            </div>
-            <p className="text-sm uppercase tracking-wide text-slate-500 mt-4">Project Title</p>
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900">
-              Shreedhar International
-            </h1>
-            <p className="text-slate-600 mt-2 text-base md:text-lg">Name of the project / feature</p>
-          </div>
 
-          <div className="max-w-5xl mx-auto text-slate-700 leading-relaxed text-base md:text-lg">
-            <p className="text-sm uppercase tracking-wide text-slate-500">Overview</p>
-            <p className="mt-2">
-              Shreedhar International is one of the best abroad education consultants for New Zealand, Canada, Australia, UK, USA, Europe and Singapore catering since 2001. Shreedhar International has built up its foundations on trust, honesty, faith to walk an extra mile, providing unique expertise to aspirants seeking overseas student placement management and total hassle-free travel solutions, with post-landing services and perfect guidance in foreign immigration and visa consultancy.
-            </p>
-            <p className="mt-2">
-              Since its inception, Shreedhar International has become a gateway to well over 4000+ students willing to study abroad to acquire global education. With so many hot-spot study destinations and courses to choose from, Shreedhar International’s expert student-counseling team will help identifying the customized and the right University, College or Institution. We also provide work permit guidance to earn a living in the UK, USA, Canada, Australia, New Zealand or Singapore that has earned Shreedhar International its top ranking best student visa guidance provider position.
-            </p>
+      <CaseStudyHero
+        logo={
+          <div className="relative h-14 w-56 md:h-16 md:w-64">
+            <Image
+              src="/logo%20(3).svg"
+              alt="Shreedhar International logo"
+              fill
+              className="object-contain object-left"
+              priority
+            />
           </div>
-        </div>
-      </section>
+        }
+        title="Shreedhar International"
+        subtitle="A modern corporate website for a trusted abroad education consultancy—showcasing services, building credibility, and guiding students through every step of their study-abroad journey."
+        meta={[
+          { label: "Industry", value: "Education / Immigration" },
+          { label: "Services", value: "Web Dev, CMS, UI/UX" },
+          { label: "Platform", value: "Corporate Website" },
+          { label: "Client Since", value: "Est. 2001" },
+        ]}
+      />
 
-      <section className="py-16 md:py-20 bg-slate-50">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            <div className="bg-white rounded-xl p-6 border border-slate-200">
-              <h2 className="text-lg md:text-xl font-semibold text-slate-900">Problem Statement</h2>
-              <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Students needed a trusted, end‑to‑end advisory for course, university, and visa decisions across multiple countries. The lack of centralized guidance made the journey confusing and risky.
-              </p>
-            </div>
-            <div className="bg-white rounded-xl p-6 border border-slate-200">
-              <h2 className="text-lg md:text-xl font-semibold text-slate-900">Objective</h2>
-              <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Create a clear, professional experience that helps students identify the right destination and institution, and smoothly complete admissions and visa processes.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CaseStudyOverview
+        paragraphs={[
+          "Shreedhar International is a leading abroad education consultancy serving students across New Zealand, Canada, Australia, the UK, USA, Europe, and Singapore since 2001. Built on trust, honesty, and a commitment to going the extra mile, the firm has helped over 4,000 students pursue global education and navigate complex visa and immigration processes.",
+          "As the consultancy expanded its reach, it needed a digital presence that matched its reputation—one that clearly communicated its full range of services, established credibility with prospective students and parents, and made it easy to understand the end-to-end study-abroad journey.",
+          "Basita Technology partnered with Shreedhar International to design and develop a professional, multilingual-ready corporate website that transforms a complex service offering into a clear, confidence-building digital experience.",
+        ]}
+      />
 
-      <section className="py-16 md:py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Solution / Feature Description</h2>
-            <p className="text-slate-600 mt-2 text-base md:text-lg">
-              We built a structured service flow that presents key offerings and guides students from discovery to admission and post‑landing support.
-            </p>
-          </div>
+      <CaseStudyMetrics
+        metrics={[
+          { value: "4,000+", label: "Students placed abroad" },
+          { value: "7+", label: "Study destinations" },
+          { value: "Since 2001", label: "Years of expertise" },
+          { value: "End-to-End", label: "Advisory services" },
+        ]}
+      />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto mt-6">
-            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <h3 className="text-base md:text-lg font-semibold text-slate-900">Course Suggestion</h3>
-              <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Selection of perfect & suitable course is very important aspect for Study Abroad, our experienced team will assist you for course selection.
-              </p>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <h3 className="text-base md:text-lg font-semibold text-slate-900">University Selection</h3>
-              <p className="text-slate-600 mt-2 text-base md:text-lg">
-                One of the primary and main criterion is Selection of right University for your future education career. We will do it on behalf of you.
-              </p>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <h3 className="text-base md:text-lg font-semibold text-slate-900">Perfect Coaching</h3>
-              <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Coaching is first step towards your career in Abroad. We are offering coaching for IELTS, TOEFL, GMAT, GRE, PTE by experienced coaches.
-              </p>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <h3 className="text-base md:text-lg font-semibold text-slate-900">Assistance in Admission</h3>
-              <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Our experienced team will assist you from the start of your admission process till your admission is confirmed. We will help you in all possible ways.
-              </p>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <h3 className="text-base md:text-lg font-semibold text-slate-900">Visa Process</h3>
-              <p className="text-slate-600 mt-2 text-base md:text-lg">
-                We have a separate department for Visa Process, team of well‑trained & experienced persons for Visa Assistance.
-              </p>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <h3 className="text-base md:text-lg font-semibold text-slate-900">Pre‑Departure Awareness</h3>
-              <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Last but not least, our team will assist you and make you familiar with all required information for Departure.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CaseStudyProblemObjective
+        problem="Prospective students and parents faced information overload when researching study-abroad options. Shreedhar International offered comprehensive services—from course selection and university placement to visa processing and pre-departure guidance—but lacked a centralized digital platform that presented this value clearly. Without a professional web presence, the consultancy risked losing trust and leads to competitors with stronger online branding."
+        objective="Create a polished, professional website that communicates Shreedhar International's expertise, organizes services into a clear student journey, and builds confidence with prospective clients—ultimately driving inquiries and strengthening the brand's digital credibility."
+      />
 
-      <section className="py-16 md:py-20 bg-slate-50">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            <div className="bg-white rounded-xl p-6 border border-slate-200">
-              <h2 className="text-lg md:text-xl font-semibold text-slate-900">Technology / Tools Used</h2>
-              <div className="flex flex-wrap gap-2 mt-3">
-                <span className="px-3 py-1 text-xs font-medium rounded-full bg-teal-50 text-teal-700">Next.js</span>
-                <span className="px-3 py-1 text-xs font-medium rounded-full bg-teal-50 text-teal-700">React</span>
-                <span className="px-3 py-1 text-xs font-medium rounded-full bg-teal-50 text-teal-700">Tailwind CSS</span>
-                <span className="px-3 py-1 text-xs font-medium rounded-full bg-teal-50 text-teal-700">TypeScript</span>
-              </div>
-            </div>
-            <div className="bg-white rounded-xl p-6 border border-slate-200">
-              <h2 className="text-lg md:text-xl font-semibold text-slate-900">Implementation Approach</h2>
-              <ul className="mt-2 text-base md:text-lg text-slate-600 space-y-2 list-disc list-inside">
-                <li>Structured the content to mirror the student journey.</li>
-                <li>Designed clear service blocks to highlight value.</li>
-                <li>Optimized for readability with consistent spacing and hierarchy.</li>
-              </ul>
-            </div>
-            <div className="bg-white rounded-xl p-6 border border-slate-200">
-              <h2 className="text-lg md:text-xl font-semibold text-slate-900">Challenges Faced</h2>
-              <p className="text-slate-600 mt-2 text-base md:text-lg">
-                Consolidating a large service offering into a concise, user‑friendly narrative without losing clarity.
-              </p>
-            </div>
-            <div className="bg-white rounded-xl p-6 border border-slate-200">
-              <h2 className="text-lg md:text-xl font-semibold text-slate-900">Result / Outcome</h2>
-              <p className="text-slate-600 mt-2 text-base md:text-lg">
-                A professional case study layout that communicates trust, services, and outcomes, helping prospective students understand the end‑to‑end support offered.
-              </p>
-            </div>
-          </div>
+      <CaseStudySolution
+        intro="We built a structured, service-oriented website that mirrors the student journey—from initial counseling through admission, visa processing, and pre-departure support—making complex offerings easy to understand and act on."
+        features={[
+          {
+            title: "Course & Career Counseling",
+            description:
+              "Dedicated sections explain how expert counselors help students select the right course aligned with career goals, market demand, and personal aspirations.",
+          },
+          {
+            title: "University Selection",
+            description:
+              "Clear content outlines the consultancy's process for identifying and shortlisting universities and institutions across multiple countries.",
+          },
+          {
+            title: "Test Preparation Support",
+            description:
+              "Information on IELTS, TOEFL, GMAT, GRE, and PTE coaching—positioning Shreedhar as a one-stop advisory partner.",
+          },
+          {
+            title: "Admission Assistance",
+            description:
+              "Step-by-step guidance on application preparation, documentation, and follow-up through confirmed admission.",
+          },
+          {
+            title: "Visa & Immigration",
+            description:
+              "A dedicated visa services section highlights the firm's specialized team and track record in student visa processing.",
+          },
+          {
+            title: "Pre-Departure & Post-Landing",
+            description:
+              "Resources covering travel preparation, accommodation guidance, and post-arrival support for a smooth transition abroad.",
+          },
+        ]}
+      />
 
-          <div className="max-w-5xl mx-auto mt-6 bg-white rounded-xl p-6 border border-slate-200">
-            <h2 className="text-lg md:text-xl font-semibold text-slate-900">Learning / Conclusion</h2>
-            <p className="text-slate-600 mt-2 text-base md:text-lg">
-              Clear information hierarchy and service‑based storytelling improve confidence and decision‑making for study‑abroad aspirants.
-            </p>
-          </div>
-        </div>
-      </section>
+      <CaseStudyProcess
+        steps={[
+          {
+            step: "1",
+            title: "Content Audit",
+            description:
+              "Reviewed existing materials, service offerings, and client messaging to define the site information architecture.",
+          },
+          {
+            step: "2",
+            title: "Design & Branding",
+            description:
+              "Created a clean, professional UI that reflects trust, expertise, and accessibility for students and parents.",
+          },
+          {
+            step: "3",
+            title: "Development",
+            description:
+              "Built a fast, SEO-friendly site with structured service pages, contact flows, and CMS-ready content blocks.",
+          },
+          {
+            step: "4",
+            title: "Launch & Optimize",
+            description:
+              "Deployed the site and refined content hierarchy based on readability, mobile performance, and user flow.",
+          },
+        ]}
+      />
+
+      <CaseStudyDetails
+        technologies={["Next.js", "React", "Tailwind CSS", "TypeScript", "Strapi", "PostgreSQL"]}
+        approach={[
+          "Organized content to follow the natural student journey—from discovery to departure.",
+          "Designed scannable service blocks with clear headings and concise descriptions.",
+          "Built with performance and SEO best practices for international discoverability.",
+          "Structured the site for future multilingual expansion across key markets.",
+        ]}
+        challenges="Consolidating a wide range of services—spanning seven countries and multiple test prep programs—into a concise, navigable website without overwhelming visitors required careful information hierarchy and progressive content disclosure."
+        outcome="Shreedhar International now has a professional digital presence that communicates trust, expertise, and comprehensive support. The website helps prospective students quickly understand available services, builds credibility with parents and counselors, and positions the firm as a leading study-abroad advisory partner."
+        deliverables={[
+          {
+            title: "Corporate Website",
+            description: "Fully responsive site with service pages, about section, and contact integration.",
+          },
+          {
+            title: "Service Architecture",
+            description: "Structured content model covering the full student advisory lifecycle.",
+          },
+          {
+            title: "Brand-Aligned UI",
+            description: "Professional design system reflecting credibility and global reach.",
+          },
+        ]}
+      />
+
+      <CaseStudyConclusion
+        conclusion="For service-driven businesses like education consultancies, clarity is the product. By organizing Shreedhar International's extensive offerings into a logical, student-centric narrative, we helped transform a complex advisory model into an approachable digital experience. Strong information hierarchy and trust-focused design are essential when guiding high-stakes life decisions."
+      />
+
+      <CaseStudyCTA />
       <Footer />
     </main>
   );

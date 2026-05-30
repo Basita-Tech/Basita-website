@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Navigation } from "@/homepage/navigation";
 import Footer from "@/components/footer";
+import { GetStartedCTA } from "@/components/get-started-cta";
+import CreekLogo from "@/components/creek-logo";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function PortfolioPage() {
@@ -20,10 +22,10 @@ export default function PortfolioPage() {
               A curated selection of projects that showcase our approach to design, engineering, and business impact.
             </p>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <Card className="relative h-full overflow-hidden border border-slate-200 bg-white shadow-sm">
               <CardHeader className="pt-3 pb-2 space-y-0 items-start text-left">
-                <div className="w-full h-14 md:h-18 flex items-center justify-start mb-2">
+                <div className="w-full h-14 md:h-16 flex items-center justify-start mb-2">
                   <Image
                     src="/satfera.svg"
                     alt="Satfera logo"
@@ -61,7 +63,7 @@ export default function PortfolioPage() {
 
             <Card className="relative h-full overflow-hidden border border-slate-200 bg-white shadow-sm">
               <CardHeader className="pt-3 pb-2 space-y-0 items-start text-left">
-                <div className="w-full h-14 md:h-18 flex items-center justify-start mb-2">
+                <div className="w-full h-14 md:h-16 flex items-center justify-start mb-2">
                   <Image
                     src="/logo%20(3).svg"
                     alt="Shreedhar International logo"
@@ -77,10 +79,10 @@ export default function PortfolioPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium rounded-full">Next.js</span>
-                  <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium rounded-full">Tailwind CSS</span>
-                  <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium rounded-full">Strapi</span>
-                  <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium rounded-full">PostgreSQL</span>
+                  <span className="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-medium rounded-full">Next.js</span>
+                  <span className="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-medium rounded-full">Tailwind CSS</span>
+                  <span className="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-medium rounded-full">Strapi</span>
+                  <span className="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-medium rounded-full">PostgreSQL</span>
                 </div>
                 <ul className="space-y-1.5 text-sm text-slate-600">
                   <li>• Modern UI/UX design</li>
@@ -89,7 +91,36 @@ export default function PortfolioPage() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Link href="/projects/shreedhara" className="text-emerald-600 font-semibold text-sm inline-flex items-center gap-1">
+                <Link href="/projects/shreedhara" className="text-teal-600 font-semibold text-sm inline-flex items-center gap-1">
+                  View Case Study
+                  <span aria-hidden="true">→</span>
+                </Link>
+              </CardFooter>
+            </Card>
+
+            <Card className="relative h-full overflow-hidden border border-slate-200 bg-white shadow-sm">
+              <CardHeader className="pt-3 pb-2 space-y-0 items-start text-left">
+                <CreekLogo className="mb-2" />
+                <CardTitle className="text-xl">Creekjob Hiring Platform</CardTitle>
+                <CardDescription className="text-sm mt-2">
+                  A job marketplace for service and hourly work, designed for quick hiring and easy employer discovery.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <span className="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-medium rounded-full">Golang</span>
+                  <span className="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-medium rounded-full">TanStack</span>
+                  <span className="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-medium rounded-full">Next.js</span>
+                  <span className="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-medium rounded-full">PostgreSQL</span>
+                </div>
+                <ul className="space-y-1.5 text-sm text-slate-600">
+                  <li>• Smart matching for hourly roles</li>
+                  <li>• Employer candidate workflows</li>
+                  <li>• Quick apply and notification alerts</li>
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <Link href="/projects/creekjob" className="text-teal-600 font-semibold text-sm inline-flex items-center gap-1">
                   View Case Study
                   <span aria-hidden="true">→</span>
                 </Link>
@@ -98,9 +129,7 @@ export default function PortfolioPage() {
           </div>
         </div>
       </section>
-
-      
-
+      <GetStartedCTA />
       <Footer />
     </main>
   );

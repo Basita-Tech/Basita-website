@@ -46,6 +46,7 @@ const structuredData = {
       "@id": `${siteUrl}#website`,
       name: "Basita Technology",
       url: siteUrl,
+      logo: `${siteUrl}/logo.png`,
       publisher: {
         "@id": `${siteUrl}#organization`,
       },

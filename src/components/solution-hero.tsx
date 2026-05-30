@@ -27,7 +27,7 @@ export default function SolutionHero() {
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold leading-tight hero-heading">
                 Intelligent Solutions for
-                <span className="block text-blue-600">
+                <span className="block text-teal-700">
                   Modern Businesses
                 </span>
               </h1>

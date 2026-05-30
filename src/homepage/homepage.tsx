@@ -3,6 +3,8 @@
   import { Award, Briefcase, ThumbsUp, Rocket, Code, Brain, Cloud, Smartphone, ShoppingCart, Cog, Palette, Package, Users, Target, Shield, Headphones, Database, GitBranch, Zap, Lock, BarChart3 } from "lucide-react";
   import Image from "next/image";
   import Link from "next/link";
+  import CreekLogo from "@/components/creek-logo";
+  import { GetStartedCTA } from "@/components/get-started-cta";
   import { motion } from "framer-motion";
   import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -111,7 +113,7 @@ export const HomePage = () => {
               <Card className="h-full bg-white hover:shadow-md transition-shadow">
                 <CardHeader>
                   <div className="w-14 h-14 mb-2">
-                    <Smartphone className="w-full h-full text-green-600" strokeWidth={1.5} />
+                    <Smartphone className="w-full h-full text-teal-600" strokeWidth={1.5} />
                   </div>
                   <CardTitle className="text-xl">Mobile App Development</CardTitle>
                   <CardDescription className="text-sm">
@@ -292,7 +294,7 @@ export const HomePage = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
          
             <motion.div
               custom={0}
@@ -303,7 +305,7 @@ export const HomePage = () => {
             >
               <Card className="h-full bg-white hover:shadow-md transition-shadow">
                 <CardHeader className="pt-3 pb-2 space-y-0 items-start text-left">
-                  <div className="w-full h-14 md:h-18 flex items-center justify-start mb-2">
+                  <div className="w-full h-14 md:h-16 flex items-center justify-start mb-2">
                     <Image
                       src="/satfera.svg"
                       alt="Satfera Matrimony logo"
@@ -365,7 +367,7 @@ export const HomePage = () => {
             >
               <Card className="h-full bg-white hover:shadow-md transition-shadow">
                 <CardHeader className="pt-3 pb-2 space-y-0 items-start text-left">
-                  <div className="w-full h-14 md:h-18 flex items-center justify-start mb-2">
+                  <div className="w-full h-14 md:h-16 flex items-center justify-start mb-2">
                     <Image
                       src="/logo%20(3).svg"
                       alt="Shreedhar International logo"
@@ -381,27 +383,27 @@ export const HomePage = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-1.5 mb-3">
-                    <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-xs font-medium rounded">Next.js</span>
-                    <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-xs font-medium rounded">Tailwind CSS</span>
-                    <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-xs font-medium rounded">Strapi</span>
-                    <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-xs font-medium rounded">PostgreSQL</span>
+                    <span className="px-2 py-0.5 bg-teal-50 text-teal-700 text-xs font-medium rounded">Next.js</span>
+                    <span className="px-2 py-0.5 bg-teal-50 text-teal-700 text-xs font-medium rounded">Tailwind CSS</span>
+                    <span className="px-2 py-0.5 bg-teal-50 text-teal-700 text-xs font-medium rounded">Strapi</span>
+                    <span className="px-2 py-0.5 bg-teal-50 text-teal-700 text-xs font-medium rounded">PostgreSQL</span>
                   </div>
 
                   <div className="space-y-1.5 text-xs text-slate-600">
                     <div className="flex items-center gap-2">
-                      <svg className="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-3.5 h-3.5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                       <span>Modern UI/UX Design</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <svg className="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-3.5 h-3.5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                       <span>Multilingual Support</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <svg className="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-3.5 h-3.5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                       <span>Product Catalog System</span>
@@ -409,7 +411,59 @@ export const HomePage = () => {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Link href="/projects/shreedhara" className="text-emerald-600 font-semibold text-xs hover:text-emerald-700 transition inline-flex items-center">
+                  <Link href="/projects/shreedhara" className="text-teal-600 font-semibold text-xs hover:text-teal-700 transition inline-flex items-center">
+                    View Case Study →
+                  </Link>
+                </CardFooter>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              custom={2}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={cardVariants}
+            >
+              <Card className="h-full bg-white hover:shadow-md transition-shadow">
+                <CardHeader className="pt-3 pb-2 space-y-0 items-start text-left">
+                  <CreekLogo className="mb-2" />
+                  <CardTitle className="text-lg">Creekjob Hiring Platform</CardTitle>
+                  <CardDescription className="text-xs mt-0">
+                    A fast, mobile-friendly job marketplace for hourly and gig work that connects seekers with employers.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    <span className="px-2 py-0.5 bg-teal-50 text-teal-700 text-xs font-medium rounded">Golang</span>
+                    <span className="px-2 py-0.5 bg-teal-50 text-teal-700 text-xs font-medium rounded">TanStack</span>
+                    <span className="px-2 py-0.5 bg-teal-50 text-teal-700 text-xs font-medium rounded">Next.js</span>
+                    <span className="px-2 py-0.5 bg-teal-50 text-teal-700 text-xs font-medium rounded">PostgreSQL</span>
+                  </div>
+
+                  <div className="space-y-1.5 text-xs text-slate-600">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-3.5 h-3.5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span>Smart Job Search</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <svg className="w-3.5 h-3.5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span>Employer Matching</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <svg className="w-3.5 h-3.5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span>Quick Onboarding</span>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Link href="/projects/creekjob" className="text-teal-600 font-semibold text-xs hover:text-teal-700 transition inline-flex items-center">
                     View Case Study →
                   </Link>
                 </CardFooter>
@@ -719,43 +773,7 @@ export const HomePage = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="relative w-full overflow-hidden bg-green-50 hero-light py-16 md:py-20">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 hero-glow rounded-full mix-blend-multiply filter blur-3xl opacity-15"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 hero-glow rounded-full mix-blend-multiply filter blur-3xl opacity-15"></div>
-        </div>
-
-        <div className="relative z-10 container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-4xl md:text-4xl font-bold mb-4 hero-heading">
-              Get Ready to Start?
-            </h2>
-            <p className="text-lg mb-8 hero-text">
-              Let&apos;s discuss how our solutions can transform your business.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link 
-                href="/contact" 
-                className="inline-flex items-center gap-2 px-8 py-3 rounded-lg font-semibold transition-all duration-200 hero-primary-btn"
-              >
-                Schedule Free Consultation
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
-              <Link 
-                href="/contact" 
-                className="inline-flex items-center gap-2 border-2 px-8 py-3 rounded-lg font-semibold transition-all duration-200 hero-secondary-btn"
-              >
-                Contact Us
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0 h-px opacity-50 hero-divider"></div>
-      </section>
+      <GetStartedCTA description="Let's discuss how our solutions can transform your business." />
     </>
   );
 };
